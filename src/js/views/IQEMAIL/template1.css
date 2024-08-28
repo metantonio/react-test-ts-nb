@@ -1,0 +1,134 @@
+@media screen {
+    @font-face {
+        font-family: 'Source Sans Pro';
+        font-style: normal;
+        font-weight: 400;
+        src: local('Source Sans Pro Regular'), local('SourceSansPro-Regular'), url('https://fonts.gstatic.com/s/sourcesanspro/v10/ODelI1aHBYDBqgeIAH2zlBM0YzuT7MdOe03otPbuUS0.woff') format('woff');
+    }
+
+    @font-face {
+        font-family: 'Source Sans Pro';
+        font-style: normal;
+        font-weight: 700;
+        src: local('Source Sans Pro Bold'), local('SourceSansPro-Bold'), url('https://fonts.gstatic.com/s/sourcesanspro/v10/toadOcfmlt9b38dHJxOBGFkQc6VGVFSmCnC_l7QZG60.woff') format('woff');
+    }
+}
+
+
+body,
+table,
+td,
+a {
+    -ms-text-size-adjust: 100%;
+    /* 1 */
+    -webkit-text-size-adjust: 100%;
+    /* 2 */
+}
+
+
+/* table,
+td {
+    mso-table - rspace: 0pt;
+    mso-table - lspace: 0pt;
+} */
+
+img {
+    -ms-interpolation-mode: bicubic;
+}
+
+
+a[x-apple-data-detectors] {
+    font-family: inherit !important;
+    font-size: inherit !important;
+    font-weight: inherit !important;
+    line-height: inherit !important;
+    color: inherit !important;
+    text-decoration: none !important;
+}
+
+
+div[style*="margin: 16px 0;"] {
+    margin: 0 !important;
+}
+
+body {
+    width: 100% !important;
+    height: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+
+table {
+    border-collapse: collapse !important;
+}
+
+a {
+    color: #1a82e2;
+}
+
+img {
+    height: auto;
+    line-height: 100%;
+    text-decoration: none;
+    border: 0;
+    outline: none;
+}
+
+.purchase {
+    width: 100%;
+    margin: 0;
+    padding: 35px 0;
+    -premailer-width: 100%;
+    -premailer-cellpadding: 0;
+    -premailer-cellspacing: 0;
+}
+
+.purchase_content {
+    width: 100%;
+    margin: 0;
+    padding: 25px 0 0 0;
+    -premailer-width: 100%;
+    -premailer-cellpadding: 0;
+    -premailer-cellspacing: 0;
+}
+
+.purchase_item {
+    padding: 10px 0;
+    color: black;
+    font-size: 15px;
+    line-height: 18px;
+}
+
+.purchase_heading {
+    padding-bottom: 8px;
+    border-bottom: 1px solid black;
+}
+
+.purchase_heading p {
+    margin: 0;
+    color: black;
+    font-size: 12px;
+}
+
+.purchase_footer {
+    padding-top: 15px;
+    border-top: 1px solid black;
+}
+
+.purchase_total {
+    margin: 0;
+    text-align: right;
+    font-weight: bold;
+    color: #333333;
+}
+
+.purchase_total--label {
+    padding: 0 15px 0 0;
+}
+
+.header {
+    color: black;
+    background-color: #E45A03;
+    text-align: center;
+}

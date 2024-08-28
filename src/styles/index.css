@@ -1,0 +1,201 @@
+/* General styles be carefull */
+@import url('/src/styles/variables.css');
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+
+/* Background color for all the app */
+html {
+    background-color: var(--bg-color);
+}
+
+/* General styles */
+.container-fluid {
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+}
+
+.nav-link {
+    text-decoration: none !important;
+    color: #333;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+
+}
+
+
+a {
+    text-decoration: none;
+    font-size: 12px;
+    line-height: 40px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    font-style: normal;
+    text-transform: uppercase;
+
+}
+
+li {
+    list-style-type: none;
+}
+
+/* .scroller-nav {
+    overflow-y: auto;
+} */
+
+.offcanvas-body {
+    overflow-y: visible !important;
+}
+
+.dropdown-menu.show {
+    transform: unset !important;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+/* El siguiente bloque de código  permite los nested dropdowns funcionen correctamente */
+.dropdown-menu>.dropdown-sub1 {
+    display: none;
+    position: absolute;
+    left: 100%;
+    top: 0px;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.dropdown-item:hover+.dropdown-menu,
+.dropdown-menu:hover {
+    /* sobre el dropdown-item list <a> mostrará a su hermano que está en el mismo nivel dropdown-menu*/
+    display: block;
+    margin-top: 0;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.dropdown-menu {
+    transition-delay: 0.3s;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    /* agrega un tiempo antes de cerrar el siguiente dropdown list para poder seleccionarlo */
+}
+
+.dropdown-sub1 {
+    left: 100%;
+    top: 0%;
+    margin-top: 0px;
+    padding-top: 0px;
+    /* width: 150px; */
+    justify-content: center;
+    overflow-y: auto;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.dropdown-item+.dropdown-sub1 {
+    /* left:50%; */
+    /* inline-size: 40px !important; */
+    /* overflow-wrap: break-word !important; */
+    hyphens: manual;
+}
+
+.item-menu-name {
+    /*  left: 50%; */
+    inline-size: 120px !important;
+    overflow-wrap: break-word !important;
+    hyphens: manual;
+    font-size: 12px;
+    line-height: 40px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    font-style: normal;
+    border-bottom: 1px solid rgba(80, 80, 80, 0.4);
+    margin: 1px 0px 1px 0px;
+    padding: 1px 0px 1px 0px;
+    list-style-type: none;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+h2 {
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-size: 1em;
+    border-bottom: 1px solid rgba(80, 80, 80, 0.2);
+}
+
+code {
+    white-space: pre-line;
+    display: flow;
+    margin: 10px;
+    color: white;
+    background-color: black;
+    padding: 5px;
+}
+
+/* .swal2-modal {
+    z-index: 9000 !important;
+}
+
+.swal2-show {
+    z-index: 9000 !important;
+} */
+
+/* .swal2-container {
+    display: grid;
+    z-index: 9001 !important;
+}
+
+#swal2-textarea{
+    z-index: 9002 !important;
+} */
+
+.accordion-header {
+    height: 30px;
+    font-size: 0.9rem;
+}
+
+.accordion-header button {
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.table {
+    color: var(--text-color-table) !important;
+    font-family: var(--font-family-table) !important;
+    font-size: var(--font-size-table) !important;
+}
+
+input[type="button"].btn-block,
+input[type="reset"].btn-block,
+input[type="button"].btn-block {
+    width: 100%;
+}
+
+button,
+[type="button"],
+[type="reset"],
+[type="submit"] {
+    -webkit-appearance: button;
+}
+
+button::-moz-focus-inner,
+[type="button"]::-moz-focus-inner,
+[type="reset"]::-moz-focus-inner,
+[type="submit"]::-moz-focus-inner {
+    padding: 0;
+    border-style: none;
+}
+
+button:not(:disabled),
+[type="button"]:not(:disabled),
+[type="reset"]:not(:disabled),
+[type="submit"]:not(:disabled) {
+    cursor: pointer;
+}
+
+.swal2-container {
+    z-index: 10000 !important;
+}
+
+svg {
+    width: 30px;
+}
+
+/* div[aria-describedby] {
+    width: 100%;
+} */
