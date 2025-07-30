@@ -1,4 +1,4 @@
-//import { getCurrentUser, signOut, fetchAuthSession, fetchUserAttributes } from '@aws-amplify/auth';
+import { getCurrentUser, signOut, fetchAuthSession, fetchUserAttributes } from '@aws-amplify/auth';
 
 export const authService = {
     async getCurrentUser() {

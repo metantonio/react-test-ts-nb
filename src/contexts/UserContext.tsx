@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { authService } from './AuthService';
-//import { AuthUser, FetchUserAttributesOutput } from 'aws-amplify/auth';
+import { AuthUser, FetchUserAttributesOutput } from 'aws-amplify/auth';
 
 export type UserRole = 'admin' | 'developer' | 'guest';
 

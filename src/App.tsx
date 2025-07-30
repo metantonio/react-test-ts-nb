@@ -38,7 +38,7 @@ const App = () => {
     if (error) setError('');
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault()
     setIsLoading(true);
     if (!username || !password) {
