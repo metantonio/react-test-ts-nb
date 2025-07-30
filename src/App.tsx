@@ -1,4 +1,4 @@
-import { useState, useEffect, ChangeEvent, FormEvent  } from 'react'
+import { useState, useEffect, ChangeEvent, FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom';
 import './App.css'
 import bgImage from './img/nba-bg.jpg'
@@ -32,7 +32,7 @@ const App = () => {
   const [form, setForm] = useState<FormState>({ username: '', password: '' });
   const [showSignUpDialog, setShowSignUpDialog] = useState(false);
   const navigate = useNavigate();
-  
+
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
     if (error) setError('');
@@ -56,13 +56,15 @@ const App = () => {
       className="min-h-screen bg-cover bg-center flex items-center justify-center"
       style={{ backgroundImage: `url(${bgImage})` }}
     >
-      <div className="w-full max-w-md bg-white bg-opacity-90 rounded-xl shadow-xl p-8 text-gray-800">
-        <h2 className="text-2xl font-bold text-center text-blue-900 mb-1">NBA Stats Login</h2>
-        <p className="text-sm text-center text-gray-600 mb-6">Access real-time basketball analytics</p>
+      <div className="flex-1 flex items-center justify-center p-8">
+        <div className='w-full max-w-md space-y-8'>
+          <div className="w-full max-w-md bg-white bg-opacity-90 rounded-xl shadow-xl p-8 text-gray-800">
+            <h2 className="text-2xl font-bold text-center text-blue-900 mb-1">NBA Stats Login</h2>
+            <p className="text-sm text-center text-gray-600 mb-6">Access real-time basketball analytics</p>
 
-        
-      </div>
-      <Card className="border-gray-200 shadow-lg">
+
+          </div>
+          <Card className="border-gray-200 shadow-lg">
             <CardHeader className="space-y-1">
               <CardTitle className="text-2xl text-center">Sign In</CardTitle>
               <CardDescription className="text-center">
@@ -127,7 +129,8 @@ const App = () => {
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-3 text-gray-400 hover:text-gray-600"
+                      className="absolute right-3 top-0 text-gray-400 hover:text-gray-600"
+                      style={{top:"0.75px"}}
                     >
                       {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                     </button>
@@ -156,6 +159,10 @@ const App = () => {
               </form>
             </CardContent>
           </Card>
+        </div>
+      </div>
+
+
     </div>
   )
 }
