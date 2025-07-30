@@ -1,7 +1,7 @@
 // src/components/layouts/DashboardLayout.jsx
 import { AppSidebar } from "./AppSidebar";
 
-const DashboardLayout = ({ children }) => {
+const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className="min-h-screen flex w-full">
       <AppSidebar />
