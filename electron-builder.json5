@@ -1,9 +1,9 @@
 // @see - https://www.electron.build/configuration/configuration
 {
   "$schema": "https://raw.githubusercontent.com/electron-userland/electron-builder/master/packages/app-builder-lib/scheme.json",
-  "appId": "YourAppID",
+  "appId": "com.electron.nabqlx",
   "asar": true,
-  "productName": "QLX-GPT",
+  "productName": "QLX-NBA",
   "directories": {
     "output": "release/${version}"
   },
@@ -26,18 +26,26 @@
         ]
       }
     ],
-    "artifactName": "${productName}-Windows-${version}-Setup.${ext}"
+    "artifactName": "${name}-${version}-setup.${ext}"
   },
   "nsis": {
     "oneClick": false,
     "perMachine": false,
     "allowToChangeInstallationDirectory": true,
-    "deleteAppDataOnUninstall": false
+    "deleteAppDataOnUninstall": false,
+    "shortcutName": "${productName}",
+    "uninstallDisplayName": "${productName}",
+    "artifactName": "${name}-${version}-setup.${ext}",
+    "license": "license.txt"
   },
   "linux": {
     "target": [
       "AppImage"
     ],
     "artifactName": "${productName}-Linux-${version}.${ext}"
+  },
+  "publish": {
+  "provider": "github",  
+  "token": "Github-token"
   }
 }
