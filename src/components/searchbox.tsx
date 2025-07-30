@@ -2,6 +2,15 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Search, X, ChevronDown, Filter } from 'lucide-react';
 
 
+// Define the Casino type
+interface Casino {
+  casinoName: string;
+  location: string;
+  category: string;
+  casinoInfo: string;
+  status: string;
+}
+
 // Define the FilterTag type
 type FilterTag = {
   id: string;

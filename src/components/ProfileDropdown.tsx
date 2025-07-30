@@ -20,7 +20,7 @@ const ProfileDropdown = () => {
 
   if (!user) return null;
 
-  const handleRoleSwitch = (role: UserRole) => {
+  const handleRoleSwitch = () => {
     // Mock role switching for demo purposes
     const mockUsers = {
       admin: { id: '1', username: 'Admin User', email: 'admin@casinovizion.com', role: 'admin' as UserRole },
@@ -81,15 +81,15 @@ const ProfileDropdown = () => {
           <DropdownMenuLabel className="text-xs text-gray-500 uppercase tracking-wider">
             Switch Role
           </DropdownMenuLabel>
-          <DropdownMenuItem onClick={() => handleRoleSwitch('admin')} className="cursor-pointer">
+          <DropdownMenuItem onClick={() => handleRoleSwitch()} className="cursor-pointer">
             <User className="mr-2 h-4 w-4" />
             <span>Admin</span>
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleRoleSwitch('developer')} className="cursor-pointer">
+          <DropdownMenuItem onClick={() => handleRoleSwitch()} className="cursor-pointer">
             <User className="mr-2 h-4 w-4" />
             <span>Developer</span>
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => handleRoleSwitch('guest')} className="cursor-pointer">
+          <DropdownMenuItem onClick={() => handleRoleSwitch()} className="cursor-pointer">
             <User className="mr-2 h-4 w-4" />
             <span>Guest</span>
           </DropdownMenuItem>
@@ -105,7 +105,7 @@ const ProfileDropdown = () => {
           <span>Reset Password</span>
         </DropdownMenuItem>
         <DropdownMenuItem className="cursor-pointer text-red-600"
-          onClick={async (e) => {
+          onClick={async () => {
             await authService.signOut()
             navigate("/adminpanel/login")
           }}

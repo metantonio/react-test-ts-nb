@@ -30,21 +30,7 @@ interface UserContextType {
   validateToken: () => Promise<boolean>;
 }
 
-interface Session {
-  tokens?: {
-    accessToken?: {
-      payload: {
-        'cognito:groups'?: string[];
-      };
-    };
-    idToken?: {
-      toString(): string;
-      payload: {
-        exp: number;
-      };
-    };
-  };
-}
+type Session = AuthSession;
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
@@ -110,10 +96,10 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     setIsLoading(true);
     console.log("load user")
     try {
-      const {cognitoUser, userAttributes} = await authService.getCurrentUser();
+      const { cognitoUser, userAttributes }: { cognitoUser: AuthUser | null; userAttributes: FetchUserAttributesOutput | null } = await authService.getCurrentUser();
       const session = await authService.getSession();
 
-      if (cognitoUser && session?.tokens?.idToken) {
+      if (cognitoUser && userAttributes && session?.tokens?.idToken) {
         const appUser = mapCognitoUserToAppUser(cognitoUser, userAttributes, session);
         setUser(appUser);
         setToken(session.tokens.idToken.toString());
@@ -178,7 +164,10 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       if (!session?.tokens?.idToken) return false;
 
       const currentTime = Math.floor(Date.now() / 1000);
-      return session.tokens.idToken.payload.exp > currentTime;
+      if (session?.tokens?.idToken?.payload?.exp) {
+        return session.tokens.idToken.payload.exp > currentTime;
+      }
+      return false;
     } catch (error) {
       console.error('Token validation failed:', error);
       return false;
