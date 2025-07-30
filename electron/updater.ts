@@ -67,7 +67,9 @@ export const checkAndApplyUpdates = (mainBackend: () => void): void => {
         mainBackend();
       }
     })
-    .catch((err: Error) => logger.info('There has been an error downloading the update' + err));
+    .catch((err: Error) => {
+      mainBackend();
+      logger.info('There has been an error downloading the update' + err)});
   });
 
   // Evento para progreso de la descarga
@@ -113,7 +115,8 @@ export const checkAndApplyUpdates = (mainBackend: () => void): void => {
       progressBar.close();
       progressBar = undefined;
     }
-    dialog
+    autoUpdater.quitAndInstall(false, true);
+    /* dialog
       .showMessageBox({
         type: 'info',
         title: 'Update ready',
@@ -125,8 +128,8 @@ export const checkAndApplyUpdates = (mainBackend: () => void): void => {
         } else {
           mainBackend();
         }
-      })
-      .catch((err: Error) => logger.info(`Error when showing updater dialog message: ${err}`));
+      }) */
+      
   });
 
   // Evento para manejar errores durante la actualización

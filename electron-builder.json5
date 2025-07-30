@@ -46,6 +46,6 @@
   },
   "publish": {
   "provider": "github",  
-  "token": "Github-token"
+  "token": "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"
   }
 }
