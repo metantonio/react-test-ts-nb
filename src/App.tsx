@@ -3,22 +3,26 @@ import { useState, useEffect } from 'react'
 //import viteLogo from '/electron-vite.animate.svg'
 import './App.css'
 import bgImage from './img/nba-bg.jpg'
-
+import { Button } from "@/components/ui/button";
 
 const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleLogin = (e) => {
     e.preventDefault()
+    setIsLoading(true);
     if (!username || !password) {
       setError('Please enter both username and password.')
+      setIsLoading(false);
       return
     }
     setError('')
-    alert(`Welcome ${username}!`)
+    alert(`Welcome ${username}!`);
+    setIsLoading(false);
   }
 
   return (
@@ -70,6 +74,9 @@ const App = () => {
           >
             Log In
           </button>
+          <Button type="submit" className="w-full bg-navy-600 hover:bg-navy-700">
+                  {isLoading ? 'Signing In...' : 'Sign In'}
+          </Button>
         </form>
       </div>
     </div>
