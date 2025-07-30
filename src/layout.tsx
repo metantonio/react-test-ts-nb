@@ -1,3 +1,4 @@
+import React, {useEffect} from "react";
 import { BrowserRouter, useLocation, Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -5,8 +6,9 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { UserProvider } from "@/contexts/UserContext";
-import ProtectedRoute from "@/components/ProtectedRoute";
-import { AuthProvider } from './contexts/AuthContext';
+//import { UserProvider } from "@/contexts/UserContext";
+
+
 import App from "./App";
 
 // Layouts
@@ -21,57 +23,59 @@ const REACT_APP_COGNITO_DOMAIN = import.meta.env.VITE_APP_COGNITO_DOMAIN; */
 
 const AppContent = () => {
 
-  const location = useLocation();
-  const isAuthRoute = location.pathname.startsWith("/login") || location.pathname === "/";
+    const location = useLocation();
+    const isAuthRoute = location.pathname.startsWith("/login") || location.pathname === "/";
 
-  const Layout = isAuthRoute ? AuthLayout : DashboardLayout;
-  
-  /* 
-  const amplifyConfig: ResourcesConfig = {
-    Auth: {
-      Cognito: {
-        userPoolId: REACT_APP_COGNITO_USER_POOL_ID || '',
-        userPoolClientId: REACT_APP_COGNITO_CLIENT_ID || '',
-        loginWith: {
-          oauth: {
-            domain: REACT_APP_COGNITO_DOMAIN || '',
-            scopes: ['email', 'profile', 'openid'],
-            redirectSignIn: [window.location.origin + '/login', 'http://localhost:3000/adminpanel/login'],
-            redirectSignOut: [window.location.origin + '/login', 'http://localhost:3000/adminpanel/login'],
-            responseType: 'code',
+    const Layout = isAuthRoute ? AuthLayout : DashboardLayout;
+    useEffect(()=> {
+        console.log("location:", location)
+    },[])
+    /* 
+    const amplifyConfig: ResourcesConfig = {
+      Auth: {
+        Cognito: {
+          userPoolId: REACT_APP_COGNITO_USER_POOL_ID || '',
+          userPoolClientId: REACT_APP_COGNITO_CLIENT_ID || '',
+          loginWith: {
+            oauth: {
+              domain: REACT_APP_COGNITO_DOMAIN || '',
+              scopes: ['email', 'profile', 'openid'],
+              redirectSignIn: [window.location.origin + '/login', 'http://localhost:3000/adminpanel/login'],
+              redirectSignOut: [window.location.origin + '/login', 'http://localhost:3000/adminpanel/login'],
+              responseType: 'code',
+            },
           },
         },
       },
-    },
-  };
+    };
+  
+    Amplify.configure(amplifyConfig); */
 
-  Amplify.configure(amplifyConfig); */
-
-  return (
-    <Layout>
-      <Routes>
-        <Route path="/login" element={<Navigate to="/" replace />} />
-        <Route path="/" element={<App />} />
-        {/* <Route path="*" element={<NotFound />} /> */}
-      </Routes>
-    </Layout>
-  );
+    return (
+        <Layout>
+            <Routes>
+                <Route path="/login" element={<Navigate to="/" replace />} />
+                <Route path="/" element={<App />} />
+                {/* <Route path="*" element={<NotFound />} /> */}
+            </Routes>
+        </Layout>
+    );
 };
 
 const AppLayout = () => (
-  <QueryClientProvider client={queryClient}>
-    <UserProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <SidebarProvider>
-            <AppContent />
-          </SidebarProvider>
-        </BrowserRouter>
-      </TooltipProvider>
-    </UserProvider>
-  </QueryClientProvider>
+    <QueryClientProvider client={queryClient}>
+        <UserProvider>
+            <TooltipProvider>
+                <Toaster />
+                <Sonner />
+                <BrowserRouter>
+                    <SidebarProvider>
+                        <AppContent />
+                    </SidebarProvider>
+                </BrowserRouter>
+            </TooltipProvider>
+        </UserProvider>
+    </QueryClientProvider>
 );
 
 export default AppLayout;

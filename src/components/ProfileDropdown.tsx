@@ -46,7 +46,7 @@ const ProfileDropdown = () => {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-10 w-10 rounded-full">
           <Avatar className="h-10 w-10">
-            <AvatarImage src={user.avatar} alt={user.username} />
+            
             <AvatarFallback className="bg-navy-100 text-navy-600">
               {user.username.split(' ').map(n => n[0]).join('').toUpperCase()}
             </AvatarFallback>
@@ -58,11 +58,10 @@ const ProfileDropdown = () => {
           <div className="flex flex-col space-y-2">
             <div className="flex items-center gap-3">
               <Avatar className="h-12 w-12">
-                <AvatarImage src={user.avatar} alt={user.username} />
-                <AvatarFallback className="bg-navy-100 text-navy-600">
-                  {user.username.split(' ').map(n => n[0]).join('').toUpperCase()}
-                </AvatarFallback>
-              </Avatar>
+            <AvatarFallback className="bg-navy-100 text-navy-600">
+              {user.username.split(' ').map(n => n[0]).join('').toUpperCase()}
+            </AvatarFallback>
+          </Avatar>
               <div className="flex-1">
                 <p className="text-sm font-medium leading-none">{user.username}</p>
                 <p className="text-xs leading-none text-gray-600 mt-1">{user.email}</p>
@@ -106,7 +105,7 @@ const ProfileDropdown = () => {
         </DropdownMenuItem>
         <DropdownMenuItem className="cursor-pointer text-red-600"
           onClick={async () => {
-            await authService.signOut()
+            await logout()
             navigate("/adminpanel/login")
           }}
           >

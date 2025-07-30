@@ -22,7 +22,7 @@ import {
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useUser } from "@/contexts/UserContext";
-import RoleGuard from "@/components/RoleGuard";
+
 
 const menuItems = [
   { title: "Dashboard", url: "/adminpanel", icon: Home, permission: "view_all" },
@@ -72,8 +72,7 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {menuItems.map((item) => (
-                <RoleGuard key={item.title} permission={item.permission}>
-                  <SidebarMenuItem>
+                  <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
                       asChild
                       isActive={location.pathname === item.url}
@@ -85,7 +84,6 @@ export function AppSidebar() {
                       </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
-                </RoleGuard>
               ))}
             </SidebarMenu>
           </SidebarGroupContent>
