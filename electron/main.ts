@@ -2,6 +2,8 @@ import { app, BrowserWindow } from 'electron'
 import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
+//const {autoUpdater, AppUpdater} = require('electron-updater')
+import { checkAndApplyUpdates } from './updater.ts'
 
 const require = createRequire(import.meta.url)
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -28,6 +30,8 @@ let win: BrowserWindow | null
 
 function createWindow() {
   win = new BrowserWindow({
+     width: 1200,
+    height: 1000,
     icon: path.join(process.env.VITE_PUBLIC, 'electron-vite.svg'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.mjs'),
@@ -68,4 +72,9 @@ app.on('activate', () => {
   }
 })
 
-app.whenReady().then(createWindow)
+/* app.whenReady().then(() => {
+  createWindow;
+}); */
+app.whenReady().then(() => {
+  checkAndApplyUpdates(createWindow);
+});
