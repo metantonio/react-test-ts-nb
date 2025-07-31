@@ -6,7 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { UserProvider } from "@/contexts/UserContext";
-//import { UserProvider } from "@/contexts/UserContext";
+import { ApiProvider } from "@/contexts/ApiContext";
 
 //Import of views or components:
 import App from "./App";
@@ -18,10 +18,6 @@ import DashboardLayout from "./components/MainLayout";
 
 const queryClient = new QueryClient();
 
-/* const REACT_APP_COGNITO_USER_POOL_ID = import.meta.env.VITE_APP_COGNITO_USER_POOL_ID;
-const REACT_APP_COGNITO_CLIENT_ID = import.meta.env.VITE_APP_COGNITO_CLIENT_ID;
-const REACT_APP_COGNITO_DOMAIN = import.meta.env.VITE_APP_COGNITO_DOMAIN; */
-
 const AppContent = () => {
 
     const location = useLocation();
@@ -31,26 +27,6 @@ const AppContent = () => {
     useEffect(()=> {
         console.log("location:", location)
     },[])
-    /* 
-    const amplifyConfig: ResourcesConfig = {
-      Auth: {
-        Cognito: {
-          userPoolId: REACT_APP_COGNITO_USER_POOL_ID || '',
-          userPoolClientId: REACT_APP_COGNITO_CLIENT_ID || '',
-          loginWith: {
-            oauth: {
-              domain: REACT_APP_COGNITO_DOMAIN || '',
-              scopes: ['email', 'profile', 'openid'],
-              redirectSignIn: [window.location.origin + '/login', 'http://localhost:3000/adminpanel/login'],
-              redirectSignOut: [window.location.origin + '/login', 'http://localhost:3000/adminpanel/login'],
-              responseType: 'code',
-            },
-          },
-        },
-      },
-    };
-  
-    Amplify.configure(amplifyConfig); */
 
     return (
         <Layout>
@@ -66,15 +42,17 @@ const AppContent = () => {
 const AppLayout = () => (
     <QueryClientProvider client={queryClient}>
         <UserProvider>
-            <TooltipProvider>
-                <Toaster />
-                <Sonner />
-                <BrowserRouter>
-                    <SidebarProvider>
-                        <AppContent />
-                    </SidebarProvider>
-                </BrowserRouter>
-            </TooltipProvider>
+            <ApiProvider>
+                <TooltipProvider>
+                    <Toaster />
+                    <Sonner />
+                    <BrowserRouter>
+                        <SidebarProvider>
+                            <AppContent />
+                        </SidebarProvider>
+                    </BrowserRouter>
+                </TooltipProvider>
+            </ApiProvider>
         </UserProvider>
     </QueryClientProvider>
 );

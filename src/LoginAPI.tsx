@@ -1,7 +1,7 @@
-import { useState, useEffect, ChangeEvent, FormEvent } from 'react'
+import { useState, ChangeEvent, FormEvent, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './App.css'
-import bgImage from './img/nba-bg.jpg'
+import './App.css';
+import bgImage from './img/nba-bg.jpg';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -17,19 +17,20 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { useApi } from '@/contexts/ApiContext';
 
 type FormState = {
-  username: string;
-  password: string;
+  apiKey: string;
+  authorization: string;
 };
 
 const LoginAPI = () => {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [showPassword, setShowPassword] = useState(false)
-  const [error, setError] = useState('')
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [form, setForm] = useState<FormState>({ username: '', password: '' });
+  const [apiKey, setApiKey] = useState('');
+  const [authorization, setAuthorization] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState('');
+  const { login, isLoading } = useApi();
+  const [form, setForm] = useState<FormState>({ apiKey: '', authorization: '' });
   const [showSignUpDialog, setShowSignUpDialog] = useState(false);
   const navigate = useNavigate();
 
@@ -39,17 +40,15 @@ const LoginAPI = () => {
   };
 
   const handleSubmit = (e: FormEvent) => {
-    e.preventDefault()
-    setIsLoading(true);
-    if (!username || !password) {
-      setError('Please enter both username and password.')
-      setIsLoading(false);
-      return
+    e.preventDefault();
+    if (!apiKey || !authorization) {
+      setError('Please enter both API Key and Authorization.');
+      return;
     }
-    setError('')
-    alert(`Welcome ${username}!`);
-    setIsLoading(false);
-  }
+    setError('');
+    login({ apiKey, authorization });
+    alert(`Welcome!`);
+  };
 
   return (
     <div
@@ -100,8 +99,8 @@ const LoginAPI = () => {
                       id="email"
                       type="email"
                       placeholder="Enter your API Key"
-                      value={username}
-                      onChange={(e) => setUsername(e.target.value)}
+                      value={apiKey}
+                      onChange={(e) => setApiKey(e.target.value)}
                       className="pl-10"
                       disabled={isLoading}
                       required
@@ -115,11 +114,11 @@ const LoginAPI = () => {
                     <Lock className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                     <Input
                       id="password"
-                      type={showPassword ? "text" : "password"}
+                      type={authorization ? "text" : "password"}
                       placeholder="Enter your Authorization"
-                      value={password}
+                      value={authorization}
                       onChange={(e) => {
-                        setPassword(e.target.value)
+                        setAuthorization(e.target.value)
                         handleChange(e)
                       }}
                       className="pl-10 pr-10"
@@ -154,7 +153,7 @@ const LoginAPI = () => {
                 </div>
 
                 <Button type="submit" className="w-full bg-navy-600 hover:bg-navy-700">
-                  {isLoading ? 'Signing In...' : 'Sign In'}
+                  {isLoading ? 'Signing In...' : 'Use this data'}
                 </Button>
               </form>
             </CardContent>
