@@ -20,14 +20,14 @@ const getDownloadsPath = (): string => {
 
 // Función principal exportada para verificar y aplicar actualizaciones
 export const checkAndApplyUpdates = (mainBackend: () => void): void => {
-
+  mainBackend();
   // Verificar y notificar actualizaciones
   autoUpdater.checkForUpdatesAndNotify().then(()=>{
-    mainBackend();
+    //mainBackend();
   }).catch((err: Error) => {
     dialog.showErrorBox('There was an error', `${err} occurred while trying to look for updates`);
     logger.info('There was an error with checking for updates: ' + err);
-    
+     //mainBackend();
   });
 
   // Variable para la barra de progreso
@@ -66,11 +66,11 @@ export const checkAndApplyUpdates = (mainBackend: () => void): void => {
             }
           });
       } else {
-        mainBackend();
+        //mainBackend();
       }
     })
     .catch((err: Error) => {
-      mainBackend();
+      //mainBackend();
       logger.info('There has been an error downloading the update' + err)});
   });
 
@@ -150,7 +150,7 @@ export const checkAndApplyUpdates = (mainBackend: () => void): void => {
   // Evento cuando no hay actualizaciones disponibles
   autoUpdater.on('update-not-available', () => {
     logger.info('No update available');
-    mainBackend();
+    //mainBackend();
   });
 
   

@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import { BrowserRouter, useLocation, Routes, Route, Navigate } from "react-router-dom";
+import { HashRouter, useLocation, Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -48,11 +48,11 @@ const AppLayout = () => (
                 <TooltipProvider>
                     <Toaster />
                     <Sonner />
-                    <BrowserRouter>
-                        <SidebarProvider>
-                            <AppContent />
-                        </SidebarProvider>
-                    </BrowserRouter>
+                    <HashRouter>
+                    <SidebarProvider>
+                        <AppContent />
+                    </SidebarProvider>
+                </HashRouter>
                 </TooltipProvider>
             </ApiProvider>
         </UserProvider>
