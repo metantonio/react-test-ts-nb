@@ -2,6 +2,14 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApi } from '@/contexts/ApiContext';
 import { Button } from '@/components/ui/button';
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableHead,
+  TableCell,
+} from "@/components/ui/table";
 
 interface League {
   league_name: string;
@@ -21,7 +29,7 @@ const LeagueName = () => {
   const handleFetchTables = async () => {
     setError(null);
     try {
-      const response = await fetchWithAuth('https://www.qlx.com/tables', 'POST');
+      const response = await fetchWithAuth('http://api.bballsports.com/simulationAPI/get_leagues.php', 'POST');
       if (!response.ok) {
         throw new Error('Failed to fetch tables.');
       }
@@ -41,7 +49,7 @@ const LeagueName = () => {
       <Button onClick={goLoginPage} disabled={isLoading}>
         Go to Login
       </Button>
-      <h1 className="text-2xl font-bold mb-4">NBA Leagues</h1>
+      <h1 className="text-2xl font-bold mb-4">NBA Leagues Names</h1>
       <Button onClick={handleFetchTables} disabled={isLoading}>
         {isLoading ? 'Fetching...' : 'Fetch Tables'}
       </Button>
@@ -49,11 +57,20 @@ const LeagueName = () => {
       {error && <p className="text-red-500 mt-4">{error}</p>}
 
       {leagues.length > 0 && (
-        <ul className="mt-4 list-disc list-inside">
-          {leagues.map((league, index) => (
-            <li key={index}>{league.league_name}</li>
-          ))}
-        </ul>
+        <Table className="mt-4">
+          <TableHeader>
+            <TableRow>
+              <TableHead>League Name</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {leagues.map((league, index) => (
+              <TableRow key={index}>
+                <TableCell>{league.league_name}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       )}
     </div>
   );

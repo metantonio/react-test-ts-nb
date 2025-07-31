@@ -47,7 +47,7 @@ export const ApiProvider = ({ children }: { children: ReactNode }) => {
 
     const requestBody = {
       ...body,
-      apiKey: api.apiKey,
+      apikey: api.apiKey,
     };
 
     const config: RequestInit = {

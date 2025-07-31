@@ -117,7 +117,7 @@ const LoginAPI = () => {
                       id="password"
                       type={authorization ? "text" : "password"}
                       placeholder="Enter your Authorization"
-                      value={authorization}
+                      value={showPassword?authorization: 'xxxxxxxx'}
                       onChange={(e) => {
                         setAuthorization(e.target.value)
                         handleChange(e)
