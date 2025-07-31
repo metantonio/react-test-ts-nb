@@ -48,6 +48,7 @@ const LoginAPI = () => {
     setError('');
     login({ apiKey, authorization });
     alert(`Welcome!`);
+    navigate('/league');
   };
 
   return (
@@ -97,7 +98,7 @@ const LoginAPI = () => {
                     <Mail className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                     <Input
                       id="email"
-                      type="email"
+                      type="text"
                       placeholder="Enter your API Key"
                       value={apiKey}
                       onChange={(e) => setApiKey(e.target.value)}
