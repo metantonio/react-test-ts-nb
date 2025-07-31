@@ -56,7 +56,7 @@ const LeagueName = () => {
 
       {error && <p className="text-red-500 mt-4">{error}</p>}
 
-      {leagues.length > 0 && (
+      {leagues?.length > 0 && (
         <Table className="mt-4">
           <TableHeader>
             <TableRow>
