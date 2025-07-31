@@ -8,8 +8,9 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { UserProvider } from "@/contexts/UserContext";
 //import { UserProvider } from "@/contexts/UserContext";
 
-
+//Import of views or components:
 import App from "./App";
+import LoginAPI from "./LoginAPI";
 
 // Layouts
 import AuthLayout from "./components/LoginLayout";
@@ -55,8 +56,8 @@ const AppContent = () => {
         <Layout>
             <Routes>
                 <Route path="/login" element={<Navigate to="/" replace />} />
-                <Route path="/" element={<App />} />
-                <Route path="*" element={<App />} />
+                <Route path="/" element={<LoginAPI />} />
+                <Route path="*" element={<LoginAPI />} />
             </Routes>
         </Layout>
     );

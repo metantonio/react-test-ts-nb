@@ -22,10 +22,12 @@ const getDownloadsPath = (): string => {
 export const checkAndApplyUpdates = (mainBackend: () => void): void => {
 
   // Verificar y notificar actualizaciones
-  autoUpdater.checkForUpdatesAndNotify().catch((err: Error) => {
+  autoUpdater.checkForUpdatesAndNotify().then(()=>{
+    mainBackend();
+  }).catch((err: Error) => {
     dialog.showErrorBox('There was an error', `${err} occurred while trying to look for updates`);
     logger.info('There was an error with checking for updates: ' + err);
-    mainBackend();
+    
   });
 
   // Variable para la barra de progreso
