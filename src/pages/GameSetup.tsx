@@ -35,6 +35,7 @@ const GameSetup = () => {
   const [leagues, setLeagues] = useState<League[]>([{league_name: "dummy data"}]);
   const [error, setError] = useState<string | null>(null);
   const [selectedLeague, setSelectedLeague] = useState<League | null>(null);
+  const [teams, setTeams] = useState<Teams[]>([{teams: "dummy data"}]);
   const navigate = useNavigate();
 
   const handleFetchLeagues = async () => {
@@ -48,6 +49,23 @@ const GameSetup = () => {
       }
       const data: LeagueResponse = await response.json();
       setLeagues(data.data);
+    } catch (err: any) {
+      //console.log("error: ", err)
+      setError(`${err}`);
+    }
+  };
+
+  const handleFetchTeams = async () => {
+    setError(null);
+    try {
+      const response = await fetchWithAuth('http://api.bballsports.com/simulationAPI/get_teams.php', 'POST', {league_name: selectedLeague});
+      if (!response.ok) {
+        const err: Message = await response.json();
+        setError(`error: ${err.message}`);
+        throw new Error('Failed to fetch teams.');
+      }
+      const data: TeamsResponse = await response.json();
+      setTeams(data.data);
     } catch (err: any) {
       //console.log("error: ", err)
       setError(`${err}`);
