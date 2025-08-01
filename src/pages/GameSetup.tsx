@@ -68,10 +68,105 @@ interface PlayPredictResponse {
   data: PlayerChar[];
 }
 
+interface ScoreBoard {
+  away_score: string;
+  home_score: string;
+  quarter: string;
+  clock: string;
+  away_possessions: string;
+  home_possessions: string;
+  away_fouls: string;
+  home_fouls: string;
+  home_team_offense: string;
+  player_with_ball: string;
+  away_player1: string;
+  away_player2: string;
+  away_player3: string;
+  away_player4: string;
+  away_player5: string;
+  home_player1: string;
+  home_player2: string;
+  home_player3: string;
+  home_player4: string;
+  home_player5: string;
+  away_player1_pts: string;
+  away_player2_pts: string;
+  away_player3_pts: string;
+  away_player4_pts: string;
+  away_player5_pts: string;
+  home_player1_pts: string;
+  home_player2_pts: string;
+  home_player3_pts: string;
+  home_player4_pts: string;
+  home_player5_pts: string;
+  away_player1_reb: string;
+  away_player2_reb: string;
+  away_player3_reb: string;
+  away_player4_reb: string;
+  away_player5_reb: string;
+  home_player1_reb: string;
+  home_player2_reb: string;
+  home_player3_reb: string;
+  home_player4_reb: string;
+  home_player5_reb: string;
+  away_player1_ast: string;
+  away_player2_ast: string;
+  away_player3_ast: string;
+  away_player4_ast: string;
+  away_player5_ast: string;
+  home_player1_ast: string;
+  home_player2_ast: string;
+  home_player3_ast: string;
+  home_player4_ast: string;
+  home_player5_ast: string;
+  away_player1_pf: string;
+  away_player2_pf: string;
+  away_player3_pf: string;
+  away_player4_pf: string;
+  away_player5_pf: string;
+  home_player1_pf: string;
+  home_player2_pf: string;
+  home_player3_pf: string;
+  home_player4_pf: string;
+  home_player5_pf: string;
+  away_player1_possfact: string;
+  away_player2_possfact: string;
+  away_player3_possfact: string;
+  away_player4_possfact: string;
+  away_player5_possfact: string;
+  home_player1_possfact: string;
+  home_player2_possfact: string;
+  home_player3_possfact: string;
+  home_player4_possfact: string;
+  home_player5_possfact: string;
+  off_position1: string;
+  off_position2: string;
+  off_position3: string;
+  off_position4: string;
+  off_position5: string;
+  def_position1: string;
+  def_position2: string;
+  def_position3: string;
+  def_position4: string;
+  def_position5: string;
+  passable1: string;
+  passable2: string;
+  passable3: string;
+  passable4: string;
+  passable5: string;
+  passable6: string;
+  passable7: string;
+}
+
+interface ScoreBoardResponse {
+  scoreboard: ScoreBoard[];
+}
+
 
 const GameSetup = () => {
   const { fetchWithAuth, isLoading } = useApi();
   const [leagues, setLeagues] = useState<League[]>([{ league_name: "dummy data league" }]);
+  const [scoreBoard, setScoreBoard] = useState<ScoreBoard[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [selectedLeague, setSelectedLeague] = useState<League | null>(null);
   const [teams, setTeams] = useState<Teams[]>([{ teams: "dummy data teams 1" }, { teams: "dummy data teams 2" }]);
@@ -205,7 +300,7 @@ const GameSetup = () => {
       const data: PlayerCharResponse = await response.json();
       console.log("play single game initial: ", data)
       setPlayersTeam2(data.data);
-      const stepResponse = await fetchWithAuth('http://api.bballsports.com/simulationAPI/playsinglegame_step.php', 'POST', { options: "4"});
+      const stepResponse = await fetchWithAuth('http://api.bballsports.com/simulationAPI/playsinglegame_step.php', 'POST', { options: "4" });
       if (!stepResponse.ok) {
         const err: Message = await stepResponse.json();
         setError(`error: ${err.message}`);
@@ -217,6 +312,23 @@ const GameSetup = () => {
       setIsGameInitial(false)
     }
     setIsGameInitial(false)
+  };
+
+  const handleFetchScoreBoard = async () => {
+    setError(null);
+    try {
+      const response = await fetchWithAuth('http://api.bballsports.com/simulationAPI/get_singlegame_stats.php', 'POST');
+      if (!response.ok) {
+        const err: Message = await response.json();
+        setError(`error: ${err.message}`);
+        throw new Error('Failed to fetch teams.');
+      }
+      const data: ScoreBoardResponse = await response.json();
+      setScoreBoard(data.scoreboard);
+    } catch (err: any) {
+      //console.log("error: ", err)
+      setError(`${err}`);
+    }
   };
 
   const goLoginPage = () => {
@@ -337,7 +449,7 @@ const GameSetup = () => {
         </DropdownMenu>
 
         {isGameInitial ? <>
-          <Button id="teams-dropdown-2" variant="default" className="mt-4 ml-4" disabled={leagues.length === 0}>
+          <Button id="simulation-btn" variant="default" className="mt-4 ml-4" disabled={leagues.length === 0} onClick={handleFetchScoreBoard}>
             Simulate the Game
           </Button>
         </> : <></>}
