@@ -200,11 +200,17 @@ const GameSetup = () => {
       if (!response.ok) {
         const err: Message = await response.json();
         setError(`error: ${err.message}`);
-        throw new Error('Failed to fetch teams.');
+        throw new Error('Failed to setup the initial game.');
       }
       const data: PlayerCharResponse = await response.json();
       console.log("play single game initial: ", data)
       setPlayersTeam2(data.data);
+      const stepResponse = await fetchWithAuth('http://api.bballsports.com/simulationAPI/playsinglegame_step.php', 'POST', { options: "4"});
+      if (!stepResponse.ok) {
+        const err: Message = await stepResponse.json();
+        setError(`error: ${err.message}`);
+        throw new Error('Failed to setup game step.');
+      }
     } catch (err: any) {
       //console.log("error: ", err)
       setError(`${err}`);
@@ -331,9 +337,8 @@ const GameSetup = () => {
         </DropdownMenu>
 
         {isGameInitial ? <>
-          <label htmlFor="teams-dropdown-2">Simulate Game</label>
-          <Button id="teams-dropdown-2" variant="outline" className="mt-4 ml-4" disabled={leagues.length === 0}>
-            "Select a Team 2"
+          <Button id="teams-dropdown-2" variant="default" className="mt-4 ml-4" disabled={leagues.length === 0}>
+            Simulate the Game
           </Button>
         </> : <></>}
       </div>
