@@ -281,121 +281,123 @@ const GameSetup = () => {
         </DropdownMenuContent>
       </DropdownMenu>
 
-      {playersTeam1.length > 0 && (
-        <div>
-          <h2 className="text-xl font-bold mt-8 mb-4">{selectedTeams1?.teams}</h2>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Position</TableHead>
-                <TableHead>Poss Fact</TableHead>
-                <TableHead>2pt FG Pct</TableHead>
-                <TableHead>FT Pct</TableHead>
-                <TableHead>Pct Shot</TableHead>
-                <TableHead>3pt Pct Shot</TableHead>
-                <TableHead>Pct Fouled</TableHead>
-                <TableHead>Pct TO</TableHead>
-                <TableHead>Pct Pass</TableHead>
-                <TableHead>Off Reb</TableHead>
-                <TableHead>Def Reb</TableHead>
-                <TableHead>Def FG Pct</TableHead>
-                <TableHead>Pct PF</TableHead>
-                <TableHead>Pct ST</TableHead>
-                <TableHead>Pct BS</TableHead>
-                <TableHead>Year</TableHead>
-                <TableHead>Team Code</TableHead>
-                <TableHead>Height</TableHead>
-                <TableHead>Deny Fact</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {playersTeam1.map((player, index) => (
-                <TableRow key={index}>
-                  <TableCell>{player.name}</TableCell>
-                  <TableCell>{player.position}</TableCell>
-                  <TableCell>{player.poss_fact}</TableCell>
-                  <TableCell>{player.two_pt_fg_pct}</TableCell>
-                  <TableCell>{player.ft_pct}</TableCell>
-                  <TableCell>{player.pct_shot}</TableCell>
-                  <TableCell>{player.three_pt_pct_shot}</TableCell>
-                  <TableCell>{player.pct_fouled}</TableCell>
-                  <TableCell>{player.pct_to}</TableCell>
-                  <TableCell>{player.pct_pass}</TableCell>
-                  <TableCell>{player.off_reb}</TableCell>
-                  <TableCell>{player.def_reb}</TableCell>
-                  <TableCell>{player.def_fg_pct}</TableCell>
-                  <TableCell>{player.pct_pf}</TableCell>
-                  <TableCell>{player.pct_st}</TableCell>
-                  <TableCell>{player.pct_bs}</TableCell>
-                  <TableCell>{player.year}</TableCell>
-                  <TableCell>{player.team_code}</TableCell>
-                  <TableCell>{player.height}</TableCell>
-                  <TableCell>{player.deny_fact}</TableCell>
+      <div className="flex flex-row gap-4">
+        {playersTeam1.length > 0 && (
+          <div className="w-1/2">
+            <h2 className="text-xl font-bold mt-8 mb-4">{selectedTeams1?.teams}</h2>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Position</TableHead>
+                  <TableHead>Poss Fact</TableHead>
+                  <TableHead>2pt FG Pct</TableHead>
+                  <TableHead>FT Pct</TableHead>
+                  <TableHead>Pct Shot</TableHead>
+                  <TableHead>3pt Pct Shot</TableHead>
+                  <TableHead>Pct Fouled</TableHead>
+                  <TableHead>Pct TO</TableHead>
+                  <TableHead>Pct Pass</TableHead>
+                  <TableHead>Off Reb</TableHead>
+                  <TableHead>Def Reb</TableHead>
+                  <TableHead>Def FG Pct</TableHead>
+                  <TableHead>Pct PF</TableHead>
+                  <TableHead>Pct ST</TableHead>
+                  <TableHead>Pct BS</TableHead>
+                  <TableHead>Year</TableHead>
+                  <TableHead>Team Code</TableHead>
+                  <TableHead>Height</TableHead>
+                  <TableHead>Deny Fact</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-      )}
+              </TableHeader>
+              <TableBody>
+                {playersTeam1.map((player, index) => (
+                  <TableRow key={index}>
+                    <TableCell>{player.name}</TableCell>
+                    <TableCell>{player.position}</TableCell>
+                    <TableCell>{player.poss_fact}</TableCell>
+                    <TableCell>{player.two_pt_fg_pct}</TableCell>
+                    <TableCell>{player.ft_pct}</TableCell>
+                    <TableCell>{player.pct_shot}</TableCell>
+                    <TableCell>{player.three_pt_pct_shot}</TableCell>
+                    <TableCell>{player.pct_fouled}</TableCell>
+                    <TableCell>{player.pct_to}</TableCell>
+                    <TableCell>{player.pct_pass}</TableCell>
+                    <TableCell>{player.off_reb}</TableCell>
+                    <TableCell>{player.def_reb}</TableCell>
+                    <TableCell>{player.def_fg_pct}</TableCell>
+                    <TableCell>{player.pct_pf}</TableCell>
+                    <TableCell>{player.pct_st}</TableCell>
+                    <TableCell>{player.pct_bs}</TableCell>
+                    <TableCell>{player.year}</TableCell>
+                    <TableCell>{player.team_code}</TableCell>
+                    <TableCell>{player.height}</TableCell>
+                    <TableCell>{player.deny_fact}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        )}
 
-      {playersTeam2.length > 0 && (
-        <div>
-          <h2 className="text-xl font-bold mt-8 mb-4">{selectedTeams2?.teams}</h2>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Position</TableHead>
-                <TableHead>Poss Fact</TableHead>
-                <TableHead>2pt FG Pct</TableHead>
-                <TableHead>FT Pct</TableHead>
-                <TableHead>Pct Shot</TableHead>
-                <TableHead>3pt Pct Shot</TableHead>
-                <TableHead>Pct Fouled</TableHead>
-                <TableHead>Pct TO</TableHead>
-                <TableHead>Pct Pass</TableHead>
-                <TableHead>Off Reb</TableHead>
-                <TableHead>Def Reb</TableHead>
-                <TableHead>Def FG Pct</TableHead>
-                <TableHead>Pct PF</TableHead>
-                <TableHead>Pct ST</TableHead>
-                <TableHead>Pct BS</TableHead>
-                <TableHead>Year</TableHead>
-                <TableHead>Team Code</TableHead>
-                <TableHead>Height</TableHead>
-                <TableHead>Deny Fact</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {playersTeam2.map((player, index) => (
-                <TableRow key={index}>
-                  <TableCell>{player.name}</TableCell>
-                  <TableCell>{player.position}</TableCell>
-                  <TableCell>{player.poss_fact}</TableCell>
-                  <TableCell>{player.two_pt_fg_pct}</TableCell>
-                  <TableCell>{player.ft_pct}</TableCell>
-                  <TableCell>{player.pct_shot}</TableCell>
-                  <TableCell>{player.three_pt_pct_shot}</TableCell>
-                  <TableCell>{player.pct_fouled}</TableCell>
-                  <TableCell>{player.pct_to}</TableCell>
-                  <TableCell>{player.pct_pass}</TableCell>
-                  <TableCell>{player.off_reb}</TableCell>
-                  <TableCell>{player.def_reb}</TableCell>
-                  <TableCell>{player.def_fg_pct}</TableCell>
-                  <TableCell>{player.pct_pf}</TableCell>
-                  <TableCell>{player.pct_st}</TableCell>
-                  <TableCell>{player.pct_bs}</TableCell>
-                  <TableCell>{player.year}</TableCell>
-                  <TableCell>{player.team_code}</TableCell>
-                  <TableCell>{player.height}</TableCell>
-                  <TableCell>{player.deny_fact}</TableCell>
+        {playersTeam2.length > 0 && (
+          <div className="w-1/2">
+            <h2 className="text-xl font-bold mt-8 mb-4">{selectedTeams2?.teams}</h2>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Position</TableHead>
+                  <TableHead>Poss Fact</TableHead>
+                  <TableHead>2pt FG Pct</TableHead>
+                  <TableHead>FT Pct</TableHead>
+                  <TableHead>Pct Shot</TableHead>
+                  <TableHead>3pt Pct Shot</TableHead>
+                  <TableHead>Pct Fouled</TableHead>
+                  <TableHead>Pct TO</TableHead>
+                  <TableHead>Pct Pass</TableHead>
+                  <TableHead>Off Reb</TableHead>
+                  <TableHead>Def Reb</TableHead>
+                  <TableHead>Def FG Pct</TableHead>
+                  <TableHead>Pct PF</TableHead>
+                  <TableHead>Pct ST</TableHead>
+                  <TableHead>Pct BS</TableHead>
+                  <TableHead>Year</TableHead>
+                  <TableHead>Team Code</TableHead>
+                  <TableHead>Height</TableHead>
+                  <TableHead>Deny Fact</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-      )}
+              </TableHeader>
+              <TableBody>
+                {playersTeam2.map((player, index) => (
+                  <TableRow key={index}>
+                    <TableCell>{player.name}</TableCell>
+                    <TableCell>{player.position}</TableCell>
+                    <TableCell>{player.poss_fact}</TableCell>
+                    <TableCell>{player.two_pt_fg_pct}</TableCell>
+                    <TableCell>{player.ft_pct}</TableCell>
+                    <TableCell>{player.pct_shot}</TableCell>
+                    <TableCell>{player.three_pt_pct_shot}</TableCell>
+                    <TableCell>{player.pct_fouled}</TableCell>
+                    <TableCell>{player.pct_to}</TableCell>
+                    <TableCell>{player.pct_pass}</TableCell>
+                    <TableCell>{player.off_reb}</TableCell>
+                    <TableCell>{player.def_reb}</TableCell>
+                    <TableCell>{player.def_fg_pct}</TableCell>
+                    <TableCell>{player.pct_pf}</TableCell>
+                    <TableCell>{player.pct_st}</TableCell>
+                    <TableCell>{player.pct_bs}</TableCell>
+                    <TableCell>{player.year}</TableCell>
+                    <TableCell>{player.team_code}</TableCell>
+                    <TableCell>{player.height}</TableCell>
+                    <TableCell>{player.deny_fact}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
