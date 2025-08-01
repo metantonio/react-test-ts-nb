@@ -64,6 +64,10 @@ interface PlayerCharResponse {
   data: PlayerChar[];
 }
 
+interface PlayPredictResponse {
+  data: PlayerChar[];
+}
+
 
 const GameSetup = () => {
   const { fetchWithAuth, isLoading } = useApi();
@@ -156,7 +160,7 @@ const GameSetup = () => {
   const handleFetchPlayersTeam1 = async () => {
     setError(null);
     try {
-      const response = await fetchWithAuth('http://api.bballsports.com/simulationAPI/get_players_chars.php', 'POST', {...selectedLeague, team_name: selectedTeams1?.teams});
+      const response = await fetchWithAuth('http://api.bballsports.com/simulationAPI/get_players_chars.php', 'POST', { ...selectedLeague, team_name: selectedTeams1?.teams });
       if (!response.ok) {
         const err: Message = await response.json();
         setError(`error: ${err.message}`);
@@ -173,13 +177,31 @@ const GameSetup = () => {
   const handleFetchPlayersTeam2 = async () => {
     setError(null);
     try {
-      const response = await fetchWithAuth('http://api.bballsports.com/simulationAPI/get_players_chars.php', 'POST', {...selectedLeague, team_name: selectedTeams2?.teams});
+      const response = await fetchWithAuth('http://api.bballsports.com/simulationAPI/get_players_chars.php', 'POST', { ...selectedLeague, team_name: selectedTeams2?.teams });
       if (!response.ok) {
         const err: Message = await response.json();
         setError(`error: ${err.message}`);
         throw new Error('Failed to fetch teams.');
       }
       const data: PlayerCharResponse = await response.json();
+      setPlayersTeam2(data.data);
+    } catch (err: any) {
+      //console.log("error: ", err)
+      setError(`${err}`);
+    }
+  };
+
+  const handleSingleGameInitial = async () => {
+    setError(null);
+    try {
+      const response = await fetchWithAuth('http://api.bballsports.com/simulationAPI/playsinglegame_initial.php', 'POST', { homeaway: "away", awayleague_name: selectedLeague?.league_name, homeleague_name: selectedLeague?.league_name, hometeam: selectedTeams2?.teams, awayteam: selectedTeams1?.teams });
+      if (!response.ok) {
+        const err: Message = await response.json();
+        setError(`error: ${err.message}`);
+        throw new Error('Failed to fetch teams.');
+      }
+      const data: PlayerCharResponse = await response.json();
+      console.log("play single game initial: ", data)
       setPlayersTeam2(data.data);
     } catch (err: any) {
       //console.log("error: ", err)
@@ -224,6 +246,17 @@ const GameSetup = () => {
     }
   }, [selectedTeams2])
 
+  useEffect(() => {
+    const loadGameInitial = async () => {
+      const loadedData = await handleSingleGameInitial()
+      return loadedData;
+    }
+
+    if (selectedTeams1 && selectedTeams2) {
+      loadGameInitial()
+    }
+  }, [selectedTeams1, selectedTeams2])
+
   return (
     <div className="p-4">
       <Button onClick={goLoginPage} disabled={isLoading}>
@@ -245,15 +278,15 @@ const GameSetup = () => {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent style={{ backgroundColor: 'var(--bg-color-component)' }} className="h-[200px] overflow-y-auto">
-          {leagues && leagues.map((league, index) => (
-            <DropdownMenuItem key={index} onSelect={() => setSelectedLeague(league)}>
-              {league.league_name}
-            </DropdownMenuItem>
-          ))}
-        </DropdownMenuContent>
+            {leagues && leagues.map((league, index) => (
+              <DropdownMenuItem key={index} onSelect={() => setSelectedLeague(league)}>
+                {league.league_name}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
         </DropdownMenu>
 
-        <label htmlFor="teams-dropdown-1">Team 1</label>
+        <label htmlFor="teams-dropdown-1">Away Team</label>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button id="teams-dropdown-1" variant="outline" className="mt-4 ml-4" disabled={leagues.length === 0}>
@@ -261,15 +294,19 @@ const GameSetup = () => {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent style={{ backgroundColor: 'var(--bg-color-component)' }} className="h-[200px] overflow-y-auto">
-          {teams && teams.map((item, index) => (
-            <DropdownMenuItem key={index} onSelect={() => setSelectedTeams1(item)}>
-              {item.teams}
-            </DropdownMenuItem>
-          ))}
-        </DropdownMenuContent>
+            {teams && teams.map((item, index) => (
+              <DropdownMenuItem key={index} onSelect={() => {
+                if (selectedLeague) {
+                  setSelectedTeams1(item)
+                }
+              }}>
+                {item.teams}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
         </DropdownMenu>
 
-        <label htmlFor="teams-dropdown-2">Team 2</label>
+        <label htmlFor="teams-dropdown-2">Home Team</label>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button id="teams-dropdown-2" variant="outline" className="mt-4 ml-4" disabled={leagues.length === 0}>
@@ -277,12 +314,16 @@ const GameSetup = () => {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent style={{ backgroundColor: 'var(--bg-color-component)' }} className="h-[200px] overflow-y-auto">
-          {teams && teams.map((item, index) => (
-            <DropdownMenuItem key={index} onSelect={() => setSelectedTeams2(item)}>
-              {item.teams}
-            </DropdownMenuItem>
-          ))}
-        </DropdownMenuContent>
+            {teams && teams.map((item, index) => (
+              <DropdownMenuItem key={index} onSelect={() => {
+                if (selectedLeague) {
+                  setSelectedTeams2(item)
+                }
+              }}>
+                {item.teams}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
         </DropdownMenu>
       </div>
 
