@@ -8,6 +8,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import Scoreboard from '@/components/Scoreboard';
+import PlayerStatsTable from '@/components/PlayerStatsTable';
 import {
   Table,
   TableHeader,
@@ -162,11 +164,10 @@ interface ScoreBoardResponse {
   scoreboard: ScoreBoard[];
 }
 
-
 const GameSetup = () => {
   const { fetchWithAuth, isLoading } = useApi();
   const [leagues, setLeagues] = useState<League[]>([{ league_name: "dummy data league" }]);
-  const [scoreBoard, setScoreBoard] = useState<ScoreBoard[]>([]);
+  const [scoreBoard, setScoreBoard] = useState<ScoreBoard | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [selectedLeague, setSelectedLeague] = useState<League | null>(null);
   const [teams, setTeams] = useState<Teams[]>([{ teams: "dummy data teams 1" }, { teams: "dummy data teams 2" }]);
@@ -231,7 +232,6 @@ const GameSetup = () => {
       const data: LeagueResponse = await response.json();
       setLeagues(data.data);
     } catch (err: any) {
-      //console.log("error: ", err)
       setError(`${err}`);
     }
   };
@@ -248,7 +248,55 @@ const GameSetup = () => {
       const data: TeamsResponse = await response.json();
       setTeams(data.data);
     } catch (err: any) {
-      //console.log("error: ", err)
+      setError(`${err}`);
+    }
+  };
+
+  const handleSingleGameInitial = async () => {
+    setError(null);
+    setIsGameInitial(true);
+    try {
+      const response = await fetchWithAuth('http://api.bballsports.com/simulationAPI/playsinglegame_initial.php', 'POST', { homeaway: "away", awayleague_name: selectedLeague?.league_name, homeleague_name: selectedLeague?.league_name, hometeam: selectedTeams2?.teams, awayteam: selectedTeams1?.teams });
+      if (!response.ok) {
+        const err: Message = await response.json();
+        setError(`error: ${err.message}`);
+        throw new Error('Failed to setup the initial game.');
+      }
+      await handleFetchScoreBoard();
+    } catch (err: any) {
+      setError(`${err}`);
+    } finally {
+      setIsGameInitial(false);
+    }
+  };
+
+  const handleFetchScoreBoard = async () => {
+    setError(null);
+    try {
+      const response = await fetchWithAuth('http://api.bballsports.com/simulationAPI/get_singlegame_stats.php', 'POST');
+      if (!response.ok) {
+        const err: Message = await response.json();
+        setError(`error: ${err.message}`);
+        throw new Error('Failed to fetch teams.');
+      }
+      const data: ScoreBoardResponse = await response.json();
+      setScoreBoard(data.scoreboard[0]);
+    } catch (err: any) {
+      setError(`${err}`);
+    }
+  };
+
+  const handlePredictPlay = async () => {
+    setError(null);
+    try {
+      const response = await fetchWithAuth('http://api.bballsports.com/simulationAPI/playsinglegame_step.php', 'POST', { options: "4" });
+      if (!response.ok) {
+        const err: Message = await response.json();
+        setError(`error: ${err.message}`);
+        throw new Error('Failed to predict play.');
+      }
+      await handleFetchScoreBoard();
+    } catch (err: any) {
       setError(`${err}`);
     }
   };
@@ -287,64 +335,29 @@ const GameSetup = () => {
     }
   };
 
-  const handleSingleGameInitial = async () => {
-    setError(null);
-    setIsGameInitial(true);
-    try {
-      const response = await fetchWithAuth('http://api.bballsports.com/simulationAPI/playsinglegame_initial.php', 'POST', { homeaway: "away", awayleague_name: selectedLeague?.league_name, homeleague_name: selectedLeague?.league_name, hometeam: selectedTeams2?.teams, awayteam: selectedTeams1?.teams });
-      if (!response.ok) {
-        const err: Message = await response.json();
-        setError(`error: ${err.message}`);
-        throw new Error('Failed to setup the initial game.');
-      }
-      const data: PlayerCharResponse = await response.json();
-      console.log("play single game initial: ", data)
-      setPlayersTeam2(data.data);
-      const stepResponse = await fetchWithAuth('http://api.bballsports.com/simulationAPI/playsinglegame_step.php', 'POST', { options: "4" });
-      if (!stepResponse.ok) {
-        const err: Message = await stepResponse.json();
-        setError(`error: ${err.message}`);
-        throw new Error('Failed to setup game step.');
-      }
-    } catch (err: any) {
-      //console.log("error: ", err)
-      setError(`${err}`);
-      setIsGameInitial(false)
-    }
-    setIsGameInitial(false)
-  };
-
-  const handleFetchScoreBoard = async () => {
-    setError(null);
-    try {
-      const response = await fetchWithAuth('http://api.bballsports.com/simulationAPI/get_singlegame_stats.php', 'POST');
-      if (!response.ok) {
-        const err: Message = await response.json();
-        setError(`error: ${err.message}`);
-        throw new Error('Failed to fetch teams.');
-      }
-      const data: ScoreBoardResponse = await response.json();
-      setScoreBoard(data.scoreboard);
-    } catch (err: any) {
-      //console.log("error: ", err)
-      setError(`${err}`);
-    }
-  };
-
   const goLoginPage = () => {
     navigate('/')
   }
 
   useEffect(() => {
     const loadTeams = async () => {
-      const loadedTeams = await handleFetchTeams()
-      return loadedTeams;
+      await handleFetchTeams();
     }
 
     if (selectedLeague) {
-      loadTeams()
+      loadTeams();
     }
-  }, [selectedLeague])
+  }, [selectedLeague]);
+
+  useEffect(() => {
+    const loadGameInitial = async () => {
+      await handleSingleGameInitial();
+    }
+
+    if (selectedTeams1 && selectedTeams2) {
+      loadGameInitial();
+    }
+  }, [selectedTeams1, selectedTeams2]);
 
   useEffect(() => {
     const loadPlayers = async () => {
@@ -367,17 +380,6 @@ const GameSetup = () => {
       loadPlayers()
     }
   }, [selectedTeams2])
-
-  useEffect(() => {
-    const loadGameInitial = async () => {
-      const loadedData = await handleSingleGameInitial()
-      return loadedData;
-    }
-
-    if (selectedTeams1 && selectedTeams2) {
-      loadGameInitial()
-    }
-  }, [selectedTeams1, selectedTeams2])
 
   return (
     <div className="p-4">
@@ -411,17 +413,13 @@ const GameSetup = () => {
         <label htmlFor="teams-dropdown-1">Away Team</label>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button id="teams-dropdown-1" variant="outline" className="mt-4 ml-4" disabled={leagues.length === 0}>
-              {selectedLeague && selectedTeams1 ? selectedTeams1.teams : selectedLeague ? "Select a Team 1" : "Select a League first"}
+            <Button id="teams-dropdown-1" variant="outline" className="mt-4 ml-4" disabled={teams.length === 0}>
+              {selectedTeams1 ? selectedTeams1.teams : "Select a Team 1"}
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent style={{ backgroundColor: 'var(--bg-color-component)' }} className="h-[200px] overflow-y-auto">
             {teams && teams.map((item, index) => (
-              <DropdownMenuItem key={index} onSelect={() => {
-                if (selectedLeague) {
-                  setSelectedTeams1(item)
-                }
-              }}>
+              <DropdownMenuItem key={index} onSelect={() => setSelectedTeams1(item)}>
                 {item.teams}
               </DropdownMenuItem>
             ))}
@@ -431,28 +429,39 @@ const GameSetup = () => {
         <label htmlFor="teams-dropdown-2">Home Team</label>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button id="teams-dropdown-2" variant="outline" className="mt-4 ml-4" disabled={leagues.length === 0}>
-              {selectedLeague && selectedTeams2 ? selectedTeams2.teams : selectedLeague ? "Select a Team 2" : "Select a League first"}
+            <Button id="teams-dropdown-2" variant="outline" className="mt-4 ml-4" disabled={teams.length === 0}>
+              {selectedTeams2 ? selectedTeams2.teams : "Select a Team 2"}
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent style={{ backgroundColor: 'var(--bg-color-component)' }} className="h-[200px] overflow-y-auto">
             {teams && teams.map((item, index) => (
-              <DropdownMenuItem key={index} onSelect={() => {
-                if (selectedLeague) {
-                  setSelectedTeams2(item)
-                }
-              }}>
+              <DropdownMenuItem key={index} onSelect={() => setSelectedTeams2(item)}>
                 {item.teams}
               </DropdownMenuItem>
             ))}
           </DropdownMenuContent>
         </DropdownMenu>
 
-        {isGameInitial ? <>
-          <Button id="simulation-btn" variant="default" className="mt-4 ml-4" disabled={leagues.length === 0} onClick={handleFetchScoreBoard}>
-            Simulate the Game
+        {isGameInitial && (
+          <Button id="simulation-btn" variant="default" className="mt-4 ml-4" onClick={handlePredictPlay} disabled={isLoading}>
+            Simulate Next Play
           </Button>
-        </> : <></>}
+        )}
+      </div>
+
+      {scoreBoard && (
+        <div className="mt-8">
+          <Scoreboard scoreboardData={scoreBoard} awayTeamName={selectedTeams1?.teams || 'Away'} homeTeamName={selectedTeams2?.teams || 'Home'} />
+        </div>
+      )}
+
+      <div className="flex flex-row gap-8 mt-8">
+        {scoreBoard && scoreBoard.away_players && (
+          <PlayerStatsTable teamName={selectedTeams1?.teams || 'Away'} players={scoreBoard.away_players} />
+        )}
+        {scoreBoard && scoreBoard.home_players && (
+          <PlayerStatsTable teamName={selectedTeams2?.teams || 'Home'} players={scoreBoard.home_players} />
+        )}
       </div>
 
       <div className="flex flex-row gap-4">
