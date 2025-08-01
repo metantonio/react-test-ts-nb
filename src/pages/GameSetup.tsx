@@ -32,10 +32,12 @@ interface TeamsResponse {
 
 const GameSetup = () => {
   const { fetchWithAuth, isLoading } = useApi();
-  const [leagues, setLeagues] = useState<League[]>([{league_name: "dummy data"}]);
+  const [leagues, setLeagues] = useState<League[]>([{league_name: "dummy data league"}]);
   const [error, setError] = useState<string | null>(null);
   const [selectedLeague, setSelectedLeague] = useState<League | null>(null);
-  const [teams, setTeams] = useState<Teams[]>([{teams: "dummy data"}]);
+  const [teams, setTeams] = useState<Teams[]>([{teams: "dummy data teams 1"}, {teams: "dummy data teams 2"}]);
+  const [selectedTeams1, setSelectedTeams1] = useState<Teams | null>(null);
+  const [selectedTeams2, setSelectedTeams2] = useState<Teams | null>(null);
   const navigate = useNavigate();
 
   const handleFetchLeagues = async () => {
@@ -98,6 +100,21 @@ const GameSetup = () => {
           {leagues.map((league, index) => (
             <DropdownMenuItem key={index} onSelect={() => setSelectedLeague(league)}>
               {league.league_name}
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="outline" className="mt-4 ml-4" disabled={leagues.length === 0}>
+            {selectedLeague && selectedTeams1? selectedTeams1.teams : selectedLeague? "Select a Team" : "Select a League first"}
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          {teams.map((item, index) => (
+            <DropdownMenuItem key={index} onSelect={() => setSelectedTeams1(item)}>
+              {item.teams}
             </DropdownMenuItem>
           ))}
         </DropdownMenuContent>
