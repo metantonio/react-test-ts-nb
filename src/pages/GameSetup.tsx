@@ -29,15 +29,86 @@ interface TeamsResponse {
   data: Teams[];
 }
 
+interface PlayerChar {
+  name: string;
+  position: string;
+  poss_fact: string;
+  two_pt_fg_pct: string;
+  ft_pct: string;
+  pct_shot: string;
+  three_pt_pct_shot: string;
+  pct_fouled: string;
+  pct_to: string;
+  pct_pass: string;
+  off_reb: string;
+  def_reb: string;
+  def_fg_pct: string;
+  pct_pf: string;
+  pct_st: string;
+  pct_bs: string;
+  year: string;
+  team_code: string;
+  height: string;
+  deny_fact: string;
+}
+
+interface PlayerCharResponse {
+  data: PlayerChar[];
+}
+
 
 const GameSetup = () => {
   const { fetchWithAuth, isLoading } = useApi();
-  const [leagues, setLeagues] = useState<League[]>([{league_name: "dummy data league"}]);
+  const [leagues, setLeagues] = useState<League[]>([{ league_name: "dummy data league" }]);
   const [error, setError] = useState<string | null>(null);
   const [selectedLeague, setSelectedLeague] = useState<League | null>(null);
-  const [teams, setTeams] = useState<Teams[]>([{teams: "dummy data teams 1"}, {teams: "dummy data teams 2"}]);
+  const [teams, setTeams] = useState<Teams[]>([{ teams: "dummy data teams 1" }, { teams: "dummy data teams 2" }]);
   const [selectedTeams1, setSelectedTeams1] = useState<Teams | null>(null);
   const [selectedTeams2, setSelectedTeams2] = useState<Teams | null>(null);
+  const [playersTeam1, setPlayersTeam1] = useState<PlayerChar[]>([{
+    name: "dummy data",
+    position: "dummy data",
+    poss_fact: "dummy data",
+    two_pt_fg_pct: "dummy data",
+    ft_pct: "dummy data",
+    pct_shot: "dummy data",
+    three_pt_pct_shot: "dummy data",
+    pct_fouled: "dummy data",
+    pct_to: "dummy data",
+    pct_pass: "dummy data",
+    off_reb: "dummy data",
+    def_reb: "dummy data",
+    def_fg_pct: "dummy data",
+    pct_pf: "dummy data",
+    pct_st: "dummy data",
+    pct_bs: "dummy data",
+    year: "dummy data",
+    team_code: "dummy data",
+    height: "dummy data",
+    deny_fact: "dummy data",
+  }]);
+  const [playersTeam2, setPlayersTeam2] = useState<PlayerChar[]>([{
+    name: "dummy data",
+    position: "dummy data",
+    poss_fact: "dummy data",
+    two_pt_fg_pct: "dummy data",
+    ft_pct: "dummy data",
+    pct_shot: "dummy data",
+    three_pt_pct_shot: "dummy data",
+    pct_fouled: "dummy data",
+    pct_to: "dummy data",
+    pct_pass: "dummy data",
+    off_reb: "dummy data",
+    def_reb: "dummy data",
+    def_fg_pct: "dummy data",
+    pct_pf: "dummy data",
+    pct_st: "dummy data",
+    pct_bs: "dummy data",
+    year: "dummy data",
+    team_code: "dummy data",
+    height: "dummy data",
+    deny_fact: "dummy data",
+  }]);
   const navigate = useNavigate();
 
   const handleFetchLeagues = async () => {
@@ -74,20 +145,76 @@ const GameSetup = () => {
     }
   };
 
+  const handleFetchPlayersTeam1 = async () => {
+    setError(null);
+    try {
+      const response = await fetchWithAuth('http://api.bballsports.com/simulationAPI/get_players_chars.php', 'POST', {...selectedLeague, team_name: selectedTeams1?.teams});
+      if (!response.ok) {
+        const err: Message = await response.json();
+        setError(`error: ${err.message}`);
+        throw new Error('Failed to fetch teams.');
+      }
+      const data: PlayerCharResponse = await response.json();
+      setPlayersTeam1(data.data);
+    } catch (err: any) {
+      //console.log("error: ", err)
+      setError(`${err}`);
+    }
+  };
+
+  const handleFetchPlayersTeam2 = async () => {
+    setError(null);
+    try {
+      const response = await fetchWithAuth('http://api.bballsports.com/simulationAPI/get_players_chars.php', 'POST', {...selectedLeague, team_name: selectedTeams2?.teams});
+      if (!response.ok) {
+        const err: Message = await response.json();
+        setError(`error: ${err.message}`);
+        throw new Error('Failed to fetch teams.');
+      }
+      const data: PlayerCharResponse = await response.json();
+      setPlayersTeam2(data.data);
+    } catch (err: any) {
+      //console.log("error: ", err)
+      setError(`${err}`);
+    }
+  };
+
   const goLoginPage = () => {
     navigate('/')
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     const loadTeams = async () => {
       const loadedTeams = await handleFetchTeams()
       return loadedTeams;
     }
 
-    if(selectedLeague){
+    if (selectedLeague) {
       loadTeams()
     }
   }, [selectedLeague])
+
+  useEffect(() => {
+    const loadPlayers = async () => {
+      const loadedData = await handleFetchPlayersTeam1()
+      return loadedData;
+    }
+
+    if (selectedTeams1) {
+      loadPlayers()
+    }
+  }, [selectedTeams1])
+
+  useEffect(() => {
+    const loadPlayers = async () => {
+      const loadedData = await handleFetchPlayersTeam2()
+      return loadedData;
+    }
+
+    if (selectedTeams2) {
+      loadPlayers()
+    }
+  }, [selectedTeams2])
 
   return (
     <div className="p-4">
@@ -119,12 +246,27 @@ const GameSetup = () => {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="outline" className="mt-4 ml-4" disabled={leagues.length === 0}>
-            {selectedLeague && selectedTeams1? selectedTeams1.teams : selectedLeague? "Select a Team" : "Select a League first"}
+            {selectedLeague && selectedTeams1 ? selectedTeams1.teams : selectedLeague ? "Select a Team 1" : "Select a League first"}
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="h-[200px] overflow-y-auto">
           {teams && teams.map((item, index) => (
             <DropdownMenuItem key={index} onSelect={() => setSelectedTeams1(item)}>
+              {item.teams}
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="outline" className="mt-4 ml-4" disabled={leagues.length === 0}>
+            {selectedLeague && selectedTeams2 ? selectedTeams2.teams : selectedLeague ? "Select a Team 2" : "Select a League first"}
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="h-[200px] overflow-y-auto">
+          {teams && teams.map((item, index) => (
+            <DropdownMenuItem key={index} onSelect={() => setSelectedTeams2(item)}>
               {item.teams}
             </DropdownMenuItem>
           ))}
