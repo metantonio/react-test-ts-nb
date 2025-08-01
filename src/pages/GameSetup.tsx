@@ -340,6 +340,10 @@ const GameSetup = () => {
   }
 
   useEffect(() => {
+    handleFetchLeagues()
+  }, [])
+
+  useEffect(() => {
     const loadTeams = async () => {
       await handleFetchTeams();
     }
@@ -387,9 +391,9 @@ const GameSetup = () => {
         Go to Login
       </Button>
       <h1 className="text-2xl font-bold mb-4">NBA Leagues Names</h1>
-      <Button onClick={handleFetchLeagues} disabled={isLoading}>
+      {/* <Button onClick={handleFetchLeagues} disabled={isLoading}>
         {isLoading ? 'Fetching...' : 'Fetch Leagues'}
-      </Button>
+      </Button> */}
 
       {error && <p className="text-red-500 mt-4">{error}</p>}
 
@@ -442,11 +446,11 @@ const GameSetup = () => {
           </DropdownMenuContent>
         </DropdownMenu>
 
-        {isGameInitial && (
-          <Button id="simulation-btn" variant="default" className="mt-4 ml-4" onClick={handlePredictPlay} disabled={isLoading}>
-            Simulate Next Play
-          </Button>
-        )}
+
+        <Button id="simulation-btn" variant="default" className="mt-4 ml-4" onClick={handlePredictPlay} disabled={isLoading}>
+          Simulate Next Play
+        </Button>
+
       </div>
 
       {scoreBoard && (
