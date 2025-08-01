@@ -107,7 +107,7 @@ const GameSetup = () => {
             {selectedLeague ? selectedLeague.league_name : "Select a League"}
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent>
+        <DropdownMenuContent className="h-[200px] overflow-y-auto">
           {leagues && leagues.map((league, index) => (
             <DropdownMenuItem key={index} onSelect={() => setSelectedLeague(league)}>
               {league.league_name}
@@ -122,7 +122,7 @@ const GameSetup = () => {
             {selectedLeague && selectedTeams1? selectedTeams1.teams : selectedLeague? "Select a Team" : "Select a League first"}
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent>
+        <DropdownMenuContent className="h-[200px] overflow-y-auto">
           {teams && teams.map((item, index) => (
             <DropdownMenuItem key={index} onSelect={() => setSelectedTeams1(item)}>
               {item.teams}
