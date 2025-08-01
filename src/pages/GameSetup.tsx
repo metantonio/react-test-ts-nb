@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApi } from '@/contexts/ApiContext';
 import { Button } from '@/components/ui/button';
@@ -9,13 +9,26 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 
+interface Message {
+  message: string;
+}
+
 interface League {
   league_name: string;
 }
 
-interface ApiResponse {
+interface LeagueResponse {
   data: League[];
 }
+
+interface Teams {
+  teams: string;
+}
+
+interface TeamsResponse {
+  data: Teams[];
+}
+
 
 const GameSetup = () => {
   const { fetchWithAuth, isLoading } = useApi();
@@ -29,12 +42,15 @@ const GameSetup = () => {
     try {
       const response = await fetchWithAuth('http://api.bballsports.com/simulationAPI/get_leagues.php', 'POST');
       if (!response.ok) {
+        const err: Message = await response.json();
+        setError(`error: ${err.message}`);
         throw new Error('Failed to fetch leagues.');
       }
-      const data: ApiResponse = await response.json();
+      const data: LeagueResponse = await response.json();
       setLeagues(data.data);
     } catch (err: any) {
-      setError(err.message);
+      //console.log("error: ", err)
+      setError(`${err}`);
     }
   };
 
