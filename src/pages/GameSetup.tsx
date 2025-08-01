@@ -60,7 +60,7 @@ const GameSetup = () => {
   const handleFetchTeams = async () => {
     setError(null);
     try {
-      const response = await fetchWithAuth('http://api.bballsports.com/simulationAPI/get_teams.php', 'POST', {league_name: selectedLeague});
+      const response = await fetchWithAuth('http://api.bballsports.com/simulationAPI/get_teams.php', 'POST', selectedLeague);
       if (!response.ok) {
         const err: Message = await response.json();
         setError(`error: ${err.message}`);
@@ -77,6 +77,17 @@ const GameSetup = () => {
   const goLoginPage = () => {
     navigate('/')
   }
+
+  useEffect(()=>{
+    const loadTeams = async () => {
+      const loadedTeams = await handleFetchTeams()
+      return loadedTeams;
+    }
+
+    if(selectedLeague){
+      loadTeams()
+    }
+  }, [selectedLeague])
 
   return (
     <div className="p-4">
@@ -97,7 +108,7 @@ const GameSetup = () => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          {leagues.map((league, index) => (
+          {leagues && leagues.map((league, index) => (
             <DropdownMenuItem key={index} onSelect={() => setSelectedLeague(league)}>
               {league.league_name}
             </DropdownMenuItem>
@@ -112,7 +123,7 @@ const GameSetup = () => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          {teams.map((item, index) => (
+          {teams && teams.map((item, index) => (
             <DropdownMenuItem key={index} onSelect={() => setSelectedTeams1(item)}>
               {item.teams}
             </DropdownMenuItem>
