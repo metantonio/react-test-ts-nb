@@ -77,6 +77,7 @@ const GameSetup = () => {
   const [teams, setTeams] = useState<Teams[]>([{ teams: "dummy data teams 1" }, { teams: "dummy data teams 2" }]);
   const [selectedTeams1, setSelectedTeams1] = useState<Teams | null>(null);
   const [selectedTeams2, setSelectedTeams2] = useState<Teams | null>(null);
+  const [isGameInitial, setIsGameInitial] = useState<boolean>(false);
   const [playersTeam1, setPlayersTeam1] = useState<PlayerChar[]>([{
     name: "dummy data",
     position: "dummy data",
@@ -193,6 +194,7 @@ const GameSetup = () => {
 
   const handleSingleGameInitial = async () => {
     setError(null);
+    setIsGameInitial(true);
     try {
       const response = await fetchWithAuth('http://api.bballsports.com/simulationAPI/playsinglegame_initial.php', 'POST', { homeaway: "away", awayleague_name: selectedLeague?.league_name, homeleague_name: selectedLeague?.league_name, hometeam: selectedTeams2?.teams, awayteam: selectedTeams1?.teams });
       if (!response.ok) {
@@ -206,7 +208,9 @@ const GameSetup = () => {
     } catch (err: any) {
       //console.log("error: ", err)
       setError(`${err}`);
+      setIsGameInitial(false)
     }
+    setIsGameInitial(false)
   };
 
   const goLoginPage = () => {
@@ -325,6 +329,13 @@ const GameSetup = () => {
             ))}
           </DropdownMenuContent>
         </DropdownMenu>
+
+        {isGameInitial ? <>
+          <label htmlFor="teams-dropdown-2">Simulate Game</label>
+          <Button id="teams-dropdown-2" variant="outline" className="mt-4 ml-4" disabled={leagues.length === 0}>
+            "Select a Team 2"
+          </Button>
+        </> : <></>}
       </div>
 
       <div className="flex flex-row gap-4">
