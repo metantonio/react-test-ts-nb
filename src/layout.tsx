@@ -11,7 +11,7 @@ import { ApiProvider } from "@/contexts/ApiContext";
 //Import of views or components:
 import App from "./App";
 import LoginAPI from "./LoginAPI";
-import LeagueName from "./pages/LeagueName";
+import GameSetup from "./pages/GameSetup";
 
 // Layouts
 import AuthLayout from "./components/LoginLayout";
@@ -34,7 +34,7 @@ const AppContent = () => {
             <Routes>
                 <Route path="/login" element={<Navigate to="/" replace />} />
                 <Route path="/" element={<LoginAPI />} />
-                <Route path="/league" element={<LeagueName />} />
+                <Route path="/league" element={<GameSetup />} />
                 <Route path="*" element={<LoginAPI />} />
             </Routes>
         </Layout>
