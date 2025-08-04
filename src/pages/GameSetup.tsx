@@ -570,7 +570,7 @@ const GameSetup = () => {
         </DropdownMenu>
 
 
-        <Button id="simulation-btn" variant="default" className="mt-4 ml-4" onClick={(e) => {
+        <Button id="simulation-btn" variant="default" className="mt-4 ml-4" onClick={() => {
           handleFetchScoreBoard()
           handleFetchPlayByPlay()
           handleFetchBoxScore()
