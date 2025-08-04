@@ -411,7 +411,7 @@ const GameSetup = () => {
         setError(`error: ${err.message}`);
         throw new Error('Failed to fetch leagues.');
       }
-      const data: PlayPredictResponse = await response.json();
+      const data: UpdatePlayByPlayResponse = await response.json();
       setPlayByPlay(data.playbyplay);
     } catch (err: any) {
       setError(`${err}`);
