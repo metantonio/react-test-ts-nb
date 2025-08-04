@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, ReactNode, useCallback } from 'react';
+import { useAppState, AppStateSlice } from './AppStateContext'; // Import the hook and type
 
 export interface ApiCredentials {
   apiKey: string;
@@ -7,7 +8,8 @@ export interface ApiCredentials {
 
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
-interface ApiContextType {
+// Combine ApiContextType with AppStateSlice to create a single, unified context type
+interface CombinedContextType extends AppStateSlice {
   api: ApiCredentials | null;
   isLoading: boolean;
   isAuthenticated: boolean;
@@ -16,12 +18,15 @@ interface ApiContextType {
   fetchWithAuth: (url: string, method?: HttpMethod, body?: any) => Promise<Response>;
 }
 
-const ApiContext = createContext<ApiContextType | undefined>(undefined);
+const ApiContext = createContext<CombinedContextType | undefined>(undefined);
 
 export const ApiProvider = ({ children }: { children: ReactNode }) => {
   const [api, setApi] = useState<ApiCredentials | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+
+  // Use the custom hook to get app state and actions
+  const appState = useAppState();
 
   const login = (apiData: ApiCredentials) => {
     setApi(apiData);
@@ -62,15 +67,19 @@ export const ApiProvider = ({ children }: { children: ReactNode }) => {
     return fetch(url, config);
   }, [api]);
 
+  // Combine the API state/actions with the App state/actions
+  const contextValue: CombinedContextType = {
+    ...appState,
+    api,
+    isLoading,
+    isAuthenticated,
+    login,
+    logout,
+    fetchWithAuth,
+  };
+
   return (
-    <ApiContext.Provider value={{
-      api,
-      isLoading,
-      isAuthenticated,
-      login,
-      logout,
-      fetchWithAuth,
-    }}>
+    <ApiContext.Provider value={contextValue}>
       {children}
     </ApiContext.Provider>
   );
