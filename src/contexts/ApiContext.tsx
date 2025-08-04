@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, ReactNode, useCallback } from 'react';
-import { useAppState, AppStateSlice } from './AppStateContext'; // Import the hook and type
+import { useAppState, AppStateSlice } from './AppStateContext';
+import { useNotificationState, NotificationSlice } from './NotificationContext';
 
 export interface ApiCredentials {
   apiKey: string;
@@ -8,8 +9,8 @@ export interface ApiCredentials {
 
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
-// Combine ApiContextType with AppStateSlice to create a single, unified context type
-interface CombinedContextType extends AppStateSlice {
+// Combine all context types into a single, unified context type
+interface CombinedContextType extends AppStateSlice, NotificationSlice {
   api: ApiCredentials | null;
   isLoading: boolean;
   isAuthenticated: boolean;
@@ -25,8 +26,9 @@ export const ApiProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
-  // Use the custom hook to get app state and actions
+  // Use the custom hooks to get state and actions
   const appState = useAppState();
+  const notificationState = useNotificationState();
 
   const login = (apiData: ApiCredentials) => {
     setApi(apiData);
@@ -67,9 +69,10 @@ export const ApiProvider = ({ children }: { children: ReactNode }) => {
     return fetch(url, config);
   }, [api]);
 
-  // Combine the API state/actions with the App state/actions
+  // Combine all state and actions into a single context value
   const contextValue: CombinedContextType = {
     ...appState,
+    ...notificationState,
     api,
     isLoading,
     isAuthenticated,
