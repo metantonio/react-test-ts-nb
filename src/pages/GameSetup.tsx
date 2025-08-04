@@ -201,7 +201,7 @@ const teamLogos: { [key: string]: string } = {
 
 const GameSetup = () => {
   const { fetchWithAuth, isLoading } = useApi();
-  const [leagues, setLeagues] = useState<League[]>([{ league_name: "dummy data league" }]);
+  const [leagues, setLeagues] = useState<League[]>([]);
   const [scoreBoard, setScoreBoard] = useState<ScoreBoard | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [selectedLeague, setSelectedLeague] = useState<League | null>(null);
@@ -210,48 +210,48 @@ const GameSetup = () => {
   const [selectedTeams2, setSelectedTeams2] = useState<Teams | null>(null);
   const [isGameInitial, setIsGameInitial] = useState<boolean>(false);
   const [playersTeam1, setPlayersTeam1] = useState<PlayerChar[]>([{
-    name: "dummy data",
-    position: "dummy data",
-    poss_fact: "dummy data",
-    two_pt_fg_pct: "dummy data",
-    ft_pct: "dummy data",
-    pct_shot: "dummy data",
-    three_pt_pct_shot: "dummy data",
-    pct_fouled: "dummy data",
-    pct_to: "dummy data",
-    pct_pass: "dummy data",
-    off_reb: "dummy data",
-    def_reb: "dummy data",
-    def_fg_pct: "dummy data",
-    pct_pf: "dummy data",
-    pct_st: "dummy data",
-    pct_bs: "dummy data",
-    year: "dummy data",
-    team_code: "dummy data",
-    height: "dummy data",
-    deny_fact: "dummy data",
+    name: "",
+    position: "",
+    poss_fact: "",
+    two_pt_fg_pct: "",
+    ft_pct: "",
+    pct_shot: "",
+    three_pt_pct_shot: "",
+    pct_fouled: "",
+    pct_to: "",
+    pct_pass: "",
+    off_reb: "",
+    def_reb: "",
+    def_fg_pct: "",
+    pct_pf: "",
+    pct_st: "",
+    pct_bs: "",
+    year: "",
+    team_code: "",
+    height: "",
+    deny_fact: "",
   }]);
   const [playersTeam2, setPlayersTeam2] = useState<PlayerChar[]>([{
-    name: "dummy data",
-    position: "dummy data",
-    poss_fact: "dummy data",
-    two_pt_fg_pct: "dummy data",
-    ft_pct: "dummy data",
-    pct_shot: "dummy data",
-    three_pt_pct_shot: "dummy data",
-    pct_fouled: "dummy data",
-    pct_to: "dummy data",
-    pct_pass: "dummy data",
-    off_reb: "dummy data",
-    def_reb: "dummy data",
-    def_fg_pct: "dummy data",
-    pct_pf: "dummy data",
-    pct_st: "dummy data",
-    pct_bs: "dummy data",
-    year: "dummy data",
-    team_code: "dummy data",
-    height: "dummy data",
-    deny_fact: "dummy data",
+    name: "",
+    position: "",
+    poss_fact: "",
+    two_pt_fg_pct: "",
+    ft_pct: "",
+    pct_shot: "",
+    three_pt_pct_shot: "",
+    pct_fouled: "",
+    pct_to: "",
+    pct_pass: "",
+    off_reb: "",
+    def_reb: "",
+    def_fg_pct: "",
+    pct_pf: "",
+    pct_st: "",
+    pct_bs: "",
+    year: "",
+    team_code: "",
+    height: "",
+    deny_fact: "",
   }]);
   const navigate = useNavigate();
 
@@ -316,6 +316,28 @@ const GameSetup = () => {
       }
       const data: ScoreBoardResponse = await response.json();
       setScoreBoard(data.scoreboard[0]);
+    } catch (err: any) {
+      setError(`${err}`);
+    }
+  };
+
+  const handlePredictMode = async () => {
+    setError(null);
+    try {
+      const response = await fetchWithAuth('http://api.bballsports.com/simulationAPI/play_predict.php', 'POST', {
+        "league_name": selectedLeague?.league_name,
+        "numgames": "normal",
+        "homeaway": "both",
+        "gamemode": "predict",
+        "keeppbp": "N",
+        "gamearray": [{ "predicthome": selectedTeams2?.teams, "predictaway": selectedTeams1?.teams, "predictgames": "20" }]
+      });
+      if (!response.ok) {
+        const err: Message = await response.json();
+        setError(`error: ${err.message}`);
+        throw new Error('Failed to predict play.');
+      }
+      //await handleFetchScoreBoard();
     } catch (err: any) {
       setError(`${err}`);
     }
@@ -408,7 +430,13 @@ const GameSetup = () => {
 
     if (selectedTeams1) {
       loadPlayers()
+      handlePredictPlay()
     }
+
+    if(selectedTeams2 && selectedTeams1){
+      handlePredictMode()
+    }
+    
   }, [selectedTeams1])
 
   useEffect(() => {
@@ -420,6 +448,10 @@ const GameSetup = () => {
     if (selectedTeams2) {
       loadPlayers()
       handlePredictPlay()
+    }
+
+    if(selectedTeams2 && selectedTeams1){
+      handlePredictMode()
     }
   }, [selectedTeams2])
 
