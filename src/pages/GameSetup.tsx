@@ -330,7 +330,7 @@ const GameSetup = () => {
         setError(`error: ${err.message}`);
         throw new Error('Failed to predict play.');
       }
-      await handleFetchScoreBoard();
+      //await handleFetchScoreBoard();
     } catch (err: any) {
       setError(`${err}`);
     }
@@ -375,7 +375,9 @@ const GameSetup = () => {
   }
 
   useEffect(() => {
-    handleFetchLeagues()
+    if (leagues.length == 0) {
+      handleFetchLeagues()
+    }
   }, [])
 
   useEffect(() => {
@@ -417,6 +419,7 @@ const GameSetup = () => {
 
     if (selectedTeams2) {
       loadPlayers()
+      handlePredictPlay()
     }
   }, [selectedTeams2])
 
@@ -482,7 +485,7 @@ const GameSetup = () => {
         </DropdownMenu>
 
 
-        <Button id="simulation-btn" variant="default" className="mt-4 ml-4" onClick={handlePredictPlay} disabled={isLoading}>
+        <Button id="simulation-btn" variant="default" className="mt-4 ml-4" onClick={handleFetchScoreBoard} disabled={isLoading}>
           Simulate Next Play
         </Button>
 
@@ -490,12 +493,12 @@ const GameSetup = () => {
 
       {scoreBoard && (
         <div className="mt-8">
-                    <Scoreboard 
-            scoreboardData={scoreBoard} 
-            awayTeamName={selectedTeams1?.teams || 'Away'} 
-            homeTeamName={selectedTeams2?.teams || 'Home'} 
-            awayTeamLogo={teamLogos[selectedTeams1?.teams || '']} 
-            homeTeamLogo={teamLogos[selectedTeams2?.teams || '']} 
+          <Scoreboard
+            scoreboardData={scoreBoard}
+            awayTeamName={selectedTeams1?.teams || 'Away'}
+            homeTeamName={selectedTeams2?.teams || 'Home'}
+            awayTeamLogo={teamLogos[selectedTeams1?.teams || '']}
+            homeTeamLogo={teamLogos[selectedTeams2?.teams || '']}
           />
         </div>
       )}
