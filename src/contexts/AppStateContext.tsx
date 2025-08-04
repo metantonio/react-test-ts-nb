@@ -1,9 +1,17 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useCallback } from 'react';
 
 // Define the shape of the application state
 export interface AppState {
   theme: 'light' | 'dark';
   language: string;
+}
+
+interface League {
+  league_name: string;
+}
+
+interface LeagueResponse {
+  data: League[];
 }
 
 // Define the actions that can be performed on the state
@@ -19,10 +27,16 @@ export type AppStateSlice = AppState & AppActions;
 export const useAppState = (): AppStateSlice => {
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
   const [language, setLanguage] = useState<string>('en');
+  const [leagues, setLeagues] = useState<League[]>([]);
 
   const toggleTheme = () => {
     setTheme(prevTheme => (prevTheme === 'light' ? 'dark' : 'light'));
   };
+
+  const setLeague = useCallback((value: []) => {
+      // Remove the notification with the matching ID
+      setLeagues(value);
+    }, []);
 
   // Memoize the context value to prevent unnecessary re-renders
   // This is crucial for performance when this is integrated into other contexts
@@ -31,7 +45,9 @@ export const useAppState = (): AppStateSlice => {
     language,
     toggleTheme,
     setLanguage,
-  }), [theme, language]);
+    leagues,
+    setLeague
+  }), [theme, language, leagues, setLeague]);
 
   return value;
 };
