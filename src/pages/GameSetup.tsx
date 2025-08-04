@@ -158,6 +158,8 @@ interface ScoreBoard {
   passable5: string;
   passable6: string;
   passable7: string;
+  away_players: []
+  home_players: []
 }
 
 interface ScoreBoardResponse {
