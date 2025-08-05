@@ -10,6 +10,13 @@ import {
 } from '@/components/ui/dropdown-menu';
 import Scoreboard from '@/components/Scoreboard';
 import PlayerStatsTable from '@/components/PlayerStatsTable';
+import { 
+  Sheet, 
+  SheetContent, 
+  SheetHeader, 
+  SheetTitle, 
+  SheetTrigger 
+} from '@/components/ui/sheet';
 import {
   Table,
   TableHeader,
@@ -584,6 +591,24 @@ const GameSetup = () => {
         }} disabled={isLoading}>
           Simulate Next Play
         </Button>
+
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button variant="outline" className="mt-4 ml-4">Show Box Score</Button>
+          </SheetTrigger>
+          <SheetContent className="overflow-y-auto">
+            <SheetHeader>
+              <SheetTitle>Box Score</SheetTitle>
+            </SheetHeader>
+            <div className="py-4" >
+              {boxScore.length > 0 ? (
+                <pre className="text-sm">{boxScore.map(item => item.box_line).join('\n')}</pre>
+              ) : (
+                <p>No box score data available.</p>
+              )}
+            </div>
+          </SheetContent>
+        </Sheet>
 
       </div>
 
