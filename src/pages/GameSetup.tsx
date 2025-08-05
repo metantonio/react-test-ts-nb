@@ -520,54 +520,60 @@ const GameSetup = () => {
 
       {error && <p className="text-red-500 mt-4">{error}</p>}
 
-      <div className="flex flex-row gap-4 items-center">
-        <label htmlFor="leagues-dropdown">Leagues</label>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button id="leagues-dropdown" variant="outline" className="mt-4 ml-4" disabled={leagues.length === 0}>
-              {selectedLeague ? selectedLeague.league_name : "Select a League"}
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent style={{ backgroundColor: 'var(--bg-color-component)' }} className="h-[200px] overflow-y-auto">
-            {leagues && leagues.map((league, index) => (
-              <DropdownMenuItem key={index} onSelect={() => setSelectedLeague(league)}>
-                {league.league_name}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
+      <div className="flex flex-col md:flex-row gap-4 items-start md:items-center flex-wrap">
+        <div className="flex items-center gap-2">
+          <label htmlFor="leagues-dropdown">Leagues</label>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button id="leagues-dropdown" variant="outline" className="mt-4 ml-4" disabled={leagues.length === 0}>
+                {selectedLeague ? selectedLeague.league_name : "Select a League"}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent style={{ backgroundColor: 'var(--bg-color-component)' }} className="h-[200px] overflow-y-auto">
+              {leagues && leagues.map((league, index) => (
+                <DropdownMenuItem key={index} onSelect={() => setSelectedLeague(league)}>
+                  {league.league_name}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
 
-        <label htmlFor="teams-dropdown-1">Away Team</label>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button id="teams-dropdown-1" variant="outline" className="mt-4 ml-4" disabled={teams.length === 0}>
-              {selectedTeams1 ? selectedTeams1.teams : "Select a Team 1"}
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent style={{ backgroundColor: 'var(--bg-color-component)' }} className="h-[200px] overflow-y-auto">
-            {teams && teams.map((item, index) => (
-              <DropdownMenuItem key={index} onSelect={() => setSelectedTeams1(item)}>
-                {item.teams}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="flex items-center gap-2">
+          <label htmlFor="teams-dropdown-1">Away Team</label>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button id="teams-dropdown-1" variant="outline" className="mt-4 ml-4" disabled={teams.length === 0}>
+                {selectedTeams1 ? selectedTeams1.teams : "Select a Team 1"}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent style={{ backgroundColor: 'var(--bg-color-component)' }} className="h-[200px] overflow-y-auto">
+              {teams && teams.map((item, index) => (
+                <DropdownMenuItem key={index} onSelect={() => setSelectedTeams1(item)}>
+                  {item.teams}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
 
-        <label htmlFor="teams-dropdown-2">Home Team</label>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button id="teams-dropdown-2" variant="outline" className="mt-4 ml-4" disabled={teams.length === 0}>
-              {selectedTeams2 ? selectedTeams2.teams : "Select a Team 2"}
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent style={{ backgroundColor: 'var(--bg-color-component)' }} className="h-[200px] overflow-y-auto">
-            {teams && teams.map((item, index) => (
-              <DropdownMenuItem key={index} onSelect={() => setSelectedTeams2(item)}>
-                {item.teams}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
+        <div className="flex items-center gap-2">
+          <label htmlFor="teams-dropdown-2">Home Team</label>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button id="teams-dropdown-2" variant="outline" className="mt-4 ml-4" disabled={teams.length === 0}>
+                {selectedTeams2 ? selectedTeams2.teams : "Select a Team 2"}
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent style={{ backgroundColor: 'var(--bg-color-component)' }} className="h-[200px] overflow-y-auto">
+              {teams && teams.map((item, index) => (
+                <DropdownMenuItem key={index} onSelect={() => setSelectedTeams2(item)}>
+                  {item.teams}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
 
 
         <Button id="simulation-btn" variant="default" className="mt-4 ml-4" onClick={() => {
@@ -593,7 +599,7 @@ const GameSetup = () => {
         </div>
       )}
 
-      <div className="flex flex-row gap-8 mt-8">
+      <div className="flex flex-col lg:flex-row gap-8 mt-8">
         {scoreBoard && scoreBoard.away_players && (
           <PlayerStatsTable teamName={selectedTeams1?.teams || 'Away'} players={scoreBoard.away_players} />
         )}
@@ -602,120 +608,124 @@ const GameSetup = () => {
         )}
       </div>
 
-      <div className="flex flex-row gap-4">
-        {playersTeam1.length > 0 && (
-          <div className="w-1/2">
+      <div className="flex flex-col xl:flex-row gap-4 mt-8">
+        {playersTeam1.length > 1 && (
+          <div className="w-full xl:w-1/2">
             <h2 className="text-xl font-bold mt-8 mb-4">{selectedTeams1?.teams}</h2>
-            <Table className="border">
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="h-10">Name</TableHead>
-                  <TableHead className="h-10">Position</TableHead>
-                  <TableHead className="h-10">Poss Fact</TableHead>
-                  <TableHead className="h-10">2pt FG Pct</TableHead>
-                  <TableHead className="h-10">FT Pct</TableHead>
-                  <TableHead className="h-10">Pct Shot</TableHead>
-                  <TableHead className="h-10">3pt Pct Shot</TableHead>
-                  <TableHead className="h-10">Pct Fouled</TableHead>
-                  <TableHead className="h-10">Pct TO</TableHead>
-                  <TableHead className="h-10">Pct Pass</TableHead>
-                  <TableHead className="h-10">Off Reb</TableHead>
-                  <TableHead className="h-10">Def Reb</TableHead>
-                  <TableHead className="h-10">Def FG Pct</TableHead>
-                  <TableHead className="h-10">Pct PF</TableHead>
-                  <TableHead className="h-10">Pct ST</TableHead>
-                  <TableHead className="h-10">Pct BS</TableHead>
-                  <TableHead className="h-10">Year</TableHead>
-                  <TableHead className="h-10">Team Code</TableHead>
-                  <TableHead className="h-10">Height</TableHead>
-                  <TableHead className="h-10">Deny Fact</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {playersTeam1.map((player, index) => (
-                  <TableRow key={index}>
-                    <TableCell className="h-10">{player.name}</TableCell>
-                    <TableCell className="h-10">{player.position}</TableCell>
-                    <TableCell className="h-10">{player.poss_fact}</TableCell>
-                    <TableCell className="h-10">{player.two_pt_fg_pct}</TableCell>
-                    <TableCell className="h-10">{player.ft_pct}</TableCell>
-                    <TableCell className="h-10">{player.pct_shot}</TableCell>
-                    <TableCell className="h-10">{player.three_pt_pct_shot}</TableCell>
-                    <TableCell className="h-10">{player.pct_fouled}</TableCell>
-                    <TableCell className="h-10">{player.pct_to}</TableCell>
-                    <TableCell className="h-10">{player.pct_pass}</TableCell>
-                    <TableCell className="h-10">{player.off_reb}</TableCell>
-                    <TableCell className="h-10">{player.def_reb}</TableCell>
-                    <TableCell className="h-10">{player.def_fg_pct}</TableCell>
-                    <TableCell className="h-10">{player.pct_pf}</TableCell>
-                    <TableCell className="h-10">{player.pct_st}</TableCell>
-                    <TableCell className="h-10">{player.pct_bs}</TableCell>
-                    <TableCell className="h-10">{player.year}</TableCell>
-                    <TableCell className="h-10">{player.team_code}</TableCell>
-                    <TableCell className="h-10">{player.height}</TableCell>
-                    <TableCell className="h-10">{player.deny_fact}</TableCell>
+            <div className="overflow-x-auto h-[250px] overflow-y-auto">
+              <Table className="border">
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="h-10">Name</TableHead>
+                    <TableHead className="h-10">Position</TableHead>
+                    <TableHead className="h-10">Poss Fact</TableHead>
+                    <TableHead className="h-10">2pt FG Pct</TableHead>
+                    <TableHead className="h-10">FT Pct</TableHead>
+                    <TableHead className="h-10">Pct Shot</TableHead>
+                    <TableHead className="h-10">3pt Pct Shot</TableHead>
+                    <TableHead className="h-10">Pct Fouled</TableHead>
+                    <TableHead className="h-10">Pct TO</TableHead>
+                    <TableHead className="h-10">Pct Pass</TableHead>
+                    <TableHead className="h-10">Off Reb</TableHead>
+                    <TableHead className="h-10">Def Reb</TableHead>
+                    <TableHead className="h-10">Def FG Pct</TableHead>
+                    <TableHead className="h-10">Pct PF</TableHead>
+                    <TableHead className="h-10">Pct ST</TableHead>
+                    <TableHead className="h-10">Pct BS</TableHead>
+                    <TableHead className="h-10">Year</TableHead>
+                    <TableHead className="h-10">Team Code</TableHead>
+                    <TableHead className="h-10">Height</TableHead>
+                    <TableHead className="h-10">Deny Fact</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {playersTeam1.map((player, index) => (
+                    <TableRow key={index}>
+                      <TableCell className="h-10">{player.name}</TableCell>
+                      <TableCell className="h-10">{player.position}</TableCell>
+                      <TableCell className="h-10">{player.poss_fact}</TableCell>
+                      <TableCell className="h-10">{player.two_pt_fg_pct}</TableCell>
+                      <TableCell className="h-10">{player.ft_pct}</TableCell>
+                      <TableCell className="h-10">{player.pct_shot}</TableCell>
+                      <TableCell className="h-10">{player.three_pt_pct_shot}</TableCell>
+                      <TableCell className="h-10">{player.pct_fouled}</TableCell>
+                      <TableCell className="h-10">{player.pct_to}</TableCell>
+                      <TableCell className="h-10">{player.pct_pass}</TableCell>
+                      <TableCell className="h-10">{player.off_reb}</TableCell>
+                      <TableCell className="h-10">{player.def_reb}</TableCell>
+                      <TableCell className="h-10">{player.def_fg_pct}</TableCell>
+                      <TableCell className="h-10">{player.pct_pf}</TableCell>
+                      <TableCell className="h-10">{player.pct_st}</TableCell>
+                      <TableCell className="h-10">{player.pct_bs}</TableCell>
+                      <TableCell className="h-10">{player.year}</TableCell>
+                      <TableCell className="h-10">{player.team_code}</TableCell>
+                      <TableCell className="h-10">{player.height}</TableCell>
+                      <TableCell className="h-10">{player.deny_fact}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           </div>
         )}
 
-        {playersTeam2.length > 0 && (
-          <div className="w-1/2">
+        {playersTeam2.length > 1 && (
+          <div className="w-full xl:w-1/2">
             <h2 className="text-xl font-bold mt-8 mb-4">{selectedTeams2?.teams}</h2>
-            <Table className="border">
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="h-10">Name</TableHead>
-                  <TableHead className="h-10">Position</TableHead>
-                  <TableHead className="h-10">Poss Fact</TableHead>
-                  <TableHead className="h-10">2pt FG Pct</TableHead>
-                  <TableHead className="h-10">FT Pct</TableHead>
-                  <TableHead className="h-10">Pct Shot</TableHead>
-                  <TableHead className="h-10">3pt Pct Shot</TableHead>
-                  <TableHead className="h-10">Pct Fouled</TableHead>
-                  <TableHead className="h-10">Pct TO</TableHead>
-                  <TableHead className="h-10">Pct Pass</TableHead>
-                  <TableHead className="h-10">Off Reb</TableHead>
-                  <TableHead className="h-10">Def Reb</TableHead>
-                  <TableHead className="h-10">Def FG Pct</TableHead>
-                  <TableHead className="h-10">Pct PF</TableHead>
-                  <TableHead className="h-10">Pct ST</TableHead>
-                  <TableHead className="h-10">Pct BS</TableHead>
-                  <TableHead className="h-10">Year</TableHead>
-                  <TableHead className="h-10">Team Code</TableHead>
-                  <TableHead className="h-10">Height</TableHead>
-                  <TableHead className="h-10">Deny Fact</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {playersTeam2.map((player, index) => (
-                  <TableRow key={index}>
-                    <TableCell className="h-10">{player.name}</TableCell>
-                    <TableCell className="h-10">{player.position}</TableCell>
-                    <TableCell className="h-10">{player.poss_fact}</TableCell>
-                    <TableCell className="h-10">{player.two_pt_fg_pct}</TableCell>
-                    <TableCell className="h-10">{player.ft_pct}</TableCell>
-                    <TableCell className="h-10">{player.pct_shot}</TableCell>
-                    <TableCell className="h-10">{player.three_pt_pct_shot}</TableCell>
-                    <TableCell className="h-10">{player.pct_fouled}</TableCell>
-                    <TableCell className="h-10">{player.pct_to}</TableCell>
-                    <TableCell className="h-10">{player.pct_pass}</TableCell>
-                    <TableCell className="h-10">{player.off_reb}</TableCell>
-                    <TableCell className="h-10">{player.def_reb}</TableCell>
-                    <TableCell className="h-10">{player.def_fg_pct}</TableCell>
-                    <TableCell className="h-10">{player.pct_pf}</TableCell>
-                    <TableCell className="h-10">{player.pct_st}</TableCell>
-                    <TableCell className="h-10">{player.pct_bs}</TableCell>
-                    <TableCell className="h-10">{player.year}</TableCell>
-                    <TableCell className="h-10">{player.team_code}</TableCell>
-                    <TableCell className="h-10">{player.height}</TableCell>
-                    <TableCell className="h-10">{player.deny_fact}</TableCell>
+            <div className="overflow-x-auto h-[250px] overflow-y-auto">
+              <Table className="border">
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="h-10">Name</TableHead>
+                    <TableHead className="h-10">Position</TableHead>
+                    <TableHead className="h-10">Poss Fact</TableHead>
+                    <TableHead className="h-10">2pt FG Pct</TableHead>
+                    <TableHead className="h-10">FT Pct</TableHead>
+                    <TableHead className="h-10">Pct Shot</TableHead>
+                    <TableHead className="h-10">3pt Pct Shot</TableHead>
+                    <TableHead className="h-10">Pct Fouled</TableHead>
+                    <TableHead className="h-10">Pct TO</TableHead>
+                    <TableHead className="h-10">Pct Pass</TableHead>
+                    <TableHead className="h-10">Off Reb</TableHead>
+                    <TableHead className="h-10">Def Reb</TableHead>
+                    <TableHead className="h-10">Def FG Pct</TableHead>
+                    <TableHead className="h-10">Pct PF</TableHead>
+                    <TableHead className="h-10">Pct ST</TableHead>
+                    <TableHead className="h-10">Pct BS</TableHead>
+                    <TableHead className="h-10">Year</TableHead>
+                    <TableHead className="h-10">Team Code</TableHead>
+                    <TableHead className="h-10">Height</TableHead>
+                    <TableHead className="h-10">Deny Fact</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {playersTeam2.map((player, index) => (
+                    <TableRow key={index}>
+                      <TableCell className="h-10">{player.name}</TableCell>
+                      <TableCell className="h-10">{player.position}</TableCell>
+                      <TableCell className="h-10">{player.poss_fact}</TableCell>
+                      <TableCell className="h-10">{player.two_pt_fg_pct}</TableCell>
+                      <TableCell className="h-10">{player.ft_pct}</TableCell>
+                      <TableCell className="h-10">{player.pct_shot}</TableCell>
+                      <TableCell className="h-10">{player.three_pt_pct_shot}</TableCell>
+                      <TableCell className="h-10">{player.pct_fouled}</TableCell>
+                      <TableCell className="h-10">{player.pct_to}</TableCell>
+                      <TableCell className="h-10">{player.pct_pass}</TableCell>
+                      <TableCell className="h-10">{player.off_reb}</TableCell>
+                      <TableCell className="h-10">{player.def_reb}</TableCell>
+                      <TableCell className="h-10">{player.def_fg_pct}</TableCell>
+                      <TableCell className="h-10">{player.pct_pf}</TableCell>
+                      <TableCell className="h-10">{player.pct_st}</TableCell>
+                      <TableCell className="h-10">{player.pct_bs}</TableCell>
+                      <TableCell className="h-10">{player.year}</TableCell>
+                      <TableCell className="h-10">{player.team_code}</TableCell>
+                      <TableCell className="h-10">{player.height}</TableCell>
+                      <TableCell className="h-10">{player.deny_fact}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           </div>
         )}
       </div>
