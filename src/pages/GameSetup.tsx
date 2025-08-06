@@ -499,15 +499,15 @@ const GameSetup = () => {
   return (
     <div className="p-4 bg-background text-foreground">
       <h1 className="text-xl font-bold mb-2">NBA Game Simulation</h1>
-
+      <Button onClick={goLoginPage} disabled={isLoading}>
+        Go to Login
+      </Button>
       <Tabs defaultValue="full-season">
+
         <TabsList>
           <TabsTrigger value="full-season">Full Season Version</TabsTrigger>
           <TabsTrigger value="single-game">Single Game Version</TabsTrigger>
           <TabsTrigger value="instructions">Instructions</TabsTrigger>
-          <Button onClick={goLoginPage} disabled={isLoading}>
-            Go to Login
-          </Button>
         </TabsList>
         <TabsContent value="full-season">
           <FullSeasonVersion
@@ -543,6 +543,7 @@ const GameSetup = () => {
           <Instructions />
         </TabsContent>
       </Tabs>
+
     </div>
   );
 };
