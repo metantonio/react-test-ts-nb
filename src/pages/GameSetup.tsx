@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useApi } from '@/contexts/ApiContext';
+import { useNavigate } from 'react-router-dom';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import FullSeasonVersion from './FullSeasonVersion';
 import SingleGameVersion from './SingleGameVersion';
 import Instructions from './Instructions';
+import { Button } from '@/components/ui/button';
 
 interface Message {
   message: string;
@@ -206,6 +208,7 @@ const teamLogos: { [key: string]: string } = {
 
 const GameSetup = () => {
   const { fetchWithAuth, isLoading } = useApi();
+  const navigate = useNavigate();
   const [leagues, setLeagues] = useState<League[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [selectedLeague, setSelectedLeague] = useState<League | null>(null);
@@ -429,6 +432,10 @@ const GameSetup = () => {
     }
   };
 
+  const goLoginPage = () => {
+    navigate('/')
+  }
+
   useEffect(() => {
     if (leagues.length == 0) {
       handleFetchLeagues()
@@ -497,6 +504,9 @@ const GameSetup = () => {
           <TabsTrigger value="full-season">Full Season Version</TabsTrigger>
           <TabsTrigger value="single-game">Single Game Version</TabsTrigger>
           <TabsTrigger value="instructions">Instructions</TabsTrigger>
+          <Button onClick={goLoginPage} disabled={isLoading}>
+            Go to Login
+          </Button>
         </TabsList>
         <TabsContent value="full-season">
           <FullSeasonVersion
