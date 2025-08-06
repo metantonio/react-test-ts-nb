@@ -75,7 +75,11 @@ const FullSeasonVersion = (
           <div className="flex gap-4">
             <div className="flex-1">
               <div className="flex gap-2">
-                <Button variant="outline">Clear</Button>
+                <Button variant="outline" onClick={()=>{
+                  setSelectedLeague([])
+                  setSelectedTeams1(null)
+                  selectedTeams2(null)
+                  }}>Clear</Button>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline" disabled={leagues.length === 0}>
@@ -91,7 +95,7 @@ const FullSeasonVersion = (
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
-              <div className="mt-2">
+              {selectedLeague ? <div className="mt-2">
                 <label className="text-sm font-medium">Team</label>
                 <div className="flex gap-2 mt-1">
                   <DropdownMenu>
@@ -123,40 +127,44 @@ const FullSeasonVersion = (
                     </DropdownMenuContent>
                   </DropdownMenu>
                 </div>
-              </div>
-              <div className="grid grid-cols-2 gap-2 mt-4">
-                <Button variant="outline" disabled>Substitution Pattern</Button>
-                <Button variant="outline">Actual Player Statistics</Button>
-                <Button variant="outline" disabled>Draft Players</Button>
-                <Button variant="outline" disabled>Change Player Characteristics</Button>
-              </div>
-              <div className="flex gap-4 mt-4">
-                <div className="border p-2 rounded-md bg-card text-card-foreground">
-                  <div className="flex flex-col space-y-1">
-                    <CustomRadio name="schedule" value="schedule" checked={schedule === 'schedule'} onChange={setSchedule} label="82/820/8200 Game Schedule" id="r1" />
-                    <CustomRadio name="schedule" value="predict" checked={schedule === 'predict'} onChange={setSchedule} label="Predict Games" id="r2" />
-                    <CustomRadio name="schedule" value="replay" checked={schedule === 'replay'} onChange={setSchedule} label="Replay Full League Season" id="r3" />
+              </div> : <></>}
+              {selectedLeague && (selectedTeams1 || selectedTeams2) ? <>
+                <div className="grid grid-cols-2 gap-2 mt-4">
+                  <Button variant="outline" disabled>Substitution Pattern</Button>
+                  <Button variant="outline">Actual Player Statistics</Button>
+                  <Button variant="outline" disabled>Draft Players</Button>
+                  <Button variant="outline" disabled>Change Player Characteristics</Button>
+                </div>
+                <div className="flex gap-4 mt-4">
+                  <div className="border p-2 rounded-md bg-card text-card-foreground">
+                    <div className="flex flex-col space-y-1">
+                      <CustomRadio name="schedule" value="schedule" checked={schedule === 'schedule'} onChange={setSchedule} label="82/820/8200 Game Schedule" id="r1" />
+                      <CustomRadio name="schedule" value="predict" checked={schedule === 'predict'} onChange={setSchedule} label="Predict Games" id="r2" />
+                      <CustomRadio name="schedule" value="replay" checked={schedule === 'replay'} onChange={setSchedule} label="Replay Full League Season" id="r3" />
+                    </div>
+                  </div>
+                  <div className="border p-2 rounded-md bg-card text-card-foreground">
+                    <div className="flex flex-col space-y-1">
+                      <CustomRadio name="location" value="home" checked={location === 'home'} onChange={setLocation} label="Home" id="r4" />
+                      <CustomRadio name="location" value="away" checked={location === 'away'} onChange={setLocation} label="Away" id="r5" />
+                      <CustomRadio name="location" value="both" checked={location === 'both'} onChange={setLocation} label="Both" id="r6" />
+                      <CustomRadio name="location" value="neutral" checked={location === 'neutral'} onChange={setLocation} label="Neutral" id="r7" />
+                    </div>
                   </div>
                 </div>
-                <div className="border p-2 rounded-md bg-card text-card-foreground">
-                  <div className="flex flex-col space-y-1">
-                    <CustomRadio name="location" value="home" checked={location === 'home'} onChange={setLocation} label="Home" id="r4" />
-                    <CustomRadio name="location" value="away" checked={location === 'away'} onChange={setLocation} label="Away" id="r5" />
-                    <CustomRadio name="location" value="both" checked={location === 'both'} onChange={setLocation} label="Both" id="r6" />
-                    <CustomRadio name="location" value="neutral" checked={location === 'neutral'} onChange={setLocation} label="Neutral" id="r7" />
-                  </div>
+                <div className="mt-4 space-y-2">
+                  <CustomCheckbox id="save-pbp" checked={savePbp} onChange={setSavePbp} label="Save Play-by-Play (<=100 games)" />
+                  <CustomCheckbox id="save-box" checked={saveBox} onChange={setSaveBox} label="Save Box Scores - no more than 15,000 games" />
                 </div>
-              </div>
-              <div className="mt-4 space-y-2">
-                <CustomCheckbox id="save-pbp" checked={savePbp} onChange={setSavePbp} label="Save Play-by-Play (<=100 games)" />
-                <CustomCheckbox id="save-box" checked={saveBox} onChange={setSaveBox} label="Save Box Scores - no more than 15,000 games" />
-              </div>
-              <Button variant="outline" disabled={isLoading} className="mt-4" onClick={() => {
-                handleFetchScoreBoard()
-                handleFetchPlayByPlay()
-                handleFetchBoxScore()
+                <Button variant="outline" disabled={isLoading} className="mt-4" onClick={() => {
+                  handleFetchScoreBoard()
+                  handleFetchPlayByPlay()
+                  handleFetchBoxScore()
 
-              }}>PLAY GAMES</Button>
+                }}>PLAY GAMES
+                </Button>
+              </> : <></>}
+
             </div>
           </div>
         </div>
