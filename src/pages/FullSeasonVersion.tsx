@@ -18,6 +18,9 @@ import {
   TableCell,
 } from '@/components/ui/table';
 
+
+
+
 const FullSeasonVersion = (
   { leagues,
     selectedLeague,
@@ -41,13 +44,18 @@ const FullSeasonVersion = (
     setPlayersTeam2,
     handleFetchScoreBoard,
     handleFetchPlayByPlay,
-    handleFetchBoxScore
+    handleFetchBoxScore,
+    teamLogos
   }
 ) => {
   const [schedule, setSchedule] = useState('schedule');
   const [location, setLocation] = useState('both');
   const [savePbp, setSavePbp] = useState(false);
   const [saveBox, setSaveBox] = useState(true);
+
+  const TeamLogo: React.FC<{ logo?: string; name: string }> = ({ logo, name }) => (
+    logo ? <img src={logo} alt={`${name} Logo`} className="h-14 w-14 object-contain" /> : <div className="h-14 w-14 bg-gray-700 rounded-full flex items-center justify-center text-white font-bold text-xl">{name.substring(0, 3).toUpperCase()}</div>
+  );
 
   return (
     <div>
@@ -169,8 +177,8 @@ const FullSeasonVersion = (
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {selectedTeams1 && <TableRow><TableCell>{selectedTeams1.teams}</TableCell><TableCell className="text-right">0</TableCell></TableRow>}
-                {selectedTeams2 && <TableRow><TableCell>{selectedTeams2.teams}</TableCell><TableCell className="text-right">0</TableCell></TableRow>}
+                {selectedTeams1 && <TableRow><TableCell> <TeamLogo logo={teamLogos[selectedTeams1?.teams || '']} name={selectedTeams1?.teams || 'Away'} />{selectedTeams1.teams}</TableCell><TableCell className="text-right">0</TableCell></TableRow>}
+                {selectedTeams2 && <TableRow><TableCell><TeamLogo logo={teamLogos[selectedTeams2?.teams || '']} name={selectedTeams2?.teams || 'Home'} />{selectedTeams2.teams}</TableCell><TableCell className="text-right">0</TableCell></TableRow>}
               </TableBody>
             </Table>
           </div>

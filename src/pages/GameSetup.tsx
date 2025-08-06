@@ -522,6 +522,7 @@ const GameSetup = () => {
             handleFetchScoreBoard={handleFetchScoreBoard}
             handleFetchPlayByPlay={handleFetchPlayByPlay}
             handleFetchBoxScore={handleFetchBoxScore}
+            teamLogos={teamLogos}
           />
         </TabsContent>
         <TabsContent value="single-game">
