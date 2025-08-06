@@ -218,6 +218,7 @@ const GameSetup = () => {
   const [isGameInitial, setIsGameInitial] = useState<boolean>(false);
   const [playByPlay, setPlayByPlay] = useState<PlayByPlay[]>([]);
   const [boxScore, setBoxScore] = useState<BoxScore[]>([]);
+  const [scoreBoard, setScoreBoard] = useState<ScoreBoard | null>(null);
   const [playersTeam1, setPlayersTeam1] = useState<PlayerChar[]>([{
     name: "",
     position: "",
