@@ -505,9 +505,9 @@ const GameSetup = () => {
       <Tabs defaultValue="full-season">
 
         <TabsList>
-          <TabsTrigger value="full-season">Full Season Version</TabsTrigger>
-          <TabsTrigger value="single-game">Single Game Version</TabsTrigger>
-          <TabsTrigger value="instructions">Instructions</TabsTrigger>
+          <TabsTrigger value="full-season" className='mx-1'>Full Season Version</TabsTrigger>
+          <TabsTrigger value="single-game" className='mx-1'>Single Game Version (hardcode data)</TabsTrigger>
+          <TabsTrigger value="instructions" className='mx-1'>Instructions</TabsTrigger>
         </TabsList>
         <TabsContent value="full-season">
           <FullSeasonVersion
