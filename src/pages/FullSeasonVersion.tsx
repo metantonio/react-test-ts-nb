@@ -87,7 +87,7 @@ const FullSeasonVersion = (
         <Button variant="outline" size="sm">Raw Stats</Button>
         <Sheet>
           <SheetTrigger asChild>
-            <Button variant={boxScore.length==0? "outline" : "destructive"} size="sm" disabled={isSimulating}>{boxScore.length==0? "Show Box Score" : "Show Box Score"}</Button>
+            <Button variant="outline" size="sm" disabled={isSimulating}>{boxScore || boxScore.length==0? "Show Box Score" : "Show Box Score (!)"}</Button>
           </SheetTrigger>
           <SheetContent className="overflow-y-auto">
             <SheetHeader>
@@ -356,9 +356,9 @@ const FullSeasonVersion = (
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {selectedTeams1 && <TableRow><TableCell> <TeamLogo logo={teamLogos[selectedTeams1?.teams || '']} name={selectedTeams1?.teams || 'Away'} />{selectedTeams1.teams}</TableCell><TableCell className="text-right">0</TableCell></TableRow>}
-                {selectedTeams2 && <TableRow><TableCell><TeamLogo logo={teamLogos[selectedTeams2?.teams || '']} name={selectedTeams2?.teams || 'Home'} />{selectedTeams2.teams}</TableCell><TableCell className="text-right">0</TableCell></TableRow>}
-              </TableBody>
+                        {selectedTeams1 && <TableRow><TableCell><div className="flex items-center justify-center gap-2"><TeamLogo logo={teamLogos[selectedTeams1?.teams || '']} name={selectedTeams1?.teams || 'Away'} /><span>{selectedTeams1.teams}</span></div></TableCell><TableCell className="text-center align-middle">0</TableCell></TableRow>}
+                        {selectedTeams2 && <TableRow><TableCell><div className="flex items-center justify-center gap-2"><TeamLogo logo={teamLogos[selectedTeams2?.teams || '']} name={selectedTeams2?.teams || 'Home'} /><span>{selectedTeams2.teams}</span></div></TableCell><TableCell className="text-center align-middle">0</TableCell></TableRow>}
+                    </TableBody>
             </Table>
           </div>
         </div>
