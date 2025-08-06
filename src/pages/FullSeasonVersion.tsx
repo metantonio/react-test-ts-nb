@@ -4,21 +4,46 @@ import CustomCheckbox from '../components/ui/CustomCheckbox';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-  } from '@/components/ui/dropdown-menu';
-  import { 
-    Table,
-    TableHeader,
-    TableBody,
-    TableHead,
-    TableRow,
-    TableCell,
-  } from '@/components/ui/table';
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import {
+  Table,
+  TableHeader,
+  TableBody,
+  TableHead,
+  TableRow,
+  TableCell,
+} from '@/components/ui/table';
 
-const FullSeasonVersion = ({ leagues, selectedLeague, setSelectedLeague, teams, selectedTeams1, setSelectedTeams1, selectedTeams2, setSelectedTeams2, error }) => {
+const FullSeasonVersion = (
+  { leagues,
+    selectedLeague,
+    setSelectedLeague,
+    teams,
+    selectedTeams1,
+    setSelectedTeams1,
+    selectedTeams2,
+    setSelectedTeams2,
+    error,
+    isLoading,
+    isGameInitial,
+    setIsGameInitial,
+    playByPlay,
+    setPlayByPlay,
+    boxScore,
+    setBoxScore,
+    playersTeam1,
+    setPlayersTeam1,
+    playersTeam2,
+    setPlayersTeam2,
+    handleFetchScoreBoard,
+    handleFetchPlayByPlay,
+    handleFetchBoxScore
+  }
+) => {
   const [schedule, setSchedule] = useState('schedule');
   const [location, setLocation] = useState('both');
   const [savePbp, setSavePbp] = useState(false);
@@ -50,7 +75,7 @@ const FullSeasonVersion = ({ leagues, selectedLeague, setSelectedLeague, teams, 
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent style={{ backgroundColor: 'var(--bg-color-component)' }} className="h-[200px] overflow-y-auto">
-                    {leagues.length>0 && leagues.map((league, index) => (
+                    {leagues.length > 0 && leagues.map((league, index) => (
                       <DropdownMenuItem key={index} onSelect={() => setSelectedLeague(league)}>
                         {league.league_name}
                       </DropdownMenuItem>
@@ -68,7 +93,7 @@ const FullSeasonVersion = ({ leagues, selectedLeague, setSelectedLeague, teams, 
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent style={{ backgroundColor: 'var(--bg-color-component)' }} className="h-[200px] overflow-y-auto">
-                      {teams.length>0 && teams.map((item, index) => (
+                      {teams.length > 0 && teams.map((item, index) => (
                         <DropdownMenuItem key={index} onSelect={() => setSelectedTeams1(item)}>
                           {item.teams}
                         </DropdownMenuItem>
@@ -82,7 +107,7 @@ const FullSeasonVersion = ({ leagues, selectedLeague, setSelectedLeague, teams, 
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent style={{ backgroundColor: 'var(--bg-color-component)' }} className="h-[200px] overflow-y-auto">
-                      {teams.length>0 && teams.map((item, index) => (
+                      {teams.length > 0 && teams.map((item, index) => (
                         <DropdownMenuItem key={index} onSelect={() => setSelectedTeams2(item)}>
                           {item.teams}
                         </DropdownMenuItem>
@@ -118,32 +143,37 @@ const FullSeasonVersion = ({ leagues, selectedLeague, setSelectedLeague, teams, 
                 <CustomCheckbox id="save-pbp" checked={savePbp} onChange={setSavePbp} label="Save Play-by-Play (<=100 games)" />
                 <CustomCheckbox id="save-box" checked={saveBox} onChange={setSaveBox} label="Save Box Scores - no more than 15,000 games" />
               </div>
-              <Button variant="outline" disabled className="mt-4">PLAY GAMES</Button>
+              <Button variant="outline" disabled={isLoading} className="mt-4" onClick={() => {
+                handleFetchScoreBoard()
+                handleFetchPlayByPlay()
+                handleFetchBoxScore()
+
+              }}>PLAY GAMES</Button>
             </div>
           </div>
         </div>
 
         <div className="col-span-1">
-            <Button variant="outline" className="w-full">Zero Schedule</Button>
-            <div className="grid grid-cols-3 gap-2 mt-2">
-                <Button variant="outline">82 Games</Button>
-                <Button variant="outline">820 Games</Button>
-                <Button variant="outline">8200 Games</Button>
-            </div>
-            <div className="mt-2 border rounded-md max-h-96 overflow-y-auto bg-card text-card-foreground">
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead>TEAM NAME</TableHead>
-                            <TableHead className="text-right">0</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {selectedTeams1 && <TableRow><TableCell>{selectedTeams1.teams}</TableCell><TableCell className="text-right">0</TableCell></TableRow>}
-                        {selectedTeams2 && <TableRow><TableCell>{selectedTeams2.teams}</TableCell><TableCell className="text-right">0</TableCell></TableRow>}
-                    </TableBody>
-                </Table>
-            </div>
+          <Button variant="outline" className="w-full">Zero Schedule</Button>
+          <div className="grid grid-cols-3 gap-2 mt-2">
+            <Button variant="outline">82 Games</Button>
+            <Button variant="outline">820 Games</Button>
+            <Button variant="outline">8200 Games</Button>
+          </div>
+          <div className="mt-2 border rounded-md max-h-96 overflow-y-auto bg-card text-card-foreground">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>TEAM NAME</TableHead>
+                  <TableHead className="text-right">0</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {selectedTeams1 && <TableRow><TableCell>{selectedTeams1.teams}</TableCell><TableCell className="text-right">0</TableCell></TableRow>}
+                {selectedTeams2 && <TableRow><TableCell>{selectedTeams2.teams}</TableCell><TableCell className="text-right">0</TableCell></TableRow>}
+              </TableBody>
+            </Table>
+          </div>
         </div>
       </div>
     </div>
