@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
+import CustomRadio from '../components/ui/CustomRadio';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
@@ -19,6 +19,9 @@ import {
   } from '@/components/ui/table';
 
 const FullSeasonVersion = ({ leagues, selectedLeague, setSelectedLeague, teams, selectedTeams1, setSelectedTeams1, selectedTeams2, setSelectedTeams2, error }) => {
+  const [schedule, setSchedule] = useState('schedule');
+  const [location, setLocation] = useState('both');
+
   return (
     <div>
       <div className="flex gap-2 mb-4 border-b-2 border-border pb-2">
@@ -94,40 +97,19 @@ const FullSeasonVersion = ({ leagues, selectedLeague, setSelectedLeague, teams, 
               </div>
               <div className="flex gap-4 mt-4">
                 <div className="border p-2 rounded-md bg-card text-card-foreground">
-                  <RadioGroup defaultValue="schedule" className="flex flex-col space-y-1">
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="schedule" id="r1" />
-                      <Label htmlFor="r1">82/820/8200 Game Schedule</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="predict" id="r2" />
-                      <Label htmlFor="r2">Predict Games</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="replay" id="r3" />
-                      <Label htmlFor="r3">Replay Full League Season</Label>
-                    </div>
-                  </RadioGroup>
+                  <div className="flex flex-col space-y-1">
+                    <CustomRadio name="schedule" value="schedule" checked={schedule === 'schedule'} onChange={setSchedule} label="82/820/8200 Game Schedule" id="r1" />
+                    <CustomRadio name="schedule" value="predict" checked={schedule === 'predict'} onChange={setSchedule} label="Predict Games" id="r2" />
+                    <CustomRadio name="schedule" value="replay" checked={schedule === 'replay'} onChange={setSchedule} label="Replay Full League Season" id="r3" />
+                  </div>
                 </div>
                 <div className="border p-2 rounded-md bg-card text-card-foreground">
-                  <RadioGroup defaultValue="both" className="flex flex-col space-y-1">
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="home" id="r4" />
-                      <Label htmlFor="r4">Home</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="away" id="r5" />
-                      <Label htmlFor="r5">Away</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="both" id="r6" />
-                      <Label htmlFor="r6">Both</Label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <RadioGroupItem value="neutral" id="r7" />
-                      <Label htmlFor="r7">Neutral</Label>
-                    </div>
-                  </RadioGroup>
+                  <div className="flex flex-col space-y-1">
+                    <CustomRadio name="location" value="home" checked={location === 'home'} onChange={setLocation} label="Home" id="r4" />
+                    <CustomRadio name="location" value="away" checked={location === 'away'} onChange={setLocation} label="Away" id="r5" />
+                    <CustomRadio name="location" value="both" checked={location === 'both'} onChange={setLocation} label="Both" id="r6" />
+                    <CustomRadio name="location" value="neutral" checked={location === 'neutral'} onChange={setLocation} label="Neutral" id="r7" />
+                  </div>
                 </div>
               </div>
               <div className="mt-4 space-y-2">
