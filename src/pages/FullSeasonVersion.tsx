@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import CustomRadio from '../components/ui/CustomRadio';
+import CustomCheckbox from '../components/ui/CustomCheckbox';
 import { Label } from '@/components/ui/label';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
@@ -21,6 +21,8 @@ import {
 const FullSeasonVersion = ({ leagues, selectedLeague, setSelectedLeague, teams, selectedTeams1, setSelectedTeams1, selectedTeams2, setSelectedTeams2, error }) => {
   const [schedule, setSchedule] = useState('schedule');
   const [location, setLocation] = useState('both');
+  const [savePbp, setSavePbp] = useState(false);
+  const [saveBox, setSaveBox] = useState(true);
 
   return (
     <div>
@@ -113,18 +115,8 @@ const FullSeasonVersion = ({ leagues, selectedLeague, setSelectedLeague, teams, 
                 </div>
               </div>
               <div className="mt-4 space-y-2">
-                <div className="flex items-center space-x-2">
-                  <Checkbox id="save-pbp" />
-                  <label htmlFor="save-pbp" className="text-sm font-medium leading-none">
-                    Save Play-by-Play (&lt;=100 games)
-                  </label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Checkbox id="save-box" defaultChecked />
-                  <label htmlFor="save-box" className="text-sm font-medium leading-none">
-                    Save Box Scores - no more than 15,000 games
-                  </label>
-                </div>
+                <CustomCheckbox id="save-pbp" checked={savePbp} onChange={setSavePbp} label="Save Play-by-Play (<=100 games)" />
+                <CustomCheckbox id="save-box" checked={saveBox} onChange={setSaveBox} label="Save Box Scores - no more than 15,000 games" />
               </div>
               <Button variant="outline" disabled className="mt-4">PLAY GAMES</Button>
             </div>
