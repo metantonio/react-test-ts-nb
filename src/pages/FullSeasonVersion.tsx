@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import CustomRadio from '../components/ui/CustomRadio';
 import CustomCheckbox from '../components/ui/CustomCheckbox';
 import { Label } from '@/components/ui/label';
@@ -59,17 +59,38 @@ const FullSeasonVersion = (
   const [location, setLocation] = useState('both');
   const [savePbp, setSavePbp] = useState(false);
   const [saveBox, setSaveBox] = useState(true);
+  const [isClear, setIsClear] = useState(false)
 
   const TeamLogo: React.FC<{ logo?: string; name: string }> = ({ logo, name }) => (
     logo ? <img src={logo} alt={`${name} Logo`} className="h-14 w-14 object-contain" /> : <div className="h-14 w-14 bg-gray-700 rounded-full flex items-center justify-center text-white font-bold text-xl">{name.substring(0, 3).toUpperCase()}</div>
   );
+
+  useEffect(()=>{
+    console.log("should reset all")
+  }, [isClear])
 
   return (
     <div>
       <div className="flex gap-2 mb-4 border-b-2 border-border pb-2">
         <Button variant="outline" size="sm">Game Setup</Button>
         <Button variant="outline" size="sm">Raw Stats</Button>
-        <Button variant="outline" size="sm">Raw Box Scores</Button>
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button variant={boxScore.length==0? "outline" : "destructive"} size="sm">{boxScore.length==0? "Show Box Score" : "Show Box Score"}</Button>
+          </SheetTrigger>
+          <SheetContent className="overflow-y-auto">
+            <SheetHeader>
+              <SheetTitle>Box Score</SheetTitle>
+            </SheetHeader>
+            <div className="py-4" >
+              {boxScore.length > 0 ? (
+                <pre className="text-sm">{boxScore.map(item => item.box_line).join('\n')}</pre>
+              ) : (
+                <p>No box score data available.</p>
+              )}
+            </div>
+          </SheetContent>
+        </Sheet>
         <Button variant="outline" size="sm">Sortable Stats</Button>
         <Button variant="outline" size="sm">Sortable Box Scores</Button>
         <Button variant="outline" size="sm">Play by Play</Button>
@@ -86,6 +107,8 @@ const FullSeasonVersion = (
                   setSelectedLeague([])
                   setSelectedTeams1(null)
                   selectedTeams2(null)
+                  setBoxScore([])
+                  setIsClear(!isClear)
                 }}>Clear</Button>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>

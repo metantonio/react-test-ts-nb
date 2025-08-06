@@ -499,7 +499,7 @@ const GameSetup = () => {
   return (
     <div className="p-4 bg-background text-foreground">
       <h1 className="text-xl font-bold mb-2">NBA Game Simulation</h1>
-      <Button onClick={goLoginPage} disabled={isLoading}>
+      <Button onClick={goLoginPage} disabled={isLoading} variant="outline">
         Go to Login
       </Button>
       <Tabs defaultValue="full-season">

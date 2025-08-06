@@ -144,7 +144,7 @@ const LoginAPI = () => {
                       type="checkbox"
                       className="rounded border-gray-300"
                     />
-                    <label htmlFor="remember" className="text-sm text-gray-600">
+                    <label htmlFor="remember" className="text-sm text-dark-600">
                       Remember me
                     </label>
                   </div>
