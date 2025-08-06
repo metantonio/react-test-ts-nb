@@ -149,9 +149,9 @@ const FullSeasonVersion = (
                       <>
                         <div className="flex flex-col xl:flex-row gap-4 mt-8">
                           {playersTeam1.length > 1 && (
-                            <div className="w-full xl:w-1/2">
+                            <div className="w-full l:w-1/1">
                               <h2 className="text-xl font-bold mt-8 mb-4">{selectedTeams1?.teams}</h2>
-                              <div className="overflow-x-auto h-[250px] overflow-y-auto">
+                              <div className="overflow-x-auto h-[500px] overflow-y-auto">
                                 <Table className="border">
                                   <TableHeader>
                                     <TableRow>
@@ -209,9 +209,9 @@ const FullSeasonVersion = (
                           )}
 
                           {playersTeam2.length > 1 && (
-                            <div className="w-full xl:w-1/2">
+                            <div className="w-full l:w-1/1">
                               <h2 className="text-xl font-bold mt-8 mb-4">{selectedTeams2?.teams}</h2>
-                              <div className="overflow-x-auto h-[250px] overflow-y-auto">
+                              <div className="overflow-x-auto h-[500px] overflow-y-auto">
                                 <Table className="border">
                                   <TableHeader>
                                     <TableRow>
