@@ -25,12 +25,67 @@ import {
   SheetTitle,
   SheetTrigger
 } from '@/components/ui/sheet';
-
-
-
 import { Loader2 } from 'lucide-react';
 
-const FullSeasonVersion = (
+interface League {
+  league_name: string;
+}
+
+interface Team {
+  teams: string;
+}
+
+interface BoxScore {
+  box_line: string;
+  game_number: string;
+  line_number: string;
+}
+
+interface PlayerChar {
+  name: string;
+  position: string;
+  poss_fact: string;
+  two_pt_fg_pct: string;
+  ft_pct: string;
+  pct_shot: string;
+  three_pt_pct_shot: string;
+  pct_fouled: string;
+  pct_to: string;
+  pct_pass: string;
+  off_reb: string;
+  def_reb: string;
+  def_fg_pct: string;
+  pct_pf: string;
+  pct_st: string;
+  pct_bs: string;
+  year: string;
+  team_code: string;
+  height: string;
+  deny_fact: string;
+}
+
+interface FullSeasonVersionProps {
+  leagues: League[];
+  selectedLeague: League | null;
+  setSelectedLeague: React.Dispatch<React.SetStateAction<League | null>>;
+  teams: Team[];
+  selectedTeams1: Team | null;
+  setSelectedTeams1: React.Dispatch<React.SetStateAction<Team | null>>;
+  selectedTeams2: Team | null;
+  setSelectedTeams2: React.Dispatch<React.SetStateAction<Team | null>>;
+  error: string | null;
+  isLoading: boolean;
+  boxScore: BoxScore[];
+  setBoxScore: React.Dispatch<React.SetStateAction<BoxScore[]>>;
+  playersTeam1: PlayerChar[];
+  playersTeam2: PlayerChar[];
+  handleFetchScoreBoard: () => Promise<void>;
+  handleFetchPlayByPlay: () => Promise<void>;
+  handleFetchBoxScore: () => Promise<void>;
+  teamLogos: { [key: string]: string };
+}
+
+const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
   { leagues,
     selectedLeague,
     setSelectedLeague,
@@ -41,16 +96,10 @@ const FullSeasonVersion = (
     setSelectedTeams2,
     error,
     isLoading,
-    isGameInitial,
-    setIsGameInitial,
-    playByPlay,
-    setPlayByPlay,
     boxScore,
     setBoxScore,
     playersTeam1,
-    setPlayersTeam1,
     playersTeam2,
-    setPlayersTeam2,
     handleFetchScoreBoard,
     handleFetchPlayByPlay,
     handleFetchBoxScore,
@@ -87,7 +136,7 @@ const FullSeasonVersion = (
         <Button variant="outline" size="sm">Raw Stats</Button>
         <Sheet>
           <SheetTrigger asChild>
-            <Button variant="outline" size="sm" disabled={isSimulating}>{boxScore || boxScore.length==0? "Show Box Score" : "Show Box Score (!)"}</Button>
+            <Button variant="outline" size="sm" disabled={isSimulating}>{boxScore.length === 0 ? "Show Box Score" : "Show Box Score (!)"}</Button>
           </SheetTrigger>
           <SheetContent className="overflow-y-auto">
             <SheetHeader>
@@ -95,7 +144,7 @@ const FullSeasonVersion = (
             </SheetHeader>
             <div className="py-4" >
               {boxScore.length > 0 ? (
-                <pre className="text-sm">{boxScore.map(item => item.box_line).join('\n')}</pre>
+                <pre className="text-sm">{boxScore.map((item: any) => item.box_line).join('\n')}</pre>
               ) : (
                 <p>No box score data available.</p>
               )}
@@ -115,9 +164,9 @@ const FullSeasonVersion = (
             <div className="flex-1">
               <div className="flex gap-2">
                 <Button variant="outline" onClick={() => {
-                  setSelectedLeague([])
+                  setSelectedLeague(null)
                   setSelectedTeams1(null)
-                  selectedTeams2(null)
+                  setSelectedTeams2(null)
                   setBoxScore([])
                   setIsClear(!isClear)
                 }}>Clear</Button>
@@ -128,8 +177,8 @@ const FullSeasonVersion = (
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent style={{ backgroundColor: 'var(--bg-color-component)' }} className="h-[200px] overflow-y-auto">
-                    {leagues.length > 0 && leagues.map((league, index) => (
-                      <DropdownMenuItem key={index} onSelect={() => setSelectedLeague(league)}>
+                    {leagues.length > 0 && leagues.map((league: any) => (
+                      <DropdownMenuItem key={league.league_name} onSelect={() => setSelectedLeague(league)}>
                         {league.league_name}
                       </DropdownMenuItem>
                     ))}
@@ -146,8 +195,8 @@ const FullSeasonVersion = (
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent style={{ backgroundColor: 'var(--bg-color-component)' }} className="h-[200px] overflow-y-auto">
-                      {teams.length > 0 && teams.map((item, index) => (
-                        <DropdownMenuItem key={index} onSelect={() => setSelectedTeams1(item)}>
+                      {teams.length > 0 && teams.map((item: any) => (
+                        <DropdownMenuItem key={item.teams} onSelect={() => setSelectedTeams1(item)}>
                           {item.teams}
                         </DropdownMenuItem>
                       ))}
@@ -160,8 +209,8 @@ const FullSeasonVersion = (
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent style={{ backgroundColor: 'var(--bg-color-component)' }} className="h-[200px] overflow-y-auto">
-                      {teams.length > 0 && teams.map((item, index) => (
-                        <DropdownMenuItem key={index} onSelect={() => setSelectedTeams2(item)}>
+                      {teams.length > 0 && teams.map((item: any) => (
+                        <DropdownMenuItem key={item.teams} onSelect={() => setSelectedTeams2(item)}>
                           {item.teams}
                         </DropdownMenuItem>
                       ))}
@@ -212,8 +261,8 @@ const FullSeasonVersion = (
                                     </TableRow>
                                   </TableHeader>
                                   <TableBody>
-                                    {playersTeam1.map((player, index) => (
-                                      <TableRow key={index}>
+                                    {playersTeam1.map((player: any) => (
+                                      <TableRow key={player.name}>
                                         <TableCell className="h-10">{player.name}</TableCell>
                                         <TableCell className="h-10">{player.position}</TableCell>
                                         <TableCell className="h-10">{player.poss_fact}</TableCell>
@@ -272,8 +321,8 @@ const FullSeasonVersion = (
                                     </TableRow>
                                   </TableHeader>
                                   <TableBody>
-                                    {playersTeam2.map((player, index) => (
-                                      <TableRow key={index}>
+                                    {playersTeam2.map((player: any) => (
+                                      <TableRow key={player.name}>
                                         <TableCell className="h-10">{player.name}</TableCell>
                                         <TableCell className="h-10">{player.position}</TableCell>
                                         <TableCell className="h-10">{player.poss_fact}</TableCell>
@@ -309,6 +358,7 @@ const FullSeasonVersion = (
                   <Button variant="outline" disabled>Change Player Characteristics</Button>
 
                 </div>
+
                 <div className="flex gap-4 mt-4">
                   <div className="border p-2 rounded-md bg-card text-card-foreground">
                     <div className="flex flex-col space-y-1">

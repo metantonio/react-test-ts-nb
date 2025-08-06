@@ -514,22 +514,17 @@ const GameSetup = () => {
             leagues={leagues}
             selectedLeague={selectedLeague}
             setSelectedLeague={setSelectedLeague}
-            teams={teams} selectedTeams1={selectedTeams1}
+            teams={teams}
+            selectedTeams1={selectedTeams1}
             setSelectedTeams1={setSelectedTeams1}
             selectedTeams2={selectedTeams2}
             setSelectedTeams2={setSelectedTeams2}
             error={error}
             isLoading={isLoading}
-            isGameInitial={isGameInitial}
-            setIsGameInitial={setIsGameInitial}
-            playByPlay={playByPlay}
-            setPlayByPlay={setPlayByPlay}
             boxScore={boxScore}
             setBoxScore={setBoxScore}
             playersTeam1={playersTeam1}
-            setPlayersTeam1={setPlayersTeam1}
             playersTeam2={playersTeam2}
-            setPlayersTeam2={setPlayersTeam2}
             handleFetchScoreBoard={handleFetchScoreBoard}
             handleFetchPlayByPlay={handleFetchPlayByPlay}
             handleFetchBoxScore={handleFetchBoxScore}
