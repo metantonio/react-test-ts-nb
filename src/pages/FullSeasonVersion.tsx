@@ -28,6 +28,8 @@ import {
 
 
 
+import { Loader2 } from 'lucide-react';
+
 const FullSeasonVersion = (
   { leagues,
     selectedLeague,
@@ -60,6 +62,7 @@ const FullSeasonVersion = (
   const [savePbp, setSavePbp] = useState(false);
   const [saveBox, setSaveBox] = useState(true);
   const [isClear, setIsClear] = useState(false)
+  const [isSimulating, setIsSimulating] = useState(false);
 
   const TeamLogo: React.FC<{ logo?: string; name: string }> = ({ logo, name }) => (
     logo ? <img src={logo} alt={`${name} Logo`} className="h-14 w-14 object-contain" /> : <div className="h-14 w-14 bg-gray-700 rounded-full flex items-center justify-center text-white font-bold text-xl">{name.substring(0, 3).toUpperCase()}</div>
@@ -69,6 +72,14 @@ const FullSeasonVersion = (
     console.log("should reset all")
   }, [isClear])
 
+  const handlePlayGames = async () => {
+    setIsSimulating(true);
+    await handleFetchScoreBoard();
+    await handleFetchPlayByPlay();
+    await handleFetchBoxScore();
+    setIsSimulating(false);
+  }
+
   return (
     <div>
       <div className="flex gap-2 mb-4 border-b-2 border-border pb-2">
@@ -76,7 +87,7 @@ const FullSeasonVersion = (
         <Button variant="outline" size="sm">Raw Stats</Button>
         <Sheet>
           <SheetTrigger asChild>
-            <Button variant={boxScore.length==0? "outline" : "destructive"} size="sm">{boxScore.length==0? "Show Box Score" : "Show Box Score"}</Button>
+            <Button variant={boxScore.length==0? "outline" : "destructive"} size="sm" disabled={isSimulating}>{boxScore.length==0? "Show Box Score" : "Show Box Score"}</Button>
           </SheetTrigger>
           <SheetContent className="overflow-y-auto">
             <SheetHeader>
@@ -319,12 +330,9 @@ const FullSeasonVersion = (
                   <CustomCheckbox id="save-pbp" checked={savePbp} onChange={setSavePbp} label="Save Play-by-Play (<=100 games)" />
                   <CustomCheckbox id="save-box" checked={saveBox} onChange={setSaveBox} label="Save Box Scores - no more than 15,000 games" />
                 </div>
-                <Button variant="outline" disabled={isLoading} className="mt-4" onClick={() => {
-                  handleFetchScoreBoard()
-                  handleFetchPlayByPlay()
-                  handleFetchBoxScore()
-
-                }}>PLAY GAMES
+                <Button variant="outline" disabled={isLoading || isSimulating} className="mt-4" onClick={handlePlayGames}>
+                  {isSimulating && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  PLAY GAMES
                 </Button>
               </> : <></>}
 
@@ -357,6 +365,7 @@ const FullSeasonVersion = (
       </div>
     </div>
   );
+
 };
 
 export default FullSeasonVersion;
