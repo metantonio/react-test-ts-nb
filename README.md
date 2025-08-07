@@ -1,48 +1,70 @@
-# React + TypeScript + Vite
+# React + TypeScript + Vite + Electron
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules, with Electron support.
 
-Currently, two official plugins are available:
+## Installation
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
-
-## Install libraries
+To install the dependencies, run the following command:
 
 ```bash
-npm i
+npm install
 ```
 
-## Run dev
+## Development
+
+This project can be run in two modes: Web and Electron.
+
+### Web Mode
+
+To run the application in your browser, use the following command:
+
+```bash
+npm run web
+```
+
+Note: [Check the .env file](#environment-variables)
+
+This will start a development server accessible at `http://localhost:5173`.
+
+### Electron Mode
+
+To run the application as a desktop app with Electron, use the following command:
 
 ```bash
 npm run dev
 ```
 
-## Build app
+Note: [Check the .env file](#environment-variables)
+
+## Building the Application
+
+### Web Build
+
+To build the web version of the application, run:
+
+```bash
+npm run buildweb
+```
+
+Note: [Check the .env file](#environment-variables)
+
+This will create a `dist` folder with the production-ready files.
+
+### Electron Build
+
+To build the Electron application for your current platform, run:
 
 ```bash
 npm run build
 ```
+
+Note: [Check the .env file](#environment-variables)
+
+This will create a `dist-electron` folder and an installer in the `release` folder.
+
+## Environment Variables
+
+The `.env` file is used to configure the application's behavior. The `VITE_APP_TARGET` variable determines the build target.
+
+- **For Electron development and builds**, set `VITE_APP_TARGET=electron`.
+- **For Web development and builds**, you can remove the `VITE_APP_TARGET` variable or set it to anything other than `electron`.
