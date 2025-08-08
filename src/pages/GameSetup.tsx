@@ -257,6 +257,23 @@ const GameSetup = () => {
     team_code: "",
     height: "",
     deny_fact: "",
+    g: "",
+    min: "",
+    ming: "",
+    ptsg: "",
+    positions: "",
+    fgpct: "",
+    scorefgpct: "",
+    twoptfgpct: "",
+    threeptfgpct: "",
+    ftpct: "",
+    offreb: "",
+    defreb: "",
+    totreb: "",
+    defrat: "",
+    pctpf: "",
+    pctst: "",
+    pctbs: ""
   }]);
   const [playersTeam2, setPlayersTeam2] = useState<PlayerChar[]>([{
     name: "",
@@ -279,6 +296,23 @@ const GameSetup = () => {
     team_code: "",
     height: "",
     deny_fact: "",
+    g: "",
+    min: "",
+    ming: "",
+    ptsg: "",
+    positions: "",
+    fgpct: "",
+    scorefgpct: "",
+    twoptfgpct: "",
+    threeptfgpct: "",
+    ftpct: "",
+    offreb: "",
+    defreb: "",
+    totreb: "",
+    defrat: "",
+    pctpf: "",
+    pctst: "",
+    pctbs: ""
   }]);
 
   const handleFetchLeagues = async () => {
