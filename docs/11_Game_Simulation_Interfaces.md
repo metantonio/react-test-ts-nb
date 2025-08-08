@@ -21,7 +21,7 @@ The following files were used as context for generating this wiki page:
 
 This document covers the user interface components that provide interactive basketball game simulation experiences. These interfaces allow users to configure and run basketball simulations, from single games to full season schedules, and view real-time results including statistics, play-by-play action, and box scores.
 
-For information about the underlying basketball simulation mechanics and algorithms, see [Basketball Simulation](#5.1). For details about the initial game setup and team selection process, see [Game Setup Interface](#4.2).
+For information about the underlying basketball simulation mechanics and algorithms, see [Basketball Simulation](./14_Basketball_Simulation.md). For details about the initial game setup and team selection process, see [Game Setup Interface](./10_Game_Setup_Interface.md).
 
 ## Overview
 
