@@ -246,8 +246,11 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                                       <TableHead className="h-10">Name</TableHead>
                                       <TableHead className="h-10">Position</TableHead>
                                       <TableHead className="h-10">Height</TableHead>
-
                                       <TableHead className="h-10">G</TableHead>
+                                      <TableHead className="h-10">Min</TableHead>
+                                      <TableHead className="h-10">Min/G</TableHead>
+                                      <TableHead className="h-10">Pts/G</TableHead>
+
                                       <TableHead className="h-10">Poss Fact</TableHead>
                                       <TableHead className="h-10">2pt FG Pct</TableHead>
                                       <TableHead className="h-10">FT Pct</TableHead>
@@ -273,8 +276,11 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                                         <TableCell className="h-10">{player.name}</TableCell>
                                         <TableCell className="h-10">{player.positions}</TableCell>
                                         <TableCell className="h-10">{player.height}</TableCell>
-
                                         <TableCell className="h-10">{player.g}</TableCell>
+                                        <TableCell className="h-10">{player.min}</TableCell>
+                                        <TableCell className="h-10">{player.ming}</TableCell>
+                                        <TableCell className="h-10">{player.ptsg}</TableCell>
+
                                         <TableCell className="h-10">{player.poss_fact}</TableCell>
                                         <TableCell className="h-10">{player.two_pt_fg_pct}</TableCell>
                                         <TableCell className="h-10">{player.ft_pct}</TableCell>
@@ -310,8 +316,11 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                                        <TableHead className="h-10">Name</TableHead>
                                       <TableHead className="h-10">Position</TableHead>
                                       <TableHead className="h-10">Height</TableHead>
-
                                       <TableHead className="h-10">G</TableHead>
+                                      <TableHead className="h-10">Min</TableHead>
+                                      <TableHead className="h-10">Min/G</TableHead>
+                                      <TableHead className="h-10">Pts/G</TableHead>
+
                                       <TableHead className="h-10">Poss Fact</TableHead>
                                       <TableHead className="h-10">2pt FG Pct</TableHead>
                                       <TableHead className="h-10">FT Pct</TableHead>
@@ -337,8 +346,11 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                                         <TableCell className="h-10">{player.name}</TableCell>
                                         <TableCell className="h-10">{player.positions}</TableCell>
                                         <TableCell className="h-10">{player.height}</TableCell>
-
                                         <TableCell className="h-10">{player.g}</TableCell>
+                                        <TableCell className="h-10">{player.min}</TableCell>
+                                        <TableCell className="h-10">{player.ming}</TableCell>
+                                        <TableCell className="h-10">{player.ptsg}</TableCell>
+
                                         <TableCell className="h-10">{player.poss_fact}</TableCell>
                                         <TableCell className="h-10">{player.two_pt_fg_pct}</TableCell>
                                         <TableCell className="h-10">{player.ft_pct}</TableCell>
