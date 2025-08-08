@@ -1,4 +1,4 @@
-# React + TypeScript + Vite + Electron
+# React + TypeScript + Vite + Electron [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/metantonio/react-test-ts-nb)
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules, with Electron support.
 
