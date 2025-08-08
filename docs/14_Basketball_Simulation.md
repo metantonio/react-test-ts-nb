@@ -5,10 +5,10 @@
 
 The following files were used as context for generating this wiki page:
 
-- [src/components/PlayerStatsTable.tsx](src/components/PlayerStatsTable.tsx)
-- [src/components/Scoreboard.tsx](src/components/Scoreboard.tsx)
-- [src/components/ui/sheet.tsx](src/components/ui/sheet.tsx)
-- [src/pages/GameSetup.tsx](src/pages/GameSetup.tsx)
+- [src/components/PlayerStatsTable.tsx](/src/components/PlayerStatsTable.tsx)
+- [src/components/Scoreboard.tsx](/src/components/Scoreboard.tsx)
+- [src/components/ui/sheet.tsx](/src/components/ui/sheet.tsx)
+- [src/pages/GameSetup.tsx](/src/pages/GameSetup.tsx)
 
 </details>
 
@@ -16,7 +16,7 @@ The following files were used as context for generating this wiki page:
 
 This document explains the basketball simulation engine that powers the core gameplay experience. It covers the data models, API integration patterns, and real-time game progression mechanics that enable users to simulate NBA games with detailed play-by-play action and statistical tracking.
 
-For information about the user interface components that display simulation results, see [Game Simulation Interfaces](#4.3). For details about season-long simulation features, see [Season Management](#5.2).
+For information about the user interface components that display simulation results, see [Game Simulation Interfaces](./11_Game_Simulation_Interfaces.md). For details about season-long simulation features, see [Season Management](./15_Season_Management.md).
 
 ## Simulation Architecture
 

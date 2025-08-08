@@ -5,9 +5,9 @@
 
 The following files were used as context for generating this wiki page:
 
-- [src/App.css](src/App.css)
-- [src/index.css](src/index.css)
-- [tailwind.config.cjs](tailwind.config.cjs)
+- [src/App.css](/src/App.css)
+- [src/index.css](/src/index.css)
+- [tailwind.config.cjs](/tailwind.config.cjs)
 
 </details>
 
@@ -15,7 +15,7 @@ The following files were used as context for generating this wiki page:
 
 This document covers the styling and theming system used in the NBA simulation application. It explains how Tailwind CSS is integrated as the primary styling framework, how global styles are managed, and the patterns used for component-specific styling throughout the codebase.
 
-For information about UI component structure and design patterns, see [Core Components](#4.1). For build system configuration that affects styling, see [Build System](#3.4).
+For information about UI component structure and design patterns, see [Core Components](./9_Core_Components.md). For build system configuration that affects styling, see [Build System](./7_Build_System.md).
 
 ## Styling System Architecture
 

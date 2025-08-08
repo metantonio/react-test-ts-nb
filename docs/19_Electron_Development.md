@@ -5,18 +5,18 @@
 
 The following files were used as context for generating this wiki page:
 
-- [.gitignore](.gitignore)
-- [README.md](README.md)
-- [electron-builder.json5.example](electron-builder.json5.example)
-- [electron/main.ts](electron/main.ts)
-- [electron/updater.ts](electron/updater.ts)
-- [license.txt](license.txt)
+- [.gitignore](/.gitignore)
+- [README.md](/README.md)
+- [electron-builder.json5.example](/electron-builder.json5.example)
+- [electron/main.ts](/electron/main.ts)
+- [electron/updater.ts](/electron/updater.ts)
+- [license.txt](/license.txt)
 
 </details>
 
 
 
-This document covers the Electron desktop application development aspects of the NBA simulation application, including the main process setup, auto-updater system, and packaging configuration. For information about the overall build system that supports both web and Electron targets, see [Build System](#3.4).
+This document covers the Electron desktop application development aspects of the NBA simulation application, including the main process setup, auto-updater system, and packaging configuration. For information about the overall build system that supports both web and Electron targets, see [Build System](./7_Build_System.md).
 
 ## Purpose and Scope
 

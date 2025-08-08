@@ -5,10 +5,10 @@
 
 The following files were used as context for generating this wiki page:
 
-- [src/components/ui/CustomRadio.tsx](src/components/ui/CustomRadio.tsx)
-- [src/components/ui/table.tsx](src/components/ui/table.tsx)
-- [src/lib/utils.ts](src/lib/utils.ts)
-- [src/pages/FullSeasonVersion.tsx](src/pages/FullSeasonVersion.tsx)
+- [src/components/ui/CustomRadio.tsx](/src/components/ui/CustomRadio.tsx)
+- [src/components/ui/table.tsx](/src/components/ui/table.tsx)
+- [src/lib/utils.ts](/src/lib/utils.ts)
+- [src/pages/FullSeasonVersion.tsx](/src/pages/FullSeasonVersion.tsx)
 
 </details>
 
@@ -16,7 +16,7 @@ The following files were used as context for generating this wiki page:
 
 This document explains the full season simulation capabilities of the NBA simulation application, focusing on how basketball seasons are configured, executed, and tracked through the `FullSeasonVersion` component. Season Management provides comprehensive functionality for simulating complete basketball seasons with configurable parameters, statistical tracking, and data export capabilities.
 
-For information about single game simulations, see [Game Simulation Interfaces](#4.3). For broader basketball simulation mechanics, see [Basketball Simulation](#5.1).
+For information about single game simulations, see [Game Simulation Interfaces](./11_Game_Simulation_Interfaces.md). For broader basketball simulation mechanics, see [Basketball Simulation](./14_Basketball_Simulation.md).
 
 ## Season Simulation Architecture
 

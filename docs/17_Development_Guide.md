@@ -5,15 +5,15 @@
 
 The following files were used as context for generating this wiki page:
 
-- [src/App.css](src/App.css)
-- [src/index.css](src/index.css)
-- [tailwind.config.cjs](tailwind.config.cjs)
+- [src/App.css](/src/App.css)
+- [src/index.css](/src/index.css)
+- [tailwind.config.cjs](/tailwind.config.cjs)
 
 </details>
 
 
 
-This document provides technical guidance for developers working on the NBA simulation application codebase. It covers component development patterns, styling approaches, development workflow, and code organization principles. For information about the overall architecture, see [Architecture](#3). For specific styling and theming details, see [Styling and Theming](#7.1). For Electron-specific development, see [Electron Development](#7.2).
+This document provides technical guidance for developers working on the NBA simulation application codebase. It covers component development patterns, styling approaches, development workflow, and code organization principles. For information about the overall architecture, see [Architecture](./3_Architecture.md). For specific styling and theming details, see [Styling and Theming](./18_Styling_and_Theming.md). For Electron-specific development, see [Electron Development](./19_Electron_Development.md).
 
 ## Development Environment Setup
 

@@ -5,12 +5,12 @@
 
 The following files were used as context for generating this wiki page:
 
-- [src/components/ui/sheet.tsx](src/components/ui/sheet.tsx)
-- [src/contexts/ApiContext.tsx](src/contexts/ApiContext.tsx)
-- [src/contexts/AppStateContext.tsx](src/contexts/AppStateContext.tsx)
-- [src/contexts/NotificationContext.tsx](src/contexts/NotificationContext.tsx)
-- [src/hooks/useFetch.tsx](src/hooks/useFetch.tsx)
-- [src/pages/GameSetup.tsx](src/pages/GameSetup.tsx)
+- [src/components/ui/sheet.tsx](/src/components/ui/sheet.tsx)
+- [src/contexts/ApiContext.tsx](/src/contexts/ApiContext.tsx)
+- [src/contexts/AppStateContext.tsx](/src/contexts/AppStateContext.tsx)
+- [src/contexts/NotificationContext.tsx](/src/contexts/NotificationContext.tsx)
+- [src/hooks/useFetch.tsx](/src/hooks/useFetch.tsx)
+- [src/pages/GameSetup.tsx](/src/pages/GameSetup.tsx)
 
 </details>
 
@@ -18,7 +18,7 @@ The following files were used as context for generating this wiki page:
 
 This document covers the API integration system used throughout the NBA simulation application. It explains how the application communicates with external basketball simulation APIs, manages authentication, handles data fetching, and processes API responses.
 
-For information about the broader state management patterns, see [State Management](#3.2). For details about specific game simulation features that consume this API data, see [Game Features](#5).
+For information about the broader state management patterns, see [State Management](./5_State_Management.md). For details about specific game simulation features that consume this API data, see [Game Features](./13_Game_Features.md).
 
 ## API Architecture Overview
 

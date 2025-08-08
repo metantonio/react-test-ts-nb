@@ -5,11 +5,11 @@
 
 The following files were used as context for generating this wiki page:
 
-- [package-lock.json](package-lock.json)
-- [postcss.config.cjs](postcss.config.cjs)
-- [src/App.tsx](src/App.tsx)
-- [src/assets/nba-logo-free-vector.jpg](src/assets/nba-logo-free-vector.jpg)
-- [src/img/nba-bg.jpg](src/img/nba-bg.jpg)
+- [package-lock.json](/package-lock.json)
+- [postcss.config.cjs](/postcss.config.cjs)
+- [src/App.tsx](/src/App.tsx)
+- [src/assets/nba-logo-free-vector.jpg](/src/assets/nba-logo-free-vector.jpg)
+- [src/img/nba-bg.jpg](/src/img/nba-bg.jpg)
 
 </details>
 
@@ -17,7 +17,7 @@ The following files were used as context for generating this wiki page:
 
 This page provides comprehensive reference documentation for the NBA simulation application codebase structure, configuration files, dependencies, and assets. It serves as a quick lookup guide for developers working with the project's technical infrastructure and build system.
 
-For information about the application's UI components and styling system, see [Styling and Theming](#7.1). For details about the build and deployment processes, see [Build System](#3.4).
+For information about the application's UI components and styling system, see [Styling and Theming](./18_Styling_and_Theming.md). For details about the build and deployment processes, see [Build System](./7_Build_System.md).
 
 ## Project Structure Overview
 
