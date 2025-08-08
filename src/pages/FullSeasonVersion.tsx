@@ -251,7 +251,8 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                           {playersTeam1.length > 1 && (
                             <div className="w-full l:w-1/1">
                               <h2 className="text-xl font-bold mt-8 mb-4">{selectedTeams1?.teams}</h2>
-                              <div className="overflow-x-auto h-[500px] overflow-y-auto">
+                              <div className="overflow-x-auto">
+                                <div className="h-[500px] overflow-y-auto">
                                 <Table className="border">
                                   <TableHeader>
                                     <TableRow>
@@ -303,6 +304,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                                     ))}
                                   </TableBody>
                                 </Table>
+                                </div>
                               </div>
                             </div>
                           )}
@@ -310,7 +312,8 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                           {playersTeam2.length > 1 && (
                             <div className="w-full l:w-1/1">
                               <h2 className="text-xl font-bold mt-8 mb-4">{selectedTeams2?.teams}</h2>
-                              <div className="overflow-x-auto h-[500px] overflow-y-auto">
+                              <div className="overflow-x-auto">
+                                <div className="h-[500px] overflow-y-auto">
                                 <Table className="border">
                                   <TableHeader>
                                     <TableRow>
@@ -361,6 +364,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                                     ))}
                                   </TableBody>
                                 </Table>
+                                </div>
                               </div>
                             </div>
                           )}
