@@ -67,6 +67,7 @@ interface PlayerChar { //this scheme is shared with playerChar editable stats, s
   ming: string;
   ptsg: string;
   positions: string;
+  fgpct: string;
 }
 
 interface FullSeasonVersionProps {
@@ -250,6 +251,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                                       <TableHead className="h-10">Min</TableHead>
                                       <TableHead className="h-10">Min/G</TableHead>
                                       <TableHead className="h-10">Pts/G</TableHead>
+                                      <TableHead className="h-10">FG%</TableHead>
 
                                       <TableHead className="h-10">Poss Fact</TableHead>
                                       <TableHead className="h-10">2pt FG Pct</TableHead>
@@ -280,6 +282,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                                         <TableCell className="h-10">{player.min}</TableCell>
                                         <TableCell className="h-10">{player.ming}</TableCell>
                                         <TableCell className="h-10">{player.ptsg}</TableCell>
+                                        <TableCell className="h-10">{player.fgpct}</TableCell>
 
                                         <TableCell className="h-10">{player.poss_fact}</TableCell>
                                         <TableCell className="h-10">{player.two_pt_fg_pct}</TableCell>
@@ -320,6 +323,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                                       <TableHead className="h-10">Min</TableHead>
                                       <TableHead className="h-10">Min/G</TableHead>
                                       <TableHead className="h-10">Pts/G</TableHead>
+                                      <TableHead className="h-10">FG%</TableHead>
 
                                       <TableHead className="h-10">Poss Fact</TableHead>
                                       <TableHead className="h-10">2pt FG Pct</TableHead>
@@ -350,6 +354,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                                         <TableCell className="h-10">{player.min}</TableCell>
                                         <TableCell className="h-10">{player.ming}</TableCell>
                                         <TableCell className="h-10">{player.ptsg}</TableCell>
+                                        <TableCell className="h-10">{player.fgpct}</TableCell>
 
                                         <TableCell className="h-10">{player.poss_fact}</TableCell>
                                         <TableCell className="h-10">{player.two_pt_fg_pct}</TableCell>
