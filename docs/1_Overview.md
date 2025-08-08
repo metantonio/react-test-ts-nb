@@ -5,13 +5,13 @@
 
 The following files were used as context for generating this wiki page:
 
-- [.env.example](.env.example)
-- [README.md](README.md)
-- [license.txt](license.txt)
-- [package.json](package.json)
-- [src/gamesetupimage.png](src/gamesetupimage.png)
-- [src/main.tsx](src/main.tsx)
-- [vite.config.ts](vite.config.ts)
+- [.env.example](/.env.example)
+- [README.md](/README.md)
+- [license.txt](/license.txt)
+- [package.json](/package.json)
+- [src/gamesetupimage.png](/src/gamesetupimage.png)
+- [src/main.tsx](/src/main.tsx)
+- [vite.config.ts](/vite.config.ts)
 
 </details>
 
@@ -21,7 +21,7 @@ The following files were used as context for generating this wiki page:
 
 This document provides a comprehensive overview of the NBA simulation application, a React-based basketball game simulator that enables users to simulate basketball games and seasons through integration with external basketball simulation APIs. The application supports both web browser and desktop deployment through a unified codebase.
 
-For detailed information about specific subsystems, see [Architecture](#3) for system design patterns, [User Interface](#4) for component documentation, [Game Features](#5) for simulation mechanics, and [Development Guide](#7) for contributor guidelines.
+For detailed information about specific subsystems, see [Architecture](./3_Architecture.md) for system design patterns, [User Interface](./8_User_Interface.md) for component documentation, [Game Features](./13_Game_Features.md) for simulation mechanics, and [Development Guide](./17_Development_Guide.md) for contributor guidelines.
 
 ## Application Architecture
 
@@ -79,7 +79,7 @@ graph TB
     style BasketballAPI fill:#e8f5e8
 ```
 
-Sources: [src/main.tsx:10](), [package.json:2](), [vite.config.ts:8-36]()
+Sources: [src/main.tsx:10](/src/main.tsx), [package.json:2](/package.json), [vite.config.ts:8-36](/vite.config.ts)
 
 ## Deployment Architecture
 
@@ -129,7 +129,7 @@ graph LR
     style ElectronBuild fill:#c8e6c9
 ```
 
-Sources: [vite.config.ts:8-11](), [package.json:6-12](), [README.md:15-71]()
+Sources: [vite.config.ts:8-11](/vite.config.ts), [package.json:6-12](/package.json), [README.md:15-71](/README.md)
 
 ## Core Technology Stack
 
@@ -182,7 +182,7 @@ sequenceDiagram
 
 The authentication system supports integration with basketball simulation services at `bballsports.com` and manages user sessions through AWS Amplify's authentication infrastructure.
 
-Sources: [package.json:15](), [package.json:47](), [package.json:113]()
+Sources: [package.json:15](/package.json), [package.json:47](/package.json), [package.json:113](/package.json)
 
 ## Development Environment Setup
 
