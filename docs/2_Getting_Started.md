@@ -5,13 +5,13 @@
 
 The following files were used as context for generating this wiki page:
 
-- [.env.example](.env.example)
-- [.gitignore](.gitignore)
-- [electron-builder.json5.example](electron-builder.json5.example)
-- [package.json](package.json)
-- [src/gamesetupimage.png](src/gamesetupimage.png)
-- [src/main.tsx](src/main.tsx)
-- [vite.config.ts](vite.config.ts)
+- [.env.example](/.env.example)
+- [.gitignore](/.gitignore)
+- [electron-builder.json5.example](/electron-builder.json5.example)
+- [package.json](/package.json)
+- [src/gamesetupimage.png](/src/gamesetupimage.png)
+- [src/main.tsx](/src/main.tsx)
+- [vite.config.ts](/vite.config.ts)
 
 </details>
 
@@ -19,7 +19,7 @@ The following files were used as context for generating this wiki page:
 
 This document provides setup instructions and development workflows for the NBA simulation application. It covers installation, environment configuration, and running the application in both web browser and desktop modes.
 
-For information about the application architecture and component structure, see [Architecture](#3). For details about the UI components and game interfaces, see [User Interface](#4).
+For information about the application architecture and component structure, see [Architecture](./3_Architecture.md). For details about the UI components and game interfaces, see [User Interface](./8_User_Interface.md).
 
 ## Prerequisites
 
@@ -233,7 +233,7 @@ After completing the installation and setup:
 
 1. Start development using `npm run web` or `npm run dev`
 2. Configure API credentials for basketball simulation services
-3. Review the authentication system documentation in [Authentication System](#3.3)
-4. Explore the game setup interface documentation in [Game Setup Interface](#4.2)
+3. Review the authentication system documentation in [Authentication System](./6_Authentication_System.md)
+4. Explore the game setup interface documentation in [Game Setup Interface](./10_Game_Setup_Interface.md)
 
 The application will require valid API credentials for the basketball simulation service to access game data and functionality.
