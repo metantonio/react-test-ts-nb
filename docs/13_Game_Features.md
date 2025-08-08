@@ -5,15 +5,15 @@
 
 The following files were used as context for generating this wiki page:
 
-- [src/components/ui/CustomRadio.tsx](src/components/ui/CustomRadio.tsx)
-- [src/components/ui/sheet.tsx](src/components/ui/sheet.tsx)
-- [src/components/ui/table.tsx](src/components/ui/table.tsx)
-- [src/gamesetup_result_image.png](src/gamesetup_result_image.png)
-- [src/lib/utils.ts](src/lib/utils.ts)
-- [src/pages/FullSeasonVersion.tsx](src/pages/FullSeasonVersion.tsx)
-- [src/pages/GameSetup.tsx](src/pages/GameSetup.tsx)
-- [src/pages/Instructions.tsx](src/pages/Instructions.tsx)
-- [src/pages/SingleGameVersion.tsx](src/pages/SingleGameVersion.tsx)
+- [src/components/ui/CustomRadio.tsx](/src/components/ui/CustomRadio.tsx)
+- [src/components/ui/sheet.tsx](/src/components/ui/sheet.tsx)
+- [src/components/ui/table.tsx](/src/components/ui/table.tsx)
+- [src/gamesetup_result_image.png](/src/gamesetup_result_image.png)
+- [src/lib/utils.ts](/src/lib/utils.ts)
+- [src/pages/FullSeasonVersion.tsx](/src/pages/FullSeasonVersion.tsx)
+- [src/pages/GameSetup.tsx](/src/pages/GameSetup.tsx)
+- [src/pages/Instructions.tsx](/src/pages/Instructions.tsx)
+- [src/pages/SingleGameVersion.tsx](/src/pages/SingleGameVersion.tsx)
 
 </details>
 
@@ -23,7 +23,7 @@ The following files were used as context for generating this wiki page:
 
 This document covers the basketball simulation features and game mechanics available in the NBA simulation application. It details the two primary simulation modes, the underlying basketball engine, player management capabilities, and statistical tracking features.
 
-For information about the user interface components that display these features, see [User Interface](#4). For details about the external API integration that powers the simulation, see [API Integration](#6).
+For information about the user interface components that display these features, see [User Interface](./8_User_Interface.md). For details about the external API integration that powers the simulation, see [API Integration](./16_API_Integration.md).
 
 ## Game Simulation Modes
 

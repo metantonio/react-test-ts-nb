@@ -5,8 +5,8 @@
 
 The following files were used as context for generating this wiki page:
 
-- [src/components/ui/sheet.tsx](src/components/ui/sheet.tsx)
-- [src/pages/GameSetup.tsx](src/pages/GameSetup.tsx)
+- [src/components/ui/sheet.tsx](/src/components/ui/sheet.tsx)
+- [src/pages/GameSetup.tsx](/src/pages/GameSetup.tsx)
 
 </details>
 
@@ -16,7 +16,7 @@ The following files were used as context for generating this wiki page:
 
 The Game Setup Interface serves as the central orchestration component for initializing and configuring basketball game simulations. It provides the main user interface for selecting leagues, teams, and game modes, while managing the complex state transitions required to prepare a game for simulation. This component acts as the primary entry point after authentication and coordinates data fetching from external basketball simulation APIs.
 
-For information about the actual game simulation mechanics, see [Basketball Simulation](#5.1). For details about the authentication system that precedes this interface, see [Authentication System](#3.3).
+For information about the actual game simulation mechanics, see [Basketball Simulation](./14_Basketball_Simulation.md). For details about the authentication system that precedes this interface, see [Authentication System](./6_Authentication_System.md).
 
 ## Component Architecture Overview
 

@@ -5,12 +5,12 @@
 
 The following files were used as context for generating this wiki page:
 
-- [src/components/PlayerStatsTable.tsx](src/components/PlayerStatsTable.tsx)
-- [src/components/Scoreboard.tsx](src/components/Scoreboard.tsx)
-- [src/components/searchbox.tsx](src/components/searchbox.tsx)
-- [src/components/ui/CustomCheckbox.tsx](src/components/ui/CustomCheckbox.tsx)
-- [src/components/ui/calendar.tsx](src/components/ui/calendar.tsx)
-- [src/singlegame_image.png](src/singlegame_image.png)
+- [src/components/PlayerStatsTable.tsx](/src/components/PlayerStatsTable.tsx)
+- [src/components/Scoreboard.tsx](/src/components/Scoreboard.tsx)
+- [src/components/searchbox.tsx](/src/components/searchbox.tsx)
+- [src/components/ui/CustomCheckbox.tsx](/src/components/ui/CustomCheckbox.tsx)
+- [src/components/ui/calendar.tsx](/src/components/ui/calendar.tsx)
+- [src/singlegame_image.png](/src/singlegame_image.png)
 
 </details>
 
@@ -20,7 +20,7 @@ The following files were used as context for generating this wiki page:
 
 This document covers the reusable UI components that form the foundation of the basketball simulation application's user interface. These components provide essential building blocks for displaying game data, collecting user input, and presenting statistical information throughout the application.
 
-For information about the higher-level game interfaces that use these components, see [Game Simulation Interfaces](#4.3). For layout and navigation components, see [Layout and Navigation](#4.4).
+For information about the higher-level game interfaces that use these components, see [Game Simulation Interfaces](./11_Game_Simulation_Interfaces.md). For layout and navigation components, see [Layout and Navigation](./12_Layout_and_Navigation.md).
 
 ## Table Components
 

@@ -5,13 +5,13 @@
 
 The following files were used as context for generating this wiki page:
 
-- [.env.example](.env.example)
-- [README.md](README.md)
-- [license.txt](license.txt)
-- [package.json](package.json)
-- [src/gamesetupimage.png](src/gamesetupimage.png)
-- [src/main.tsx](src/main.tsx)
-- [vite.config.ts](vite.config.ts)
+- [.env.example](/.env.example)
+- [README.md](/README.md)
+- [license.txt](/license.txt)
+- [package.json](/package.json)
+- [src/gamesetupimage.png](/src/gamesetupimage.png)
+- [src/main.tsx](/src/main.tsx)
+- [vite.config.ts](/vite.config.ts)
 
 </details>
 
@@ -19,7 +19,7 @@ The following files were used as context for generating this wiki page:
 
 This document covers the dual-target build system that enables the NBA simulation application to be deployed as both a web application and an Electron desktop application from a single codebase. The build system uses Vite as the primary build tool with conditional configuration based on environment variables.
 
-For information about the application architecture and component structure, see [Application Structure](#3.1). For deployment and packaging details, see [Electron Development](#7.2).
+For information about the application architecture and component structure, see [Application Structure](./4_Application_Structure.md). For deployment and packaging details, see [Electron Development](./19_Electron_Development.md).
 
 ## Overview
 

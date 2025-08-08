@@ -5,11 +5,11 @@
 
 The following files were used as context for generating this wiki page:
 
-- [src/components/searchbox.tsx](src/components/searchbox.tsx)
-- [src/components/ui/CustomCheckbox.tsx](src/components/ui/CustomCheckbox.tsx)
-- [src/components/ui/calendar.tsx](src/components/ui/calendar.tsx)
-- [src/index.css](src/index.css)
-- [src/singlegame_image.png](src/singlegame_image.png)
+- [src/components/searchbox.tsx](/src/components/searchbox.tsx)
+- [src/components/ui/CustomCheckbox.tsx](/src/components/ui/CustomCheckbox.tsx)
+- [src/components/ui/calendar.tsx](/src/components/ui/calendar.tsx)
+- [src/index.css](/src/index.css)
+- [src/singlegame_image.png](/src/singlegame_image.png)
 
 </details>
 
@@ -17,7 +17,7 @@ The following files were used as context for generating this wiki page:
 
 This document covers the user interface components and design patterns used throughout the NBA simulation application. It focuses on the reusable UI components, styling system, and architectural patterns that form the foundation for all user-facing interfaces.
 
-For information about specific game interfaces and their interactions, see [Game Simulation Interfaces](#4.3). For details about the overall application layout and navigation structure, see [Layout and Navigation](#4.4).
+For information about specific game interfaces and their interactions, see [Game Simulation Interfaces](./10_Game_Setup_Interface.md). For details about the overall application layout and navigation structure, see [Layout and Navigation](./12_Layout_and_Navigation.md).
 
 ## Styling System
 

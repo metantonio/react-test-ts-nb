@@ -5,9 +5,9 @@
 
 The following files were used as context for generating this wiki page:
 
-- [src/LoginAPI.tsx](src/LoginAPI.tsx)
-- [src/contexts/AuthService.ts](src/contexts/AuthService.ts)
-- [src/contexts/UserContext.tsx](src/contexts/UserContext.tsx)
+- [src/LoginAPI.tsx](/src/LoginAPI.tsx)
+- [src/contexts/AuthService.ts](/src/contexts/AuthService.ts)
+- [src/contexts/UserContext.tsx](/src/contexts/UserContext.tsx)
 
 </details>
 
@@ -15,7 +15,7 @@ The following files were used as context for generating this wiki page:
 
 This document covers the authentication system used in the NBA simulation application, which implements API key-based authentication for accessing external basketball simulation services. The system manages user credentials, maintains authentication state, and provides role-based access control throughout the application.
 
-For information about the broader state management architecture, see [State Management](#3.2). For details about API integration patterns, see [API Integration](#6).
+For information about the broader state management architecture, see [State Management](./5_State_Management.md). For details about API integration patterns, see [API Integration](./16_API_Integration.md).
 
 ## Overview
 

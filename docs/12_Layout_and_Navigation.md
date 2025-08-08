@@ -5,11 +5,11 @@
 
 The following files were used as context for generating this wiki page:
 
-- [src/components/AppSidebar.tsx](src/components/AppSidebar.tsx)
-- [src/components/GoogleMap.tsx](src/components/GoogleMap.tsx)
-- [src/components/LoginLayout.tsx](src/components/LoginLayout.tsx)
-- [src/components/MainLayout.tsx](src/components/MainLayout.tsx)
-- [src/components/ProfileDropdown.tsx](src/components/ProfileDropdown.tsx)
+- [src/components/AppSidebar.tsx](/src/components/AppSidebar.tsx)
+- [src/components/GoogleMap.tsx](/src/components/GoogleMap.tsx)
+- [src/components/LoginLayout.tsx](/src/components/LoginLayout.tsx)
+- [src/components/MainLayout.tsx](/src/components/MainLayout.tsx)
+- [src/components/ProfileDropdown.tsx](/src/components/ProfileDropdown.tsx)
 
 </details>
 
@@ -17,7 +17,7 @@ The following files were used as context for generating this wiki page:
 
 This document covers the application's layout system, sidebar navigation components, and user profile management interface. The layout system provides a consistent structure for the application with role-based navigation and user account management features.
 
-For information about the core UI components used within these layouts, see [Core Components](#4.1). For details about the game-specific interfaces that render within these layouts, see [Game Setup Interface](#4.2) and [Game Simulation Interfaces](#4.3).
+For information about the core UI components used within these layouts, see [Core Components](./9_Core_Components.md). For details about the game-specific interfaces that render within these layouts, see [Game Setup Interface](./10_Game_Setup_Interface.md) and [Game Simulation Interfaces](./11_Game_Simulation_Interfaces.md).
 
 ## Layout Architecture
 
