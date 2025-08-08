@@ -5,11 +5,11 @@
 
 The following files were used as context for generating this wiki page:
 
-- [index.html](index.html)
-- [src/components/GoogleMap.tsx](src/components/GoogleMap.tsx)
-- [src/components/LoginLayout.tsx](src/components/LoginLayout.tsx)
-- [src/components/MainLayout.tsx](src/components/MainLayout.tsx)
-- [src/layout.tsx](src/layout.tsx)
+- [index.html](/index.html)
+- [src/components/GoogleMap.tsx](/src/components/GoogleMap.tsx)
+- [src/components/LoginLayout.tsx](/src/components/LoginLayout.tsx)
+- [src/components/MainLayout.tsx](/src/components/MainLayout.tsx)
+- [src/layout.tsx](/src/layout.tsx)
 
 </details>
 
@@ -17,7 +17,7 @@ The following files were used as context for generating this wiki page:
 
 This page documents the React application structure, routing system, and layout components that form the foundation of the NBA simulation application. It covers the component hierarchy, routing configuration, provider setup, and layout organization.
 
-For information about the build system that supports both web and Electron deployment, see [Build System](#3.4). For details about the React Context-based state management, see [State Management](#3.2).
+For information about the build system that supports both web and Electron deployment, see [Build System](./7_Build_System.md). For details about the React Context-based state management, see [State Management](./5_State_Management.md).
 
 ## Application Entry Point and Provider Hierarchy
 
@@ -51,7 +51,7 @@ graph TB
     TooltipProvider -.-> Sonner
 ```
 
-Sources: [src/layout.tsx:44-60]()
+Sources: [src/layout.tsx:44-60](/src/layout.tsx)
 
 ## Routing System
 
@@ -193,6 +193,6 @@ sequenceDiagram
     Routes->>Routes: Render LoginAPI or GameSetup
 ```
 
-Sources: [index.html:10-12](), [src/layout.tsx:44-60]()
+Sources: [index.html:10-12](/index.html), [src/layout.tsx:44-60](/src/layout.tsx)
 
 The `AppLayout` component serves as the root component that orchestrates the entire application structure, establishing the context providers, routing system, and layout rendering logic in a predictable hierarchy.

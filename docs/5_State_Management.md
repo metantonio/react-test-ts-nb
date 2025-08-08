@@ -5,11 +5,11 @@
 
 The following files were used as context for generating this wiki page:
 
-- [src/contexts/ApiContext.tsx](src/contexts/ApiContext.tsx)
-- [src/contexts/AppStateContext.tsx](src/contexts/AppStateContext.tsx)
-- [src/contexts/AuthService.ts](src/contexts/AuthService.ts)
-- [src/contexts/NotificationContext.tsx](src/contexts/NotificationContext.tsx)
-- [src/contexts/UserContext.tsx](src/contexts/UserContext.tsx)
+- [src/contexts/ApiContext.tsx](/src/contexts/ApiContext.tsx)
+- [src/contexts/AppStateContext.tsx](/src/contexts/AppStateContext.tsx)
+- [src/contexts/AuthService.ts](/src/contexts/AuthService.ts)
+- [src/contexts/NotificationContext.tsx](/src/contexts/NotificationContext.tsx)
+- [src/contexts/UserContext.tsx](/src/contexts/UserContext.tsx)
 
 </details>
 
@@ -17,7 +17,7 @@ The following files were used as context for generating this wiki page:
 
 This document covers the React Context-based state management system used throughout the NBA simulation application. The system implements a centralized pattern where multiple specialized contexts are combined into a unified API context that provides state and actions to components.
 
-For information about the authentication integration with AWS Amplify, see [Authentication System](#3.3). For details about API integration patterns, see [API Integration](#6).
+For information about the authentication integration with AWS Amplify, see [Authentication System](./6_Authentication_System.md). For details about API integration patterns, see [API Integration](./16_API_Integration.md).
 
 ## Overview
 
@@ -223,12 +223,12 @@ const {
 } = useApi();
 ```
 
-The hook provides type safety and throws an error if used outside the provider context: [src/contexts/ApiContext.tsx:91-97]()
+The hook provides type safety and throws an error if used outside the provider context: [src/contexts/ApiContext.tsx:91-97](/src/contexts/ApiContext.tsx)
 
 ### Error Handling
 
-Context hooks include runtime validation to ensure proper provider hierarchy: [src/contexts/ApiContext.tsx:93-96]()
+Context hooks include runtime validation to ensure proper provider hierarchy: [src/contexts/ApiContext.tsx:93-96](/src/contexts/ApiContext.tsx)
 
 This pattern is consistent across all context implementations for development-time error detection.
 
-Sources: [src/contexts/ApiContext.tsx:91-97](), [src/contexts/UserContext.tsx:72-78]()
+Sources: [src/contexts/ApiContext.tsx:91-97](/src/contexts/ApiContext.tsx), [src/contexts/UserContext.tsx:72-78](/src/contexts/UserContext.tsx)

@@ -213,7 +213,7 @@ The application follows a standard React application structure with TypeScript s
 
 ### Main Entry Point
 
-The application bootstraps through [src/main.tsx:8-12]() where `ReactDOM` renders the `AppLayout` component wrapped in `React.StrictMode`. The main entry also includes Electron IPC communication setup for desktop deployment.
+The application bootstraps through [src/main.tsx:8-12](/src/main.tsx) where `ReactDOM` renders the `AppLayout` component wrapped in `React.StrictMode`. The main entry also includes Electron IPC communication setup for desktop deployment.
 
 ### Core Application Layout
 

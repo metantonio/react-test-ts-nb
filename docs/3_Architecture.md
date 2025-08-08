@@ -5,13 +5,13 @@
 
 The following files were used as context for generating this wiki page:
 
-- [.env.example](.env.example)
-- [src/contexts/ApiContext.tsx](src/contexts/ApiContext.tsx)
-- [src/contexts/AppStateContext.tsx](src/contexts/AppStateContext.tsx)
-- [src/contexts/NotificationContext.tsx](src/contexts/NotificationContext.tsx)
-- [src/layout.tsx](src/layout.tsx)
-- [src/main.tsx](src/main.tsx)
-- [vite.config.ts](vite.config.ts)
+- [.env.example](/.env.example)
+- [src/contexts/ApiContext.tsx](/src/contexts/ApiContext.tsx)
+- [src/contexts/AppStateContext.tsx](/src/contexts/AppStateContext.tsx)
+- [src/contexts/NotificationContext.tsx](/src/contexts/NotificationContext.tsx)
+- [src/layout.tsx](/src/layout.tsx)
+- [src/main.tsx](/src/main.tsx)
+- [vite.config.ts](/vite.config.ts)
 
 </details>
 
@@ -19,7 +19,7 @@ The following files were used as context for generating this wiki page:
 
 This document explains the overall system architecture and core design patterns of the NBA simulation application. It covers the React application structure, state management system, authentication patterns, and dual-target build configuration that enables both web and desktop deployment.
 
-For specific details about individual UI components, see [Core Components](#4.1). For build system implementation details, see [Build System](#3.4).
+For specific details about individual UI components, see [Core Components](./9_Core_Components.md). For build system implementation details, see [Build System](./7_Build_System.md).
 
 ## System Overview
 
