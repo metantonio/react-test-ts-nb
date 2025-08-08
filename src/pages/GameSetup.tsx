@@ -27,7 +27,7 @@ interface TeamsResponse {
   data: Teams[];
 }
 
-interface PlayerChar {
+interface PlayerChar { //this scheme is shared with playerChar editable stats, so two values could refer to the same stat but it has different name depending if is editable or not
   name: string;
   position: string;
   poss_fact: string;
@@ -48,6 +48,11 @@ interface PlayerChar {
   team_code: string;
   height: string;
   deny_fact: string;
+  g: string;
+  min: string;
+  ming: string;
+  ptsg: string;
+  positions: string;
 }
 
 interface PlayerCharResponse {
@@ -367,10 +372,10 @@ const GameSetup = () => {
     }
   };
 
-  const handleFetchPlayersTeam1 = async () => {
+  const handleFetchPlayersTeam1 = async () => { //this is for actual player stats, for editable stats is: http://api.bballsports.com/simulationAPI/get_players_chars.php
     setError(null);
     try {
-      const response = await fetchWithAuth('http://api.bballsports.com/simulationAPI/get_players_chars.php', 'POST', { ...selectedLeague, team_name: selectedTeams1?.teams });
+      const response = await fetchWithAuth('http://api.bballsports.com/simulationAPI/get_actual_player_stats.php', 'POST', { ...selectedLeague, team_name: selectedTeams1?.teams });
       if (!response.ok) {
         const err: Message = await response.json();
         setError(`error: ${err.message}`);
@@ -384,10 +389,10 @@ const GameSetup = () => {
     }
   };
 
-  const handleFetchPlayersTeam2 = async () => {
+  const handleFetchPlayersTeam2 = async () => {//this is for actual player stats, for editable stats is: http://api.bballsports.com/simulationAPI/get_players_chars.php
     setError(null);
     try {
-      const response = await fetchWithAuth('http://api.bballsports.com/simulationAPI/get_players_chars.php', 'POST', { ...selectedLeague, team_name: selectedTeams2?.teams });
+      const response = await fetchWithAuth('http://api.bballsports.com/simulationAPI/get_actual_player_stats.php', 'POST', { ...selectedLeague, team_name: selectedTeams2?.teams });
       if (!response.ok) {
         const err: Message = await response.json();
         setError(`error: ${err.message}`);

@@ -41,7 +41,7 @@ interface BoxScore {
   line_number: string;
 }
 
-interface PlayerChar {
+interface PlayerChar { //this scheme is shared with playerChar editable stats, so two values could refer to the same stat but it has different name depending if is editable or not
   name: string;
   position: string;
   poss_fact: string;
@@ -62,6 +62,11 @@ interface PlayerChar {
   team_code: string;
   height: string;
   deny_fact: string;
+  g: string;
+  min: string;
+  ming: string;
+  ptsg: string;
+  positions: string;
 }
 
 interface FullSeasonVersionProps {
@@ -240,6 +245,9 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                                     <TableRow>
                                       <TableHead className="h-10">Name</TableHead>
                                       <TableHead className="h-10">Position</TableHead>
+                                      <TableHead className="h-10">Height</TableHead>
+
+                                      <TableHead className="h-10">G</TableHead>
                                       <TableHead className="h-10">Poss Fact</TableHead>
                                       <TableHead className="h-10">2pt FG Pct</TableHead>
                                       <TableHead className="h-10">FT Pct</TableHead>
@@ -256,7 +264,6 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                                       <TableHead className="h-10">Pct BS</TableHead>
                                       <TableHead className="h-10">Year</TableHead>
                                       <TableHead className="h-10">Team Code</TableHead>
-                                      <TableHead className="h-10">Height</TableHead>
                                       <TableHead className="h-10">Deny Fact</TableHead>
                                     </TableRow>
                                   </TableHeader>
@@ -264,7 +271,10 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                                     {playersTeam1.map((player: any) => (
                                       <TableRow key={player.name}>
                                         <TableCell className="h-10">{player.name}</TableCell>
-                                        <TableCell className="h-10">{player.position}</TableCell>
+                                        <TableCell className="h-10">{player.positions}</TableCell>
+                                        <TableCell className="h-10">{player.height}</TableCell>
+
+                                        <TableCell className="h-10">{player.g}</TableCell>
                                         <TableCell className="h-10">{player.poss_fact}</TableCell>
                                         <TableCell className="h-10">{player.two_pt_fg_pct}</TableCell>
                                         <TableCell className="h-10">{player.ft_pct}</TableCell>
@@ -281,7 +291,6 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                                         <TableCell className="h-10">{player.pct_bs}</TableCell>
                                         <TableCell className="h-10">{player.year}</TableCell>
                                         <TableCell className="h-10">{player.team_code}</TableCell>
-                                        <TableCell className="h-10">{player.height}</TableCell>
                                         <TableCell className="h-10">{player.deny_fact}</TableCell>
                                       </TableRow>
                                     ))}
@@ -298,8 +307,11 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                                 <Table className="border">
                                   <TableHeader>
                                     <TableRow>
-                                      <TableHead className="h-10">Name</TableHead>
+                                       <TableHead className="h-10">Name</TableHead>
                                       <TableHead className="h-10">Position</TableHead>
+                                      <TableHead className="h-10">Height</TableHead>
+
+                                      <TableHead className="h-10">G</TableHead>
                                       <TableHead className="h-10">Poss Fact</TableHead>
                                       <TableHead className="h-10">2pt FG Pct</TableHead>
                                       <TableHead className="h-10">FT Pct</TableHead>
@@ -316,7 +328,6 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                                       <TableHead className="h-10">Pct BS</TableHead>
                                       <TableHead className="h-10">Year</TableHead>
                                       <TableHead className="h-10">Team Code</TableHead>
-                                      <TableHead className="h-10">Height</TableHead>
                                       <TableHead className="h-10">Deny Fact</TableHead>
                                     </TableRow>
                                   </TableHeader>
@@ -324,7 +335,10 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                                     {playersTeam2.map((player: any) => (
                                       <TableRow key={player.name}>
                                         <TableCell className="h-10">{player.name}</TableCell>
-                                        <TableCell className="h-10">{player.position}</TableCell>
+                                        <TableCell className="h-10">{player.positions}</TableCell>
+                                        <TableCell className="h-10">{player.height}</TableCell>
+
+                                        <TableCell className="h-10">{player.g}</TableCell>
                                         <TableCell className="h-10">{player.poss_fact}</TableCell>
                                         <TableCell className="h-10">{player.two_pt_fg_pct}</TableCell>
                                         <TableCell className="h-10">{player.ft_pct}</TableCell>
@@ -341,7 +355,6 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                                         <TableCell className="h-10">{player.pct_bs}</TableCell>
                                         <TableCell className="h-10">{player.year}</TableCell>
                                         <TableCell className="h-10">{player.team_code}</TableCell>
-                                        <TableCell className="h-10">{player.height}</TableCell>
                                         <TableCell className="h-10">{player.deny_fact}</TableCell>
                                       </TableRow>
                                     ))}
