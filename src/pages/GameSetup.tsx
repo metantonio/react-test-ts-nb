@@ -315,10 +315,12 @@ const GameSetup = () => {
     pctbs: ""
   }]);
 
+  const API_URL = import.meta.env.VITE_API_BASE_URL;
+
   const handleFetchLeagues = async () => {
     setError(null);
     try {
-      const response = await fetchWithAuth('http://api.bballsports.com/simulationAPI/get_leagues.php', 'POST');
+      const response = await fetchWithAuth(`${API_URL}/get_leagues.php`, 'POST');
       if (!response.ok) {
         const err: Message = await response.json();
         setError(`error: ${err.message}`);
@@ -334,7 +336,7 @@ const GameSetup = () => {
   const handleFetchTeams = async () => {
     setError(null);
     try {
-      const response = await fetchWithAuth('http://api.bballsports.com/simulationAPI/get_teams.php', 'POST', selectedLeague);
+      const response = await fetchWithAuth(`${API_URL}/get_teams.php`, 'POST', selectedLeague);
       if (!response.ok) {
         const err: Message = await response.json();
         setError(`error: ${err.message}`);
@@ -351,7 +353,7 @@ const GameSetup = () => {
     setError(null);
     setIsGameInitial(true);
     try {
-      const response = await fetchWithAuth('http://api.bballsports.com/simulationAPI/playsinglegame_initial.php', 'POST', { homeaway: "away", awayleague_name: selectedLeague?.league_name, homeleague_name: selectedLeague?.league_name, hometeam: selectedTeams2?.teams, awayteam: selectedTeams1?.teams });
+      const response = await fetchWithAuth(`${API_URL}/playsinglegame_initial.php`, 'POST', { homeaway: "away", awayleague_name: selectedLeague?.league_name, homeleague_name: selectedLeague?.league_name, hometeam: selectedTeams2?.teams, awayteam: selectedTeams1?.teams });
       if (!response.ok) {
         const err: Message = await response.json();
         setError(`error: ${err.message}`);
@@ -368,7 +370,7 @@ const GameSetup = () => {
   const handleFetchScoreBoard = async () => {
     setError(null);
     try {
-      const response = await fetchWithAuth('http://api.bballsports.com/simulationAPI/get_singlegame_stats.php', 'POST');
+      const response = await fetchWithAuth(`${API_URL}/get_singlegame_stats.php`, 'POST');
       if (!response.ok) {
         const err: Message = await response.json();
         setError(`error: ${err.message}`);
@@ -384,7 +386,7 @@ const GameSetup = () => {
   const handlePredictMode = async () => {
     setError(null);
     try {
-      const response = await fetchWithAuth('http://api.bballsports.com/simulationAPI/play_predict.php', 'POST', {
+      const response = await fetchWithAuth(`${API_URL}/play_predict.php`, 'POST', {
         "league_name": selectedLeague?.league_name,
         "numgames": "normal",
         "homeaway": "both",
@@ -406,7 +408,7 @@ const GameSetup = () => {
   const handlePredictPlay = async () => {
     setError(null);
     try {
-      const response = await fetchWithAuth('http://api.bballsports.com/simulationAPI/playsinglegame_step.php', 'POST', { options: "4" });
+      const response = await fetchWithAuth(`${API_URL}/playsinglegame_step.php`, 'POST', { options: "4" });
       if (!response.ok) {
         const err: Message = await response.json();
         setError(`error: ${err.message}`);
@@ -421,7 +423,7 @@ const GameSetup = () => {
   const handleFetchPlayersTeam1 = async () => { //this is for actual player stats, for editable stats is: http://api.bballsports.com/simulationAPI/get_players_chars.php
     setError(null);
     try {
-      const response = await fetchWithAuth('http://api.bballsports.com/simulationAPI/get_actual_player_stats.php', 'POST', { ...selectedLeague, team_name: selectedTeams1?.teams });
+      const response = await fetchWithAuth(`${API_URL}/get_actual_player_stats.php`, 'POST', { ...selectedLeague, team_name: selectedTeams1?.teams });
       if (!response.ok) {
         const err: Message = await response.json();
         setError(`error: ${err.message}`);
@@ -438,7 +440,7 @@ const GameSetup = () => {
   const handleFetchPlayersTeam2 = async () => {//this is for actual player stats, for editable stats is: http://api.bballsports.com/simulationAPI/get_players_chars.php
     setError(null);
     try {
-      const response = await fetchWithAuth('http://api.bballsports.com/simulationAPI/get_actual_player_stats.php', 'POST', { ...selectedLeague, team_name: selectedTeams2?.teams });
+      const response = await fetchWithAuth(`${API_URL}/get_actual_player_stats.php`, 'POST', { ...selectedLeague, team_name: selectedTeams2?.teams });
       if (!response.ok) {
         const err: Message = await response.json();
         setError(`error: ${err.message}`);
@@ -455,7 +457,7 @@ const GameSetup = () => {
   const handleFetchPlayByPlay = async () => {
     setError(null);
     try {
-      const response = await fetchWithAuth('http://api.bballsports.com/simulationAPI/get_singlegame_pbp.php', 'POST');
+      const response = await fetchWithAuth(`${API_URL}/get_singlegame_pbp.php`, 'POST');
       if (!response.ok) {
         const err: Message = await response.json();
         setError(`error: ${err.message}`);
@@ -471,7 +473,7 @@ const GameSetup = () => {
   const handleFetchBoxScore = async () => {
     setError(null);
     try {
-      const response = await fetchWithAuth('http://api.bballsports.com/simulationAPI/get_singlegame_box.php', 'POST');
+      const response = await fetchWithAuth(`${API_URL}/get_singlegame_box.php`, 'POST');
       if (!response.ok) {
         const err: Message = await response.json();
         setError(`error: ${err.message}`);
