@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import CustomRadio from '../components/ui/CustomRadio';
 import CustomCheckbox from '../components/ui/CustomCheckbox';
-import { Label } from '@/components/ui/label';
+import { exportToCSV } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -146,6 +146,8 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
     setIsSimulating(false);
   }
 
+
+
   return (
     <div>
       <div className="flex gap-2 mb-4 border-b-2 border-border pb-2">
@@ -250,60 +252,63 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                         <div className="flex flex-col xl:flex-row gap-4 mt-8">
                           {playersTeam1.length > 1 && (
                             <div className="w-full l:w-1/1">
-                              <h2 className="text-xl font-bold mt-8 mb-4">{selectedTeams1?.teams}</h2>
+                              <div className="flex items-center justify-between">
+                                <h2 className="text-xl font-bold mt-8 mb-4">{selectedTeams1?.teams}</h2>
+                                <Button variant="outline" size="sm" onClick={() => exportToCSV(playersTeam1, `${selectedTeams1?.teams}_stats.csv`)}>Export to CSV</Button>
+                              </div>
                               <div className="overflow-x-auto">
                                 <div className="h-[500px] overflow-y-auto">
-                                <Table className="border">
-                                  <TableHeader>
-                                    <TableRow>
-                                      <TableHead className="h-10">Name</TableHead>
-                                      <TableHead className="h-10">Position</TableHead>
-                                      <TableHead className="h-10">Height</TableHead>
-                                      <TableHead className="h-10">G</TableHead>
-                                      <TableHead className="h-10">Min</TableHead>
-                                      <TableHead className="h-10">Min/G</TableHead>
-                                      <TableHead className="h-10">Pts/G</TableHead>
-                                      <TableHead className="h-10">FG%</TableHead>
-                                      <TableHead className="h-10">Score FG%</TableHead>
-                                      <TableHead className="h-10">2 Pts FG%</TableHead>
-                                      <TableHead className="h-10">3 Pts FG%</TableHead>
-                                      <TableHead className="h-10">FT%</TableHead>
-                                      <TableHead className="h-10">OFF REB</TableHead>
-                                      <TableHead className="h-10">DEF REB</TableHead>
-                                      <TableHead className="h-10">TOT REB</TableHead>
-                                      <TableHead className="h-10">DEF RAT</TableHead>
-                                      <TableHead className="h-10">%PF</TableHead>
-                                      <TableHead className="h-10">%ST</TableHead>
-                                      <TableHead className="h-10">%BS</TableHead>
+                                  <Table className="border">
+                                    <TableHeader>
+                                      <TableRow>
+                                        <TableHead className="h-10">Name</TableHead>
+                                        <TableHead className="h-10">Position</TableHead>
+                                        <TableHead className="h-10">Height</TableHead>
+                                        <TableHead className="h-10">G</TableHead>
+                                        <TableHead className="h-10">Min</TableHead>
+                                        <TableHead className="h-10">Min/G</TableHead>
+                                        <TableHead className="h-10">Pts/G</TableHead>
+                                        <TableHead className="h-10">FG%</TableHead>
+                                        <TableHead className="h-10">Score FG%</TableHead>
+                                        <TableHead className="h-10">2 Pts FG%</TableHead>
+                                        <TableHead className="h-10">3 Pts FG%</TableHead>
+                                        <TableHead className="h-10">FT%</TableHead>
+                                        <TableHead className="h-10">OFF REB</TableHead>
+                                        <TableHead className="h-10">DEF REB</TableHead>
+                                        <TableHead className="h-10">TOT REB</TableHead>
+                                        <TableHead className="h-10">DEF RAT</TableHead>
+                                        <TableHead className="h-10">%PF</TableHead>
+                                        <TableHead className="h-10">%ST</TableHead>
+                                        <TableHead className="h-10">%BS</TableHead>
 
-                                    </TableRow>
-                                  </TableHeader>
-                                  <TableBody>
-                                    {playersTeam1.map((player: any) => (
-                                      <TableRow key={player.name}>
-                                        <TableCell className="h-10">{player.name}</TableCell>
-                                        <TableCell className="h-10">{player.positions}</TableCell>
-                                        <TableCell className="h-10">{player.height}</TableCell>
-                                        <TableCell className="h-10">{player.g}</TableCell>
-                                        <TableCell className="h-10">{player.min}</TableCell>
-                                        <TableCell className="h-10">{player.ming}</TableCell>
-                                        <TableCell className="h-10">{player.ptsg}</TableCell>
-                                        <TableCell className="h-10">{player.fgpct}</TableCell>
-                                        <TableCell className="h-10">{player.scorefgpct}</TableCell>
-                                        <TableCell className="h-10">{player.twoptfgpct}</TableCell>
-                                        <TableCell className="h-10">{player.threeptfgpct}</TableCell>
-                                        <TableCell className="h-10">{player.ftpct}</TableCell>
-                                        <TableCell className="h-10">{player.offreb}</TableCell>
-                                        <TableCell className="h-10">{player.defreb}</TableCell>
-                                        <TableCell className="h-10">{player.totreb}</TableCell>
-                                        <TableCell className="h-10">{player.defrat}</TableCell>
-                                        <TableCell className="h-10">{player.pctpf}</TableCell>
-                                        <TableCell className="h-10">{player.pctst}</TableCell>
-                                        <TableCell className="h-10">{player.pctbs}</TableCell>
                                       </TableRow>
-                                    ))}
-                                  </TableBody>
-                                </Table>
+                                    </TableHeader>
+                                    <TableBody>
+                                      {playersTeam1.map((player: any) => (
+                                        <TableRow key={player.name}>
+                                          <TableCell className="h-10">{player.name}</TableCell>
+                                          <TableCell className="h-10">{player.positions}</TableCell>
+                                          <TableCell className="h-10">{player.height}</TableCell>
+                                          <TableCell className="h-10">{player.g}</TableCell>
+                                          <TableCell className="h-10">{player.min}</TableCell>
+                                          <TableCell className="h-10">{player.ming}</TableCell>
+                                          <TableCell className="h-10">{player.ptsg}</TableCell>
+                                          <TableCell className="h-10">{player.fgpct}</TableCell>
+                                          <TableCell className="h-10">{player.scorefgpct}</TableCell>
+                                          <TableCell className="h-10">{player.twoptfgpct}</TableCell>
+                                          <TableCell className="h-10">{player.threeptfgpct}</TableCell>
+                                          <TableCell className="h-10">{player.ftpct}</TableCell>
+                                          <TableCell className="h-10">{player.offreb}</TableCell>
+                                          <TableCell className="h-10">{player.defreb}</TableCell>
+                                          <TableCell className="h-10">{player.totreb}</TableCell>
+                                          <TableCell className="h-10">{player.defrat}</TableCell>
+                                          <TableCell className="h-10">{player.pctpf}</TableCell>
+                                          <TableCell className="h-10">{player.pctst}</TableCell>
+                                          <TableCell className="h-10">{player.pctbs}</TableCell>
+                                        </TableRow>
+                                      ))}
+                                    </TableBody>
+                                  </Table>
                                 </div>
                               </div>
                             </div>
@@ -311,59 +316,62 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
 
                           {playersTeam2.length > 1 && (
                             <div className="w-full l:w-1/1">
-                              <h2 className="text-xl font-bold mt-8 mb-4">{selectedTeams2?.teams}</h2>
+                              <div className="flex items-center justify-between">
+                                <h2 className="text-xl font-bold mt-8 mb-4">{selectedTeams2?.teams}</h2>
+                                <Button variant="outline" size="sm" onClick={() => exportToCSV(playersTeam2, `${selectedTeams2?.teams}_stats.csv`)}>Export to CSV</Button>
+                              </div>
                               <div className="overflow-x-auto">
                                 <div className="h-[500px] overflow-y-auto">
-                                <Table className="border">
-                                  <TableHeader>
-                                    <TableRow>
-                                      <TableHead className="h-10">Name</TableHead>
-                                      <TableHead className="h-10">Position</TableHead>
-                                      <TableHead className="h-10">Height</TableHead>
-                                      <TableHead className="h-10">G</TableHead>
-                                      <TableHead className="h-10">Min</TableHead>
-                                      <TableHead className="h-10">Min/G</TableHead>
-                                      <TableHead className="h-10">Pts/G</TableHead>
-                                      <TableHead className="h-10">FG%</TableHead>
-                                      <TableHead className="h-10">Score FG%</TableHead>
-                                      <TableHead className="h-10">2 Pts FG%</TableHead>
-                                      <TableHead className="h-10">3 Pts FG%</TableHead>
-                                      <TableHead className="h-10">FT%</TableHead>
-                                      <TableHead className="h-10">OFF REB</TableHead>
-                                      <TableHead className="h-10">DEF REB</TableHead>
-                                      <TableHead className="h-10">TOT REB</TableHead>
-                                      <TableHead className="h-10">DEF RAT</TableHead>
-                                      <TableHead className="h-10">%PF</TableHead>
-                                      <TableHead className="h-10">%ST</TableHead>
-                                      <TableHead className="h-10">%BS</TableHead>
-                                    </TableRow>
-                                  </TableHeader>
-                                  <TableBody>
-                                    {playersTeam2.map((player: any) => (
-                                      <TableRow key={player.name}>
-                                        <TableCell className="h-10">{player.name}</TableCell>
-                                        <TableCell className="h-10">{player.positions}</TableCell>
-                                        <TableCell className="h-10">{player.height}</TableCell>
-                                        <TableCell className="h-10">{player.g}</TableCell>
-                                        <TableCell className="h-10">{player.min}</TableCell>
-                                        <TableCell className="h-10">{player.ming}</TableCell>
-                                        <TableCell className="h-10">{player.ptsg}</TableCell>
-                                        <TableCell className="h-10">{player.fgpct}</TableCell>
-                                        <TableCell className="h-10">{player.scorefgpct}</TableCell>
-                                        <TableCell className="h-10">{player.twoptfgpct}</TableCell>
-                                        <TableCell className="h-10">{player.threeptfgpct}</TableCell>
-                                        <TableCell className="h-10">{player.ftpct}</TableCell>
-                                        <TableCell className="h-10">{player.offreb}</TableCell>
-                                        <TableCell className="h-10">{player.defreb}</TableCell>
-                                        <TableCell className="h-10">{player.totreb}</TableCell>
-                                        <TableCell className="h-10">{player.defrat}</TableCell>
-                                        <TableCell className="h-10">{player.pctpf}</TableCell>
-                                        <TableCell className="h-10">{player.pctst}</TableCell>
-                                        <TableCell className="h-10">{player.pctbs}</TableCell>
+                                  <Table className="border">
+                                    <TableHeader>
+                                      <TableRow>
+                                        <TableHead className="h-10">Name</TableHead>
+                                        <TableHead className="h-10">Position</TableHead>
+                                        <TableHead className="h-10">Height</TableHead>
+                                        <TableHead className="h-10">G</TableHead>
+                                        <TableHead className="h-10">Min</TableHead>
+                                        <TableHead className="h-10">Min/G</TableHead>
+                                        <TableHead className="h-10">Pts/G</TableHead>
+                                        <TableHead className="h-10">FG%</TableHead>
+                                        <TableHead className="h-10">Score FG%</TableHead>
+                                        <TableHead className="h-10">2 Pts FG%</TableHead>
+                                        <TableHead className="h-10">3 Pts FG%</TableHead>
+                                        <TableHead className="h-10">FT%</TableHead>
+                                        <TableHead className="h-10">OFF REB</TableHead>
+                                        <TableHead className="h-10">DEF REB</TableHead>
+                                        <TableHead className="h-10">TOT REB</TableHead>
+                                        <TableHead className="h-10">DEF RAT</TableHead>
+                                        <TableHead className="h-10">%PF</TableHead>
+                                        <TableHead className="h-10">%ST</TableHead>
+                                        <TableHead className="h-10">%BS</TableHead>
                                       </TableRow>
-                                    ))}
-                                  </TableBody>
-                                </Table>
+                                    </TableHeader>
+                                    <TableBody>
+                                      {playersTeam2.map((player: any) => (
+                                        <TableRow key={player.name}>
+                                          <TableCell className="h-10">{player.name}</TableCell>
+                                          <TableCell className="h-10">{player.positions}</TableCell>
+                                          <TableCell className="h-10">{player.height}</TableCell>
+                                          <TableCell className="h-10">{player.g}</TableCell>
+                                          <TableCell className="h-10">{player.min}</TableCell>
+                                          <TableCell className="h-10">{player.ming}</TableCell>
+                                          <TableCell className="h-10">{player.ptsg}</TableCell>
+                                          <TableCell className="h-10">{player.fgpct}</TableCell>
+                                          <TableCell className="h-10">{player.scorefgpct}</TableCell>
+                                          <TableCell className="h-10">{player.twoptfgpct}</TableCell>
+                                          <TableCell className="h-10">{player.threeptfgpct}</TableCell>
+                                          <TableCell className="h-10">{player.ftpct}</TableCell>
+                                          <TableCell className="h-10">{player.offreb}</TableCell>
+                                          <TableCell className="h-10">{player.defreb}</TableCell>
+                                          <TableCell className="h-10">{player.totreb}</TableCell>
+                                          <TableCell className="h-10">{player.defrat}</TableCell>
+                                          <TableCell className="h-10">{player.pctpf}</TableCell>
+                                          <TableCell className="h-10">{player.pctst}</TableCell>
+                                          <TableCell className="h-10">{player.pctbs}</TableCell>
+                                        </TableRow>
+                                      ))}
+                                    </TableBody>
+                                  </Table>
                                 </div>
                               </div>
                             </div>
