@@ -54,6 +54,17 @@ interface PlayerChar { //this scheme is shared with playerChar editable stats, s
   ptsg: string;
   positions: string;
   fgpct: string;
+  scorefgpct: string;
+  twoptfgpct: string;
+  threeptfgpct: string;
+  ftpct: string;
+  offreb: string;
+  defreb: string;
+  totreb: string;
+  defrat: string;
+  pctpf: string;
+  pctst: string;
+  pctbs: string;
 }
 
 interface PlayerCharResponse {

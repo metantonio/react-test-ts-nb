@@ -68,6 +68,17 @@ interface PlayerChar { //this scheme is shared with playerChar editable stats, s
   ptsg: string;
   positions: string;
   fgpct: string;
+  scorefgpct: string;
+  twoptfgpct: string;
+  threeptfgpct: string;
+  ftpct: string;
+  offreb: string;
+  defreb: string;
+  totreb: string;
+  defrat: string;
+  pctpf: string;
+  pctst: string;
+  pctbs: string;
 }
 
 interface FullSeasonVersionProps {
@@ -123,7 +134,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
     logo ? <img src={logo} alt={`${name} Logo`} className="h-14 w-14 object-contain" /> : <div className="h-14 w-14 bg-gray-700 rounded-full flex items-center justify-center text-white font-bold text-xl">{name.substring(0, 3).toUpperCase()}</div>
   );
 
-  useEffect(()=>{
+  useEffect(() => {
     console.log("should reset all")
   }, [isClear])
 
@@ -252,24 +263,18 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                                       <TableHead className="h-10">Min/G</TableHead>
                                       <TableHead className="h-10">Pts/G</TableHead>
                                       <TableHead className="h-10">FG%</TableHead>
+                                      <TableHead className="h-10">Score FG%</TableHead>
+                                      <TableHead className="h-10">2 Pts FG%</TableHead>
+                                      <TableHead className="h-10">3 Pts FG%</TableHead>
+                                      <TableHead className="h-10">FT%</TableHead>
+                                      <TableHead className="h-10">OFF REB</TableHead>
+                                      <TableHead className="h-10">DEF REB</TableHead>
+                                      <TableHead className="h-10">TOT REB</TableHead>
+                                      <TableHead className="h-10">DEF RAT</TableHead>
+                                      <TableHead className="h-10">%PF</TableHead>
+                                      <TableHead className="h-10">%ST</TableHead>
+                                      <TableHead className="h-10">%BS</TableHead>
 
-                                      <TableHead className="h-10">Poss Fact</TableHead>
-                                      <TableHead className="h-10">2pt FG Pct</TableHead>
-                                      <TableHead className="h-10">FT Pct</TableHead>
-                                      <TableHead className="h-10">Pct Shot</TableHead>
-                                      <TableHead className="h-10">3pt Pct Shot</TableHead>
-                                      <TableHead className="h-10">Pct Fouled</TableHead>
-                                      <TableHead className="h-10">Pct TO</TableHead>
-                                      <TableHead className="h-10">Pct Pass</TableHead>
-                                      <TableHead className="h-10">Off Reb</TableHead>
-                                      <TableHead className="h-10">Def Reb</TableHead>
-                                      <TableHead className="h-10">Def FG Pct</TableHead>
-                                      <TableHead className="h-10">Pct PF</TableHead>
-                                      <TableHead className="h-10">Pct ST</TableHead>
-                                      <TableHead className="h-10">Pct BS</TableHead>
-                                      <TableHead className="h-10">Year</TableHead>
-                                      <TableHead className="h-10">Team Code</TableHead>
-                                      <TableHead className="h-10">Deny Fact</TableHead>
                                     </TableRow>
                                   </TableHeader>
                                   <TableBody>
@@ -283,24 +288,17 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                                         <TableCell className="h-10">{player.ming}</TableCell>
                                         <TableCell className="h-10">{player.ptsg}</TableCell>
                                         <TableCell className="h-10">{player.fgpct}</TableCell>
-
-                                        <TableCell className="h-10">{player.poss_fact}</TableCell>
-                                        <TableCell className="h-10">{player.two_pt_fg_pct}</TableCell>
-                                        <TableCell className="h-10">{player.ft_pct}</TableCell>
-                                        <TableCell className="h-10">{player.pct_shot}</TableCell>
-                                        <TableCell className="h-10">{player.three_pt_pct_shot}</TableCell>
-                                        <TableCell className="h-10">{player.pct_fouled}</TableCell>
-                                        <TableCell className="h-10">{player.pct_to}</TableCell>
-                                        <TableCell className="h-10">{player.pct_pass}</TableCell>
-                                        <TableCell className="h-10">{player.off_reb}</TableCell>
-                                        <TableCell className="h-10">{player.def_reb}</TableCell>
-                                        <TableCell className="h-10">{player.def_fg_pct}</TableCell>
-                                        <TableCell className="h-10">{player.pct_pf}</TableCell>
-                                        <TableCell className="h-10">{player.pct_st}</TableCell>
-                                        <TableCell className="h-10">{player.pct_bs}</TableCell>
-                                        <TableCell className="h-10">{player.year}</TableCell>
-                                        <TableCell className="h-10">{player.team_code}</TableCell>
-                                        <TableCell className="h-10">{player.deny_fact}</TableCell>
+                                        <TableCell className="h-10">{player.scorefgpct}</TableCell>
+                                        <TableCell className="h-10">{player.twoptfgpct}</TableCell>
+                                        <TableCell className="h-10">{player.threeptfgpct}</TableCell>
+                                        <TableCell className="h-10">{player.ftpct}</TableCell>
+                                        <TableCell className="h-10">{player.offreb}</TableCell>
+                                        <TableCell className="h-10">{player.defreb}</TableCell>
+                                        <TableCell className="h-10">{player.totreb}</TableCell>
+                                        <TableCell className="h-10">{player.defrat}</TableCell>
+                                        <TableCell className="h-10">{player.pctpf}</TableCell>
+                                        <TableCell className="h-10">{player.pctst}</TableCell>
+                                        <TableCell className="h-10">{player.pctbs}</TableCell>
                                       </TableRow>
                                     ))}
                                   </TableBody>
@@ -316,7 +314,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                                 <Table className="border">
                                   <TableHeader>
                                     <TableRow>
-                                       <TableHead className="h-10">Name</TableHead>
+                                      <TableHead className="h-10">Name</TableHead>
                                       <TableHead className="h-10">Position</TableHead>
                                       <TableHead className="h-10">Height</TableHead>
                                       <TableHead className="h-10">G</TableHead>
@@ -324,24 +322,17 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                                       <TableHead className="h-10">Min/G</TableHead>
                                       <TableHead className="h-10">Pts/G</TableHead>
                                       <TableHead className="h-10">FG%</TableHead>
-
-                                      <TableHead className="h-10">Poss Fact</TableHead>
-                                      <TableHead className="h-10">2pt FG Pct</TableHead>
-                                      <TableHead className="h-10">FT Pct</TableHead>
-                                      <TableHead className="h-10">Pct Shot</TableHead>
-                                      <TableHead className="h-10">3pt Pct Shot</TableHead>
-                                      <TableHead className="h-10">Pct Fouled</TableHead>
-                                      <TableHead className="h-10">Pct TO</TableHead>
-                                      <TableHead className="h-10">Pct Pass</TableHead>
-                                      <TableHead className="h-10">Off Reb</TableHead>
-                                      <TableHead className="h-10">Def Reb</TableHead>
-                                      <TableHead className="h-10">Def FG Pct</TableHead>
-                                      <TableHead className="h-10">Pct PF</TableHead>
-                                      <TableHead className="h-10">Pct ST</TableHead>
-                                      <TableHead className="h-10">Pct BS</TableHead>
-                                      <TableHead className="h-10">Year</TableHead>
-                                      <TableHead className="h-10">Team Code</TableHead>
-                                      <TableHead className="h-10">Deny Fact</TableHead>
+                                      <TableHead className="h-10">Score FG%</TableHead>
+                                      <TableHead className="h-10">2 Pts FG%</TableHead>
+                                      <TableHead className="h-10">3 Pts FG%</TableHead>
+                                      <TableHead className="h-10">FT%</TableHead>
+                                      <TableHead className="h-10">OFF REB</TableHead>
+                                      <TableHead className="h-10">DEF REB</TableHead>
+                                      <TableHead className="h-10">TOT REB</TableHead>
+                                      <TableHead className="h-10">DEF RAT</TableHead>
+                                      <TableHead className="h-10">%PF</TableHead>
+                                      <TableHead className="h-10">%ST</TableHead>
+                                      <TableHead className="h-10">%BS</TableHead>
                                     </TableRow>
                                   </TableHeader>
                                   <TableBody>
@@ -355,24 +346,17 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                                         <TableCell className="h-10">{player.ming}</TableCell>
                                         <TableCell className="h-10">{player.ptsg}</TableCell>
                                         <TableCell className="h-10">{player.fgpct}</TableCell>
-
-                                        <TableCell className="h-10">{player.poss_fact}</TableCell>
-                                        <TableCell className="h-10">{player.two_pt_fg_pct}</TableCell>
-                                        <TableCell className="h-10">{player.ft_pct}</TableCell>
-                                        <TableCell className="h-10">{player.pct_shot}</TableCell>
-                                        <TableCell className="h-10">{player.three_pt_pct_shot}</TableCell>
-                                        <TableCell className="h-10">{player.pct_fouled}</TableCell>
-                                        <TableCell className="h-10">{player.pct_to}</TableCell>
-                                        <TableCell className="h-10">{player.pct_pass}</TableCell>
-                                        <TableCell className="h-10">{player.off_reb}</TableCell>
-                                        <TableCell className="h-10">{player.def_reb}</TableCell>
-                                        <TableCell className="h-10">{player.def_fg_pct}</TableCell>
-                                        <TableCell className="h-10">{player.pct_pf}</TableCell>
-                                        <TableCell className="h-10">{player.pct_st}</TableCell>
-                                        <TableCell className="h-10">{player.pct_bs}</TableCell>
-                                        <TableCell className="h-10">{player.year}</TableCell>
-                                        <TableCell className="h-10">{player.team_code}</TableCell>
-                                        <TableCell className="h-10">{player.deny_fact}</TableCell>
+                                        <TableCell className="h-10">{player.scorefgpct}</TableCell>
+                                        <TableCell className="h-10">{player.twoptfgpct}</TableCell>
+                                        <TableCell className="h-10">{player.threeptfgpct}</TableCell>
+                                        <TableCell className="h-10">{player.ftpct}</TableCell>
+                                        <TableCell className="h-10">{player.offreb}</TableCell>
+                                        <TableCell className="h-10">{player.defreb}</TableCell>
+                                        <TableCell className="h-10">{player.totreb}</TableCell>
+                                        <TableCell className="h-10">{player.defrat}</TableCell>
+                                        <TableCell className="h-10">{player.pctpf}</TableCell>
+                                        <TableCell className="h-10">{player.pctst}</TableCell>
+                                        <TableCell className="h-10">{player.pctbs}</TableCell>
                                       </TableRow>
                                     ))}
                                   </TableBody>
@@ -436,9 +420,9 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                 </TableRow>
               </TableHeader>
               <TableBody>
-                        {selectedTeams1 && <TableRow><TableCell><div className="flex items-center justify-center gap-2"><TeamLogo logo={teamLogos[selectedTeams1?.teams || '']} name={selectedTeams1?.teams || 'Away'} /><span>{selectedTeams1.teams}</span></div></TableCell><TableCell className="text-center align-middle">0</TableCell></TableRow>}
-                        {selectedTeams2 && <TableRow><TableCell><div className="flex items-center justify-center gap-2"><TeamLogo logo={teamLogos[selectedTeams2?.teams || '']} name={selectedTeams2?.teams || 'Home'} /><span>{selectedTeams2.teams}</span></div></TableCell><TableCell className="text-center align-middle">0</TableCell></TableRow>}
-                    </TableBody>
+                {selectedTeams1 && <TableRow><TableCell><div className="flex items-center justify-center gap-2"><TeamLogo logo={teamLogos[selectedTeams1?.teams || '']} name={selectedTeams1?.teams || 'Away'} /><span>{selectedTeams1.teams}</span></div></TableCell><TableCell className="text-center align-middle">0</TableCell></TableRow>}
+                {selectedTeams2 && <TableRow><TableCell><div className="flex items-center justify-center gap-2"><TeamLogo logo={teamLogos[selectedTeams2?.teams || '']} name={selectedTeams2?.teams || 'Home'} /><span>{selectedTeams2.teams}</span></div></TableCell><TableCell className="text-center align-middle">0</TableCell></TableRow>}
+              </TableBody>
             </Table>
           </div>
         </div>
