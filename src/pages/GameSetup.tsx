@@ -27,6 +27,15 @@ interface TeamsResponse {
   data: Teams[];
 }
 
+interface TeamsSchedule {
+  teams: string;
+  games: string;
+}
+
+interface TeamsScheduleResponse {
+  data: TeamsSchedule[];
+}
+
 interface PlayerChar { //this scheme is shared with playerChar editable stats, so two values could refer to the same stat but it has different name depending if is editable or not
   name: string;
   position: string;
@@ -230,6 +239,7 @@ const GameSetup = () => {
   const [error, setError] = useState<string | null>(null);
   const [selectedLeague, setSelectedLeague] = useState<League | null>(null);
   const [teams, setTeams] = useState<Teams[]>([{ teams: "dummy data teams 1" }, { teams: "dummy data teams 2" }]);
+  const [teamsSchedule, setTeamsSchedule] = useState<TeamsSchedule[]>([{ teams: "dummy data teams 1", games:"0"}]);
   const [selectedTeams1, setSelectedTeams1] = useState<Teams | null>(null);
   const [selectedTeams2, setSelectedTeams2] = useState<Teams | null>(null);
   const [isGameInitial, setIsGameInitial] = useState<boolean>(false);
@@ -360,6 +370,25 @@ const GameSetup = () => {
         throw new Error('Failed to setup the initial game.');
       }
       await handleFetchScoreBoard();
+    } catch (err: any) {
+      setError(`${err}`);
+    } finally {
+      setIsGameInitial(false);
+    }
+  };
+
+  const handleSchedule82 = async () => {
+    setError(null);
+    setIsGameInitial(true);
+    try {
+      const response = await fetchWithAuth(`${API_URL}/get_82_game_schedule.php`, 'POST', {league_name: selectedLeague?.league_name, team_name: selectedTeams2?.teams });
+      if (!response.ok) {
+        const err: Message = await response.json();
+        setError(`error: ${err.message}`);
+        throw new Error('Failed to setup the initial game.');
+      }
+      const data: TeamsScheduleResponse = await response.json();
+      setTeamsSchedule(data.data)
     } catch (err: any) {
       setError(`${err}`);
     } finally {

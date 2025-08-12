@@ -35,6 +35,11 @@ interface Team {
   teams: string;
 }
 
+interface TeamsSchedule {
+  teams: string;
+  games: string;
+}
+
 interface BoxScore {
   box_line: string;
   game_number: string;
