@@ -123,7 +123,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
     teamLogos
   }
 ) => {
-  const [schedule, setSchedule] = useState('schedule');
+  const [schedule, setSchedule] = useState('predict');
   const [location, setLocation] = useState('both');
   const [savePbp, setSavePbp] = useState(false);
   const [saveBox, setSaveBox] = useState(true);
@@ -406,7 +406,14 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                   <CustomCheckbox id="save-pbp" checked={savePbp} onChange={setSavePbp} label="Save Play-by-Play (<=100 games)" />
                   <CustomCheckbox id="save-box" checked={saveBox} onChange={setSaveBox} label="Save Box Scores - no more than 15,000 games" />
                 </div>
-                <Button variant="outline" disabled={isLoading || isSimulating} className="mt-4" onClick={handlePlayGames}>
+                <Button variant="outline" disabled={isLoading || isSimulating} className="mt-4" onClick={() => {
+                  if (schedule == "predict") {
+                    handlePlayGames()
+                  }else{
+                    alert("in development")
+                  }
+
+                }}>
                   {isSimulating && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   PLAY GAMES
                 </Button>
