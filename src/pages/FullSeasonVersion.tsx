@@ -437,9 +437,9 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
         <div className="col-span-1">
           <Button variant="outline" className="w-full">Zero Schedule</Button>
           <div className="grid grid-cols-3 gap-2 mt-2">
-            <Button variant="outline" onClick={handleSchedule82}>82 Games</Button>
-            <Button variant="outline">820 Games</Button>
-            <Button variant="outline">8200 Games</Button>
+            <Button variant="outline" onClick={handleSchedule82} disabled={selectedTeams2==null}>82 Games</Button>
+            <Button variant="outline" disabled>820 Games</Button>
+            <Button variant="outline" disabled>8200 Games</Button>
           </div>
           <div className="mt-2 border rounded-md max-h-96 overflow-y-auto bg-card text-card-foreground">
             <Table>
@@ -458,7 +458,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
 
           {teamsSchedule && teamsSchedule.length > 0 ?
             <div className="mt-2 border rounded-md max-h-96 overflow-y-auto bg-card text-card-foreground">
-              <div className="grid grid-cols-3 gap-2 mt-2">Schedule <TeamLogo logo={teamLogos[selectedTeams2?.teams || '']} name={selectedTeams2?.teamss || 'Home'} />{selectedTeams2?.teams} </div>
+              <div className="grid grid-cols-2 gap-3 mt-2">SCHEDULE FOR {selectedTeams2?.teams}<TeamLogo logo={teamLogos[selectedTeams2?.teams || '']} name={selectedTeams2?.teamss || 'Home'} /> </div>
               <Table>
                 <TableHeader>
                   <TableHead>TEAM NAME</TableHead>
