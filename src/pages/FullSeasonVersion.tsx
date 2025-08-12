@@ -138,6 +138,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
   const [saveBox, setSaveBox] = useState(true);
   const [isClear, setIsClear] = useState(false)
   const [isSimulating, setIsSimulating] = useState(false);
+  const [multiplier, setMultiplier] = useState(100)
 
   let gameCounter = 0
 
@@ -437,9 +438,18 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
         <div className="col-span-1">
           <Button variant="outline" className="w-full">Zero Schedule</Button>
           <div className="grid grid-cols-3 gap-2 mt-2">
-            <Button variant="outline" onClick={handleSchedule82} disabled={selectedTeams2==null}>82 Games</Button>
-            <Button variant="outline" disabled>820 Games</Button>
-            <Button variant="outline" disabled>8200 Games</Button>
+            <Button variant="outline" onClick={()=>{
+              setMultiplier(100)
+              handleSchedule82()
+              }} disabled={selectedTeams2==null}>82 Games</Button>
+            <Button variant="outline" disabled={selectedTeams2==null} onClick={()=>{
+              setMultiplier(10)
+              handleSchedule82()
+              }}>820 Games</Button>
+            <Button variant="outline" disabled={selectedTeams2==null} onClick={()=>{
+              setMultiplier(1)
+              handleSchedule82()
+              }}>8200 Games</Button>
           </div>
           <div className="mt-2 border rounded-md max-h-96 overflow-y-auto bg-card text-card-foreground">
             <Table>
@@ -468,7 +478,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                   {teamsSchedule.map((item: TeamsSchedule, index: any) => {
                     if(index==0){gameCounter=0}
                     if (item.teams != selectedTeams2?.teams) {
-                      gameCounter+=parseInt(item.games) / 100
+                      gameCounter+=parseInt(item.games) / multiplier
                       console.log(gameCounter)
                       return (
                         <TableRow key={item.teams}>
@@ -478,7 +488,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                               <span>{item.teams}</span>
                             </div>
                           </TableCell>
-                          <TableCell className="text-right">{parseInt(item.games) / 100}</TableCell>
+                          <TableCell className="text-right">{parseInt(item.games) / multiplier}</TableCell>
                         </TableRow>
                       )
                     }
