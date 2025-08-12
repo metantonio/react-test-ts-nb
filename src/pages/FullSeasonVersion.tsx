@@ -92,6 +92,7 @@ interface FullSeasonVersionProps {
   setSelectedLeague: React.Dispatch<React.SetStateAction<League | null>>;
   teams: Team[];
   selectedTeams1: Team | null;
+  teamsSchedule: TeamsSchedule[];
   setSelectedTeams1: React.Dispatch<React.SetStateAction<Team | null>>;
   selectedTeams2: Team | null;
   setSelectedTeams2: React.Dispatch<React.SetStateAction<Team | null>>;
@@ -104,6 +105,7 @@ interface FullSeasonVersionProps {
   handleFetchScoreBoard: () => Promise<void>;
   handleFetchPlayByPlay: () => Promise<void>;
   handleFetchBoxScore: () => Promise<void>;
+  handleSchedule82: () => Promise<void>;
   teamLogos: { [key: string]: string };
 }
 
@@ -125,7 +127,9 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
     handleFetchScoreBoard,
     handleFetchPlayByPlay,
     handleFetchBoxScore,
-    teamLogos
+    teamLogos,
+    handleSchedule82,
+    teamsSchedule
   }
 ) => {
   const [schedule, setSchedule] = useState('predict');
@@ -134,6 +138,8 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
   const [saveBox, setSaveBox] = useState(true);
   const [isClear, setIsClear] = useState(false)
   const [isSimulating, setIsSimulating] = useState(false);
+
+  let gameCounter = 0
 
   const TeamLogo: React.FC<{ logo?: string; name: string }> = ({ logo, name }) => (
     logo ? <img src={logo} alt={`${name} Logo`} className="h-14 w-14 object-contain" /> : <div className="h-14 w-14 bg-gray-700 rounded-full flex items-center justify-center text-white font-bold text-xl">{name.substring(0, 3).toUpperCase()}</div>
@@ -414,7 +420,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                 <Button variant="outline" disabled={isLoading || isSimulating} className="mt-4" onClick={() => {
                   if (schedule == "predict") {
                     handlePlayGames()
-                  }else{
+                  } else {
                     alert("in development")
                   }
 
@@ -431,7 +437,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
         <div className="col-span-1">
           <Button variant="outline" className="w-full">Zero Schedule</Button>
           <div className="grid grid-cols-3 gap-2 mt-2">
-            <Button variant="outline">82 Games</Button>
+            <Button variant="outline" onClick={handleSchedule82}>82 Games</Button>
             <Button variant="outline">820 Games</Button>
             <Button variant="outline">8200 Games</Button>
           </div>
@@ -449,6 +455,39 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
               </TableBody>
             </Table>
           </div>
+
+          {teamsSchedule && teamsSchedule.length > 0 ?
+            <div className="mt-2 border rounded-md max-h-96 overflow-y-auto bg-card text-card-foreground">
+              <div className="grid grid-cols-3 gap-2 mt-2">Schedule <TeamLogo logo={teamLogos[selectedTeams2?.teams || '']} name={selectedTeams2?.teamss || 'Home'} />{selectedTeams2?.teams} </div>
+              <Table>
+                <TableHeader>
+                  <TableHead>TEAM NAME</TableHead>
+                  <TableHead className="text-right">GAMES</TableHead>
+                </TableHeader>
+                <TableBody>
+                  {teamsSchedule.map((item: TeamsSchedule, index: any) => {
+                    if(index==0){gameCounter=0}
+                    if (item.teams != selectedTeams2?.teams) {
+                      gameCounter+=parseInt(item.games) / 100
+                      console.log(gameCounter)
+                      return (
+                        <TableRow key={item.teams}>
+                          <TableCell>
+                            <div className="flex items-center gap-2">
+                              <TeamLogo logo={teamLogos[item.teams || '']} name={item.teams || 'Home'} />
+                              <span>{item.teams}</span>
+                            </div>
+                          </TableCell>
+                          <TableCell className="text-right">{parseInt(item.games) / 100}</TableCell>
+                        </TableRow>
+                      )
+                    }
+                  })}
+                </TableBody>
+              </Table>
+            </div> :
+            <></>
+          }
         </div>
       </div>
     </div>

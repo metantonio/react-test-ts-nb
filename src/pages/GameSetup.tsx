@@ -477,6 +477,7 @@ const GameSetup = () => {
       }
       const data: PlayerCharResponse = await response.json();
       setPlayersTeam2(data.data);
+      await handleSchedule82()
     } catch (err: any) {
       //console.log("error: ", err)
       setError(`${err}`);
@@ -578,6 +579,8 @@ const GameSetup = () => {
     }
   }, [selectedTeams2])
 
+  useEffect(()=>{console.log("82 games schedule")},[teamsSchedule])
+
   return (
     <div className="p-4 bg-background text-foreground">
       <h1 className="text-xl font-bold mb-2">NBA Game Simulation</h1>
@@ -597,6 +600,7 @@ const GameSetup = () => {
             selectedLeague={selectedLeague}
             setSelectedLeague={setSelectedLeague}
             teams={teams}
+            teamsSchedule={teamsSchedule}
             selectedTeams1={selectedTeams1}
             setSelectedTeams1={setSelectedTeams1}
             selectedTeams2={selectedTeams2}
@@ -610,6 +614,7 @@ const GameSetup = () => {
             handleFetchScoreBoard={handleFetchScoreBoard}
             handleFetchPlayByPlay={handleFetchPlayByPlay}
             handleFetchBoxScore={handleFetchBoxScore}
+            handleSchedule82={handleSchedule82}
             teamLogos={teamLogos}
           />
         </TabsContent>
