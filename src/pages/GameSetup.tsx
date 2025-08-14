@@ -532,7 +532,7 @@ const GameSetup = () => {
   const handleFetchPlayerSubpattern = async () => {
     setError(null);
     try {
-      const response = await fetchWithAuth(`${API_URL}/get_players_subs.php`, 'POST');
+      const response = await fetchWithAuth(`${API_URL}/get_players_subs.php`, 'POST', {...selectedLeague, team_name: selectedTeams2?.teams});
       if (!response.ok) {
         const err: Message = await response.json();
         setError(`error: ${err.message}`);
