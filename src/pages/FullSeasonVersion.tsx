@@ -410,6 +410,29 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                           </Table>
                         </div>
                       </div>
+                      <div className="w-1/3 border-l pl-4">
+                          <h3 className="font-bold mb-2">Available Players</h3>
+                          <div className="h-[600px] overflow-y-auto">
+                            <Table>
+                              <TableHeader>
+                                <TableRow>
+                                  <TableHead>Name</TableHead>
+                                  <TableHead>Pos</TableHead>
+                                  <TableHead>Ht</TableHead>
+                                </TableRow>
+                              </TableHeader>
+                              <TableBody>
+                                {playersTeam2.map(player => (
+                                  <TableRow key={player.name} className="cursor-pointer hover:bg-muted">
+                                    <TableCell>{player.name}</TableCell>
+                                    <TableCell>{player.positions}</TableCell>
+                                    <TableCell>{player.height}</TableCell>
+                                  </TableRow>
+                                ))}
+                              </TableBody>
+                            </Table>
+                          </div>
+                        </div>
                     </SheetContent>
                   </Sheet>
                   <Sheet>
