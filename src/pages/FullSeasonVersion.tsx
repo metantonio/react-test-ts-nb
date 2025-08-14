@@ -323,7 +323,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                     <SheetTrigger asChild>
                       <Button variant="outline" onClick={handleSubPatternClick} disabled={schedule !== "schedule" || isFetchingSubPattern}>Substitution Pattern</Button>
                     </SheetTrigger>
-                    <SheetContent className="max-w-none w-[90vw] sm:w-[85vw] md:w-[80vw] lg:w-[90vw] xl:w-[80vw] overflow-y-auto">
+                    <SheetContent className="max-w-none w-[90vw] sm:w-[85vw] md:w-[80vw] lg:w-[90vw] xl:w-[100vw] overflow-y-auto">
                       <SheetHeader>
                         <SheetTitle>4 Minute Substitution Pattern - {selectedTeams2?.teams}</SheetTitle>
                       </SheetHeader>
@@ -416,7 +416,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                                 </TableBody>
                               </Table>
                             </div>
-                            <div className="w-1/3 border-l pl-2">
+                            <div className="w-1/3 border-l pl-2 mx-4">
                               <h3 className="font-bold mb-2 text-sm">Available Players</h3>
                               <div className="overflow-y-auto" style={{ height: 'calc(100vh - 200px)' }}>
                                 <Table>
