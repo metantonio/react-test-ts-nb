@@ -93,6 +93,7 @@ interface FullSeasonVersionProps {
   teams: Team[];
   selectedTeams1: Team | null;
   teamsSchedule: TeamsSchedule[];
+  setTeamsSchedule:React.Dispatch<React.SetStateAction<TeamsSchedule | null>>;
   setSelectedTeams1: React.Dispatch<React.SetStateAction<Team | null>>;
   selectedTeams2: Team | null;
   setSelectedTeams2: React.Dispatch<React.SetStateAction<Team | null>>;
@@ -129,7 +130,8 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
     handleFetchBoxScore,
     teamLogos,
     handleSchedule82,
-    teamsSchedule
+    teamsSchedule,
+    setTeamsSchedule
   }
 ) => {
   const [schedule, setSchedule] = useState('predict');
@@ -199,6 +201,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                   setSelectedTeams1(null)
                   setSelectedTeams2(null)
                   setBoxScore([])
+                  setTeamsSchedule([])
                   setIsClear(!isClear)
                 }}>Clear</Button>
                 <DropdownMenu>
@@ -466,7 +469,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
             </Table>
           </div>
 
-          {teamsSchedule && teamsSchedule.length > 0 ?
+          {teamsSchedule && teamsSchedule.length > 1 ?
             <div className="mt-2 border rounded-md max-h-96 overflow-y-auto bg-card text-card-foreground">
               <div className="grid grid-cols-2 gap-3 mt-2">SCHEDULE FOR {selectedTeams2?.teams}<TeamLogo logo={teamLogos[selectedTeams2?.teams || '']} name={selectedTeams2?.teams || 'Home'} /> </div>
               <Table>
