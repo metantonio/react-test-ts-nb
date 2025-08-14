@@ -537,12 +537,14 @@ const GameSetup = () => {
         const err: Message = await response.json();
         setError(`error: ${err.message}`);
         throw new Error('Failed to fetch players sub pattern.');
+        
       }
       const data: PlayerSubPatternResponse = await response.json();
       setPlayerSubPattern(data.data);
       return data.data
     } catch (err: any) {
       setError(`${err}`);
+      return null
     }
   };
 

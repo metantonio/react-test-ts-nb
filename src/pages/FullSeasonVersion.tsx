@@ -116,7 +116,7 @@ interface FullSeasonVersionProps {
   handleFetchPlayByPlay: () => Promise<void>;
   handleFetchBoxScore: () => Promise<void>;
   handleSchedule82: () => Promise<void>;
-  handleFetchPlayerSubpattern: () => Promise<void>;
+  handleFetchPlayerSubpattern: () => Promise<PlayerSubPattern[] | null>;
   teamLogos: { [key: string]: string };
 }
 
@@ -153,14 +153,16 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
   const [isClear, setIsClear] = useState(false)
   const [isSimulating, setIsSimulating] = useState(false);
   const [multiplier, setMultiplier] = useState(100)
-  const [playerSubPattern, setPlayerSubPattern] = useState<PlayerSubPattern[]>([]);
+  const [playerSubPattern, setPlayerSubPattern] = useState<PlayerSubPattern[] | null>([]);
   const [isSubPatternSheetOpen, setIsSubPatternSheetOpen] = useState(false);
 
   const handleSubPatternClick = async () => {
-    const response = await handleFetchPlayerSubpattern();
-    // NOTE: Using mock data as the mechanism to get data from handleFetchPlayerSubpattern is not clear.
-    const mockSubPattern: PlayerSubPattern[] = response;
-    setPlayerSubPattern(mockSubPattern);
+    const data = await handleFetchPlayerSubpattern();
+    if (data) {
+      setPlayerSubPattern(data);
+    } else {
+      setPlayerSubPattern([]); // Clear if no data
+    }
     setIsSubPatternSheetOpen(true);
   };
 
