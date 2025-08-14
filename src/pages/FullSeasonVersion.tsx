@@ -155,8 +155,10 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
   const [multiplier, setMultiplier] = useState(100)
   const [playerSubPattern, setPlayerSubPattern] = useState<PlayerSubPattern[] | null>([]);
   const [isSubPatternSheetOpen, setIsSubPatternSheetOpen] = useState(false);
+  const [isFetchingSubPattern, setIsFetchingSubPattern] = useState(false);
 
   const handleSubPatternClick = async () => {
+    setIsFetchingSubPattern(true);
     const data = await handleFetchPlayerSubpattern();
     if (data) {
       setPlayerSubPattern(data);
@@ -164,6 +166,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
       setPlayerSubPattern([]); // Clear if no data
     }
     setIsSubPatternSheetOpen(true);
+    setIsFetchingSubPattern(false);
   };
 
 
@@ -318,117 +321,126 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                 <div className="grid grid-cols-2 gap-2 mt-4">
                   <Sheet open={isSubPatternSheetOpen} onOpenChange={setIsSubPatternSheetOpen}>
                     <SheetTrigger asChild>
-                      <Button variant="outline" onClick={handleSubPatternClick} disabled={schedule !== "schedule"}>Substitution Pattern</Button>
+                      <Button variant="outline" onClick={handleSubPatternClick} disabled={schedule !== "schedule" || isFetchingSubPattern}>Substitution Pattern</Button>
                     </SheetTrigger>
-                    <SheetContent className="max-w-none w-[90vw] sm:w-[85vw] md:w-[80vw] lg:w-[90vw] xl:w-[90vw] overflow-y-auto">
+                    <SheetContent className="max-w-none w-[90vw] sm:w-[85vw] md:w-[80vw] lg:w-[90vw] xl:w-[80vw] overflow-y-auto">
                       <SheetHeader>
                         <SheetTitle>4 Minute Substitution Pattern - {selectedTeams2?.teams}</SheetTitle>
                       </SheetHeader>
                       <div className="flex gap-2 mt-4 text-xs">
-                        <div className="w-2/3 overflow-auto pr-2" style={{ height: 'calc(100vh - 150px)' }}>
-                          <Table>
-                            <TableBody>
-                              {/* QTR 1 */}
-                              <TableRow>
-                                <TableHead colSpan={1} className="w-16"></TableHead>
-                                <TableHead colSpan={2} className="text-center font-bold border">0-4</TableHead>
-                                <TableHead colSpan={2} className="text-center font-bold border">4-8</TableHead>
-                                <TableHead colSpan={2} className="text-center font-bold border">8-12</TableHead>
-                              </TableRow>
-                              {playerSubPattern && playerSubPattern.length === 12 && positions.map((pos, posIndex) => (
-                                <TableRow key={`q1-${pos.key}`}>
-                                  {posIndex === 0 && <TableCell rowSpan={5} className="align-middle text-center font-bold w-16">Qtr1</TableCell>}
-                                  <TableCell className="font-bold border w-12">{pos.label}</TableCell>
-                                  <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[0][pos.key]}</TableCell>
-                                  <TableCell className="font-bold border w-12">{pos.label}</TableCell>
-                                  <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[1][pos.key]}</TableCell>
-                                  <TableCell className="font-bold border w-12">{pos.label}</TableCell>
-                                  <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[2][pos.key]}</TableCell>
-                                </TableRow>
-                              ))}
-
-                              {/* QTR 2 */}
-                              <TableRow>
-                                <TableHead colSpan={1} className="w-16"></TableHead>
-                                <TableHead colSpan={2} className="text-center font-bold border">12-16</TableHead>
-                                <TableHead colSpan={2} className="text-center font-bold border">16-20</TableHead>
-                                <TableHead colSpan={2} className="text-center font-bold border">20-24</TableHead>
-                              </TableRow>
-                              {playerSubPattern && playerSubPattern.length === 12 && positions.map((pos, posIndex) => (
-                                <TableRow key={`q2-${pos.key}`}>
-                                  {posIndex === 0 && <TableCell rowSpan={5} className="align-middle text-center font-bold w-16">Qtr2</TableCell>}
-                                  <TableCell className="font-bold border w-12">{pos.label}</TableCell>
-                                  <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[3][pos.key]}</TableCell>
-                                  <TableCell className="font-bold border w-12">{pos.label}</TableCell>
-                                  <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[4][pos.key]}</TableCell>
-                                  <TableCell className="font-bold border w-12">{pos.label}</TableCell>
-                                  <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[5][pos.key]}</TableCell>
-                                </TableRow>
-                              ))}
-
-                              {/* QTR 3 */}
-                              <TableRow>
-                                <TableHead colSpan={1} className="w-16"></TableHead>
-                                <TableHead colSpan={2} className="text-center font-bold border">24-28</TableHead>
-                                <TableHead colSpan={2} className="text-center font-bold border">28-32</TableHead>
-                                <TableHead colSpan={2} className="text-center font-bold border">32-36</TableHead>
-                              </TableRow>
-                              {playerSubPattern && playerSubPattern.length === 12 && positions.map((pos, posIndex) => (
-                                <TableRow key={`q3-${pos.key}`}>
-                                  {posIndex === 0 && <TableCell rowSpan={5} className="align-middle text-center font-bold w-16">Qtr3</TableCell>}
-                                  <TableCell className="font-bold border w-12">{pos.label}</TableCell>
-                                  <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[6][pos.key]}</TableCell>
-                                  <TableCell className="font-bold border w-12">{pos.label}</TableCell>
-                                  <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[7][pos.key]}</TableCell>
-                                  <TableCell className="font-bold border w-12">{pos.label}</TableCell>
-                                  <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[8][pos.key]}</TableCell>
-                                </TableRow>
-                              ))}
-
-                              {/* QTR 4 */}
-                              <TableRow>
-                                <TableHead colSpan={1} className="w-16"></TableHead>
-                                <TableHead colSpan={2} className="text-center font-bold border">36-40</TableHead>
-                                <TableHead colSpan={2} className="text-center font-bold border">40-44</TableHead>
-                                <TableHead colSpan={2} className="text-center font-bold border">44-48</TableHead>
-                              </TableRow>
-                              {playerSubPattern && playerSubPattern.length === 12 && positions.map((pos, posIndex) => (
-                                <TableRow key={`q4-${pos.key}`}>
-                                  {posIndex === 0 && <TableCell rowSpan={5} className="align-middle text-center font-bold w-16">Qtr4</TableCell>}
-                                  <TableCell className="font-bold border w-12">{pos.label}</TableCell>
-                                  <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[9][pos.key]}</TableCell>
-                                  <TableCell className="font-bold border w-12">{pos.label}</TableCell>
-                                  <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[10][pos.key]}</TableCell>
-                                  <TableCell className="font-bold border w-12">{pos.label}</TableCell>
-                                  <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[11][pos.key]}</TableCell>
-                                </TableRow>
-                              ))}
-                            </TableBody>
-                          </Table>
-                        </div>
-                        <div className="w-1/3 border-l pl-2 mx-4">
-                          <h3 className="font-bold mb-2 text-sm">Available Players</h3>
-                          <div className="overflow-y-auto" style={{ height: 'calc(100vh - 200px)' }}>
-                            <Table>
-                              <TableHeader>
-                                <TableRow>
-                                  <TableHead>Name</TableHead>
-                                  <TableHead>Pos</TableHead>
-                                  <TableHead>Ht</TableHead>
-                                </TableRow>
-                              </TableHeader>
-                              <TableBody>
-                                {playersTeam2.map(player => (
-                                  <TableRow key={player.name}>
-                                    <TableCell className="cursor-pointer hover:bg-muted">{player.name}</TableCell>
-                                    <TableCell className="cursor-pointer hover:bg-muted">{player.positions}</TableCell>
-                                    <TableCell className="cursor-pointer hover:bg-muted">{player.height}</TableCell>
-                                  </TableRow>
-                                ))}
-                              </TableBody>
-                            </Table>
+                        {isFetchingSubPattern ? (
+                          <div className="flex flex-col items-center justify-center w-full h-full min-h-[300px]">
+                            <Loader2 className="h-8 w-8 animate-spin" />
+                            <p className="mt-2">Loading player substitution data...</p>
                           </div>
-                        </div>
+                        ) : (
+                          <>
+                            <div className="w-2/3 overflow-auto pr-2" style={{ height: 'calc(100vh - 150px)' }}>
+                              <Table>
+                                <TableBody>
+                                  {/* QTR 1 */}
+                                  <TableRow>
+                                    <TableHead colSpan={1} className="w-16"></TableHead>
+                                    <TableHead colSpan={2} className="text-center font-bold border">0-4</TableHead>
+                                    <TableHead colSpan={2} className="text-center font-bold border">4-8</TableHead>
+                                    <TableHead colSpan={2} className="text-center font-bold border">8-12</TableHead>
+                                  </TableRow>
+                                  {playerSubPattern && playerSubPattern.length === 12 && positions.map((pos, posIndex) => (
+                                    <TableRow key={`q1-${pos.key}`}>
+                                      {posIndex === 0 && <TableCell rowSpan={5} className="align-middle text-center font-bold w-16">Qtr1</TableCell>}
+                                      <TableCell className="font-bold border w-12">{pos.label}</TableCell>
+                                      <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[0][pos.key]}</TableCell>
+                                      <TableCell className="font-bold border w-12">{pos.label}</TableCell>
+                                      <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[1][pos.key]}</TableCell>
+                                      <TableCell className="font-bold border w-12">{pos.label}</TableCell>
+                                      <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[2][pos.key]}</TableCell>
+                                    </TableRow>
+                                  ))}
+
+                                  {/* QTR 2 */}
+                                  <TableRow>
+                                    <TableHead colSpan={1} className="w-16"></TableHead>
+                                    <TableHead colSpan={2} className="text-center font-bold border">12-16</TableHead>
+                                    <TableHead colSpan={2} className="text-center font-bold border">16-20</TableHead>
+                                    <TableHead colSpan={2} className="text-center font-bold border">20-24</TableHead>
+                                  </TableRow>
+                                  {playerSubPattern && playerSubPattern.length === 12 && positions.map((pos, posIndex) => (
+                                    <TableRow key={`q2-${pos.key}`}>
+                                      {posIndex === 0 && <TableCell rowSpan={5} className="align-middle text-center font-bold w-16">Qtr2</TableCell>}
+                                      <TableCell className="font-bold border w-12">{pos.label}</TableCell>
+                                      <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[3][pos.key]}</TableCell>
+                                      <TableCell className="font-bold border w-12">{pos.label}</TableCell>
+                                      <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[4][pos.key]}</TableCell>
+                                      <TableCell className="font-bold border w-12">{pos.label}</TableCell>
+                                      <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[5][pos.key]}</TableCell>
+                                    </TableRow>
+                                  ))}
+
+                                  {/* QTR 3 */}
+                                  <TableRow>
+                                    <TableHead colSpan={1} className="w-16"></TableHead>
+                                    <TableHead colSpan={2} className="text-center font-bold border">24-28</TableHead>
+                                    <TableHead colSpan={2} className="text-center font-bold border">28-32</TableHead>
+                                    <TableHead colSpan={2} className="text-center font-bold border">32-36</TableHead>
+                                  </TableRow>
+                                  {playerSubPattern && playerSubPattern.length === 12 && positions.map((pos, posIndex) => (
+                                    <TableRow key={`q3-${pos.key}`}>
+                                      {posIndex === 0 && <TableCell rowSpan={5} className="align-middle text-center font-bold w-16">Qtr3</TableCell>}
+                                      <TableCell className="font-bold border w-12">{pos.label}</TableCell>
+                                      <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[6][pos.key]}</TableCell>
+                                      <TableCell className="font-bold border w-12">{pos.label}</TableCell>
+                                      <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[7][pos.key]}</TableCell>
+                                      <TableCell className="font-bold border w-12">{pos.label}</TableCell>
+                                      <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[8][pos.key]}</TableCell>
+                                    </TableRow>
+                                  ))}
+
+                                  {/* QTR 4 */}
+                                  <TableRow>
+                                    <TableHead colSpan={1} className="w-16"></TableHead>
+                                    <TableHead colSpan={2} className="text-center font-bold border">36-40</TableHead>
+                                    <TableHead colSpan={2} className="text-center font-bold border">40-44</TableHead>
+                                    <TableHead colSpan={2} className="text-center font-bold border">44-48</TableHead>
+                                  </TableRow>
+                                  {playerSubPattern && playerSubPattern.length === 12 && positions.map((pos, posIndex) => (
+                                    <TableRow key={`q4-${pos.key}`}>
+                                      {posIndex === 0 && <TableCell rowSpan={5} className="align-middle text-center font-bold w-16">Qtr4</TableCell>}
+                                      <TableCell className="font-bold border w-12">{pos.label}</TableCell>
+                                      <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[9][pos.key]}</TableCell>
+                                      <TableCell className="font-bold border w-12">{pos.label}</TableCell>
+                                      <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[10][pos.key]}</TableCell>
+                                      <TableCell className="font-bold border w-12">{pos.label}</TableCell>
+                                      <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[11][pos.key]}</TableCell>
+                                    </TableRow>
+                                  ))}
+                                </TableBody>
+                              </Table>
+                            </div>
+                            <div className="w-1/3 border-l pl-2">
+                              <h3 className="font-bold mb-2 text-sm">Available Players</h3>
+                              <div className="overflow-y-auto" style={{ height: 'calc(100vh - 200px)' }}>
+                                <Table>
+                                  <TableHeader>
+                                    <TableRow>
+                                      <TableHead>Name</TableHead>
+                                      <TableHead>Pos</TableHead>
+                                      <TableHead>Ht</TableHead>
+                                    </TableRow>
+                                  </TableHeader>
+                                  <TableBody>
+                                    {playersTeam2.map(player => (
+                                      <TableRow key={player.name}>
+                                        <TableCell className="cursor-pointer hover:bg-muted">{player.name}</TableCell>
+                                        <TableCell className="cursor-pointer hover:bg-muted">{player.positions}</TableCell>
+                                        <TableCell className="cursor-pointer hover:bg-muted">{player.height}</TableCell>
+                                      </TableRow>
+                                    ))}
+                                  </TableBody>
+                                </Table>
+                              </div>
+                            </div>
+                          </>
+                        )}
                       </div>
                     </SheetContent>
                   </Sheet>
