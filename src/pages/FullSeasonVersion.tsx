@@ -86,6 +86,15 @@ interface PlayerChar { //this scheme is shared with playerChar editable stats, s
   pctbs: string;
 }
 
+interface PlayerSubPattern {
+  pos1: string;
+  pos2: string;
+  pos3: string;
+  pos4: string;
+  pos5: string;
+}
+
+
 interface FullSeasonVersionProps {
   leagues: League[];
   selectedLeague: League | null;
@@ -93,7 +102,7 @@ interface FullSeasonVersionProps {
   teams: Team[];
   selectedTeams1: Team | null;
   teamsSchedule: TeamsSchedule[];
-  setTeamsSchedule:React.Dispatch<React.SetStateAction<TeamsSchedule | null>>;
+  setTeamsSchedule:React.Dispatch<React.SetStateAction<TeamsSchedule[]>>;
   setSelectedTeams1: React.Dispatch<React.SetStateAction<Team | null>>;
   selectedTeams2: Team | null;
   setSelectedTeams2: React.Dispatch<React.SetStateAction<Team | null>>;
@@ -112,7 +121,8 @@ interface FullSeasonVersionProps {
 }
 
 const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
-  { leagues,
+  {
+    leagues,
     selectedLeague,
     setSelectedLeague,
     teams,
@@ -143,6 +153,58 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
   const [isClear, setIsClear] = useState(false)
   const [isSimulating, setIsSimulating] = useState(false);
   const [multiplier, setMultiplier] = useState(100)
+  const [playerSubPattern, setPlayerSubPattern] = useState<PlayerSubPattern[]>([]);
+  const [isSubPatternSheetOpen, setIsSubPatternSheetOpen] = useState(false);
+
+  const handleSubPatternClick = async () => {
+    await handleFetchPlayerSubpattern();
+    // NOTE: Using mock data as the mechanism to get data from handleFetchPlayerSubpattern is not clear.
+    const mockSubPattern: PlayerSubPattern[] = [
+      { pos1: 'Clint Capela', pos2: 'Jalen Johnson', pos3: 'Zaccharie Risache', pos4: 'Dyson Daniels', pos5: 'Trae Young' }, { pos1: 'Clint Capela', pos2: 'Georges Niang', pos3: 'Caris Levert', pos4: 'Dyson Daniels', pos5: 'Trae Young' }, { pos1: 'Onyeka Okongwu', pos2: 'Jalen Johnson', pos3: 'Zaccharie Risache', pos4: 'Garrison Mathews', pos5: 'Keaton Wallace' },
+      { pos1: 'Onyeka Okongwu', pos2: 'Larry Nance Jr.', pos3: 'Vit Krejci', pos4: 'Terance Mann', pos5: 'Garrison Mathews' }, { pos1: 'Jalen Johnson', pos2: 'Vit Krejci', pos3: 'Zaccharie Risache', pos4: 'Garrison Mathews', pos5: 'Trae Young' }, { pos1: 'Clint Capela', pos2: 'Jalen Johnson', pos3: 'Caris Levert', pos4: 'Dyson Daniels', pos5: 'Trae Young' },
+      { pos1: 'Clint Capela', pos2: 'Jalen Johnson', pos3: 'Zaccharie Risache', pos4: 'Dyson Daniels', pos5: 'Trae Young' }, { pos1: 'Onyeka Okongwu', pos2: 'Jalen Johnson', pos3: 'Georges Niang', pos4: 'Dyson Daniels', pos5: 'Keaton Wallace' }, { pos1: 'Onyeka Okongwu', pos2: 'Larry Nance Jr.', pos3: 'Georges Niang', pos4: 'Caris Levert', pos5: 'Trae Young' },
+      { pos1: 'Onyeka Okongwu', pos2: 'Jalen Johnson', pos3: 'Caris Levert', pos4: 'Terance Mann', pos5: 'Trae Young' }, { pos1: 'Clint Capela', pos2: 'Georges Niang', pos3: 'Zaccharie Risache', pos4: 'Dyson Daniels', pos5: 'Trae Young' }, { pos1: 'Clint Capela', pos2: 'Jalen Johnson', pos3: 'Zaccharie Risache', pos4: 'Dyson Daniels', pos5: 'Trae Young' },
+    ];
+    setPlayerSubPattern(mockSubPattern);
+    setIsSubPatternSheetOpen(true);
+  };
+
+
+  const positions: { key: keyof PlayerSubPattern, label: string }[] = [
+    { key: 'pos1', label: 'C' }, { key: 'pos2', label: 'PF' }, { key: 'pos3', label: 'SF' }, { key: 'pos4', label: 'SG' }, { key: 'pos5', label: 'PG' },
+  ];
+
+  const timeIntervals = [
+    '0-4', '4-8', '8-12', '12-16', '16-20', '20-24', '24-28', '28-32', '32-36', '36-40', '40-44', '44-48',
+  ];
+
+  const renderInterval = (intervalIndex: number) => {
+    if (!playerSubPattern || playerSubPattern.length !== 12) return null;
+    const data = playerSubPattern[intervalIndex];
+    return (
+      <div>
+        <div className="font-bold text-center mb-2">{timeIntervals[intervalIndex]}</div>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-[50px]">Pos</TableHead>
+              <TableHead>Name</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {positions.map(pos => (
+              <TableRow key={pos.key}>
+                <TableCell>{pos.label}</TableCell>
+                <TableCell className="cursor-pointer hover:bg-muted">
+                  {data[pos.key]}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    );
+  };
 
   let gameCounter = 0
 
@@ -206,6 +268,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                   setTeamsSchedule([])
                   setIsClear(!isClear)
                 }}>Clear</Button>
+
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline" disabled={leagues.length === 0}>
@@ -256,7 +319,75 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
               </div> : <></>}
               {selectedLeague && (selectedTeams1 || selectedTeams2) ? <>
                 <div className="grid grid-cols-2 gap-2 mt-4">
-                  <Button variant="outline" onClick={handleFetchPlayerSubpattern} disabled={schedule != "schedule"}>Substitution Pattern</Button>
+                  <Sheet open={isSubPatternSheetOpen} onOpenChange={setIsSubPatternSheetOpen}>
+                    <SheetTrigger asChild>
+                      <Button variant="outline" onClick={handleSubPatternClick} disabled={schedule !== "schedule"}>Substitution Pattern</Button>
+                    </SheetTrigger>
+                    <SheetContent className="max-w-none w-[90vw] sm:w-[80vw] md:w-[70vw] lg:w-[60vw] xl:w-[50vw] overflow-y-auto">
+                      <SheetHeader>
+                        <SheetTitle>4 Minute Substitution Pattern - {selectedTeams2?.teams}</SheetTitle>
+                      </SheetHeader>
+                      <div className="flex gap-4 mt-4">
+                        <div className="flex-grow">
+                          <div>
+                            <div className="font-bold text-lg mb-2">Qtr 1</div>
+                            <div className="grid grid-cols-3 gap-4">
+                              {renderInterval(0)}
+                              {renderInterval(1)}
+                              {renderInterval(2)}
+                            </div>
+                          </div>
+                          <div className="mt-4">
+                            <div className="font-bold text-lg mb-2">Qtr 2</div>
+                            <div className="grid grid-cols-3 gap-4">
+                              {renderInterval(3)}
+                              {renderInterval(4)}
+                              {renderInterval(5)}
+                            </div>
+                          </div>
+                          <div className="mt-4">
+                            <div className="font-bold text-lg mb-2">Qtr 3</div>
+                            <div className="grid grid-cols-3 gap-4">
+                              {renderInterval(6)}
+                              {renderInterval(7)}
+                              {renderInterval(8)}
+                            </div>
+                          </div>
+                          <div className="mt-4">
+                            <div className="font-bold text-lg mb-2">Qtr 4</div>
+                            <div className="grid grid-cols-3 gap-4">
+                              {renderInterval(9)}
+                              {renderInterval(10)}
+                              {renderInterval(11)}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="w-1/3 border-l pl-4">
+                          <h3 className="font-bold mb-2">Available Players</h3>
+                          <div className="h-[600px] overflow-y-auto">
+                            <Table>
+                              <TableHeader>
+                                <TableRow>
+                                  <TableHead>Name</TableHead>
+                                  <TableHead>Pos</TableHead>
+                                  <TableHead>Ht</TableHead>
+                                </TableRow>
+                              </TableHeader>
+                              <TableBody>
+                                {playersTeam1.map(player => (
+                                  <TableRow key={player.name} className="cursor-pointer hover:bg-muted">
+                                    <TableCell>{player.name}</TableCell>
+                                    <TableCell>{player.positions}</TableCell>
+                                    <TableCell>{player.height}</TableCell>
+                                  </TableRow>
+                                ))}
+                              </TableBody>
+                            </Table>
+                          </div>
+                        </div>
+                      </div>
+                    </SheetContent>
+                  </Sheet>
                   <Sheet>
                     <SheetTrigger asChild>
                       <Button variant="outline">Actual Player Statistics</Button>

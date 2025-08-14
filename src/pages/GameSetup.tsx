@@ -647,6 +647,7 @@ const GameSetup = () => {
             handleSchedule82={handleSchedule82}
             handleFetchPlayerSubpattern={handleFetchPlayerSubpattern}
             teamLogos={teamLogos}
+            
           />
         </TabsContent>
         <TabsContent value="single-game">
