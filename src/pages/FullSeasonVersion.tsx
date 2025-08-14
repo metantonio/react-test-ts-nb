@@ -107,6 +107,7 @@ interface FullSeasonVersionProps {
   handleFetchPlayByPlay: () => Promise<void>;
   handleFetchBoxScore: () => Promise<void>;
   handleSchedule82: () => Promise<void>;
+  handleFetchPlayerSubpattern: () => Promise<void>;
   teamLogos: { [key: string]: string };
 }
 
@@ -131,7 +132,8 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
     teamLogos,
     handleSchedule82,
     teamsSchedule,
-    setTeamsSchedule
+    setTeamsSchedule,
+    handleFetchPlayerSubpattern
   }
 ) => {
   const [schedule, setSchedule] = useState('predict');
@@ -254,7 +256,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
               </div> : <></>}
               {selectedLeague && (selectedTeams1 || selectedTeams2) ? <>
                 <div className="grid grid-cols-2 gap-2 mt-4">
-                  <Button variant="outline" disabled>Substitution Pattern</Button>
+                  <Button variant="outline" onClick={handleFetchPlayerSubpattern} disabled>Substitution Pattern</Button>
                   <Sheet>
                     <SheetTrigger asChild>
                       <Button variant="outline">Actual Player Statistics</Button>

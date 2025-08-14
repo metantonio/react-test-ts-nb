@@ -199,6 +199,18 @@ interface BoxScoreResponse {
   boxscore: BoxScore[];
 }
 
+interface PlayerSubPattern {
+  pos1: string;
+  pos2: string;
+  pos3: string;
+  pos4: string;
+  pos5: string;
+}
+
+interface PlayerSubPatternResponse {
+  data: PlayerSubPattern[];
+}
+
 const teamLogos: { [key: string]: string } = {
   "Atlanta Hawks": "https://upload.wikimedia.org/wikipedia/en/2/24/Atlanta_Hawks_logo.svg",
   "Boston Celtics": "https://upload.wikimedia.org/wikipedia/en/8/8f/Boston_Celtics.svg",
@@ -245,6 +257,7 @@ const GameSetup = () => {
   const [isGameInitial, setIsGameInitial] = useState<boolean>(false);
   const [playByPlay, setPlayByPlay] = useState<PlayByPlay[]>([]);
   const [boxScore, setBoxScore] = useState<BoxScore[]>([]);
+  const [playerSubPattern, setPlayerSubPattern] = useState<PlayerSubPattern[]>([]);
   const [scoreBoard, setScoreBoard] = useState<ScoreBoard | null>(null);
   const [playersTeam1, setPlayersTeam1] = useState<PlayerChar[]>([{
     name: "",
@@ -516,6 +529,22 @@ const GameSetup = () => {
     }
   };
 
+  const handleFetchPlayerSubpattern = async () => {
+    setError(null);
+    try {
+      const response = await fetchWithAuth(`${API_URL}/get_players_subs.php`, 'POST');
+      if (!response.ok) {
+        const err: Message = await response.json();
+        setError(`error: ${err.message}`);
+        throw new Error('Failed to fetch players sub pattern.');
+      }
+      const data: PlayerSubPatternResponse = await response.json();
+      setPlayerSubPattern(data.data);
+    } catch (err: any) {
+      setError(`${err}`);
+    }
+  };
+
   const goLoginPage = () => {
     navigate('/')
   }
@@ -616,6 +645,7 @@ const GameSetup = () => {
             handleFetchPlayByPlay={handleFetchPlayByPlay}
             handleFetchBoxScore={handleFetchBoxScore}
             handleSchedule82={handleSchedule82}
+            handleFetchPlayerSubpattern={handleFetchPlayerSubpattern}
             teamLogos={teamLogos}
           />
         </TabsContent>
