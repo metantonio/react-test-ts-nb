@@ -102,7 +102,7 @@ interface FullSeasonVersionProps {
   teams: Team[];
   selectedTeams1: Team | null;
   teamsSchedule: TeamsSchedule[];
-  setTeamsSchedule:React.Dispatch<React.SetStateAction<TeamsSchedule[]>>;
+  setTeamsSchedule: React.Dispatch<React.SetStateAction<TeamsSchedule[]>>;
   setSelectedTeams1: React.Dispatch<React.SetStateAction<Team | null>>;
   selectedTeams2: Team | null;
   setSelectedTeams2: React.Dispatch<React.SetStateAction<Team | null>>;
@@ -323,67 +323,91 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                     <SheetTrigger asChild>
                       <Button variant="outline" onClick={handleSubPatternClick} disabled={schedule !== "schedule"}>Substitution Pattern</Button>
                     </SheetTrigger>
-                    <SheetContent className="max-w-none w-[90vw] sm:w-[80vw] md:w-[70vw] lg:w-[60vw] xl:w-[50vw] overflow-y-auto">
+                    <SheetContent className="max-w-none w-[90vw] sm:w-[80vw] md:w-[90vw] lg:w-[90vw] xl:w-[90vw] overflow-y-auto">
                       <SheetHeader>
-                        <SheetTitle>4 Minute Substitution Pattern - {selectedTeams2?.teams}</SheetTitle>
+                        <SheetTitle>4 Minute Substitution Pattern - {selectedTeams1?.teams}</SheetTitle>
                       </SheetHeader>
                       <div className="flex gap-4 mt-4">
-                        <div className="flex-grow">
-                          <div>
-                            <div className="font-bold text-lg mb-2">Qtr 1</div>
-                            <div className="grid grid-cols-3 gap-4">
-                              {renderInterval(0)}
-                              {renderInterval(1)}
-                              {renderInterval(2)}
-                            </div>
-                          </div>
-                          <div className="mt-4">
-                            <div className="font-bold text-lg mb-2">Qtr 2</div>
-                            <div className="grid grid-cols-3 gap-4">
-                              {renderInterval(3)}
-                              {renderInterval(4)}
-                              {renderInterval(5)}
-                            </div>
-                          </div>
-                          <div className="mt-4">
-                            <div className="font-bold text-lg mb-2">Qtr 3</div>
-                            <div className="grid grid-cols-3 gap-4">
-                              {renderInterval(6)}
-                              {renderInterval(7)}
-                              {renderInterval(8)}
-                            </div>
-                          </div>
-                          <div className="mt-4">
-                            <div className="font-bold text-lg mb-2">Qtr 4</div>
-                            <div className="grid grid-cols-3 gap-4">
-                              {renderInterval(9)}
-                              {renderInterval(10)}
-                              {renderInterval(11)}
-                            </div>
-                          </div>
-                        </div>
-                        <div className="w-1/3 border-l pl-4">
-                          <h3 className="font-bold mb-2">Available Players</h3>
-                          <div className="h-[600px] overflow-y-auto">
-                            <Table>
-                              <TableHeader>
-                                <TableRow>
-                                  <TableHead>Name</TableHead>
-                                  <TableHead>Pos</TableHead>
-                                  <TableHead>Ht</TableHead>
+                        <div className="flex-grow overflow-auto pr-4" style={{ height: 'calc(100vh - 150px)' }}>
+                          <Table>
+                            <TableBody>
+                              {/* QTR 1 */}
+                              <TableRow>
+                                <TableHead colSpan={1} className="w-16"></TableHead>
+                                <TableHead colSpan={2} className="text-center font-bold border">0-4</TableHead>
+                                <TableHead colSpan={2} className="text-center font-bold border">4-8</TableHead>
+                                <TableHead colSpan={2} className="text-center font-bold border">8-12</TableHead>
+                              </TableRow>
+                              {playerSubPattern && playerSubPattern.length === 12 && positions.map((pos, posIndex) => (
+                                <TableRow key={`q1-${pos.key}`}>
+                                  {posIndex === 0 && <TableCell rowSpan={5} className="align-middle text-center font-bold w-16">Qtr1</TableCell>}
+                                  <TableCell className="font-bold border w-12">{pos.label}</TableCell>
+                                  <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[0][pos.key]}</TableCell>
+                                  <TableCell className="font-bold border w-12">{pos.label}</TableCell>
+                                  <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[1][pos.key]}</TableCell>
+                                  <TableCell className="font-bold border w-12">{pos.label}</TableCell>
+                                  <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[2][pos.key]}</TableCell>
                                 </TableRow>
-                              </TableHeader>
-                              <TableBody>
-                                {playersTeam1.map(player => (
-                                  <TableRow key={player.name} className="cursor-pointer hover:bg-muted">
-                                    <TableCell>{player.name}</TableCell>
-                                    <TableCell>{player.positions}</TableCell>
-                                    <TableCell>{player.height}</TableCell>
-                                  </TableRow>
-                                ))}
-                              </TableBody>
-                            </Table>
-                          </div>
+                              ))}
+
+                              {/* QTR 2 */}
+                              <TableRow>
+                                <TableHead colSpan={1} className="w-16"></TableHead>
+                                <TableHead colSpan={2} className="text-center font-bold border">12-16</TableHead>
+                                <TableHead colSpan={2} className="text-center font-bold border">16-20</TableHead>
+                                <TableHead colSpan={2} className="text-center font-bold border">20-24</TableHead>
+                              </TableRow>
+                              {playerSubPattern && playerSubPattern.length === 12 && positions.map((pos, posIndex) => (
+                                <TableRow key={`q2-${pos.key}`}>
+                                  {posIndex === 0 && <TableCell rowSpan={5} className="align-middle text-center font-bold w-16">Qtr2</TableCell>}
+                                  <TableCell className="font-bold border w-12">{pos.label}</TableCell>
+                                  <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[3][pos.key]}</TableCell>
+                                  <TableCell className="font-bold border w-12">{pos.label}</TableCell>
+                                  <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[4][pos.key]}</TableCell>
+                                  <TableCell className="font-bold border w-12">{pos.label}</TableCell>
+                                  <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[5][pos.key]}</TableCell>
+                                </TableRow>
+                              ))}
+
+                              {/* QTR 3 */}
+                              <TableRow>
+                                <TableHead colSpan={1} className="w-16"></TableHead>
+                                <TableHead colSpan={2} className="text-center font-bold border">24-28</TableHead>
+                                <TableHead colSpan={2} className="text-center font-bold border">28-32</TableHead>
+                                <TableHead colSpan={2} className="text-center font-bold border">32-36</TableHead>
+                              </TableRow>
+                              {playerSubPattern && playerSubPattern.length === 12 && positions.map((pos, posIndex) => (
+                                <TableRow key={`q3-${pos.key}`}>
+                                  {posIndex === 0 && <TableCell rowSpan={5} className="align-middle text-center font-bold w-16">Qtr3</TableCell>}
+                                  <TableCell className="font-bold border w-12">{pos.label}</TableCell>
+                                  <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[6][pos.key]}</TableCell>
+                                  <TableCell className="font-bold border w-12">{pos.label}</TableCell>
+                                  <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[7][pos.key]}</TableCell>
+                                  <TableCell className="font-bold border w-12">{pos.label}</TableCell>
+                                  <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[8][pos.key]}</TableCell>
+                                </TableRow>
+                              ))}
+
+                              {/* QTR 4 */}
+                              <TableRow>
+                                <TableHead colSpan={1} className="w-16"></TableHead>
+                                <TableHead colSpan={2} className="text-center font-bold border">36-40</TableHead>
+                                <TableHead colSpan={2} className="text-center font-bold border">40-44</TableHead>
+                                <TableHead colSpan={2} className="text-center font-bold border">44-48</TableHead>
+                              </TableRow>
+                              {playerSubPattern && playerSubPattern.length === 12 && positions.map((pos, posIndex) => (
+                                <TableRow key={`q4-${pos.key}`}>
+                                  {posIndex === 0 && <TableCell rowSpan={5} className="align-middle text-center font-bold w-16">Qtr4</TableCell>}
+                                  <TableCell className="font-bold border w-12">{pos.label}</TableCell>
+                                  <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[9][pos.key]}</TableCell>
+                                  <TableCell className="font-bold border w-12">{pos.label}</TableCell>
+                                  <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[10][pos.key]}</TableCell>
+                                  <TableCell className="font-bold border w-12">{pos.label}</TableCell>
+                                  <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[11][pos.key]}</TableCell>
+                                </TableRow>
+                              ))}
+                            </TableBody>
+                          </Table>
                         </div>
                       </div>
                     </SheetContent>
@@ -574,18 +598,18 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
         <div className="col-span-1">
           <Button variant="outline" className="w-full">Zero Schedule</Button>
           <div className="grid grid-cols-3 gap-2 mt-2">
-            <Button variant="outline" onClick={()=>{
+            <Button variant="outline" onClick={() => {
               setMultiplier(100)
               handleSchedule82()
-              }} disabled={selectedTeams2==null}>82 Games</Button>
-            <Button variant="outline" disabled={selectedTeams2==null} onClick={()=>{
+            }} disabled={selectedTeams2 == null}>82 Games</Button>
+            <Button variant="outline" disabled={selectedTeams2 == null} onClick={() => {
               setMultiplier(10)
               handleSchedule82()
-              }}>820 Games</Button>
-            <Button variant="outline" disabled={selectedTeams2==null} onClick={()=>{
+            }}>820 Games</Button>
+            <Button variant="outline" disabled={selectedTeams2 == null} onClick={() => {
               setMultiplier(1)
               handleSchedule82()
-              }}>8200 Games</Button>
+            }}>8200 Games</Button>
           </div>
           <div className="mt-2 border rounded-md max-h-96 overflow-y-auto bg-card text-card-foreground">
             <Table>
@@ -612,9 +636,9 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                 </TableHeader>
                 <TableBody>
                   {teamsSchedule.map((item: TeamsSchedule, index: any) => {
-                    if(index==0){gameCounter=0}
+                    if (index == 0) { gameCounter = 0 }
                     if (item.teams != selectedTeams2?.teams) {
-                      gameCounter+=parseInt(item.games) / multiplier
+                      gameCounter += parseInt(item.games) / multiplier
                       console.log(gameCounter)
                       return (
                         <TableRow key={item.teams}>
