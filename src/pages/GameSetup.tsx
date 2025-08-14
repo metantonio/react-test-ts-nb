@@ -540,6 +540,7 @@ const GameSetup = () => {
       }
       const data: PlayerSubPatternResponse = await response.json();
       setPlayerSubPattern(data.data);
+      return data.data
     } catch (err: any) {
       setError(`${err}`);
     }

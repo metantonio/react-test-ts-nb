@@ -157,14 +157,9 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
   const [isSubPatternSheetOpen, setIsSubPatternSheetOpen] = useState(false);
 
   const handleSubPatternClick = async () => {
-    await handleFetchPlayerSubpattern();
+    const response = await handleFetchPlayerSubpattern();
     // NOTE: Using mock data as the mechanism to get data from handleFetchPlayerSubpattern is not clear.
-    const mockSubPattern: PlayerSubPattern[] = [
-      { pos1: 'Clint Capela', pos2: 'Jalen Johnson', pos3: 'Zaccharie Risache', pos4: 'Dyson Daniels', pos5: 'Trae Young' }, { pos1: 'Clint Capela', pos2: 'Georges Niang', pos3: 'Caris Levert', pos4: 'Dyson Daniels', pos5: 'Trae Young' }, { pos1: 'Onyeka Okongwu', pos2: 'Jalen Johnson', pos3: 'Zaccharie Risache', pos4: 'Garrison Mathews', pos5: 'Keaton Wallace' },
-      { pos1: 'Onyeka Okongwu', pos2: 'Larry Nance Jr.', pos3: 'Vit Krejci', pos4: 'Terance Mann', pos5: 'Garrison Mathews' }, { pos1: 'Jalen Johnson', pos2: 'Vit Krejci', pos3: 'Zaccharie Risache', pos4: 'Garrison Mathews', pos5: 'Trae Young' }, { pos1: 'Clint Capela', pos2: 'Jalen Johnson', pos3: 'Caris Levert', pos4: 'Dyson Daniels', pos5: 'Trae Young' },
-      { pos1: 'Clint Capela', pos2: 'Jalen Johnson', pos3: 'Zaccharie Risache', pos4: 'Dyson Daniels', pos5: 'Trae Young' }, { pos1: 'Onyeka Okongwu', pos2: 'Jalen Johnson', pos3: 'Georges Niang', pos4: 'Dyson Daniels', pos5: 'Keaton Wallace' }, { pos1: 'Onyeka Okongwu', pos2: 'Larry Nance Jr.', pos3: 'Georges Niang', pos4: 'Caris Levert', pos5: 'Trae Young' },
-      { pos1: 'Onyeka Okongwu', pos2: 'Jalen Johnson', pos3: 'Caris Levert', pos4: 'Terance Mann', pos5: 'Trae Young' }, { pos1: 'Clint Capela', pos2: 'Georges Niang', pos3: 'Zaccharie Risache', pos4: 'Dyson Daniels', pos5: 'Trae Young' }, { pos1: 'Clint Capela', pos2: 'Jalen Johnson', pos3: 'Zaccharie Risache', pos4: 'Dyson Daniels', pos5: 'Trae Young' },
-    ];
+    const mockSubPattern: PlayerSubPattern[] = response;
     setPlayerSubPattern(mockSubPattern);
     setIsSubPatternSheetOpen(true);
   };
@@ -323,12 +318,12 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                     <SheetTrigger asChild>
                       <Button variant="outline" onClick={handleSubPatternClick} disabled={schedule !== "schedule"}>Substitution Pattern</Button>
                     </SheetTrigger>
-                    <SheetContent className="max-w-none w-[90vw] sm:w-[80vw] md:w-[90vw] lg:w-[90vw] xl:w-[90vw] overflow-y-auto">
+                    <SheetContent className="max-w-none w-[90vw] sm:w-[85vw] md:w-[80vw] lg:w-[90vw] xl:w-[90vw] overflow-y-auto">
                       <SheetHeader>
-                        <SheetTitle>4 Minute Substitution Pattern - {selectedTeams1?.teams}</SheetTitle>
+                        <SheetTitle>4 Minute Substitution Pattern - {selectedTeams2?.teams}</SheetTitle>
                       </SheetHeader>
-                      <div className="flex gap-4 mt-4">
-                        <div className="flex-grow overflow-auto pr-4" style={{ height: 'calc(100vh - 150px)' }}>
+                      <div className="flex gap-2 mt-4 text-xs">
+                        <div className="w-2/3 overflow-auto pr-2" style={{ height: 'calc(100vh - 150px)' }}>
                           <Table>
                             <TableBody>
                               {/* QTR 1 */}
@@ -409,10 +404,9 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                             </TableBody>
                           </Table>
                         </div>
-                      </div>
-                      <div className="w-1/3 border-l pl-4">
-                          <h3 className="font-bold mb-2">Available Players</h3>
-                          <div className="h-[600px] overflow-y-auto">
+                        <div className="w-1/3 border-l pl-2 mx-4">
+                          <h3 className="font-bold mb-2 text-sm">Available Players</h3>
+                          <div className="overflow-y-auto" style={{ height: 'calc(100vh - 200px)' }}>
                             <Table>
                               <TableHeader>
                                 <TableRow>
@@ -423,16 +417,17 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                               </TableHeader>
                               <TableBody>
                                 {playersTeam2.map(player => (
-                                  <TableRow key={player.name} className="cursor-pointer hover:bg-muted">
-                                    <TableCell>{player.name}</TableCell>
-                                    <TableCell>{player.positions}</TableCell>
-                                    <TableCell>{player.height}</TableCell>
+                                  <TableRow key={player.name}>
+                                    <TableCell className="cursor-pointer hover:bg-muted">{player.name}</TableCell>
+                                    <TableCell className="cursor-pointer hover:bg-muted">{player.positions}</TableCell>
+                                    <TableCell className="cursor-pointer hover:bg-muted">{player.height}</TableCell>
                                   </TableRow>
                                 ))}
                               </TableBody>
                             </Table>
                           </div>
                         </div>
+                      </div>
                     </SheetContent>
                   </Sheet>
                   <Sheet>
