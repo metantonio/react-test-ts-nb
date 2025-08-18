@@ -336,6 +336,10 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                         ) : (
                           <>
                             <div className="w-2/3 overflow-auto pr-2" style={{ height: 'calc(100vh - 150px)' }}>
+                            <div className="flex items-center justify-between">
+                                <h2 className="text-xl font-bold mt-8 mb-4">{selectedTeams2?.teams}</h2>
+                                <Button variant="outline" size="sm" onClick={() => exportToCSV(playerSubPattern, `${selectedTeams2?.teams}_4min_sub_pattern.csv`)}>Print</Button>
+                              </div>
                               <Table>
                                 <TableBody>
                                   {/* QTR 1 */}
@@ -356,7 +360,6 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                                       <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[2][pos.key]}</TableCell>
                                     </TableRow>
                                   ))}
-
                                   {/* QTR 2 */}
                                   <TableRow>
                                     <TableHead colSpan={1} className="w-16"></TableHead>
