@@ -172,6 +172,20 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
   const handleDrop = (e: React.DragEvent, intervalIndex: number, posKey: keyof PlayerSubPattern) => {
     const playerName = e.dataTransfer.getData("player_name");
     if (playerName && playerSubPattern) {
+      const currentIntervalPattern = playerSubPattern[intervalIndex];
+
+      // Check for duplicate player in the current 4-minute interval
+      const isDuplicate = Object.values(currentIntervalPattern).some(
+        (name) => name === playerName
+      );
+
+      if (isDuplicate) {
+        // Optionally, provide feedback to the user, e.g., a toast notification
+        console.log(`Player ${playerName} is already in this 4-minute pattern.`);
+        alert(`Player ${playerName} is already in this 4-minute pattern.`)
+        return; // Prevent the drop
+      }
+
       const newPlayerSubPattern = [...playerSubPattern];
       newPlayerSubPattern[intervalIndex] = {
         ...newPlayerSubPattern[intervalIndex],
