@@ -323,7 +323,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                     <SheetTrigger asChild>
                       <Button variant="outline" onClick={handleSubPatternClick} disabled={schedule !== "schedule" || isFetchingSubPattern}>Substitution Pattern</Button>
                     </SheetTrigger>
-                    <SheetContent className="max-w-none w-[90vw] sm:w-[85vw] md:w-[80vw] lg:w-[90vw] xl:w-[100vw] overflow-y-auto">
+                    <SheetContent className="max-w-none w-[100vw] sm:w-[100vw] md:w-[100vw] lg:w-[100vw] xl:w-[90vw] overflow-y-auto">
                       <SheetHeader>
                         <SheetTitle>4 Minute Substitution Pattern - {selectedTeams2?.teams}</SheetTitle>
                       </SheetHeader>
@@ -341,18 +341,18 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                                   {/* QTR 1 */}
                                   <TableRow>
                                     <TableHead colSpan={1} className="w-16"></TableHead>
-                                    <TableHead colSpan={2} className="text-center font-bold border">0-4</TableHead>
-                                    <TableHead colSpan={2} className="text-center font-bold border">4-8</TableHead>
-                                    <TableHead colSpan={2} className="text-center font-bold border">8-12</TableHead>
+                                    <TableHead colSpan={2} className="text-center font-bold border tb-border">0-4</TableHead>
+                                    <TableHead colSpan={2} className="text-center font-bold border tb-border">4-8</TableHead>
+                                    <TableHead colSpan={2} className="text-center font-bold border tb-border">8-12</TableHead>
                                   </TableRow>
                                   {playerSubPattern && playerSubPattern.length === 12 && positions.map((pos, posIndex) => (
-                                    <TableRow key={`q1-${pos.key}`}>
-                                      {posIndex === 0 && <TableCell rowSpan={5} className="align-middle text-center font-bold w-16">Qtr1</TableCell>}
-                                      <TableCell className="font-bold border w-12">{pos.label}</TableCell>
+                                    <TableRow key={`q1-${pos.key}`} className=''>
+                                      {posIndex === 0 && <TableCell rowSpan={5} className="align-middle text-center font-bold w-16 bg-gray tb-border">Qtr1</TableCell>}
+                                      <TableCell className="font-bold border w-12 bg-danger">{pos.label}</TableCell>
                                       <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[0][pos.key]}</TableCell>
-                                      <TableCell className="font-bold border w-12">{pos.label}</TableCell>
+                                      <TableCell className="font-bold border w-12 bg-danger">{pos.label}</TableCell>
                                       <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[1][pos.key]}</TableCell>
-                                      <TableCell className="font-bold border w-12">{pos.label}</TableCell>
+                                      <TableCell className="font-bold border w-12 bg-danger">{pos.label}</TableCell>
                                       <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[2][pos.key]}</TableCell>
                                     </TableRow>
                                   ))}
@@ -360,18 +360,18 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                                   {/* QTR 2 */}
                                   <TableRow>
                                     <TableHead colSpan={1} className="w-16"></TableHead>
-                                    <TableHead colSpan={2} className="text-center font-bold border">12-16</TableHead>
-                                    <TableHead colSpan={2} className="text-center font-bold border">16-20</TableHead>
-                                    <TableHead colSpan={2} className="text-center font-bold border">20-24</TableHead>
+                                    <TableHead colSpan={2} className="text-center font-bold border tb-border">12-16</TableHead>
+                                    <TableHead colSpan={2} className="text-center font-bold border tb-border">16-20</TableHead>
+                                    <TableHead colSpan={2} className="text-center font-bold border tb-border">20-24</TableHead>
                                   </TableRow>
                                   {playerSubPattern && playerSubPattern.length === 12 && positions.map((pos, posIndex) => (
                                     <TableRow key={`q2-${pos.key}`}>
-                                      {posIndex === 0 && <TableCell rowSpan={5} className="align-middle text-center font-bold w-16">Qtr2</TableCell>}
-                                      <TableCell className="font-bold border w-12">{pos.label}</TableCell>
+                                      {posIndex === 0 && <TableCell rowSpan={5} className="align-middle text-center font-bold w-16 bg-gray tb-border">Qtr2</TableCell>}
+                                      <TableCell className="font-bold border w-12 bg-danger">{pos.label}</TableCell>
                                       <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[3][pos.key]}</TableCell>
-                                      <TableCell className="font-bold border w-12">{pos.label}</TableCell>
+                                      <TableCell className="font-bold border w-12 bg-danger">{pos.label}</TableCell>
                                       <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[4][pos.key]}</TableCell>
-                                      <TableCell className="font-bold border w-12">{pos.label}</TableCell>
+                                      <TableCell className="font-bold border w-12 bg-danger">{pos.label}</TableCell>
                                       <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[5][pos.key]}</TableCell>
                                     </TableRow>
                                   ))}
@@ -379,18 +379,18 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                                   {/* QTR 3 */}
                                   <TableRow>
                                     <TableHead colSpan={1} className="w-16"></TableHead>
-                                    <TableHead colSpan={2} className="text-center font-bold border">24-28</TableHead>
-                                    <TableHead colSpan={2} className="text-center font-bold border">28-32</TableHead>
-                                    <TableHead colSpan={2} className="text-center font-bold border">32-36</TableHead>
+                                    <TableHead colSpan={2} className="text-center font-bold border tb-border">24-28</TableHead>
+                                    <TableHead colSpan={2} className="text-center font-bold border tb-border">28-32</TableHead>
+                                    <TableHead colSpan={2} className="text-center font-bold border tb-border">32-36</TableHead>
                                   </TableRow>
                                   {playerSubPattern && playerSubPattern.length === 12 && positions.map((pos, posIndex) => (
                                     <TableRow key={`q3-${pos.key}`}>
-                                      {posIndex === 0 && <TableCell rowSpan={5} className="align-middle text-center font-bold w-16">Qtr3</TableCell>}
-                                      <TableCell className="font-bold border w-12">{pos.label}</TableCell>
+                                      {posIndex === 0 && <TableCell rowSpan={5} className="align-middle text-center font-bold w-16 bg-gray tb-border">Qtr3</TableCell>}
+                                      <TableCell className="font-bold border w-12 bg-danger">{pos.label}</TableCell>
                                       <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[6][pos.key]}</TableCell>
-                                      <TableCell className="font-bold border w-12">{pos.label}</TableCell>
+                                      <TableCell className="font-bold border w-12 bg-danger">{pos.label}</TableCell>
                                       <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[7][pos.key]}</TableCell>
-                                      <TableCell className="font-bold border w-12">{pos.label}</TableCell>
+                                      <TableCell className="font-bold border w-12 bg-danger">{pos.label}</TableCell>
                                       <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[8][pos.key]}</TableCell>
                                     </TableRow>
                                   ))}
@@ -398,18 +398,18 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                                   {/* QTR 4 */}
                                   <TableRow>
                                     <TableHead colSpan={1} className="w-16"></TableHead>
-                                    <TableHead colSpan={2} className="text-center font-bold border">36-40</TableHead>
-                                    <TableHead colSpan={2} className="text-center font-bold border">40-44</TableHead>
-                                    <TableHead colSpan={2} className="text-center font-bold border">44-48</TableHead>
+                                    <TableHead colSpan={2} className="text-center font-bold border tb-border">36-40</TableHead>
+                                    <TableHead colSpan={2} className="text-center font-bold border tb-border">40-44</TableHead>
+                                    <TableHead colSpan={2} className="text-center font-bold border tb-border">44-48</TableHead>
                                   </TableRow>
                                   {playerSubPattern && playerSubPattern.length === 12 && positions.map((pos, posIndex) => (
                                     <TableRow key={`q4-${pos.key}`}>
-                                      {posIndex === 0 && <TableCell rowSpan={5} className="align-middle text-center font-bold w-16">Qtr4</TableCell>}
-                                      <TableCell className="font-bold border w-12">{pos.label}</TableCell>
+                                      {posIndex === 0 && <TableCell rowSpan={5} className="align-middle text-center font-bold w-16 bg-gray tb-border">Qtr4</TableCell>}
+                                      <TableCell className="font-bold border w-12 bg-danger">{pos.label}</TableCell>
                                       <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[9][pos.key]}</TableCell>
-                                      <TableCell className="font-bold border w-12">{pos.label}</TableCell>
+                                      <TableCell className="font-bold border w-12 bg-danger">{pos.label}</TableCell>
                                       <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[10][pos.key]}</TableCell>
-                                      <TableCell className="font-bold border w-12">{pos.label}</TableCell>
+                                      <TableCell className="font-bold border w-12 bg-danger">{pos.label}</TableCell>
                                       <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[11][pos.key]}</TableCell>
                                     </TableRow>
                                   ))}
