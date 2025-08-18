@@ -25,7 +25,7 @@ import {
   SheetTitle,
   SheetTrigger
 } from '@/components/ui/sheet';
-import { Loader2 } from 'lucide-react';
+import { Loader2, Info } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import {
   Tooltip,
@@ -459,7 +459,10 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                               <TooltipProvider>
                                 <Tooltip>
                                   <TooltipTrigger asChild>
-                                    <h3 className="font-bold mb-2 text-sm">Available Players ℹ️</h3>
+                                    
+                                      <h3 className="font-bold mb-2 text-sm">Available Players <Info className="h-4 w-4 inline-block ml-1" /></h3>
+                                    
+
                                   </TooltipTrigger>
                                   <TooltipContent>
                                     <p>Drag players from here to the substitution pattern table</p>
