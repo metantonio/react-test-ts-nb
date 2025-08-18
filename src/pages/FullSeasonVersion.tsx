@@ -26,6 +26,13 @@ import {
   SheetTrigger
 } from '@/components/ui/sheet';
 import { Loader2 } from 'lucide-react';
+import { useToast } from "@/hooks/use-toast";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface League {
   league_name: string;
@@ -156,6 +163,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
   const [playerSubPattern, setPlayerSubPattern] = useState<PlayerSubPattern[] | null>([]);
   const [isSubPatternSheetOpen, setIsSubPatternSheetOpen] = useState(false);
   const [isFetchingSubPattern, setIsFetchingSubPattern] = useState(false);
+  const { toast } = useToast();
 
   const handleSubPatternClick = async () => {
     setIsFetchingSubPattern(true);
@@ -180,9 +188,11 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
       );
 
       if (isDuplicate) {
-        // Optionally, provide feedback to the user, e.g., a toast notification
-        console.log(`Player ${playerName} is already in this 4-minute pattern.`);
-        alert(`Player ${playerName} is already in this 4-minute pattern.`)
+        toast({
+          title: "Duplicate Player",
+          description: `Player ${playerName} is already in this 4-minute pattern.`,
+          variant: "destructive",
+        });
         return; // Prevent the drop
       }
 
@@ -446,7 +456,16 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                               </Table>
                             </div>
                             <div className="w-1/3 border-l pl-2 mx-4">
-                              <h3 className="font-bold mb-2 text-sm">Available Players</h3>
+                              <TooltipProvider>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <h3 className="font-bold mb-2 text-sm">Available Players ℹ️</h3>
+                                  </TooltipTrigger>
+                                  <TooltipContent>
+                                    <p>Drag players from here to the substitution pattern table</p>
+                                  </TooltipContent>
+                                </Tooltip>
+                              </TooltipProvider>
                               <div className="overflow-y-auto" style={{ height: 'calc(100vh - 200px)' }}>
                                 <Table>
                                   <TableHeader>
