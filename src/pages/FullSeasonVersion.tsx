@@ -169,6 +169,18 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
     setIsFetchingSubPattern(false);
   };
 
+  const handleDrop = (e: React.DragEvent, intervalIndex: number, posKey: keyof PlayerSubPattern) => {
+    const playerName = e.dataTransfer.getData("player_name");
+    if (playerName && playerSubPattern) {
+      const newPlayerSubPattern = [...playerSubPattern];
+      newPlayerSubPattern[intervalIndex] = {
+        ...newPlayerSubPattern[intervalIndex],
+        [posKey]: playerName,
+      };
+      setPlayerSubPattern(newPlayerSubPattern);
+    }
+  };
+
 
   const positions: { key: keyof PlayerSubPattern, label: string }[] = [
     { key: 'pos1', label: 'C' }, { key: 'pos2', label: 'PF' }, { key: 'pos3', label: 'SF' }, { key: 'pos4', label: 'SG' }, { key: 'pos5', label: 'PG' },
@@ -323,7 +335,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                     <SheetTrigger asChild>
                       <Button variant="outline" onClick={handleSubPatternClick} disabled={schedule !== "schedule" || isFetchingSubPattern}>Substitution Pattern</Button>
                     </SheetTrigger>
-                    <SheetContent className="max-w-none w-[100vw] sm:w-[100vw] md:w-[100vw] lg:w-[100vw] xl:w-[90vw] overflow-y-auto">
+                    <SheetContent className="max-w-none w-[100vw] overflow-y-auto">
                       <SheetHeader>
                         <SheetTitle>4 Minute Substitution Pattern - {selectedTeams2?.teams}</SheetTitle>
                       </SheetHeader>
@@ -335,8 +347,8 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                           </div>
                         ) : (
                           <>
-                            <div className="w-2/3 overflow-auto pr-2" style={{ height: 'calc(100vh - 150px)' }}>
-                            <div className="flex items-center justify-between">
+                            <div className="overflow-auto pr-2" style={{ height: 'calc(100vh - 150px)' }}>
+                              <div className="flex items-center justify-between">
                                 <h2 className="text-xl font-bold mt-8 mb-4">{selectedTeams2?.teams}</h2>
                                 <Button variant="outline" size="sm" onClick={() => exportToCSV(playerSubPattern, `${selectedTeams2?.teams}_4min_sub_pattern.csv`)}>Print</Button>
                               </div>
@@ -353,11 +365,11 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                                     <TableRow key={`q1-${pos.key}`} className=''>
                                       {posIndex === 0 && <TableCell rowSpan={5} className="align-middle text-center font-bold w-16 bg-gray tb-border">Qtr1</TableCell>}
                                       <TableCell className="font-bold border w-12 bg-danger">{pos.label}</TableCell>
-                                      <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[0][pos.key]}</TableCell>
+                                      <TableCell className="cursor-pointer hover:bg-muted border" onDragOver={(e) => e.preventDefault()} onDrop={(e) => handleDrop(e, 0, pos.key)}>{playerSubPattern[0][pos.key]}</TableCell>
                                       <TableCell className="font-bold border w-12 bg-danger">{pos.label}</TableCell>
-                                      <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[1][pos.key]}</TableCell>
+                                      <TableCell className="cursor-pointer hover:bg-muted border" onDragOver={(e) => e.preventDefault()} onDrop={(e) => handleDrop(e, 1, pos.key)}>{playerSubPattern[1][pos.key]}</TableCell>
                                       <TableCell className="font-bold border w-12 bg-danger">{pos.label}</TableCell>
-                                      <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[2][pos.key]}</TableCell>
+                                      <TableCell className="cursor-pointer hover:bg-muted border" onDragOver={(e) => e.preventDefault()} onDrop={(e) => handleDrop(e, 2, pos.key)}>{playerSubPattern[2][pos.key]}</TableCell>
                                     </TableRow>
                                   ))}
                                   {/* QTR 2 */}
@@ -371,11 +383,11 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                                     <TableRow key={`q2-${pos.key}`}>
                                       {posIndex === 0 && <TableCell rowSpan={5} className="align-middle text-center font-bold w-16 bg-gray tb-border">Qtr2</TableCell>}
                                       <TableCell className="font-bold border w-12 bg-danger">{pos.label}</TableCell>
-                                      <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[3][pos.key]}</TableCell>
+                                      <TableCell className="cursor-pointer hover:bg-muted border" onDragOver={(e) => e.preventDefault()} onDrop={(e) => handleDrop(e, 3, pos.key)}>{playerSubPattern[3][pos.key]}</TableCell>
                                       <TableCell className="font-bold border w-12 bg-danger">{pos.label}</TableCell>
-                                      <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[4][pos.key]}</TableCell>
+                                      <TableCell className="cursor-pointer hover:bg-muted border" onDragOver={(e) => e.preventDefault()} onDrop={(e) => handleDrop(e, 4, pos.key)}>{playerSubPattern[4][pos.key]}</TableCell>
                                       <TableCell className="font-bold border w-12 bg-danger">{pos.label}</TableCell>
-                                      <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[5][pos.key]}</TableCell>
+                                      <TableCell className="cursor-pointer hover:bg-muted border" onDragOver={(e) => e.preventDefault()} onDrop={(e) => handleDrop(e, 5, pos.key)}>{playerSubPattern[5][pos.key]}</TableCell>
                                     </TableRow>
                                   ))}
 
@@ -390,11 +402,11 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                                     <TableRow key={`q3-${pos.key}`}>
                                       {posIndex === 0 && <TableCell rowSpan={5} className="align-middle text-center font-bold w-16 bg-gray tb-border">Qtr3</TableCell>}
                                       <TableCell className="font-bold border w-12 bg-danger">{pos.label}</TableCell>
-                                      <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[6][pos.key]}</TableCell>
+                                      <TableCell className="cursor-pointer hover:bg-muted border" onDragOver={(e) => e.preventDefault()} onDrop={(e) => handleDrop(e, 6, pos.key)}>{playerSubPattern[6][pos.key]}</TableCell>
                                       <TableCell className="font-bold border w-12 bg-danger">{pos.label}</TableCell>
-                                      <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[7][pos.key]}</TableCell>
+                                      <TableCell className="cursor-pointer hover:bg-muted border" onDragOver={(e) => e.preventDefault()} onDrop={(e) => handleDrop(e, 7, pos.key)}>{playerSubPattern[7][pos.key]}</TableCell>
                                       <TableCell className="font-bold border w-12 bg-danger">{pos.label}</TableCell>
-                                      <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[8][pos.key]}</TableCell>
+                                      <TableCell className="cursor-pointer hover:bg-muted border" onDragOver={(e) => e.preventDefault()} onDrop={(e) => handleDrop(e, 8, pos.key)}>{playerSubPattern[8][pos.key]}</TableCell>
                                     </TableRow>
                                   ))}
 
@@ -409,11 +421,11 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                                     <TableRow key={`q4-${pos.key}`}>
                                       {posIndex === 0 && <TableCell rowSpan={5} className="align-middle text-center font-bold w-16 bg-gray tb-border">Qtr4</TableCell>}
                                       <TableCell className="font-bold border w-12 bg-danger">{pos.label}</TableCell>
-                                      <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[9][pos.key]}</TableCell>
+                                      <TableCell className="cursor-pointer hover:bg-muted border" onDragOver={(e) => e.preventDefault()} onDrop={(e) => handleDrop(e, 9, pos.key)}>{playerSubPattern[9][pos.key]}</TableCell>
                                       <TableCell className="font-bold border w-12 bg-danger">{pos.label}</TableCell>
-                                      <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[10][pos.key]}</TableCell>
+                                      <TableCell className="cursor-pointer hover:bg-muted border" onDragOver={(e) => e.preventDefault()} onDrop={(e) => handleDrop(e, 10, pos.key)}>{playerSubPattern[10][pos.key]}</TableCell>
                                       <TableCell className="font-bold border w-12 bg-danger">{pos.label}</TableCell>
-                                      <TableCell className="cursor-pointer hover:bg-muted border">{playerSubPattern[11][pos.key]}</TableCell>
+                                      <TableCell className="cursor-pointer hover:bg-muted border" onDragOver={(e) => e.preventDefault()} onDrop={(e) => handleDrop(e, 11, pos.key)}>{playerSubPattern[11][pos.key]}</TableCell>
                                     </TableRow>
                                   ))}
                                 </TableBody>
@@ -433,7 +445,13 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                                   <TableBody>
                                     {playersTeam2.map(player => (
                                       <TableRow key={player.name}>
-                                        <TableCell className="cursor-pointer hover:bg-muted">{player.name}</TableCell>
+                                        <TableCell
+                                          className="cursor-pointer hover:bg-muted"
+                                          draggable="true"
+                                          onDragStart={(e) => e.dataTransfer.setData("player_name", player.name)}
+                                        >
+                                          {player.name}
+                                        </TableCell>
                                         <TableCell className="cursor-pointer hover:bg-muted">{player.positions}</TableCell>
                                         <TableCell className="cursor-pointer hover:bg-muted">{player.height}</TableCell>
                                       </TableRow>
