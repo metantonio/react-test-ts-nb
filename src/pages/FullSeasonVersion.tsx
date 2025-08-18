@@ -345,9 +345,9 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                                   {/* QTR 1 */}
                                   <TableRow>
                                     <TableHead colSpan={1} className="w-16"></TableHead>
-                                    <TableHead colSpan={2} className="text-center font-bold border tb-border">0-4</TableHead>
-                                    <TableHead colSpan={2} className="text-center font-bold border tb-border">4-8</TableHead>
-                                    <TableHead colSpan={2} className="text-center font-bold border tb-border">8-12</TableHead>
+                                    <TableHead colSpan={2} className="text-center font-bold border tb-border">0-4 min</TableHead>
+                                    <TableHead colSpan={2} className="text-center font-bold border tb-border">4-8 min</TableHead>
+                                    <TableHead colSpan={2} className="text-center font-bold border tb-border">8-12 min</TableHead>
                                   </TableRow>
                                   {playerSubPattern && playerSubPattern.length === 12 && positions.map((pos, posIndex) => (
                                     <TableRow key={`q1-${pos.key}`} className=''>
@@ -363,9 +363,9 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                                   {/* QTR 2 */}
                                   <TableRow>
                                     <TableHead colSpan={1} className="w-16"></TableHead>
-                                    <TableHead colSpan={2} className="text-center font-bold border tb-border">12-16</TableHead>
-                                    <TableHead colSpan={2} className="text-center font-bold border tb-border">16-20</TableHead>
-                                    <TableHead colSpan={2} className="text-center font-bold border tb-border">20-24</TableHead>
+                                    <TableHead colSpan={2} className="text-center font-bold border tb-border">12-16 min</TableHead>
+                                    <TableHead colSpan={2} className="text-center font-bold border tb-border">16-20 min</TableHead>
+                                    <TableHead colSpan={2} className="text-center font-bold border tb-border">20-24 min</TableHead>
                                   </TableRow>
                                   {playerSubPattern && playerSubPattern.length === 12 && positions.map((pos, posIndex) => (
                                     <TableRow key={`q2-${pos.key}`}>
@@ -382,9 +382,9 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                                   {/* QTR 3 */}
                                   <TableRow>
                                     <TableHead colSpan={1} className="w-16"></TableHead>
-                                    <TableHead colSpan={2} className="text-center font-bold border tb-border">24-28</TableHead>
-                                    <TableHead colSpan={2} className="text-center font-bold border tb-border">28-32</TableHead>
-                                    <TableHead colSpan={2} className="text-center font-bold border tb-border">32-36</TableHead>
+                                    <TableHead colSpan={2} className="text-center font-bold border tb-border">24-28 min</TableHead>
+                                    <TableHead colSpan={2} className="text-center font-bold border tb-border">28-32 min</TableHead>
+                                    <TableHead colSpan={2} className="text-center font-bold border tb-border">32-36 min</TableHead>
                                   </TableRow>
                                   {playerSubPattern && playerSubPattern.length === 12 && positions.map((pos, posIndex) => (
                                     <TableRow key={`q3-${pos.key}`}>
@@ -401,9 +401,9 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                                   {/* QTR 4 */}
                                   <TableRow>
                                     <TableHead colSpan={1} className="w-16"></TableHead>
-                                    <TableHead colSpan={2} className="text-center font-bold border tb-border">36-40</TableHead>
-                                    <TableHead colSpan={2} className="text-center font-bold border tb-border">40-44</TableHead>
-                                    <TableHead colSpan={2} className="text-center font-bold border tb-border">44-48</TableHead>
+                                    <TableHead colSpan={2} className="text-center font-bold border tb-border">36-40 min</TableHead>
+                                    <TableHead colSpan={2} className="text-center font-bold border tb-border">40-44 min</TableHead>
+                                    <TableHead colSpan={2} className="text-center font-bold border tb-border">44-48 min</TableHead>
                                   </TableRow>
                                   {playerSubPattern && playerSubPattern.length === 12 && positions.map((pos, posIndex) => (
                                     <TableRow key={`q4-${pos.key}`}>
