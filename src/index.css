@@ -10,7 +10,7 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #4d4d4d;
+  background-color: #252525; /* App background color:  */;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -53,9 +53,9 @@ button {
   transition: border-color 0.25s;
 }
 
-button:hover {
+/* button:hover {
   border-color: #646cff;
-}
+} */
 
 button:focus,
 button:focus-visible {
@@ -75,9 +75,33 @@ button:focus-visible {
 }
 
 .bg-gray {
-  background-color: #4d4d4d;
+  background-color: #433737;
 }
 
 .tb-border {
   border: 2px white solid;
+}
+
+.bg-background {
+  background-color: #252525;
+}
+
+.bg-primary {
+  background-color: #605f5f;
+}
+
+button.bg-primary:hover {
+  background-color: #c6c3c3;
+}
+
+button.bg-background:hover {
+  background-color: #c6c3c3;
+}
+
+button.border-input {
+  border: 1px rgb(185, 182, 182) solid
+}
+
+button.text-primary-foreground {
+  color: rgb(255, 240, 246);
 }
