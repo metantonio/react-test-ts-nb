@@ -548,6 +548,25 @@ const GameSetup = () => {
     }
   };
 
+  const handleFetchSetPlayerSubpattern = async () => {
+    setError(null);
+    try {
+      const response = await fetchWithAuth(`${API_URL}/set_players_subs.php`, 'POST', {...selectedLeague, team_name: selectedTeams2?.teams, data:playerSubPattern});
+      if (!response.ok) {
+        const err: Message = await response.json();
+        setError(`error: ${err.message}`);
+        throw new Error('Failed to fetch players sub pattern.');
+        
+      }
+      const data: PlayerSubPatternResponse = await response.json();
+      setPlayerSubPattern(data.data);
+      return data.data
+    } catch (err: any) {
+      setError(`${err}`);
+      return null
+    }
+  };
+
   const goLoginPage = () => {
     navigate('/')
   }
