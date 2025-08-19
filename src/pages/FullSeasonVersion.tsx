@@ -125,6 +125,7 @@ interface FullSeasonVersionProps {
   handleSchedule82: () => Promise<void>;
   handleFetchPlayerSubpattern: () => Promise<PlayerSubPattern[] | null>;
   teamLogos: { [key: string]: string };
+  handleFetchSetPlayerSubpattern: () => Promise<void>;
 }
 
 const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
@@ -150,7 +151,8 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
     handleSchedule82,
     teamsSchedule,
     setTeamsSchedule,
-    handleFetchPlayerSubpattern
+    handleFetchPlayerSubpattern,
+    handleFetchSetPlayerSubpattern
   }
 ) => {
   const [schedule, setSchedule] = useState('predict');
@@ -375,6 +377,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                               <div className="flex items-center justify-between">
                                 <h2 className="text-xl font-bold mt-8 mb-4">{selectedTeams2?.teams}</h2>
                                 <Button variant="outline" size="sm" onClick={() => exportToCSV(playerSubPattern || [], `${selectedTeams2?.teams}_4min_sub_pattern.csv`)}>Print</Button>
+                                <Button variant="outline" size="sm" onClick={()=>{handleFetchSetPlayerSubpattern()}}>Set Pattern</Button>
                               </div>
                               <Table>
                                 <TableBody>

@@ -558,9 +558,10 @@ const GameSetup = () => {
         throw new Error('Failed to fetch players sub pattern.');
         
       }
-      const data: PlayerSubPatternResponse = await response.json();
-      setPlayerSubPattern(data.data);
-      return data.data
+      //const data: PlayerSubPatternResponse = await response.json();
+      //setPlayerSubPattern(data.data);
+      //return data.data
+      return
     } catch (err: any) {
       setError(`${err}`);
       return null
@@ -669,6 +670,7 @@ const GameSetup = () => {
             handleSchedule82={handleSchedule82}
             handleFetchPlayerSubpattern={handleFetchPlayerSubpattern}
             teamLogos={teamLogos}
+            handleFetchSetPlayerSubpattern={handleFetchSetPlayerSubpattern}
             
           />
         </TabsContent>
