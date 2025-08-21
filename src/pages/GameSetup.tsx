@@ -737,7 +737,7 @@ const GameSetup = () => {
             teamLogos={teamLogos}
             handleFetchSetPlayerSubpattern={handleFetchSetPlayerSubpattern}
             getAlts = {getAlts}
-            setGetAlts = {setGetAlts}
+            //setGetAlts = {setGetAlts}
             getAltsSelected = {getAltsSelected}
             setGetAltsSelected = {setGetAltsSelected}
           />

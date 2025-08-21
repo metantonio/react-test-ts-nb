@@ -131,7 +131,7 @@ interface FullSeasonVersionProps {
   teamLogos: { [key: string]: string };
   handleFetchSetPlayerSubpattern: () => Promise<void | null>;
   getAlts: GetAlts[];
-  setGetAlts: React.Dispatch<React.SetStateAction<GetAlts[]>>;
+  //setGetAlts: React.Dispatch<React.SetStateAction<GetAlts[]>>;
   getAltsSelected: string | null;
   setGetAltsSelected: React.Dispatch<React.SetStateAction<string>>;
 }
@@ -162,7 +162,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
     handleFetchPlayerSubpattern,
     handleFetchSetPlayerSubpattern,
     getAlts,
-    setGetAlts,
+    //setGetAlts,
     getAltsSelected,
     setGetAltsSelected
   }
