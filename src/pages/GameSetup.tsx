@@ -619,9 +619,9 @@ const GameSetup = () => {
     if (selectedLeague) {
       loadTeams();
       if (selectedTeams2) {
+        setGetAltsSelected("Default-")
         handleFetchSetGetAlts()
       }
-
     }
   }, [selectedLeague]);
 
