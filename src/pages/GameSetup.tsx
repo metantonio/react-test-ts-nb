@@ -225,8 +225,8 @@ const teamLogos: { [key: string]: string } = {
   "Boston Celtics": "https://upload.wikimedia.org/wikipedia/en/8/8f/Boston_Celtics.svg",
   "Brooklyn Nets": "https://upload.wikimedia.org/wikipedia/commons/4/44/Brooklyn_Nets_newlogo.svg",
   "Charlotte Hornets": "https://upload.wikimedia.org/wikipedia/en/c/c4/Charlotte_Hornets_%282014%29.svg",
-  "Chicago Bulls": "https://upload.wikimedia.org/wikipedia/en/6/67/Chicago_Bulls_logo.svg", 
-  "Cleveland Cavaliers": "https://upload.wikimedia.org/wikipedia/commons/4/4b/Cleveland_Cavaliers_logo.svg", 
+  "Chicago Bulls": "https://upload.wikimedia.org/wikipedia/en/6/67/Chicago_Bulls_logo.svg",
+  "Cleveland Cavaliers": "https://upload.wikimedia.org/wikipedia/commons/4/4b/Cleveland_Cavaliers_logo.svg",
   "Dallas Mavericks": "https://upload.wikimedia.org/wikipedia/en/9/97/Dallas_Mavericks_logo.svg",
   "Denver Nuggets": "https://upload.wikimedia.org/wikipedia/en/7/76/Denver_Nuggets.svg",
   "Detroit Pistons": "https://upload.wikimedia.org/wikipedia/commons/c/c9/Logo_of_the_Detroit_Pistons.svg",
@@ -260,7 +260,7 @@ const GameSetup = () => {
   const [error, setError] = useState<string | null>(null);
   const [selectedLeague, setSelectedLeague] = useState<League | null>(null);
   const [teams, setTeams] = useState<Teams[]>([{ teams: "N/A" }, { teams: "N/A" }]);
-  const [teamsSchedule, setTeamsSchedule] = useState<TeamsSchedule[]>([{ teams: "N/A", games:"0"}]);
+  const [teamsSchedule, setTeamsSchedule] = useState<TeamsSchedule[]>([{ teams: "N/A", games: "0" }]);
   const [selectedTeams1, setSelectedTeams1] = useState<Teams | null>(null);
   const [selectedTeams2, setSelectedTeams2] = useState<Teams | null>(null);
   const [isGameInitial, setIsGameInitial] = useState<boolean>(false);
@@ -406,7 +406,7 @@ const GameSetup = () => {
     setError(null);
     setIsGameInitial(true);
     try {
-      const response = await fetchWithAuth(`${API_URL}/get_82_game_schedule.php`, 'POST', {league_name: selectedLeague?.league_name, team_name: selectedTeams2?.teams });
+      const response = await fetchWithAuth(`${API_URL}/get_82_game_schedule.php`, 'POST', { league_name: selectedLeague?.league_name, team_name: selectedTeams2?.teams });
       if (!response.ok) {
         const err: Message = await response.json();
         setError(`error: ${err.message}`);
@@ -544,12 +544,12 @@ const GameSetup = () => {
   const handleFetchPlayerSubpattern = async () => {
     setError(null);
     try {
-      const response = await fetchWithAuth(`${API_URL}/get_players_subs.php`, 'POST', {...selectedLeague, team_name: selectedTeams2?.teams});
+      const response = await fetchWithAuth(`${API_URL}/get_players_subs.php`, 'POST', { ...selectedLeague, team_name: selectedTeams2?.teams });
       if (!response.ok) {
         const err: Message = await response.json();
         setError(`error: ${err.message}`);
         throw new Error('Failed to fetch players sub pattern.');
-        
+
       }
       const data: PlayerSubPatternResponse = await response.json();
       setPlayerSubPattern(data.data);
@@ -563,12 +563,12 @@ const GameSetup = () => {
   const handleFetchSetPlayerSubpattern = async () => {
     setError(null);
     try {
-      const response = await fetchWithAuth(`${API_URL}/set_players_subs.php`, 'POST', {...selectedLeague, team_name: selectedTeams2?.teams, data:playerSubPattern});
+      const response = await fetchWithAuth(`${API_URL}/set_players_subs.php`, 'POST', { ...selectedLeague, team_name: selectedTeams2?.teams, data: playerSubPattern });
       if (!response.ok) {
         const err: Message = await response.json();
         setError(`error: ${err.message}`);
         throw new Error('Failed to fetch players sub pattern.');
-        
+
       }
       //const data: PlayerSubPatternResponse = await response.json();
       //setPlayerSubPattern(data.data);
@@ -583,12 +583,12 @@ const GameSetup = () => {
   const handleFetchSetGetAlts = async () => {
     setError(null);
     try {
-      const response = await fetchWithAuth(`${API_URL}/get_alts.php`, 'POST', {...selectedLeague, team_name: selectedTeams2?.teams});
+      const response = await fetchWithAuth(`${API_URL}/get_alts.php`, 'POST', { ...selectedLeague, team_name: selectedTeams2?.teams });
       if (!response.ok) {
         const err: Message = await response.json();
         setError(`error: ${err.message}`);
         throw new Error('Failed to fetch players sub pattern.');
-        
+
       }
       const data: GetAltsResponse = await response.json();
       console.log("Alts: ", data.data)
@@ -618,6 +618,10 @@ const GameSetup = () => {
 
     if (selectedLeague) {
       loadTeams();
+      if (selectedTeams2) {
+        handleFetchSetGetAlts()
+      }
+
     }
   }, [selectedLeague]);
 
@@ -665,7 +669,7 @@ const GameSetup = () => {
     }
   }, [selectedTeams2])
 
-  useEffect(()=>{console.log("82 games schedule")},[teamsSchedule])
+  useEffect(() => { console.log("82 games schedule") }, [teamsSchedule])
 
   return (
     <div className="p-4 bg-background text-foreground">
@@ -736,10 +740,10 @@ const GameSetup = () => {
             handleFetchPlayerSubpattern={handleFetchPlayerSubpattern}
             teamLogos={teamLogos}
             handleFetchSetPlayerSubpattern={handleFetchSetPlayerSubpattern}
-            getAlts = {getAlts}
+            getAlts={getAlts}
             //setGetAlts = {setGetAlts}
-            getAltsSelected = {getAltsSelected}
-            setGetAltsSelected = {setGetAltsSelected}
+            getAltsSelected={getAltsSelected}
+            setGetAltsSelected={setGetAltsSelected}
           />
         }
         {activeView === 'single-game' &&
