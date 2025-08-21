@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useApi } from '@/contexts/ApiContext';
 import { useNavigate } from 'react-router-dom';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import FullSeasonVersion from './FullSeasonVersion';
 import SingleGameVersion from './SingleGameVersion';
 import Instructions from './Instructions';
 import { Button } from '@/components/ui/button';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Menu } from 'lucide-react';
 
 interface Message {
   message: string;
@@ -259,6 +260,7 @@ const GameSetup = () => {
   const [boxScore, setBoxScore] = useState<BoxScore[]>([]);
   const [playerSubPattern, setPlayerSubPattern] = useState<PlayerSubPattern[]>([]);
   const [scoreBoard, setScoreBoard] = useState<ScoreBoard | null>(null);
+  const [activeView, setActiveView] = useState('full-season');
   const [playersTeam1, setPlayersTeam1] = useState<PlayerChar[]>([{
     name: "",
     position: "",
@@ -635,18 +637,49 @@ const GameSetup = () => {
 
   return (
     <div className="p-4 bg-background text-foreground">
-      <h1 className="text-xl font-bold mb-2">NBA Game Simulation</h1>
-      <Button onClick={goLoginPage} disabled={isLoading} variant="outline">
-        Go to Login
-      </Button>
-      <Tabs defaultValue="full-season">
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-xl font-bold">NBA Game Simulation</h1>
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button variant="outline" size="icon">
+              <Menu className="h-4 w-4" />
+            </Button>
+          </SheetTrigger>
+          <SheetContent side="right" className="w-1/3">
+            <div className="flex flex-col h-full p-4">
+              <div className="flex-grow">
+                <Button
+                  variant={activeView === 'full-season' ? 'secondary' : 'ghost'}
+                  onClick={() => setActiveView('full-season')}
+                  className="justify-start mb-2 w-full"
+                >
+                  Full Season Version
+                </Button>
+                <Button
+                  variant={activeView === 'single-game' ? 'secondary' : 'ghost'}
+                  onClick={() => setActiveView('single-game')}
+                  className="justify-start mb-2 w-full"
+                >
+                  Single Game Version (hardcode data)
+                </Button>
+                <Button
+                  variant={activeView === 'instructions' ? 'secondary' : 'ghost'}
+                  onClick={() => setActiveView('instructions')}
+                  className="justify-start w-full"
+                >
+                  Instructions
+                </Button>
+              </div>
+              <Button onClick={goLoginPage} disabled={isLoading} variant="outline" className="mt-auto">
+                Go to Login
+              </Button>
+            </div>
+          </SheetContent>
+        </Sheet>
+      </div>
 
-        <TabsList>
-          <TabsTrigger value="full-season" className='mx-1'>Full Season Version</TabsTrigger>
-          <TabsTrigger value="single-game" className='mx-1'>Single Game Version (hardcode data)</TabsTrigger>
-          <TabsTrigger value="instructions" className='mx-1'>Instructions</TabsTrigger>
-        </TabsList>
-        <TabsContent value="full-season">
+      <div className="mt-4">
+        {activeView === 'full-season' &&
           <FullSeasonVersion
             leagues={leagues}
             selectedLeague={selectedLeague}
@@ -671,17 +704,16 @@ const GameSetup = () => {
             handleFetchPlayerSubpattern={handleFetchPlayerSubpattern}
             teamLogos={teamLogos}
             handleFetchSetPlayerSubpattern={handleFetchSetPlayerSubpattern}
-            
-          />
-        </TabsContent>
-        <TabsContent value="single-game">
-          <SingleGameVersion />
-        </TabsContent>
-        <TabsContent value="instructions">
-          <Instructions />
-        </TabsContent>
-      </Tabs>
 
+          />
+        }
+        {activeView === 'single-game' &&
+          <SingleGameVersion />
+        }
+        {activeView === 'instructions' &&
+          <Instructions />
+        }
+      </div>
     </div>
   );
 };
