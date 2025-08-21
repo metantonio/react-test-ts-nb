@@ -101,6 +101,10 @@ interface PlayerSubPattern {
   pos5: string;
 }
 
+interface GetAlts {
+  alt_sub: string;
+}
+
 
 interface FullSeasonVersionProps {
   leagues: League[];
@@ -126,6 +130,10 @@ interface FullSeasonVersionProps {
   handleFetchPlayerSubpattern: () => Promise<PlayerSubPattern[] | null>;
   teamLogos: { [key: string]: string };
   handleFetchSetPlayerSubpattern: () => Promise<void | null>;
+  getAlts: GetAlts[];
+  setGetAlts: React.Dispatch<React.SetStateAction<GetAlts[]>>;
+  getAltsSelected: string | null;
+  setGetAltsSelected: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
@@ -152,7 +160,11 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
     teamsSchedule,
     setTeamsSchedule,
     handleFetchPlayerSubpattern,
-    handleFetchSetPlayerSubpattern
+    handleFetchSetPlayerSubpattern,
+    getAlts,
+    setGetAlts,
+    getAltsSelected,
+    setGetAltsSelected
   }
 ) => {
   const [schedule, setSchedule] = useState('predict');
@@ -323,10 +335,11 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                 </DropdownMenu>
               </div>
               {selectedLeague ? <div className="mt-2">
-                <label className="text-sm font-medium">Team</label>
+                <label className="text-sm font-medium">Away Team - Home Team</label>
                 <div className="flex gap-2 mt-1">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
+                      
                       <Button variant="outline" className="w-full" disabled={teams.length === 0}>
                         {selectedTeams1 ? selectedTeams1.teams : "Select Away Team"}
                       </Button>
@@ -355,6 +368,25 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                   </DropdownMenu>
                 </div>
               </div> : <></>}
+              {selectedLeague && selectedTeams2 && schedule == "schedule" ? <>
+              <label className="text-sm font-medium">Alts Subs (Home Team)</label>
+              <div className="grid grid-cols-1 gap-2 mt-4">
+                
+                <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" className="w-full" disabled={teams.length === 0}>
+                        {getAltsSelected ? getAltsSelected : "Select Alts Sub"}
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent style={{ backgroundColor: 'var(--bg-color-component)' }} className="h-[200px] overflow-y-auto">
+                      {getAlts.length > 0 && getAlts.map((item: any) => (
+                        <DropdownMenuItem key={item.alt_sub} onSelect={() => setGetAltsSelected(item.alt_sub)}>
+                          {item.alt_sub}
+                        </DropdownMenuItem>
+                      ))}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+              </div></>:<></>}
               {selectedLeague && (selectedTeams1 || selectedTeams2) ? <>
                 <div className="grid grid-cols-2 gap-2 mt-4">
                   <Sheet open={isSubPatternSheetOpen} onOpenChange={setIsSubPatternSheetOpen}>
@@ -731,7 +763,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                     if (index == 0) { gameCounter = 0 }
                     if (item.teams != selectedTeams2?.teams) {
                       gameCounter += parseInt(item.games) / multiplier
-                      console.log(gameCounter)
+                      //console.log(gameCounter)
                       return (
                         <TableRow key={item.teams}>
                           <TableCell>

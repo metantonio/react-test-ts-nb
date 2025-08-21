@@ -212,6 +212,14 @@ interface PlayerSubPatternResponse {
   data: PlayerSubPattern[];
 }
 
+interface GetAlts {
+  alt_sub: string;
+}
+
+interface GetAltsResponse {
+  data: GetAlts[];
+}
+
 const teamLogos: { [key: string]: string } = {
   "Atlanta Hawks": "https://upload.wikimedia.org/wikipedia/en/2/24/Atlanta_Hawks_logo.svg",
   "Boston Celtics": "https://upload.wikimedia.org/wikipedia/en/8/8f/Boston_Celtics.svg",
@@ -259,6 +267,8 @@ const GameSetup = () => {
   const [playByPlay, setPlayByPlay] = useState<PlayByPlay[]>([]);
   const [boxScore, setBoxScore] = useState<BoxScore[]>([]);
   const [playerSubPattern, setPlayerSubPattern] = useState<PlayerSubPattern[]>([]);
+  const [getAlts, setGetAlts] = useState<GetAlts[]>([]);
+  const [getAltsSelected, setGetAltsSelected] = useState("Default-")
   const [scoreBoard, setScoreBoard] = useState<ScoreBoard | null>(null);
   const [activeView, setActiveView] = useState('full-season');
   const [playersTeam1, setPlayersTeam1] = useState<PlayerChar[]>([{
@@ -570,6 +580,27 @@ const GameSetup = () => {
     }
   };
 
+  const handleFetchSetGetAlts = async () => {
+    setError(null);
+    try {
+      const response = await fetchWithAuth(`${API_URL}/get_alts.php`, 'POST', {...selectedLeague, team_name: selectedTeams2?.teams});
+      if (!response.ok) {
+        const err: Message = await response.json();
+        setError(`error: ${err.message}`);
+        throw new Error('Failed to fetch players sub pattern.');
+        
+      }
+      const data: GetAltsResponse = await response.json();
+      console.log("Alts: ", data.data)
+      setGetAlts(data.data)
+      //return data.data
+      return
+    } catch (err: any) {
+      setError(`${err}`);
+      return null
+    }
+  };
+
   const goLoginPage = () => {
     navigate('/')
   }
@@ -626,6 +657,7 @@ const GameSetup = () => {
     if (selectedTeams2) {
       loadPlayers()
       handlePredictPlay()
+      handleFetchSetGetAlts()
     }
 
     if (selectedTeams2 && selectedTeams1) {
@@ -704,7 +736,10 @@ const GameSetup = () => {
             handleFetchPlayerSubpattern={handleFetchPlayerSubpattern}
             teamLogos={teamLogos}
             handleFetchSetPlayerSubpattern={handleFetchSetPlayerSubpattern}
-
+            getAlts = {getAlts}
+            setGetAlts = {setGetAlts}
+            getAltsSelected = {getAltsSelected}
+            setGetAltsSelected = {setGetAltsSelected}
           />
         }
         {activeView === 'single-game' &&
