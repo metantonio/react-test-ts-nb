@@ -30,11 +30,13 @@ interface IForm {
   middleName: string;
   familyName: string;
   birthdate: string;
+  password: string;
 }
 
 const Signup = () => {
   const [form, setForm] = useState<IForm>({
     username: "",
+    password: "",
     email: "",
     address: "",
     phone: "",
@@ -64,9 +66,9 @@ const Signup = () => {
   };
 
   const validateForm = () => {
-    if (!form.username.trim()) {
+    /* if (!form.username.trim()) {
       throw new Error("Username is required");
-    }
+    } */
     if (!form.email.trim()) {
       throw new Error("Email is required");
     }
@@ -77,7 +79,7 @@ const Signup = () => {
     }
 
     const usernameRegex = /^[a-zA-Z0-9_@.]+$/;
-    if (!usernameRegex.test(form.username)) {
+    if (!usernameRegex.test(form.email)) {
       throw new Error(
         "Username can only contain letters, numbers, and underscores, and @"
       );
@@ -94,7 +96,8 @@ const Signup = () => {
       validateForm();
 
       const { isSignUpComplete, nextStep }: SignUpOutput = await signUp({
-        username: form.username,
+        username: form.email,
+        password: form.password,
         options: {
           userAttributes: {
             email: form.email,
@@ -144,7 +147,7 @@ const Signup = () => {
       }
 
       const { isSignUpComplete } = await confirmSignUp({
-        username: form.username,
+        username: form.email,
         confirmationCode: confirmationCode.trim(),
       });
 
@@ -172,7 +175,7 @@ const Signup = () => {
 
     try {
       await resendSignUpCode({
-        username: form.username,
+        username: form.email,
       });
       setSuccess("Confirmation code resent! Please check your email.");
     } catch (err: unknown) {
@@ -224,7 +227,7 @@ const Signup = () => {
             </div>
           )}
           <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-2">
+            {/* <div className="space-y-2">
               <Label htmlFor="username">Username</Label>
               <Input
                 id="username"
@@ -236,7 +239,7 @@ const Signup = () => {
                 required
                 disabled={isLoading}
               />
-            </div>
+            </div> */}
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
@@ -247,6 +250,20 @@ const Signup = () => {
                 value={form.email}
                 onChange={handleChange}
                 placeholder="john.doe@example.com"
+                required
+                disabled={isLoading}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="email">Password</Label>
+              <Input
+                id="password"
+                name="password"
+                type="password"
+                className="text-gray-100"
+                value={form.password}
+                onChange={handleChange}
+                placeholder="password"
                 required
                 disabled={isLoading}
               />
