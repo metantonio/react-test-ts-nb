@@ -1,12 +1,62 @@
+import { getCurrentUser, signOut, fetchAuthSession, fetchUserAttributes } from '@aws-amplify/auth';
+
 export const authService = {
-    async login(username: string, password: string) {
-        // Replace this with your actual login logic
-        console.log(username, password)
-        return Promise.resolve({ user: { id: '1', name: 'Test User' }, token: 'test-token' });
+    async getCurrentUser() {
+
+        try {
+            const currentUser = getCurrentUser()
+            
+            const userAttributes = await fetchUserAttributes();
+            //console.log("userAttributes: ", userAttributes);
+            if (userAttributes) {
+                const name = userAttributes.given_name; // Or userAttributes.given_name, userAttributes.family_name
+                console.log("User's name:", name);
+                //currentUser["name"] = name
+                //currentUser["lastname"] = userAttributes.family_name
+                //return currentUser
+            }
+            return await currentUser, userAttributes;
+        } catch (error) {
+            console.error('Error getting current user:', error);
+            return null;
+        }
     },
 
-    async logout() {
-        // Replace this with your actual logout logic
-        return Promise.resolve();
+    async getAttributes() {
+        try {
+            return await fetchUserAttributes();
+        } catch (error) {
+            console.error('Error getting current user attributes:', error);
+            return null;
+        }
+    },
+
+    async getSession() {
+        try {
+            return await fetchAuthSession();
+        } catch (error) {
+            console.error('Error fetching session:', error);
+            return null;
+        }
+    },
+
+    async signOut() {
+        try {
+            await signOut();
+            return true;
+        } catch (error) {
+            console.error('Error signing out:', error);
+            return false;
+        }
+    },
+
+    async refreshSession() {
+        try {
+            const session = await fetchAuthSession({ forceRefresh: true });
+            return session.tokens?.idToken?.toString() || null;
+        } catch (error) {
+            console.error('Error refreshing session:', error);
+            return null;
+        }
     }
 };
