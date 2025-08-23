@@ -1,5 +1,12 @@
 {
   "name": "react-nba-qlx",
+  "description": "A React-based NBA simulator with Electron and TypeScript.",
+  "author": {
+    "name": "Your Name",
+    "email": "your.email@example.com",
+    "url": "https://example.com"
+  },
+  "homepage": "https://example.com",
   "private": true,
   "version": "1.0.20",
   "type": "module",

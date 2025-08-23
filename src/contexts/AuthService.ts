@@ -15,7 +15,7 @@ export const authService = {
                 //currentUser["lastname"] = userAttributes.family_name
                 //return currentUser
             }
-            return await currentUser, userAttributes;
+            return { cognitoUser: await currentUser, userAttributes };
         } catch (error) {
             console.error('Error getting current user:', error);
             return null;

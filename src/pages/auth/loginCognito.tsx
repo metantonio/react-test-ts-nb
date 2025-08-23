@@ -7,7 +7,7 @@ import { Eye, EyeOff, Lock, Mail } from "lucide-react";
 import { useNavigate, Link } from 'react-router-dom';
 import { useUser } from '@/contexts/UserContext';
 import { signIn, confirmSignIn, getCurrentUser, fetchAuthSession, fetchUserAttributes } from "aws-amplify/auth";
-import { AuthNextSignInStep, AuthSignInResult, AuthError } from 'aws-amplify/auth';
+import { AuthError } from 'aws-amplify/auth';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -54,7 +54,7 @@ const LoginCognito = () => {
       const { isSignedIn, nextStep } = await signIn({
         username: email,
         password: password,
-      }) as AuthSignInResult;
+      });
 
       if (isSignedIn) {
         const currentUser = await getCurrentUser();
@@ -97,7 +97,7 @@ const LoginCognito = () => {
     }
   };
 
-  const handleAuthNextStep = (nextStep: AuthNextSignInStep) => {
+  const handleAuthNextStep = (nextStep: any) => {
     switch (nextStep.signInStep) {
       case 'CONFIRM_SIGN_IN_WITH_NEW_PASSWORD_REQUIRED':
         navigate('/updatepassword', { state: { email } });

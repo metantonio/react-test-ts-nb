@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { authService } from './AuthService';
-import { AuthUser, FetchUserAttributesOutput } from 'aws-amplify/auth';
+import { AuthUser, FetchUserAttributesOutput, AuthSession } from 'aws-amplify/auth';
 
 export type UserRole = 'admin' | 'developer' | 'guest';
 
@@ -30,21 +30,7 @@ interface UserContextType {
   validateToken: () => Promise<boolean>;
 }
 
-interface Session {
-  tokens?: {
-    accessToken?: {
-      payload: {
-        'cognito:groups'?: string[];
-      };
-    };
-    idToken?: {
-      toString(): string;
-      payload: {
-        exp: number;
-      };
-    };
-  };
-}
+
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
@@ -85,9 +71,10 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
-  const mapCognitoUserToAppUser = (cognitoUser: AuthUser, userAttributes: FetchUserAttributesOutput, session: Session | null = null): User => {
+  const mapCognitoUserToAppUser = (cognitoUser: AuthUser, userAttributes: FetchUserAttributesOutput, session: AuthSession | null = null): User => {
     // Map cognito data to the user structure
-    const group = session?.tokens?.accessToken?.payload['cognito:groups']?.[0];
+    const groups = session?.tokens?.accessToken?.payload['cognito:groups'];
+    const group = Array.isArray(groups) && groups.length > 0 ? groups[0] : null;
     console.log("user group: ", group)
     
     const tempObj: User = {
@@ -110,7 +97,11 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     setIsLoading(true);
     console.log("load user")
     try {
-      const {cognitoUser, userAttributes} = await authService.getCurrentUser();
+      const currentUserData = await authService.getCurrentUser();
+      if (!currentUserData) {
+        throw new Error("User not found");
+      }
+      const { cognitoUser, userAttributes } = currentUserData;
       const session = await authService.getSession();
 
       if (cognitoUser && session?.tokens?.idToken) {
@@ -175,7 +166,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   const validateToken = async (): Promise<boolean> => {
     try {
       const session = await authService.getSession();
-      if (!session?.tokens?.idToken) return false;
+      if (!session?.tokens?.idToken?.payload.exp) return false;
 
       const currentTime = Math.floor(Date.now() / 1000);
       return session.tokens.idToken.payload.exp > currentTime;

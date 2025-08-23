@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { signUp, confirmSignUp, resendSignUpCode } from "aws-amplify/auth";
+import { signUp, confirmSignUp, resendSignUpCode, SignUpOutput } from "aws-amplify/auth";
 import ConfirmationForm from "./ConfirmationForm";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
@@ -14,13 +14,7 @@ import {
   CardTitle,
 } from "../../components/ui/card";
 
-interface SignUpResult {
-  isSignUpComplete: boolean;
-  userId: string;
-  nextStep: {
-    signUpStep: string;
-  };
-}
+
 
 const SignUpStep = {
   CONFIRM_SIGN_UP: "CONFIRM_SIGN_UP",
@@ -99,7 +93,7 @@ const Signup = () => {
     try {
       validateForm();
 
-      const { isSignUpComplete, nextStep }: SignUpResult = await signUp({
+      const { isSignUpComplete, nextStep }: SignUpOutput = await signUp({
         username: form.username,
         options: {
           userAttributes: {
