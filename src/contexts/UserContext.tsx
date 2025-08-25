@@ -23,7 +23,7 @@ interface UserContextType {
   token: string | null;
   isLoading: boolean;
   isAuthenticated: boolean;
-  login: (cognitoUser: AuthUser, token: string, userAttributes: FetchUserAttributesOutput) => void;
+  login: (cognitoUser: AuthUser, token: string, userAttributes: FetchUserAttributesOutput, session: AuthSession) => void;
   logout: () => Promise<void>;
   updateUser: (userData: Partial<User>) => void;
   hasPermission: (permission: string) => boolean;
@@ -133,9 +133,9 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   };
 
 
-  const login = async (cognitoUser: AuthUser, authToken: string, userAttributes: FetchUserAttributesOutput) => {
+  const login = async (cognitoUser: AuthUser, authToken: string, userAttributes: FetchUserAttributesOutput, session:AuthSession) => {
 
-    const appUser = mapCognitoUserToAppUser(cognitoUser, userAttributes);
+    const appUser = mapCognitoUserToAppUser(cognitoUser, userAttributes, session);
     //console.log(appUser)
     setUser(appUser);
     setToken(authToken);

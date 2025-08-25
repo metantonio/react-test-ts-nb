@@ -66,7 +66,7 @@ const LoginCognito = () => {
           throw new Error('No ID token found in session');
         }
 
-        await login(currentUser, idToken.toString(), userAttributes);
+        await login(currentUser, idToken.toString(), userAttributes,session);
 
         const redirectUrl = idToken.payload.website as string || currentUser.signInDetails?.loginId || '';
 
@@ -138,7 +138,7 @@ const LoginCognito = () => {
             throw new Error('No ID token found in session');
           }
 
-          await login(user, idToken.toString(), userAttributes);
+          await login(user, idToken.toString(), userAttributes, session);
 
           const state = urlParams.get('state');
           if (state) {
