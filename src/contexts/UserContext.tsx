@@ -15,6 +15,7 @@ export interface User {
   name: string;
   given_name: string;
   family_name: string;
+  custom?: string;
 }
 
 interface UserContextType {
@@ -73,56 +74,67 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 
   const mapCognitoUserToAppUser = (cognitoUser: AuthUser, userAttributes: FetchUserAttributesOutput, session: AuthSession | null = null): User => {
     // Map cognito data to the user structure
-    const groups = session?.tokens?.accessToken?.payload['cognito:groups'];
+    const id_token_payload = session?.tokens?.idToken?.payload;
+    const access_token_payload = session?.tokens?.accessToken?.payload;
+    const groups = access_token_payload?.['cognito:groups'];
     const group = Array.isArray(groups) && groups.length > 0 ? groups[0] : null;
-    console.log("user group:", group)
-    console.log("idToken payload received:", session?.tokens?.idToken?.payload);
-    console.log("AccessToken payload received", session?.tokens?.accessToken?.payload);
+    //console.log("user group:", group)
+    //console.log("idToken payload received: ", session?.tokens?.idToken?.payload);
+    //console.log("AccessToken payload received", session);
     const tempObj: User = {
       id: cognitoUser.username,
       username: cognitoUser.username,
       email: cognitoUser.signInDetails?.loginId || '',
-      role: ( group as UserRole) || 'admin',
+      role: (group as UserRole) || 'admin',
       cognitoId: cognitoUser.userId,
       name: userAttributes.given_name || "",
       given_name: userAttributes.given_name || "",
-      family_name: userAttributes.family_name || ""
+      family_name: userAttributes.family_name || "",
+      custom: id_token_payload?.["custom:string"] || " "
     }
 
-    //console.log("cognitoUser returned: ", tempObj)
-    
+    console.log("cognitoUser returned: ", tempObj)
+
     return tempObj
   };
 
   const loadUser = async () => {
     setIsLoading(true);
-    console.log("load user")
+    console.log("load user");
     try {
       const currentUserData = await authService.getCurrentUser();
       if (!currentUserData) {
         throw new Error("User not found");
       }
+
       const { cognitoUser, userAttributes } = currentUserData;
       const session = await authService.getSession();
 
-      if (cognitoUser && session?.tokens?.idToken) {
+      if (cognitoUser && session?.tokens?.idToken && session?.tokens?.accessToken) {
         const appUser = mapCognitoUserToAppUser(cognitoUser, userAttributes, session);
+
         setUser(appUser);
+
+        // Guarda el JWT completo como string (útil para enviar a APIs)
         setToken(session.tokens.idToken.toString());
+
         setIsAuthenticated(true);
-        //const idToken = session?.tokens?.idToken;
-        //const payload = idToken;
-        //console.log("payload received", payload);
+
+        console.log("idToken payload:", session.tokens.idToken.payload);
+        console.log("accessToken payload:", session.tokens.accessToken.payload);
       }
     } catch (error) {
-      console.error('Error loading user:', error);
+      console.error("Error loading user:", error);
+      setUser(null);
+      setIsAuthenticated(false);
     } finally {
       setIsLoading(false);
     }
   };
 
+
   const login = async (cognitoUser: AuthUser, authToken: string, userAttributes: FetchUserAttributesOutput) => {
-    
+
     const appUser = mapCognitoUserToAppUser(cognitoUser, userAttributes);
     //console.log(appUser)
     setUser(appUser);
