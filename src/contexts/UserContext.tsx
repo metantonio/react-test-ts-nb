@@ -16,6 +16,7 @@ export interface User {
   given_name: string;
   family_name: string;
   custom?: string;
+  authorizationNBA?: string; 
 }
 
 interface UserContextType {
@@ -73,18 +74,19 @@ const mapCognitoUserToAppUser = (cognitoUser: AuthUser, userAttributes: FetchUse
   const groups = access_token_payload?.['cognito:groups'];
   const group = Array.isArray(groups) && groups.length > 0 ? groups[0] : null;
   //console.log("user group:", group)
-  //console.log("idToken payload received: ", session?.tokens?.idToken?.payload);
+  console.log("idToken payload received: ", session?.tokens?.idToken?.payload);
   //console.log("AccessToken payload received", session);
   const tempObj: User = {
     id: cognitoUser.username,
     username: cognitoUser.username,
     email: cognitoUser.signInDetails?.loginId || '',
-                role: (group as UserRole) || 'admin',
+    role: (group as UserRole) || 'admin',
     cognitoId: cognitoUser.userId,
     name: userAttributes.given_name || "",
     given_name: userAttributes.given_name || "",
     family_name: userAttributes.family_name || "",
-    custom: id_token_payload?.["custom:string"]?.toString() || " "
+    custom: id_token_payload?.["custom:string"]?.toString() || " ",
+    authorizationNBA: id_token_payload?.["authorizationNBA"]?.toString() || " ",
   }
 
   //console.log("cognitoUser returned: ", tempObj)
@@ -120,7 +122,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 
         setIsAuthenticated(true);
 
-        console.log("idToken payload:", session.tokens.idToken.payload);
+        console.log("idToken payload: ", session.tokens.idToken.payload);
         console.log("accessToken payload:", session.tokens.accessToken.payload);
       }
     } catch (error) {
@@ -144,6 +146,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 
   const logout = useCallback(async (): Promise<void> => {
     try {
+      console.log("logout: ",user)
       await authService.signOut();
       setUser(mockUsers.guest);
       setToken(null);
