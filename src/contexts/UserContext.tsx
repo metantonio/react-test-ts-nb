@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { authService } from './AuthService';
-import { AuthUser, FetchUserAttributesOutput, AuthSession, Auth } from 'aws-amplify/auth';
+import { AuthUser, FetchUserAttributesOutput, AuthSession } from 'aws-amplify/auth';
 
 export type UserRole = 'admin' | 'developer' | 'guest';
 
@@ -90,7 +90,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       name: userAttributes.given_name || "",
       given_name: userAttributes.given_name || "",
       family_name: userAttributes.family_name || "",
-      custom: id_token_payload?.["custom:string"] || " "
+      custom: id_token_payload?.["custom:string"]?.toString() || " "
     }
 
     console.log("cognitoUser returned: ", tempObj)
