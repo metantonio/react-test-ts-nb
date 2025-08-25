@@ -7,6 +7,7 @@ import Instructions from './Instructions';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Menu } from 'lucide-react';
+import { authService } from '@/contexts/AuthService';
 
 interface Message {
   message: string;
@@ -601,7 +602,8 @@ const GameSetup = () => {
     }
   };
 
-  const goLoginPage = () => {
+  const goLoginPage = async() => {
+    await authService.signOut()
     navigate('/')
   }
 
@@ -706,7 +708,7 @@ const GameSetup = () => {
                   Instructions
                 </Button>
               </div>
-              <Button onClick={goLoginPage} disabled={isLoading} variant="outline" className="mt-auto">
+              <Button onClick={async()=> { goLoginPage()}} disabled={isLoading} variant="outline" className="mt-auto">
                 Go to Login
               </Button>
             </div>
