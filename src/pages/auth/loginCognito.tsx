@@ -25,7 +25,7 @@ type FormState = {
 };
 
 const LoginCognito = () => {
-  const { login } = useUser();
+  const { login, isAuthenticated } = useUser();
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -80,12 +80,11 @@ const LoginCognito = () => {
       } else {
         handleAuthNextStep(nextStep);
       }
-    } catch (err) {
-      const authError = err as AuthError;
-      console.error('Login error:', authError);
-      if (authError.name === 'UserNotFoundException' || authError.name === 'NotAuthorizedException') {
+    } catch (err: any) {
+      console.error('Login error:', err);
+      if (err.name === 'UserNotFoundException' || err.name === 'NotAuthorizedException') {
         setShowSignUpDialog(true);
-      } else if (authError.name === 'NewPasswordRequired') {
+      } else if (err.name === 'NewPasswordRequired') {
         navigate('/updatepassword', { state: { email } });
       } else if (err instanceof Error) {
         setError(err.message || 'Login failed. Please check your credentials.');
@@ -113,52 +112,7 @@ const LoginCognito = () => {
     }
   };
 
-  useEffect(() => {
-    const handleOAuthResponse = async () => {
-      try {
-        const urlParams = new URLSearchParams(window.location.search);
-        const errorParam = urlParams.get('error');
-        const errorDescriptionParam = urlParams.get('error_description');
-
-        if (errorParam || errorDescriptionParam) {
-          setError(`Social sign-in failed: ${errorDescriptionParam || errorParam}. Please check your browser's pop-up blocker or try again later.`);
-          setIsLoading(false);
-          const newUrl = window.location.origin + window.location.pathname;
-          window.history.replaceState({}, document.title, newUrl);
-          return;
-        }
-
-        const user = await getCurrentUser();
-        if (user) {
-          const session = await fetchAuthSession();
-          const idToken = session.tokens?.idToken;
-          const userAttributes = await fetchUserAttributes();
-
-          if (!idToken) {
-            throw new Error('No ID token found in session');
-          }
-
-          await login(user, idToken.toString(), userAttributes, session);
-
-          const state = urlParams.get('state');
-          if (state) {
-            try {
-              const parsedState = JSON.parse(decodeURIComponent(state));
-              navigate(parsedState.returnUrl || '/league');
-            } catch {
-              navigate('/login');
-            }
-          } else {
-            navigate('/league');
-          }
-        }
-      } catch (error) {
-        console.log('No authenticated user found or OAuth response error:', error);
-      }
-    };
-
-    handleOAuthResponse();
-  }, [login, navigate, setError, setIsLoading]);
+  
 
 
   return (

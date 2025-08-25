@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import React, { createContext, useContext, useState, ReactNode, useEffect, useCallback } from 'react';
 import { authService } from './AuthService';
 import { AuthUser, FetchUserAttributesOutput, AuthSession } from 'aws-amplify/auth';
 
@@ -66,39 +66,39 @@ const mockUsers: { [key in UserRole]: User } = {
   }
 };
 
+const mapCognitoUserToAppUser = (cognitoUser: AuthUser, userAttributes: FetchUserAttributesOutput, session: AuthSession | null = null): User => {
+  // Map cognito data to the user structure
+  const id_token_payload = session?.tokens?.idToken?.payload;
+  const access_token_payload = session?.tokens?.accessToken?.payload;
+  const groups = access_token_payload?.['cognito:groups'];
+  const group = Array.isArray(groups) && groups.length > 0 ? groups[0] : null;
+  //console.log("user group:", group)
+  //console.log("idToken payload received: ", session?.tokens?.idToken?.payload);
+  //console.log("AccessToken payload received", session);
+  const tempObj: User = {
+    id: cognitoUser.username,
+    username: cognitoUser.username,
+    email: cognitoUser.signInDetails?.loginId || '',
+                role: (group as UserRole) || 'admin',
+    cognitoId: cognitoUser.userId,
+    name: userAttributes.given_name || "",
+    given_name: userAttributes.given_name || "",
+    family_name: userAttributes.family_name || "",
+    custom: id_token_payload?.["custom:string"]?.toString() || " "
+  }
+
+  //console.log("cognitoUser returned: ", tempObj)
+
+  return tempObj
+};
+
 export const UserProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(mockUsers.guest); //change this from mockUsers.admin to null later
+  const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
 
-  const mapCognitoUserToAppUser = (cognitoUser: AuthUser, userAttributes: FetchUserAttributesOutput, session: AuthSession | null = null): User => {
-    // Map cognito data to the user structure
-    const id_token_payload = session?.tokens?.idToken?.payload;
-    const access_token_payload = session?.tokens?.accessToken?.payload;
-    const groups = access_token_payload?.['cognito:groups'];
-    const group = Array.isArray(groups) && groups.length > 0 ? groups[0] : null;
-    //console.log("user group:", group)
-    //console.log("idToken payload received: ", session?.tokens?.idToken?.payload);
-    //console.log("AccessToken payload received", session);
-    const tempObj: User = {
-      id: cognitoUser.username,
-      username: cognitoUser.username,
-      email: cognitoUser.signInDetails?.loginId || '',
-      role: (group as UserRole) || 'admin',
-      cognitoId: cognitoUser.userId,
-      name: userAttributes.given_name || "",
-      given_name: userAttributes.given_name || "",
-      family_name: userAttributes.family_name || "",
-      custom: id_token_payload?.["custom:string"]?.toString() || " "
-    }
-
-    console.log("cognitoUser returned: ", tempObj)
-
-    return tempObj
-  };
-
-  const loadUser = async () => {
+  const loadUser = useCallback(async () => {
     setIsLoading(true);
     console.log("load user");
     try {
@@ -130,19 +130,19 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
 
-  const login = async (cognitoUser: AuthUser, authToken: string, userAttributes: FetchUserAttributesOutput, session:AuthSession) => {
+  const login = useCallback(async (cognitoUser: AuthUser, authToken: string, userAttributes: FetchUserAttributesOutput, session:AuthSession) => {
 
     const appUser = mapCognitoUserToAppUser(cognitoUser, userAttributes, session);
-    //console.log(appUser)
+    console.log(appUser)
     setUser(appUser);
     setToken(authToken);
     setIsAuthenticated(true);
-  };
+  }, []);
 
-  const logout = async (): Promise<void> => {
+  const logout = useCallback(async (): Promise<void> => {
     try {
       await authService.signOut();
       setUser(mockUsers.guest);
@@ -151,7 +151,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     } catch (error) {
       console.error('Logout failed:', error);
     }
-  };
+  }, []);
 
   const updateUser = (userData: Partial<User>) => {
     if (user) {
@@ -165,7 +165,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     const permissions = {
       admin: ['view_all', 'add_edit_delete_users', 'add_edit_records', 'delete_records', 'edit_profile'],
       developer: ['view_all', 'add_edit_records', 'delete_records', 'edit_profile'],
-      guest: ['view_all', 'add_edit_records', 'edit_profile']
+      guest: ['view_all']
     };
 
     return permissions[user.role]?.includes(permission) || false;
@@ -192,9 +192,11 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  useEffect(()=>{authService.signOut()},[])
+
   useEffect(() => {
     loadUser();
-  }, []);
+  }, [loadUser]);
 
   return (
     <UserContext.Provider value={{
