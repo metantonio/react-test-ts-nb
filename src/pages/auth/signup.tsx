@@ -108,7 +108,8 @@ const Signup = () => {
             family_name: form.familyName,
             //middle_name: form.middleName,
             //birthdate: form.birthdate,
-            name: form.givenName
+            name: form.givenName,
+            "custom:string":""
           },
         },
       });

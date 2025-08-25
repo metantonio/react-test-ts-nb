@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { authService } from './AuthService';
-import { AuthUser, FetchUserAttributesOutput, AuthSession } from 'aws-amplify/auth';
+import { AuthUser, FetchUserAttributesOutput, AuthSession, Auth } from 'aws-amplify/auth';
 
 export type UserRole = 'admin' | 'developer' | 'guest';
 
@@ -75,8 +75,9 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     // Map cognito data to the user structure
     const groups = session?.tokens?.accessToken?.payload['cognito:groups'];
     const group = Array.isArray(groups) && groups.length > 0 ? groups[0] : null;
-    console.log("user group: ", group)
-    
+    console.log("user group:", group)
+    console.log("idToken payload received:", session?.tokens?.idToken?.payload);
+    console.log("AccessToken payload received", session?.tokens?.accessToken?.payload);
     const tempObj: User = {
       id: cognitoUser.username,
       username: cognitoUser.username,
@@ -88,8 +89,8 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       family_name: userAttributes.family_name || ""
     }
 
-    console.log("cognitoUser returned: ", tempObj)
-
+    //console.log("cognitoUser returned: ", tempObj)
+    
     return tempObj
   };
 
@@ -109,6 +110,9 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         setUser(appUser);
         setToken(session.tokens.idToken.toString());
         setIsAuthenticated(true);
+        //const idToken = session?.tokens?.idToken;
+        //const payload = idToken;
+        //console.log("payload received", payload);
       }
     } catch (error) {
       console.error('Error loading user:', error);
