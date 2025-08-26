@@ -15,6 +15,7 @@ interface CombinedContextType extends AppStateSlice, NotificationSlice {
   isLoading: boolean;
   isAuthenticated: boolean;
   login: (apiData: ApiCredentials) => void;
+  loginWithCognito: (apiData: ApiCredentials) => void;
   logout: () => void;
   fetchWithAuth: (url: string, method?: HttpMethod, body?: any) => Promise<Response>;
 }
@@ -31,6 +32,13 @@ export const ApiProvider = ({ children }: { children: ReactNode }) => {
   const notificationState = useNotificationState();
 
   const login = (apiData: ApiCredentials) => {
+    setApi(apiData);
+    setIsAuthenticated(true);
+    setIsLoading(false);
+    console.log(apiData)
+  };
+
+  const loginWithCognito = (apiData: ApiCredentials) => {
     setApi(apiData);
     setIsAuthenticated(true);
     setIsLoading(false);
@@ -79,6 +87,7 @@ export const ApiProvider = ({ children }: { children: ReactNode }) => {
     login,
     logout,
     fetchWithAuth,
+    loginWithCognito
   };
 
   return (

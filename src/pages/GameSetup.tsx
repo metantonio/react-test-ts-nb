@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Menu } from 'lucide-react';
 import { authService } from '@/contexts/AuthService';
+import { useUser } from '@/contexts/UserContext';
 
 interface Message {
   message: string;
@@ -255,7 +256,8 @@ const teamLogos: { [key: string]: string } = {
 };
 
 const GameSetup = () => {
-  const { fetchWithAuth, isLoading } = useApi();
+  //const { fetchWithAuth, isLoading } = useApi();
+  const {fetchWithAuth, isLoading } = useUser();
   const navigate = useNavigate();
   const [leagues, setLeagues] = useState<League[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -356,13 +358,14 @@ const GameSetup = () => {
   const handleFetchLeagues = async () => {
     setError(null);
     try {
-      const response = await fetchWithAuth(`${API_URL}/get_leagues.php`, 'POST');
+      const response = await fetchWithAuth(`${API_URL}/conversion`, 'POST', {method: "POST", endpoint: "get_leagues.php", content:"form"});
       if (!response.ok) {
         const err: Message = await response.json();
         setError(`error: ${err.message}`);
         throw new Error('Failed to fetch leagues.');
       }
       const data: LeagueResponse = await response.json();
+      console.log("leagues",data)
       setLeagues(data.data);
     } catch (err: any) {
       setError(`${err}`);
@@ -372,7 +375,7 @@ const GameSetup = () => {
   const handleFetchTeams = async () => {
     setError(null);
     try {
-      const response = await fetchWithAuth(`${API_URL}/get_teams.php`, 'POST', selectedLeague);
+      const response = await fetchWithAuth(`${API_URL}/conversion`, 'POST', {...selectedLeague, method: "POST", endpoint: "get_teams.php" });
       if (!response.ok) {
         const err: Message = await response.json();
         setError(`error: ${err.message}`);

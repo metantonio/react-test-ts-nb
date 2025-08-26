@@ -4,6 +4,16 @@ import { AuthUser, FetchUserAttributesOutput, AuthSession } from 'aws-amplify/au
 
 export type UserRole = 'admin' | 'developer' | 'guest';
 
+type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE' | 'OPTIONS';
+
+interface League {
+  league_name: string;
+}
+
+interface LeagueResponse {
+  data: League[];
+}
+
 export interface User {
   id: string;
   username: string;
@@ -22,6 +32,7 @@ export interface User {
 interface UserContextType {
   user: User | null;
   token: string | null;
+  nbaToken: string | null;
   isLoading: boolean;
   isAuthenticated: boolean;
   login: (cognitoUser: AuthUser, token: string, userAttributes: FetchUserAttributesOutput, session: AuthSession) => void;
@@ -30,6 +41,8 @@ interface UserContextType {
   hasPermission: (permission: string) => boolean;
   refreshToken: () => Promise<string | null>;
   validateToken: () => Promise<boolean>;
+  fetchWithAuth: (url: string, method?: HttpMethod, body?: any) => Promise<Response>;
+  leagues: League | null;
 }
 
 
@@ -99,6 +112,13 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [nbaToken, setNbaToken] = useState<string | null>(null);
+  const [leagues, setLeagues] = useState<League[]>([]);
+
+  const setLeague = useCallback((value: []) => {
+      // Remove the notification with the matching ID
+      setLeagues(value);
+    }, []);
 
   const loadUser = useCallback(async () => {
     setIsLoading(true);
@@ -114,6 +134,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 
       if(session?.tokens?.idToken?.payload?.["custom:string"] && session?.tokens?.idToken?.payload?.["custom:string"]?.toString() != ""){
         session = await authService.getSession();
+        
       }
 
       if (cognitoUser && session?.tokens?.idToken && session?.tokens?.accessToken) {
@@ -122,12 +143,14 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         setUser(appUser);
 
         // Guarda el JWT completo como string (útil para enviar a APIs)
+        const newNbaToken = session.tokens.idToken.payload["custom:string"]?.toString() || null;
         setToken(session.tokens.idToken.toString());
-
+        setNbaToken(newNbaToken);
         setIsAuthenticated(true);
 
         console.log("idToken payload: ", session.tokens.idToken.payload);
-        console.log("accessToken payload:", session.tokens.accessToken.payload);
+        //console.log("accessToken payload:", session.tokens.accessToken.payload);
+        console.log("nba token: ", newNbaToken);
       }
     } catch (error) {
       console.error("Error loading user:", error);
@@ -142,10 +165,12 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   const login = useCallback(async (cognitoUser: AuthUser, authToken: string, userAttributes: FetchUserAttributesOutput, session:AuthSession) => {
 
     const appUser = await mapCognitoUserToAppUser(cognitoUser, userAttributes, session);
-    console.log(appUser)
+    //console.log(appUser)
     setUser(appUser);
     setToken(authToken);
+    setNbaToken(appUser.custom || null);
     setIsAuthenticated(true);
+    console.log("nba token: ",appUser.custom || null)
   }, []);
 
   const logout = useCallback(async (): Promise<void> => {
@@ -199,6 +224,33 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const fetchWithAuth = useCallback(async (url: string, method: HttpMethod = 'GET', body: any = {}) => {
+      if (!token) {
+        throw new Error('API credentials are not set. Please login first.');
+      }
+  
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+        'Authorization': token || "",
+      };
+  
+      const requestBody = {
+        ...body,
+        authorization: nbaToken,
+      };
+  
+      const config: RequestInit = {
+        method,
+        headers,
+      };
+  
+      if (method !== 'GET' && method !== 'DELETE') {
+        config.body = JSON.stringify(requestBody);
+      }
+  
+      return fetch(url, config);
+    }, [nbaToken]);
+
   useEffect(()=>{authService.signOut()},[])
 
   useEffect(() => {
@@ -209,6 +261,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     <UserContext.Provider value={{
       user,
       token,
+      nbaToken,
       isLoading,
       isAuthenticated,
       login,
@@ -216,7 +269,10 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       updateUser,
       hasPermission,
       refreshToken,
-      validateToken
+      validateToken,
+      fetchWithAuth,
+      leagues,
+      setLeague
     }}>
       {children}
     </UserContext.Provider>

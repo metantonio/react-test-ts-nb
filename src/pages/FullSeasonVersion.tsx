@@ -321,12 +321,12 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
 
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="outline" disabled={leagues.length === 0}>
+                    <Button variant="outline" disabled={leagues?.length === 0}>
                       {selectedLeague ? selectedLeague.league_name : "Choose League"}
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent style={{ backgroundColor: 'var(--bg-color-component)' }} className="h-[200px] overflow-y-auto">
-                    {leagues.length > 0 && leagues.map((league: any) => (
+                    {leagues?.length > 0 && leagues.map((league: any) => (
                       <DropdownMenuItem key={league.league_name} onSelect={() => setSelectedLeague(league)}>
                         {league.league_name}
                       </DropdownMenuItem>
