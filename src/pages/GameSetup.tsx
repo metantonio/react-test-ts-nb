@@ -19,7 +19,7 @@ interface League {
 }
 
 interface LeagueResponse {
-  data: League[];
+  body: string;
 }
 
 interface Teams {
@@ -358,15 +358,18 @@ const GameSetup = () => {
   const handleFetchLeagues = async () => {
     setError(null);
     try {
-      const response = await fetchWithAuth(`${API_URL}/conversion`, 'POST', {body:{method: "POST", endpoint: "get_leagues.php", content:"form"}});
+      const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', {body:{method: "POST", endpoint: "get_leagues.php", content:"form"}});
       if (!response.ok) {
         const err: Message = await response.json();
         setError(`error: ${err.message}`);
         throw new Error('Failed to fetch leagues.');
       }
       const data: LeagueResponse = await response.json();
-      console.log("leagues",data)
-      setLeagues(data.data);
+      const body: { data: League[] } = JSON.parse(data.body)
+      //console.log("data", data)
+      console.log("leagues", body)
+      
+      setLeagues(body.data);
     } catch (err: any) {
       setError(`${err}`);
     }

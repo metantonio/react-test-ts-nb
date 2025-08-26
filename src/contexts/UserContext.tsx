@@ -43,6 +43,7 @@ interface UserContextType {
   validateToken: () => Promise<boolean>;
   fetchWithAuth: (url: string, method?: HttpMethod, body?: any) => Promise<Response>;
   leagues: League | null;
+  setLeague: (value: League | null) => void;
 }
 
 
@@ -80,7 +81,7 @@ const mockUsers: { [key in UserRole]: User } = {
   }
 };
 
-const mapCognitoUserToAppUser = async (cognitoUser: AuthUser, userAttributes: FetchUserAttributesOutput, session: AuthSession | null = null): User => {
+const mapCognitoUserToAppUser = async (cognitoUser: AuthUser, userAttributes: FetchUserAttributesOutput, session: AuthSession | null = null): Promise<User> => {
   // Map cognito data to the user structure
   const id_token_payload = session?.tokens?.idToken?.payload;
   const access_token_payload = session?.tokens?.accessToken?.payload;
@@ -113,9 +114,9 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [nbaToken, setNbaToken] = useState<string | null>(null);
-  const [leagues, setLeagues] = useState<League[]>([]);
+  const [leagues, setLeagues] = useState<League | null>(null);
 
-  const setLeague = useCallback((value: []) => {
+  const setLeague = useCallback((value: League | null) => {
       // Remove the notification with the matching ID
       setLeagues(value);
     }, []);
