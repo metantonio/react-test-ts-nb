@@ -67,7 +67,7 @@ const mockUsers: { [key in UserRole]: User } = {
   }
 };
 
-const mapCognitoUserToAppUser = (cognitoUser: AuthUser, userAttributes: FetchUserAttributesOutput, session: AuthSession | null = null): User => {
+const mapCognitoUserToAppUser = async (cognitoUser: AuthUser, userAttributes: FetchUserAttributesOutput, session: AuthSession | null = null): User => {
   // Map cognito data to the user structure
   const id_token_payload = session?.tokens?.idToken?.payload;
   const access_token_payload = session?.tokens?.accessToken?.payload;
@@ -110,10 +110,14 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       }
 
       const { cognitoUser, userAttributes } = currentUserData;
-      const session = await authService.getSession();
+      let session = await authService.getSession();
+
+      if(session?.tokens?.idToken?.payload?.["custom:string"] && session?.tokens?.idToken?.payload?.["custom:string"]?.toString() != ""){
+        session = await authService.getSession();
+      }
 
       if (cognitoUser && session?.tokens?.idToken && session?.tokens?.accessToken) {
-        const appUser = mapCognitoUserToAppUser(cognitoUser, userAttributes, session);
+        const appUser = await mapCognitoUserToAppUser(cognitoUser, userAttributes, session);
 
         setUser(appUser);
 
@@ -137,7 +141,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
 
   const login = useCallback(async (cognitoUser: AuthUser, authToken: string, userAttributes: FetchUserAttributesOutput, session:AuthSession) => {
 
-    const appUser = mapCognitoUserToAppUser(cognitoUser, userAttributes, session);
+    const appUser = await mapCognitoUserToAppUser(cognitoUser, userAttributes, session);
     console.log(appUser)
     setUser(appUser);
     setToken(authToken);
