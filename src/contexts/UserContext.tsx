@@ -233,7 +233,9 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
         'Content-Type': 'application/json',
         'Authorization': token || "",
       };
-  
+
+      let tempBody = {...body}
+      tempBody["body"]["authorization"] = nbaToken
       const requestBody = {
         ...body,
         authorization: nbaToken,
@@ -245,7 +247,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       };
   
       if (method !== 'GET' && method !== 'DELETE') {
-        config.body = JSON.stringify(requestBody);
+        config.body = JSON.stringify(tempBody);
       }
   
       return fetch(url, config);

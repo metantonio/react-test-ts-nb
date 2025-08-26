@@ -358,7 +358,7 @@ const GameSetup = () => {
   const handleFetchLeagues = async () => {
     setError(null);
     try {
-      const response = await fetchWithAuth(`${API_URL}/conversion`, 'POST', {method: "POST", endpoint: "get_leagues.php", content:"form"});
+      const response = await fetchWithAuth(`${API_URL}/conversion`, 'POST', {body:{method: "POST", endpoint: "get_leagues.php", content:"form"}});
       if (!response.ok) {
         const err: Message = await response.json();
         setError(`error: ${err.message}`);
