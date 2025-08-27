@@ -448,7 +448,7 @@ const GameSetup = () => {
       }
       const data: BodyResponse = await response.json();
       //const data: ScoreBoardResponse = await response.json();
-      const body: { data: ScoreBoard[] } = JSON.parse(data.body)
+      const body: { scoreboard: ScoreBoard[] } = JSON.parse(data.body)
       setScoreBoard(body.scoreboard[0]);
     } catch (err: any) {
       setError(`${err}`);
