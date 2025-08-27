@@ -545,14 +545,20 @@ const GameSetup = () => {
   const handleFetchPlayByPlay = async () => {
     setError(null);
     try {
-      const response = await fetchWithAuth(`${API_URL}/get_singlegame_pbp.php`, 'POST');
+      const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', {body:{
+          endpoint: "get_singlegame_pbp.php", method: "POST"
+          }}
+      );
       if (!response.ok) {
         const err: Message = await response.json();
         setError(`error: ${err.message}`);
         throw new Error('Failed to fetch leagues.');
       }
-      const data: UpdatePlayByPlayResponse = await response.json();
-      setPlayByPlay(data.playbyplay);
+      const data: BodyResponse = await response.json();
+      console.log("playbyplay response:", data)
+      const body: { playbyplay: PlayByPlay[] } = JSON.parse(data.body)
+      //const data: UpdatePlayByPlayResponse = await response.json();
+      setPlayByPlay(body.playbyplay);
     } catch (err: any) {
       setError(`${err}`);
     }
@@ -561,14 +567,18 @@ const GameSetup = () => {
   const handleFetchBoxScore = async () => {
     setError(null);
     try {
-      const response = await fetchWithAuth(`${API_URL}/get_singlegame_box.php`, 'POST');
+      const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', {body:{
+          endpoint: "get_singlegame_box.php", method: "POST"
+          }});
       if (!response.ok) {
         const err: Message = await response.json();
         setError(`error: ${err.message}`);
         throw new Error('Failed to fetch leagues.');
       }
-      const data: BoxScoreResponse = await response.json();
-      setBoxScore(data.boxscore);
+      const data: BodyResponse = await response.json();
+      //const data: BoxScoreResponse = await response.json();
+      const body: { boxscore: BoxScore[] } = JSON.parse(data.body)
+      setBoxScore(body.boxscore);
     } catch (err: any) {
       setError(`${err}`);
     }
@@ -577,16 +587,23 @@ const GameSetup = () => {
   const handleFetchPlayerSubpattern = async () => {
     setError(null);
     try {
-      const response = await fetchWithAuth(`${API_URL}/get_players_subs.php`, 'POST', { ...selectedLeague, team_name: selectedTeams2?.teams });
+      const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', {
+         body:{
+          ...selectedLeague, team_name: selectedTeams2?.teams,
+          endpoint: "get_players_subs.php", method: "POST" 
+        }
+        });
       if (!response.ok) {
         const err: Message = await response.json();
         setError(`error: ${err.message}`);
         throw new Error('Failed to fetch players sub pattern.');
 
       }
-      const data: PlayerSubPatternResponse = await response.json();
-      setPlayerSubPattern(data.data);
-      return data.data
+      //const data: PlayerSubPatternResponse = await response.json();
+      const data: BodyResponse = await response.json();
+      const body: { data: PlayerSubPattern[] } = JSON.parse(data.body)
+      setPlayerSubPattern(body.data);
+      return body.data
     } catch (err: any) {
       setError(`${err}`);
       return null
@@ -596,7 +613,12 @@ const GameSetup = () => {
   const handleFetchSetPlayerSubpattern = async () => {
     setError(null);
     try {
-      const response = await fetchWithAuth(`${API_URL}/set_players_subs.php`, 'POST', { ...selectedLeague, team_name: selectedTeams2?.teams, data: playerSubPattern });
+      const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', { 
+        body:{
+          ...selectedLeague, team_name: selectedTeams2?.teams, data: playerSubPattern,
+          endpoint: "set_players_subs.php", method: "POST"  
+        }
+      });
       if (!response.ok) {
         const err: Message = await response.json();
         setError(`error: ${err.message}`);
@@ -616,16 +638,21 @@ const GameSetup = () => {
   const handleFetchSetGetAlts = async () => {
     setError(null);
     try {
-      const response = await fetchWithAuth(`${API_URL}/get_alts.php`, 'POST', { ...selectedLeague, team_name: selectedTeams2?.teams });
+      const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', { body:{
+        ...selectedLeague, team_name: selectedTeams2?.teams,
+        endpoint: "get_alts.php", method: "POST"  
+      }});
       if (!response.ok) {
         const err: Message = await response.json();
         setError(`error: ${err.message}`);
         throw new Error('Failed to fetch players sub pattern.');
 
       }
-      const data: GetAltsResponse = await response.json();
-      console.log("Alts: ", data.data)
-      setGetAlts(data.data)
+      const data: BodyResponse = await response.json();
+      //const data: GetAltsResponse = await response.json();
+      const body: { data: GetAlts[] } = JSON.parse(data.body)
+      console.log("Alts: ", body.data)
+      setGetAlts(body.data)
       //return data.data
       return
     } catch (err: any) {
