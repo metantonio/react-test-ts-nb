@@ -14,6 +14,10 @@ interface Message {
   message: string;
 }
 
+interface BodyResponse {
+  body: string;
+}
+
 interface League {
   league_name: string;
 }
@@ -257,12 +261,12 @@ const teamLogos: { [key: string]: string } = {
 
 const GameSetup = () => {
   //const { fetchWithAuth, isLoading } = useApi();
-  const {fetchWithAuth, isLoading } = useUser();
+  const { fetchWithAuth, isLoading } = useUser();
   const navigate = useNavigate();
   const [leagues, setLeagues] = useState<League[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [selectedLeague, setSelectedLeague] = useState<League | null>(null);
-  const [teams, setTeams] = useState<Teams[]>([{ teams: "N/A" }, { teams: "N/A" }]);
+  const [teams, setTeams] = useState<Teams[]>([{ teams: "N/A" }]);
   const [teamsSchedule, setTeamsSchedule] = useState<TeamsSchedule[]>([{ teams: "N/A", games: "0" }]);
   const [selectedTeams1, setSelectedTeams1] = useState<Teams | null>(null);
   const [selectedTeams2, setSelectedTeams2] = useState<Teams | null>(null);
@@ -358,17 +362,17 @@ const GameSetup = () => {
   const handleFetchLeagues = async () => {
     setError(null);
     try {
-      const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', {body:{method: "POST", endpoint: "get_leagues.php", content:"form"}});
+      const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', { body: { method: "POST", endpoint: "get_leagues.php", content: "form" } });
       if (!response.ok) {
         const err: Message = await response.json();
         setError(`error: ${err.message}`);
         throw new Error('Failed to fetch leagues.');
       }
-      const data: LeagueResponse = await response.json();
+      const data: BodyResponse = await response.json();
       const body: { data: League[] } = JSON.parse(data.body)
       //console.log("data", data)
       console.log("leagues", body)
-      
+
       setLeagues(body.data);
     } catch (err: any) {
       setError(`${err}`);
@@ -378,14 +382,17 @@ const GameSetup = () => {
   const handleFetchTeams = async () => {
     setError(null);
     try {
-      const response = await fetchWithAuth(`${API_URL}/conversion`, 'POST', {...selectedLeague, method: "POST", endpoint: "get_teams.php" });
+      const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', { body: { ...selectedLeague, method: "POST", endpoint: "get_teams.php" } });
       if (!response.ok) {
         const err: Message = await response.json();
         setError(`error: ${err.message}`);
         throw new Error('Failed to fetch teams.');
       }
-      const data: TeamsResponse = await response.json();
-      setTeams(data.data);
+      //const data: TeamsResponse = await response.json();
+      const data: BodyResponse = await response.json();
+      const body: { data: Teams[] } = JSON.parse(data.body)
+      console.log(body.data)
+      setTeams(body.data);
     } catch (err: any) {
       setError(`${err}`);
     }
@@ -395,7 +402,7 @@ const GameSetup = () => {
     setError(null);
     setIsGameInitial(true);
     try {
-      const response = await fetchWithAuth(`${API_URL}/playsinglegame_initial.php`, 'POST', { homeaway: "away", awayleague_name: selectedLeague?.league_name, homeleague_name: selectedLeague?.league_name, hometeam: selectedTeams2?.teams, awayteam: selectedTeams1?.teams });
+      const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', { body: { endpoint: "playsinglegame_initial.php", method: "POST", homeaway: "away", awayleague_name: selectedLeague?.league_name, homeleague_name: selectedLeague?.league_name, hometeam: selectedTeams2?.teams, awayteam: selectedTeams1?.teams } });
       if (!response.ok) {
         const err: Message = await response.json();
         setError(`error: ${err.message}`);
@@ -413,14 +420,16 @@ const GameSetup = () => {
     setError(null);
     setIsGameInitial(true);
     try {
-      const response = await fetchWithAuth(`${API_URL}/get_82_game_schedule.php`, 'POST', { league_name: selectedLeague?.league_name, team_name: selectedTeams2?.teams });
+      const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', { body: { endpoint: "get_82_game_schedule.php", method: "POST", league_name: selectedLeague?.league_name, team_name: selectedTeams2?.teams } });
       if (!response.ok) {
         const err: Message = await response.json();
         setError(`error: ${err.message}`);
         throw new Error('Failed to setup the initial game.');
       }
-      const data: TeamsScheduleResponse = await response.json();
-      setTeamsSchedule(data.data)
+      const data: BodyResponse = await response.json();
+      //const data: TeamsScheduleResponse = await response.json();
+      const body: { data: TeamsSchedule[] } = JSON.parse(data.body)
+      setTeamsSchedule(body.data)
     } catch (err: any) {
       setError(`${err}`);
     } finally {
@@ -431,14 +440,16 @@ const GameSetup = () => {
   const handleFetchScoreBoard = async () => {
     setError(null);
     try {
-      const response = await fetchWithAuth(`${API_URL}/get_singlegame_stats.php`, 'POST');
+      const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', { body: { endpoint: "get_singlegame_stats.php", method: "POST" } });
       if (!response.ok) {
         const err: Message = await response.json();
         setError(`error: ${err.message}`);
         throw new Error('Failed to fetch teams.');
       }
-      const data: ScoreBoardResponse = await response.json();
-      setScoreBoard(data.scoreboard[0]);
+      const data: BodyResponse = await response.json();
+      //const data: ScoreBoardResponse = await response.json();
+      const body: { data: ScoreBoard[] } = JSON.parse(data.body)
+      setScoreBoard(body.scoreboard[0]);
     } catch (err: any) {
       setError(`${err}`);
     }
@@ -447,14 +458,15 @@ const GameSetup = () => {
   const handlePredictMode = async () => {
     setError(null);
     try {
-      const response = await fetchWithAuth(`${API_URL}/play_predict.php`, 'POST', {
+      const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', {body:{
+        endpoint: "play_predict.php", method: "POST",
         "league_name": selectedLeague?.league_name,
         "numgames": "normal",
         "homeaway": "both",
         "gamemode": "predict",
         "keeppbp": "N",
         "gamearray": [{ "predicthome": selectedTeams2?.teams, "predictaway": selectedTeams1?.teams, "predictgames": "20" }]
-      });
+      }});
       if (!response.ok) {
         const err: Message = await response.json();
         setError(`error: ${err.message}`);
@@ -469,7 +481,10 @@ const GameSetup = () => {
   const handlePredictPlay = async () => {
     setError(null);
     try {
-      const response = await fetchWithAuth(`${API_URL}/playsinglegame_step.php`, 'POST', { options: "4" });
+      const response = await fetchWithAuth(`${API_URL}/conversion.js`, 'POST', {body:{
+        endpoint: "playsinglegame_step.php", method: "POST",
+         options: "4" 
+        }});
       if (!response.ok) {
         const err: Message = await response.json();
         setError(`error: ${err.message}`);
@@ -484,14 +499,20 @@ const GameSetup = () => {
   const handleFetchPlayersTeam1 = async () => { //this is for actual player stats, for editable stats is: http://api.bballsports.com/simulationAPI/get_players_chars.php
     setError(null);
     try {
-      const response = await fetchWithAuth(`${API_URL}/get_actual_player_stats.php`, 'POST', { ...selectedLeague, team_name: selectedTeams1?.teams });
+      const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', { 
+        body:{...selectedLeague, team_name: selectedTeams1?.teams, 
+          endpoint: "get_actual_player_stats.php", method: "POST"
+        }
+      });
       if (!response.ok) {
         const err: Message = await response.json();
         setError(`error: ${err.message}`);
         throw new Error('Failed to fetch teams.');
       }
-      const data: PlayerCharResponse = await response.json();
-      setPlayersTeam1(data.data);
+      const data: BodyResponse = await response.json();
+      //const data: PlayerCharResponse = await response.json();
+      const body: { data: PlayerChar[] } = JSON.parse(data.body)
+      setPlayersTeam1(body.data);
     } catch (err: any) {
       //console.log("error: ", err)
       setError(`${err}`);
@@ -501,14 +522,19 @@ const GameSetup = () => {
   const handleFetchPlayersTeam2 = async () => {//this is for actual player stats, for editable stats is: http://api.bballsports.com/simulationAPI/get_players_chars.php
     setError(null);
     try {
-      const response = await fetchWithAuth(`${API_URL}/get_actual_player_stats.php`, 'POST', { ...selectedLeague, team_name: selectedTeams2?.teams });
+      const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', { 
+        body:{...selectedLeague, 
+          endpoint: "get_actual_player_stats.php", method: "POST", 
+          team_name: selectedTeams2?.teams }
+      });
       if (!response.ok) {
         const err: Message = await response.json();
         setError(`error: ${err.message}`);
         throw new Error('Failed to fetch teams.');
       }
-      const data: PlayerCharResponse = await response.json();
-      setPlayersTeam2(data.data);
+      const data: BodyResponse = await response.json();
+      const body: { data: PlayerChar[] } = JSON.parse(data.body)
+      setPlayersTeam2(body.data);
       await handleSchedule82()
     } catch (err: any) {
       //console.log("error: ", err)
@@ -608,7 +634,7 @@ const GameSetup = () => {
     }
   };
 
-  const goLoginPage = async() => {
+  const goLoginPage = async () => {
     await authService.signOut()
     navigate('/')
   }
@@ -714,7 +740,7 @@ const GameSetup = () => {
                   Instructions
                 </Button>
               </div>
-              <Button onClick={async()=> { goLoginPage()}} disabled={isLoading} variant="outline" className="mt-auto">
+              <Button onClick={async () => { goLoginPage() }} disabled={isLoading} variant="outline" className="mt-auto">
                 Go to Login
               </Button>
             </div>

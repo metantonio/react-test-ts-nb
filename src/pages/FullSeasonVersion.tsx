@@ -346,7 +346,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                     </DropdownMenuTrigger>
                     <DropdownMenuContent style={{ backgroundColor: 'var(--bg-color-component)' }} className="h-[200px] overflow-y-auto">
                       {teams.length > 0 && teams.map((item: any) => (
-                        <DropdownMenuItem key={item.teams} onSelect={() => setSelectedTeams1(item)}>
+                        <DropdownMenuItem key={`away-${item.teams}`} onSelect={() => setSelectedTeams1(item)}>
                           {item.teams}
                         </DropdownMenuItem>
                       ))}
@@ -360,7 +360,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                     </DropdownMenuTrigger>
                     <DropdownMenuContent style={{ backgroundColor: 'var(--bg-color-component)' }} className="h-[200px] overflow-y-auto">
                       {teams.length > 0 && teams.map((item: any) => (
-                        <DropdownMenuItem key={item.teams} onSelect={() => setSelectedTeams2(item)}>
+                        <DropdownMenuItem key={`home-${item.teams}`} onSelect={() => setSelectedTeams2(item)}>
                           {item.teams}
                         </DropdownMenuItem>
                       ))}
