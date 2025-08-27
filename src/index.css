@@ -110,8 +110,6 @@ a:hover {
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
 }
@@ -142,24 +140,28 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+.casino-gradient {
+  background: linear-gradient(135deg, #13294B 0%, #234fc8 50%, #fcfcfc 100%);
+}
+
+.gold-accent {
+  background: linear-gradient(135deg, #e03100 0%, #F4C430 100%);
+}
+
 .bg-popover {
   background-color: #242424 !important;
-}
-
-.bg-destructive {
-  background-color: #ab1717 !important;
-}
-
-.bg-danger {
-    background-color: #ab1717;
-}
-
-.bg-gray {
-  background-color: #433737;
-}
-
-.tb-border {
-  border: 2px white solid;
 }
 
 .bg-background {
@@ -184,24 +186,4 @@ button.border-input {
 
 button.text-primary-foreground {
   color: rgb(255, 240, 246);
-}
-
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-.casino-gradient {
-  background: linear-gradient(135deg, #13294B 0%, #234fc8 50%, #fcfcfc 100%);
-}
-
-.gold-accent {
-  background: linear-gradient(135deg, #e03100 0%, #F4C430 100%);
 }

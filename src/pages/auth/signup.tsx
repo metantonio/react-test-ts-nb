@@ -14,8 +14,6 @@ import {
   CardTitle,
 } from "../../components/ui/card";
 
-
-
 const SignUpStep = {
   CONFIRM_SIGN_UP: "CONFIRM_SIGN_UP",
 };
@@ -31,12 +29,14 @@ interface IForm {
   familyName: string;
   birthdate: string;
   password: string;
+  confirmPassword: string;
 }
 
 const Signup = () => {
   const [form, setForm] = useState<IForm>({
     username: "",
     password: "",
+    confirmPassword: "",
     email: "",
     address: "",
     phone: "",
@@ -44,7 +44,7 @@ const Signup = () => {
     givenName: "",
     middleName: "",
     familyName: "",
-    birthdate:"",
+    birthdate: "",
   });
   const [confirmationCode, setConfirmationCode] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -66,14 +66,11 @@ const Signup = () => {
   };
 
   const validateForm = () => {
-    /* if (!form.username.trim()) {
-      throw new Error("Username is required");
-    } */
     if (!form.email.trim()) {
       throw new Error("Email is required");
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\\.[^\s@]+$/;
     if (!emailRegex.test(form.email)) {
       throw new Error("Please enter a valid email address");
     }
@@ -84,6 +81,10 @@ const Signup = () => {
         "Username can only contain letters, numbers, and underscores, and @"
       );
     }
+
+    if (form.password.length < 8) {
+        throw new Error("Password must be at least 8 characters long");
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -91,6 +92,12 @@ const Signup = () => {
     setIsLoading(true);
     setError("");
     setSuccess("");
+
+    if (form.password !== form.confirmPassword) {
+      setError("Passwords do not match.");
+      setIsLoading(false);
+      return;
+    }
 
     try {
       validateForm();
@@ -101,15 +108,10 @@ const Signup = () => {
         options: {
           userAttributes: {
             email: form.email,
-            //website: form.website,
-            //address: form.address,
-            //phone_number: form.phone,
             given_name: form.givenName,
             family_name: form.familyName,
-            //middle_name: form.middleName,
-            //birthdate: form.birthdate,
             name: form.givenName,
-            "custom:string":""
+            "custom:string": "",
           },
         },
       });
@@ -127,7 +129,7 @@ const Signup = () => {
       }
     } catch (err: unknown) {
       console.error("Signup error:", err);
-       if (err instanceof Error) {
+      if (err instanceof Error) {
         setError(err.message || "Signup failed. Please try again.");
       } else {
         setError("An unknown error occurred during signup.");
@@ -186,8 +188,7 @@ const Signup = () => {
       } else {
         setError("An unknown error occurred while resending the code.");
       }
-    }
-    finally {
+    } finally {
       setIsLoading(false);
     }
   };
@@ -208,46 +209,58 @@ const Signup = () => {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100 text-gray-600">
-      <Card className="flex-1 flex items-center justify-center bg-white p-8">
-        <CardHeader>
-          <CardTitle>Create Account</CardTitle>
+    <div className="flex items-center justify-center min-h-screen bg-background">
+      <Card className="w-full max-w-lg mx-4 sm:mx-auto">
+        <CardHeader className="text-center">
+          <CardTitle className="text-2xl">Create Account</CardTitle>
           <CardDescription>
             Enter your details to create a new account.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {error && (
-            <div className="mb-4 text-red-500 bg-red-100 p-3 rounded">
-              {error}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {error && (
+              <div className="mb-4 text-red-500 bg-red-100 p-3 rounded dark:bg-red-900 dark:text-red-200">
+                {error}
+              </div>
+            )}
+            {success && (
+              <div className="mb-4 text-green-500 bg-green-100 p-3 rounded dark:bg-green-900 dark:text-green-200">
+                {success}
+              </div>
+            )}
+            <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
+                <div className="space-y-2">
+                    <Label htmlFor="givenName">Given Name</Label>
+                    <Input
+                        id="givenName"
+                        name="givenName"
+                        value={form.givenName}
+                        onChange={handleChange}
+                        placeholder="John"
+                        required
+                        disabled={isLoading}
+                    />
+                </div>
+                <div className="space-y-2">
+                    <Label htmlFor="familyName">Family Name</Label>
+                    <Input
+                        id="familyName"
+                        name="familyName"
+                        value={form.familyName}
+                        onChange={handleChange}
+                        placeholder="Doe"
+                        required
+                        disabled={isLoading}
+                    />
+                </div>
             </div>
-          )}
-          {success && (
-            <div className="mb-4 text-green-500 bg-green-100 p-3 rounded">
-              {success}
-            </div>
-          )}
-          <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* <div className="space-y-2">
-              <Label htmlFor="username">Username</Label>
-              <Input
-                id="username"
-                name="username"
-                className="text-gray-100"
-                value={form.username}
-                onChange={handleChange}
-                placeholder="john_doe"
-                required
-                disabled={isLoading}
-              />
-            </div> */}
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
                 name="email"
                 type="email"
-                className="text-gray-100"
                 value={form.email}
                 onChange={handleChange}
                 placeholder="john.doe@example.com"
@@ -256,118 +269,44 @@ const Signup = () => {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="email">Password</Label>
+              <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
                 name="password"
                 type="password"
-                className="text-gray-100"
                 value={form.password}
                 onChange={handleChange}
-                placeholder="password"
+                placeholder="********"
                 required
                 disabled={isLoading}
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="givenName">Given Name</Label>
+              <Label htmlFor="confirmPassword">Confirm Password</Label>
               <Input
-                id="givenName"
-                name="givenName"
-                className="text-gray-100"
-                value={form.givenName}
+                id="confirmPassword"
+                name="confirmPassword"
+                type="password"
+                value={form.confirmPassword}
                 onChange={handleChange}
-                placeholder="John"
+                placeholder="********"
                 required
                 disabled={isLoading}
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="familyName">Family Name</Label>
-              <Input
-                id="familyName"
-                name="familyName"
-                className="text-gray-100"
-                value={form.familyName}
-                onChange={handleChange}
-                placeholder="Doe"
-                required
-                disabled={isLoading}
-              />
-            </div>
-            {/* <div className="space-y-2">
-              <Label htmlFor="middleName">Middle Name</Label>
-              <Input
-                id="middleName"
-                name="middleName"
-                value={form.middleName}
-                onChange={handleChange}
-                placeholder="Michael"
-                disabled={isLoading}
-              />
-            </div> */}
-            {/* <div className="space-y-2">
-              <Label htmlFor="website">Website</Label>
-              <Input
-                id="website"
-                name="website"
-                type="url"
-                value={form.website}
-                onChange={handleChange}
-                placeholder="https://example.com"
-                disabled={isLoading}
-              />
-            </div> */}
-            {/* <div className="space-y-2">
-              <Label htmlFor="phone">Phone Number</Label>
-              <Input
-                id="phone"
-                name="phone"
-                type="tel"
-                value={form.phone}
-                onChange={handleChange}
-                placeholder="+15555555555"
-                disabled={isLoading}
-              />
-            </div> */}
-            {/* <div className="space-y-2">
-              <Label htmlFor="address">Address</Label>
-              <Input
-                id="address"
-                name="address"
-                value={form.address}
-                onChange={handleChange}
-                placeholder="123 Main St, Anytown, USA"
-                disabled={isLoading}
-              />
-            </div> */}
-            {/* <div className="space-y-2">
-              <Label htmlFor="birthdate">Birthdate</Label>
-              <Input
-                id="birthdate"
-                name="birthdate"
-                value={form.birthdate}
-                onChange={handleChange}
-                placeholder="01/01/1990"
-                type="date"
-                disabled={isLoading}
-              />
-            </div> */}
-            <div className="md:col-span-2">
-              <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? "Creating Account..." : "Create Account"}
-              </Button>
-            </div>
+            <Button type="submit" className="w-full" disabled={isLoading}>
+              {isLoading ? "Creating Account..." : "Create Account"}
+            </Button>
           </form>
         </CardContent>
         <CardFooter className="flex flex-col items-center space-y-2">
-          <small className="text-sm text-gray-600">
+          <small className="text-sm text-muted-foreground">
             Already have an account?{" "}
-            <Link to="/login" className="font-medium text-blue-600 hover:underline">
+            <Link to="/login" className="font-medium text-primary hover:underline">
               Sign in
             </Link>
           </small>
-          <Link to="/" className="text-sm text-gray-600 hover:underline">
+          <Link to="/" className="text-sm text-muted-foreground hover:underline">
             Back to Home
           </Link>
         </CardFooter>
@@ -377,3 +316,4 @@ const Signup = () => {
 };
 
 export default Signup;
+
