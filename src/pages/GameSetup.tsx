@@ -602,6 +602,7 @@ const GameSetup = () => {
       //const data: PlayerSubPatternResponse = await response.json();
       const data: BodyResponse = await response.json();
       const body: { data: PlayerSubPattern[] } = JSON.parse(data.body)
+      console.log("Player Subs: ", body)
       setPlayerSubPattern(body.data);
       return body.data
     } catch (err: any) {
