@@ -70,17 +70,18 @@ const Signup = () => {
       throw new Error("Email is required");
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\\.[^\s@]+$/;
+    //const emailRegex = /^[^\s@]+@[^\s@]+\\.[^\s@]+$/;
+    const emailRegex = /^[^+@]+@[^@]+$/;
     if (!emailRegex.test(form.email)) {
-      throw new Error("Please enter a valid email address");
+      throw new Error("Please enter a valid email address with @ and without +");
     }
 
-    const usernameRegex = /^[a-zA-Z0-9_@.]+$/;
+    /* const usernameRegex = /^[a-zA-Z0-9_@.]+$/;
     if (!usernameRegex.test(form.email)) {
       throw new Error(
         "Username can only contain letters, numbers, and underscores, and @"
       );
-    }
+    } */
 
     if (form.password.length < 8) {
         throw new Error("Password must be at least 8 characters long");

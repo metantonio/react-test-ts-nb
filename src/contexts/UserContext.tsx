@@ -133,9 +133,9 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       const { cognitoUser, userAttributes } = currentUserData;
       let session = await authService.getSession();
 
-      if(session?.tokens?.idToken?.payload?.["custom:string"] && session?.tokens?.idToken?.payload?.["custom:string"]?.toString() != ""){
+      if(!session?.tokens?.idToken?.payload?.["custom:string"] || session?.tokens?.idToken?.payload?.["custom:string"]?.toString() != "" || !nbaToken){
         session = await authService.getSession();
-        
+        console.log("re-execution")
       }
 
       if (cognitoUser && session?.tokens?.idToken && session?.tokens?.accessToken) {
@@ -171,7 +171,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     setToken(authToken);
     setNbaToken(appUser.custom || null);
     setIsAuthenticated(true);
-    console.log("nba token: ",appUser.custom || null)
+    console.log("nba token: ",appUser.custom || "null")
   }, []);
 
   const logout = useCallback(async (): Promise<void> => {
@@ -180,6 +180,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       await authService.signOut();
       setUser(mockUsers.guest);
       setToken(null);
+      setNbaToken(null)
       setIsAuthenticated(false);
     } catch (error) {
       console.error('Logout failed:', error);
@@ -208,6 +209,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     const newToken = await authService.refreshSession();
     if (newToken) {
       setToken(newToken);
+      setNbaToken(newToken)
     }
     return newToken;
   };
@@ -254,7 +256,10 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       return fetch(url, config);
     }, [nbaToken]);
 
-  useEffect(()=>{authService.signOut()},[])
+  useEffect(()=>{
+    setNbaToken(null)
+    authService.signOut()
+  },[])
 
   useEffect(() => {
     loadUser();
