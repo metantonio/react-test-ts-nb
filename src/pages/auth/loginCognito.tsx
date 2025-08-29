@@ -66,7 +66,7 @@ const LoginCognito = () => {
           throw new Error('No ID token found in session');
         }
 
-        await login(currentUser, idToken.toString(), userAttributes,session);
+        await login(currentUser, idToken.toString(), userAttributes, session);
 
         const redirectUrl = idToken.payload.website as string || currentUser.signInDetails?.loginId || '';
 
@@ -112,7 +112,7 @@ const LoginCognito = () => {
     }
   };
 
-  
+
 
 
   return (
@@ -216,7 +216,7 @@ const LoginCognito = () => {
                 <Button type="submit" className="w-full bg-navy-600 hover:bg-navy-700">
                   {isLoading ? 'Signing In...' : 'Sign In'}
                 </Button>
-                <Button type="button" className="w-full bg-navy-600 hover:bg-navy-700" onClick={()=>{navigate("/signup")}}>
+                <Button type="button" className="w-full bg-navy-600 hover:bg-navy-700" onClick={() => { navigate("/signup") }}>
                   Sign Up
                 </Button>
               </form>
@@ -231,17 +231,40 @@ const LoginCognito = () => {
           <div className="relative">
             {/* Animated Casino Elements */}
             <div className="mb-6">
-              <img
+              {/* <img
                 src="/src/singlegame_image.png" // ⬅️ Replace with actual logo path
                 alt="CasinoVizion Logo"
                 className="h-24 w-24 mx-auto"
-              />
+              /> */}
             </div>
 
-            <h2 className="text-4xl font-bold mb-4">NBA Simulator</h2>
+            <h2 className="text-4xl font-bold mb-4">NBA Simulation Platform</h2>
             <p className="text-xl mb-8 opacity-90">
               Professional  Simulator
             </p>
+
+            <div className="basketball-to-chart">
+              {/* <div className="ball">
+                <div className="curve left"></div>
+                <div className="curve right"></div>
+              </div> */}
+
+              <div className="basketball">
+                <div className="ball">
+                  <div className="lines"></div>
+                </div>
+
+              </div>
+              {/* <div className="chart">
+                <div className="y-axis"></div>
+                <div className="x-axis"></div>
+                <div className="bars">
+                  <div className="bar bar1"></div>
+                  <div className="bar bar2"></div>
+                  <div className="bar bar3"></div>
+                </div>
+              </div> */}
+            </div>
 
             {/* Floating Cards Animation */}
             {/* <div className="relative h-32">

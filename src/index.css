@@ -207,3 +207,195 @@ button.text-primary-foreground {
 .bg-muted:hover {
   background-color: #c6c3c3;
 }
+
+/* Clase de atención con pulso */
+.pulse-attention {
+  --cta-red: #e02424;      /* rojo accesible */
+  --cta-red-dark: #b91c1c; /* tono más oscuro para hover */
+  background: var(--cta-red);
+  color: #fff;
+  border: none;
+  border-radius: 0.75rem;
+  padding: 0.75rem 1rem;
+  font-weight: 700;
+  text-align: center;
+  cursor: pointer;
+  box-shadow: 0 6px 16px rgba(224, 36, 36, 0.35);
+  transform-origin: center;
+  animation: pulse-press 1.2s ease-in-out infinite both;
+  transition: transform 0.12s ease, background 0.12s ease, box-shadow 0.12s ease;
+}
+
+/* Efectos al interactuar */
+.pulse-attention:hover,
+.pulse-attention:focus-visible {
+  background: var(--cta-red-dark);
+  box-shadow: 0 8px 22px rgba(224, 36, 36, 0.45);
+}
+
+.pulse-attention:active {
+  transform: scale(0.97); /* feedback de “presión” */
+}
+
+/* Accesibilidad: foco visible */
+.pulse-attention:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 2px;
+}
+
+/* Deshabilitado (opcional) */
+.pulse-attention[disabled],
+.pulse-attention.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  animation: none;
+}
+
+/* Respeta preferencias de reducción de movimiento */
+@media (prefers-reduced-motion: reduce) {
+  .pulse-attention {
+    animation: none;
+  }
+}
+
+/* Animación de pulso */
+@keyframes pulse-press {
+  0%   { transform: scale(1);   }
+  50%  { transform: scale(1.07); }
+  100% { transform: scale(1);   }
+}
+
+/* Balón */
+.basket-ball {
+  position: relative;
+  height: 15em;
+  width: 15em;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #ff9933, #cc6600);
+  box-shadow: inset -10px -10px 15px rgba(0,0,0,0.3),
+              inset 10px 10px 15px rgba(255,255,255,0.2),
+              0 20px 40px rgba(0,0,0,0.5);
+  animation: bounce 2s infinite ease-in-out;
+  overflow: hidden;
+}
+
+/* Curva izquierda */
+.basket-ball::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: -25%;
+  top: 0;
+  border: 0.5em solid #0d0d0d;
+  border-radius: 50%;
+  border-right: none;
+  border-left-width: 0.5em;
+  box-sizing: border-box;
+}
+
+/* Curva derecha */
+.basket-ball::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 25%;
+  top: 0;
+  border: 0.5em solid #0d0d0d;
+  border-radius: 50%;
+  border-left: none;
+  border-right-width: 0.5em;
+  box-sizing: border-box;
+}
+
+/* Línea vertical */
+.line1 {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  border-right: 0.5em solid #0d0d0d;
+  right: 50%;
+}
+
+/* Línea horizontal */
+.line2 {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  border-top: 0.5em solid #0d0d0d;
+  top: 50%;
+}
+
+/* Rebote */
+@keyframes bounce {
+  0%, 100% { transform: translateY(0) scaleX(1) scaleY(1); }
+  30%      { transform: translateY(-60px) scaleX(0.95) scaleY(1.05); }
+  50%      { transform: translateY(0) scaleX(1.05) scaleY(0.95); }
+  70%      { transform: translateY(-30px) scaleX(0.97) scaleY(1.03); }
+}
+
+  .basketball {
+    position: relative;
+    top: 50px;
+    left:-50px;
+  }
+
+  .ball {
+    position: absolute;
+    background-color: #e76f51;
+    border-radius:50%;
+    width:100px;
+    height:100px;
+    overflow: hidden;
+    border: 3px solid #333;
+    animation: bounce 2s ease-in infinite;
+  }
+
+  @keyframes bounce {
+     0% {transform: translate3d(0, 0, 0) rotate(0deg);}
+    25% {transform: translate3d(0, -200px, 0) rotate(90deg);}
+    50% {transform: translate3d(0, 0, 0) rotate(180deg);}
+    75% {transform: translate3d(0, -200px, 0) rotate(270deg);}
+    100% {transform: translate3d(0, 0, 0) rotate(360deg);}
+  }
+
+  .ball:before, .ball:after {
+    content:"";
+    position: absolute;
+    background-color: #333;
+    width:110px;
+    height:3px;
+    top:50px;
+    left:-5px;
+  }
+
+  .ball:before {
+    transform: rotate(45deg);
+  }
+
+  .ball:after {
+    transform: rotate(-45deg);
+  }
+
+  .lines {
+    position: absolute;
+    border-radius:50%;
+    border: 3px solid #333;
+    width:70px;
+    height:70px;
+    left:-20px;
+    top:-20px;
+  }
+
+  .lines:before, .lines:after {
+    content:"";
+    position: absolute; 
+    border-radius:50%;
+    border: 3px solid #333;
+    width:70px;
+    height:70px;
+    top:65px;
+    left:60px;
+  }
+

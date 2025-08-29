@@ -20,10 +20,10 @@ const ConfirmationForm: React.FC<ConfirmationFormProps> = ({ email, error, succe
         <div className="flex items-center justify-center min-h-screen bg-gray-100">
             <div className='flex-1'>Hi</div>
             <div className='flex-1'>
-                <Card className="w-full max-w-md">
+                <Card className="w-full max-w-md text-gray-800">
                 <CardHeader>
                     <CardTitle>Confirm Your Email</CardTitle>
-                    <CardDescription>
+                    <CardDescription className='text-gray-600'>
                         We've sent a confirmation code to <strong>{email}</strong>. Please enter the code below to complete your registration.
                     </CardDescription>
                 </CardHeader>

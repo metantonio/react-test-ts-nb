@@ -283,7 +283,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
         <Button variant="outline" size="sm">Raw Stats</Button>
         <Sheet>
           <SheetTrigger asChild>
-            <Button variant="outline" size="sm" disabled={isSimulating}>{boxScore.length === 0 ? "Show Box Score" : "Show Box Score (!)"}</Button>
+            <Button variant="outline" size="sm" disabled={isSimulating} className={`${boxScore.length === 0 ? "" : "pulse-attention"}`}>{boxScore.length === 0 ? "Show Box Score" : "Show Box Score (!)"}</Button>
           </SheetTrigger>
           <SheetContent className="overflow-y-auto">
             <SheetHeader>
@@ -321,7 +321,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
 
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="outline" disabled={leagues?.length === 0}>
+                    <Button variant="outline" disabled={leagues?.length === 0} className={selectedLeague?"":'pulse-attention'}>
                       {selectedLeague ? selectedLeague.league_name : "Choose League"}
                     </Button>
                   </DropdownMenuTrigger>
@@ -335,12 +335,12 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                 </DropdownMenu>
               </div>
               {selectedLeague ? <div className="mt-2">
-                <label className="text-sm font-medium">Away Team - Home Team</label>
+                <label className="text-sm font-medium text-center">Away Team - Home Team</label>
                 <div className="flex gap-2 mt-1">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       
-                      <Button variant="outline" className="w-full" disabled={teams.length === 0}>
+                      <Button variant="outline" className={`${selectedTeams1?"":"pulse-attention"}`} disabled={teams.length === 0}>
                         {selectedTeams1 ? selectedTeams1.teams : "Select Away Team"}
                       </Button>
                     </DropdownMenuTrigger>
@@ -354,7 +354,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                   </DropdownMenu>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="outline" className="w-full" disabled={teams.length === 0}>
+                      <Button variant="outline" className={`${selectedTeams2?"":"pulse-attention"}`} disabled={teams.length === 0}>
                         {selectedTeams2 ? selectedTeams2.teams : "Select Home Team"}
                       </Button>
                     </DropdownMenuTrigger>
