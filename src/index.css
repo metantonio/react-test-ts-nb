@@ -187,3 +187,23 @@ button.border-input {
 button.text-primary-foreground {
   color: rgb(255, 240, 246);
 }
+
+.tb-border {
+  border: 2px white solid;
+}
+
+.bg-destructive {
+  background-color: #ab1717 !important;
+}
+
+.bg-danger {
+    background-color: #ab1717;
+}
+
+.bg-gray {
+  background-color: #4d4d4d;
+}
+
+.bg-muted:hover {
+  background-color: #c6c3c3;
+}
