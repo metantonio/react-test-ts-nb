@@ -744,7 +744,7 @@ const GameSetup = () => {
             </Button>
           </SheetTrigger>
           <SheetContent side="right" className="w-1/3">
-            <div className="flex flex-col h-full p-4">
+            <div className="flex flex-col h-full p-8">
               <div className="flex-grow">
                 <Button
                   variant={activeView === 'full-season' ? 'secondary' : 'ghost'}
@@ -769,7 +769,7 @@ const GameSetup = () => {
                 </Button>
               </div>
               <Button onClick={async () => { goLoginPage() }} disabled={isLoading} variant="outline" className="mt-auto">
-                Go to Login
+                Sign Out
               </Button>
             </div>
           </SheetContent>

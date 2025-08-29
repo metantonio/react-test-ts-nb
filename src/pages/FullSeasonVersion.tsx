@@ -740,7 +740,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
               <TableHeader>
                 <TableRow>
                   <TableHead>TEAM NAME</TableHead>
-                  <TableHead className="text-right">0</TableHead>
+                  <TableHead className="text-right"></TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -752,7 +752,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
 
           {teamsSchedule && teamsSchedule.length > 1 ?
             <div className="mt-2 border rounded-md max-h-96 overflow-y-auto bg-card text-card-foreground">
-              <div className="grid grid-cols-2 gap-3 mt-2">SCHEDULE FOR {selectedTeams2?.teams}<TeamLogo logo={teamLogos[selectedTeams2?.teams || '']} name={selectedTeams2?.teams || 'Home'} /> </div>
+              <div className="grid grid-cols-2 gap-3 mt-2 p-2 text-center">{selectedTeams2?.teams} Schedule<TeamLogo logo={teamLogos[selectedTeams2?.teams || '']} name={selectedTeams2?.teams || 'Home'}/> </div>
               <Table>
                 <TableHeader>
                   <TableHead>TEAM NAME</TableHead>
