@@ -344,7 +344,7 @@ button.text-primary-foreground {
 }
 
 /* Rebote */
-@keyframes bounce {
+/* @keyframes bounce {
 
   0%,
   100% {
@@ -362,7 +362,7 @@ button.text-primary-foreground {
   70% {
     transform: translateY(-30px) scaleX(0.97) scaleY(1.03);
   }
-}
+} */
 
 .basketball {
   position: relative;
