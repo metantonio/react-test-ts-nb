@@ -278,6 +278,7 @@ const GameSetup = () => {
   const [getAltsSelected, setGetAltsSelected] = useState("Default-")
   const [scoreBoard, setScoreBoard] = useState<ScoreBoard | null>(null);
   const [activeView, setActiveView] = useState('full-season');
+  const [schedule, setSchedule] = useState('predict');
   const [playersTeam1, setPlayersTeam1] = useState<PlayerChar[]>([{
     name: "",
     position: "",
@@ -732,6 +733,8 @@ const GameSetup = () => {
   }, [selectedTeams2])
 
   useEffect(() => { console.log("82 games schedule") }, [teamsSchedule])
+  useEffect(() => { console.log("game mode: ", schedule) }, [schedule])
+
 
   return (
     <div className="p-4 bg-background text-foreground">
@@ -806,6 +809,8 @@ const GameSetup = () => {
             //setGetAlts = {setGetAlts}
             getAltsSelected={getAltsSelected}
             setGetAltsSelected={setGetAltsSelected}
+            schedule={schedule}
+            setSchedule={setSchedule}
           />
         }
         {activeView === 'single-game' &&

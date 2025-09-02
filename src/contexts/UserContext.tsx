@@ -88,7 +88,7 @@ const mapCognitoUserToAppUser = async (cognitoUser: AuthUser, userAttributes: Fe
   const groups = access_token_payload?.['cognito:groups'];
   const group = Array.isArray(groups) && groups.length > 0 ? groups[0] : null;
   //console.log("user group:", group)
-  console.log("idToken payload received: ", session?.tokens?.idToken?.payload);
+  //console.log("idToken payload received: ", session?.tokens?.idToken?.payload);
   //console.log("AccessToken payload received", session);
   const tempObj: User = {
     id: cognitoUser.username,
@@ -171,7 +171,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     setToken(authToken);
     setNbaToken(appUser.custom || null);
     setIsAuthenticated(true);
-    console.log("nba token: ",appUser.custom || "null")
+    //console.log("nba token: ",appUser.custom || "null")
   }, []);
 
   const logout = useCallback(async (): Promise<void> => {

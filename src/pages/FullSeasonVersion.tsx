@@ -134,6 +134,8 @@ interface FullSeasonVersionProps {
   //setGetAlts: React.Dispatch<React.SetStateAction<GetAlts[]>>;
   getAltsSelected: string | null;
   setGetAltsSelected: React.Dispatch<React.SetStateAction<string>>;
+  schedule: string | null;
+  setSchedule: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
@@ -164,10 +166,12 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
     getAlts,
     //setGetAlts,
     getAltsSelected,
-    setGetAltsSelected
+    setGetAltsSelected,
+    schedule,
+    setSchedule
   }
 ) => {
-  const [schedule, setSchedule] = useState('predict');
+  //const [schedule, setSchedule] = useState('predict');
   const [location, setLocation] = useState('both');
   const [savePbp, setSavePbp] = useState(false);
   const [saveBox, setSaveBox] = useState(true);
