@@ -90,7 +90,9 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #252525; /* App background color:  */;
+  background-color: #252525;
+  /* App background color:  */
+  ;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -146,12 +148,15 @@ button:focus-visible {
   will-change: filter;
   transition: filter 300ms;
 }
+
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
+
 .logo.react:hover {
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
+
 .casino-gradient {
   background: linear-gradient(135deg, #13294B 0%, #234fc8 50%, #fcfcfc 100%);
 }
@@ -197,7 +202,7 @@ button.text-primary-foreground {
 }
 
 .bg-danger {
-    background-color: #ab1717;
+  background-color: #ab1717;
 }
 
 .bg-gray {
@@ -210,8 +215,10 @@ button.text-primary-foreground {
 
 /* Clase de atención con pulso */
 .pulse-attention {
-  --cta-red: #e02424;      /* rojo accesible */
-  --cta-red-dark: #b91c1c; /* tono más oscuro para hover */
+  --cta-red: #e02424;
+  /* rojo accesible */
+  --cta-red-dark: #b91c1c;
+  /* tono más oscuro para hover */
   background: var(--cta-red);
   color: #fff;
   border: none;
@@ -234,7 +241,8 @@ button.text-primary-foreground {
 }
 
 .pulse-attention:active {
-  transform: scale(0.97); /* feedback de “presión” */
+  transform: scale(0.97);
+  /* feedback de “presión” */
 }
 
 /* Accesibilidad: foco visible */
@@ -260,9 +268,17 @@ button.text-primary-foreground {
 
 /* Animación de pulso */
 @keyframes pulse-press {
-  0%   { transform: scale(1);   }
-  50%  { transform: scale(1.07); }
-  100% { transform: scale(1);   }
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.07);
+  }
+
+  100% {
+    transform: scale(1);
+  }
 }
 
 /* Balón */
@@ -272,9 +288,9 @@ button.text-primary-foreground {
   width: 15em;
   border-radius: 50%;
   background: radial-gradient(circle at 30% 30%, #ff9933, #cc6600);
-  box-shadow: inset -10px -10px 15px rgba(0,0,0,0.3),
-              inset 10px 10px 15px rgba(255,255,255,0.2),
-              0 20px 40px rgba(0,0,0,0.5);
+  box-shadow: inset -10px -10px 15px rgba(0, 0, 0, 0.3),
+    inset 10px 10px 15px rgba(255, 255, 255, 0.2),
+    0 20px 40px rgba(0, 0, 0, 0.5);
   animation: bounce 2s infinite ease-in-out;
   overflow: hidden;
 }
@@ -329,73 +345,94 @@ button.text-primary-foreground {
 
 /* Rebote */
 @keyframes bounce {
-  0%, 100% { transform: translateY(0) scaleX(1) scaleY(1); }
-  30%      { transform: translateY(-60px) scaleX(0.95) scaleY(1.05); }
-  50%      { transform: translateY(0) scaleX(1.05) scaleY(0.95); }
-  70%      { transform: translateY(-30px) scaleX(0.97) scaleY(1.03); }
+
+  0%,
+  100% {
+    transform: translateY(0) scaleX(1) scaleY(1);
+  }
+
+  30% {
+    transform: translateY(-60px) scaleX(0.95) scaleY(1.05);
+  }
+
+  50% {
+    transform: translateY(0) scaleX(1.05) scaleY(0.95);
+  }
+
+  70% {
+    transform: translateY(-30px) scaleX(0.97) scaleY(1.03);
+  }
 }
 
-  .basketball {
-    position: relative;
-    top: 50px;
-    left:-50px;
-  }
+.basketball {
+  position: relative;
+  top: 50px;
+  left: -50px;
+}
 
-  .ball {
-    position: absolute;
-    background-color: #e76f51;
-    border-radius:50%;
-    width:100px;
-    height:100px;
-    overflow: hidden;
-    border: 3px solid #333;
-    animation: bounce 2s ease-in infinite;
-  }
+.ball {
+  position: absolute;
+  background-color: #e76f51;
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  overflow: hidden;
+  border: 3px solid #333;
+  /* animation: bounce 2s ease-in infinite; */
+  animation: bounce 2.5s cubic-bezier(.25,.65,.5,1) infinite;
+  
+  /* transform-origin: center bottom;  */
+}
 
-  @keyframes bounce {
-     0% {transform: translate3d(0, 0, 0) rotate(0deg);}
-    25% {transform: translate3d(0, -200px, 0) rotate(90deg);}
-    50% {transform: translate3d(0, 0, 0) rotate(180deg);}
-    75% {transform: translate3d(0, -200px, 0) rotate(270deg);}
-    100% {transform: translate3d(0, 0, 0) rotate(360deg);}
-  }
+@keyframes bounce {
+  0%   { transform: translateY(0) scaleX(1) scaleY(1) rotate(0deg); }
+  15%  { transform: translateY(-180px) scaleX(0.95) scaleY(1.05) rotate(90deg); }
+  30%  { transform: translateY(0) scaleX(1.1) scaleY(0.9) rotate(180deg); }
+  45%  { transform: translateY(-120px) scaleX(0.97) scaleY(1.03) rotate(225deg); }
+  60%  { transform: translateY(0) scaleX(1.08) scaleY(0.92) rotate(270deg); }
+  75%  { transform: translateY(-60px) scaleX(0.99) scaleY(1.01) rotate(315deg); }
+  90%  { transform: translateY(0) scaleX(1.05) scaleY(0.95) rotate(340deg); }
+  100% { transform: translateY(0) scaleX(1) scaleY(1) rotate(360deg); }
+}
 
-  .ball:before, .ball:after {
-    content:"";
-    position: absolute;
-    background-color: #333;
-    width:110px;
-    height:3px;
-    top:50px;
-    left:-5px;
-  }
+.ball:before,
+.ball:after {
+  content: "";
+  position: absolute;
+  background-color: #333;
+  width: 110px;
+  height: 3px;
+  top: 50px;
+  left: -8px;
+}
 
-  .ball:before {
-    transform: rotate(45deg);
-  }
+.ball:before {
+  transform: rotate(45deg);
+}
 
-  .ball:after {
-    transform: rotate(-45deg);
-  }
+.ball:after {
+  transform: rotate(-45deg);
+}
 
-  .lines {
-    position: absolute;
-    border-radius:50%;
-    border: 3px solid #333;
-    width:70px;
-    height:70px;
-    left:-20px;
-    top:-20px;
-  }
+.lines {
+  position: absolute;
+  border-radius: 50%;
+  border: 3px solid #333;
+  width: 70px;
+  height: 70px;
+  left: -20px;
+  top: -20px;
+}
 
-  .lines:before, .lines:after {
-    content:"";
-    position: absolute; 
-    border-radius:50%;
-    border: 3px solid #333;
-    width:70px;
-    height:70px;
-    top:65px;
-    left:60px;
-  }
+.lines:before,
+.lines:after {
+  content: "";
+  position: absolute;
+  border-radius: 50%;
+  border: 3px solid #333;
+  width: 70px;
+  height: 70px;
+  top: 65px;
+  left: 60px;
+}
 
