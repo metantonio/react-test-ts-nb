@@ -32,7 +32,7 @@ function createWindow() {
   win = new BrowserWindow({
      width: 1200,
     height: 1000,
-    icon: path.join(process.env.VITE_PUBLIC, 'electron-vite.svg'),
+    icon: path.join(process.env.APP_ROOT, 'vite.svg'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.mjs'),
       nodeIntegration: true,
