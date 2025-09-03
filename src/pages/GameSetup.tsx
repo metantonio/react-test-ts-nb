@@ -279,6 +279,7 @@ const GameSetup = () => {
   const [scoreBoard, setScoreBoard] = useState<ScoreBoard | null>(null);
   const [activeView, setActiveView] = useState('full-season');
   const [schedule, setSchedule] = useState('predict');
+  const [location, setLocation] = useState('both');
   const [playersTeam1, setPlayersTeam1] = useState<PlayerChar[]>([{
     name: "",
     position: "",
@@ -403,7 +404,7 @@ const GameSetup = () => {
     setError(null);
     setIsGameInitial(true);
     try {
-      const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', { body: { endpoint: "playsinglegame_initial.php", method: "POST", homeaway: "away", awayleague_name: selectedLeague?.league_name, homeleague_name: selectedLeague?.league_name, hometeam: selectedTeams2?.teams, awayteam: selectedTeams1?.teams } });
+      const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', { body: { endpoint: "playsinglegame_initial.php", method: "POST", homeaway: location, awayleague_name: selectedLeague?.league_name, homeleague_name: selectedLeague?.league_name, hometeam: selectedTeams2?.teams, awayteam: selectedTeams1?.teams } });
       if (!response.ok) {
         const err: Message = await response.json();
         setError(`error: ${err.message}`);
@@ -460,13 +461,14 @@ const GameSetup = () => {
     setError(null);
     try {
       const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', {body:{
-        endpoint: "play_predict.php", method: "POST",
+        endpoint: schedule=="predict"? "play_predict.php" : schedule=="8200" ? "play_82": "play_fsv", method: "POST",
         "league_name": selectedLeague?.league_name,
         "numgames": "normal",
-        "homeaway": "both",
-        "gamemode": "predict",
-        "keeppbp": "N",
-        "gamearray": [{ "predicthome": selectedTeams2?.teams, "predictaway": selectedTeams1?.teams, "predictgames": "20" }]
+        "homeaway": location,
+        "gamemode": schedule,
+        "keeppbp": schedule=="8200"? "Y" : "N",
+        "gamearray": [{ "predicthome": selectedTeams2?.teams, "predictaway": selectedTeams1?.teams, "predictgames": "20" }],
+        "hometeam": selectedTeams2?.teams
       }});
       if (!response.ok) {
         const err: Message = await response.json();
@@ -733,7 +735,12 @@ const GameSetup = () => {
   }, [selectedTeams2])
 
   useEffect(() => { console.log("82 games schedule") }, [teamsSchedule])
-  useEffect(() => { console.log("game mode: ", schedule) }, [schedule])
+  useEffect(() => { 
+    console.log("game mode: ", schedule) 
+    if (selectedTeams2 && selectedTeams1) {
+      handlePredictMode()
+    }
+  }, [schedule])
 
 
   return (
@@ -811,6 +818,8 @@ const GameSetup = () => {
             setGetAltsSelected={setGetAltsSelected}
             schedule={schedule}
             setSchedule={setSchedule}
+            location={location}
+            setLocation={setLocation}
           />
         }
         {activeView === 'single-game' &&

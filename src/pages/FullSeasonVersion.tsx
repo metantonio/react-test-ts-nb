@@ -136,6 +136,8 @@ interface FullSeasonVersionProps {
   setGetAltsSelected: React.Dispatch<React.SetStateAction<string>>;
   schedule: string | null;
   setSchedule: React.Dispatch<React.SetStateAction<string>>;
+  location: string | null;
+  setLocation: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
@@ -168,11 +170,13 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
     getAltsSelected,
     setGetAltsSelected,
     schedule,
-    setSchedule
+    setSchedule,
+    location,
+    setLocation
   }
 ) => {
   //const [schedule, setSchedule] = useState('predict');
-  const [location, setLocation] = useState('both');
+  //const [location, setLocation] = useState('both');
   const [savePbp, setSavePbp] = useState(false);
   const [saveBox, setSaveBox] = useState(true);
   const [isClear, setIsClear] = useState(false)
@@ -372,7 +376,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                   </DropdownMenu>
                 </div>
               </div> : <></>}
-              {selectedLeague && selectedTeams2 && schedule == "schedule" ? <>
+              {selectedLeague && selectedTeams2 && schedule == "8200" ? <>
               <label className="text-sm font-medium">Alts Subs (Home Team)</label>
               <div className="grid grid-cols-1 gap-2 mt-4">
                 
@@ -395,7 +399,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                 <div className="grid grid-cols-2 gap-2 mt-4">
                   <Sheet open={isSubPatternSheetOpen} onOpenChange={setIsSubPatternSheetOpen}>
                     <SheetTrigger asChild>
-                      <Button variant="outline" onClick={handleSubPatternClick} disabled={schedule !== "schedule" || isFetchingSubPattern}>Substitution Pattern</Button>
+                      <Button variant="outline" onClick={handleSubPatternClick} disabled={schedule !== "8200" || isFetchingSubPattern}>Substitution Pattern</Button>
                     </SheetTrigger>
                     <SheetContent className="max-w-none w-[100vw] overflow-y-auto">
                       <SheetHeader>
@@ -688,9 +692,9 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                 <div className="flex gap-4 mt-4">
                   <div className="border p-2 rounded-md bg-card text-card-foreground">
                     <div className="flex flex-col space-y-1">
-                      <CustomRadio name="schedule" value="schedule" checked={schedule === 'schedule'} onChange={setSchedule} label="82/820/8200 Game Schedule" id="r1" />
+                      <CustomRadio name="schedule" value="8200" checked={schedule === '8200'} onChange={setSchedule} label="82/820/8200 Game Schedule" id="r1" />
                       <CustomRadio name="schedule" value="predict" checked={schedule === 'predict'} onChange={setSchedule} label="Predict Games" id="r2" />
-                      <CustomRadio name="schedule" value="replay" checked={schedule === 'replay'} onChange={setSchedule} label="Replay Full League Season" id="r3" />
+                      <CustomRadio name="schedule" value="fullseason" checked={schedule === 'fullseason'} onChange={setSchedule} label="Replay Full League Season" id="r3" />
                     </div>
                   </div>
                   <div className="border p-2 rounded-md bg-card text-card-foreground">
@@ -710,7 +714,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                   if (schedule == "predict") {
                     handlePlayGames()
                   } else {
-                    alert("in development")
+                    handlePlayGames()
                   }
 
                 }}>
