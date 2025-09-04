@@ -460,16 +460,18 @@ const GameSetup = () => {
   const handlePredictMode = async () => {
     setError(null);
     try {
-      const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', {body:{
-        endpoint: schedule=="predict"? "play_predict.php" : schedule=="8200" ? "play_82": "play_fsv", method: "POST",
-        "league_name": selectedLeague?.league_name,
-        "numgames": "normal",
-        "homeaway": location,
-        "gamemode": schedule,
-        "keeppbp": schedule=="8200"? "Y" : "N",
-        "gamearray": [{ "predicthome": selectedTeams2?.teams, "predictaway": selectedTeams1?.teams, "predictgames": "20" }],
-        "hometeam": selectedTeams2?.teams
-      }});
+      const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', {
+        body: {
+          endpoint: schedule == "predict" ? "play_predict.php" : schedule == "8200" ? "play_82" : "play_fsv", method: "POST",
+          "league_name": selectedLeague?.league_name,
+          "numgames": "normal",
+          "homeaway": location,
+          "gamemode": schedule,
+          "keeppbp": schedule == "8200" ? "Y" : "N",
+          "gamearray": [{ "predicthome": selectedTeams2?.teams, "predictaway": selectedTeams1?.teams, "predictgames": "20" }],
+          "hometeam": selectedTeams2?.teams
+        }
+      });
       if (!response.ok) {
         const err: Message = await response.json();
         setError(`error: ${err.message}`);
@@ -484,10 +486,12 @@ const GameSetup = () => {
   const handlePredictPlay = async () => {
     setError(null);
     try {
-      const response = await fetchWithAuth(`${API_URL}/conversion.js`, 'POST', {body:{
-        endpoint: "playsinglegame_step.php", method: "POST",
-         options: "4" 
-        }});
+      const response = await fetchWithAuth(`${API_URL}/conversion.js`, 'POST', {
+        body: {
+          endpoint: "playsinglegame_step.php", method: "POST",
+          options: "4"
+        }
+      });
       if (!response.ok) {
         const err: Message = await response.json();
         setError(`error: ${err.message}`);
@@ -502,8 +506,9 @@ const GameSetup = () => {
   const handleFetchPlayersTeam1 = async () => { //this is for actual player stats, for editable stats is: http://api.bballsports.com/simulationAPI/get_players_chars.php
     setError(null);
     try {
-      const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', { 
-        body:{...selectedLeague, team_name: selectedTeams1?.teams, 
+      const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', {
+        body: {
+          ...selectedLeague, team_name: selectedTeams1?.teams,
           endpoint: "get_actual_player_stats.php", method: "POST"
         }
       });
@@ -525,10 +530,12 @@ const GameSetup = () => {
   const handleFetchPlayersTeam2 = async () => {//this is for actual player stats, for editable stats is: http://api.bballsports.com/simulationAPI/get_players_chars.php
     setError(null);
     try {
-      const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', { 
-        body:{...selectedLeague, 
-          endpoint: "get_actual_player_stats.php", method: "POST", 
-          team_name: selectedTeams2?.teams }
+      const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', {
+        body: {
+          ...selectedLeague,
+          endpoint: "get_actual_player_stats.php", method: "POST",
+          team_name: selectedTeams2?.teams
+        }
       });
       if (!response.ok) {
         const err: Message = await response.json();
@@ -548,9 +555,11 @@ const GameSetup = () => {
   const handleFetchPlayByPlay = async () => {
     setError(null);
     try {
-      const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', {body:{
+      const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', {
+        body: {
           endpoint: "get_singlegame_pbp.php", method: "POST"
-          }}
+        }
+      }
       );
       if (!response.ok) {
         const err: Message = await response.json();
@@ -570,20 +579,46 @@ const GameSetup = () => {
   const handleFetchBoxScore = async () => {
     setError(null);
     try {
-      const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', {body:{
-          endpoint: "get_singlegame_box.php", method: "POST"
-          }});
+      const response = await fetchWithAuth(`${API_URL}/conversionjs`, "POST", {
+        body: {
+          endpoint: "get_singlegame_box.php",
+          method: "POST",
+        },
+      });
+
       if (!response.ok) {
-        const err: Message = await response.json();
-        setError(`error: ${err.message}`);
-        throw new Error('Failed to fetch leagues.');
+        let errMsg = "Failed to fetch box score.";
+        try {
+          const err: Message = await response.json();
+          if (err?.message) errMsg = err.message;
+        } catch {
+          // si no se puede parsear el error, se deja el genérico
+        }
+        setError(`error: ${errMsg}`);
+        throw new Error(errMsg);
       }
+
       const data: BodyResponse = await response.json();
-      //const data: BoxScoreResponse = await response.json();
-      const body: { boxscore: BoxScore[] } = JSON.parse(data.body)
-      setBoxScore(body.boxscore);
+
+      let parsed: unknown;
+      try {
+        parsed = JSON.parse(data.body);
+      } catch {
+        throw new Error("Invalid JSON in response body.");
+      }
+
+      if (
+        typeof parsed === "object" &&
+        parsed !== null &&
+        "boxscore" in parsed
+      ) {
+        const body = parsed as { boxscore: BoxScore[] };
+        setBoxScore(body.boxscore);
+      } else {
+        throw new Error("Unexpected response format.");
+      }
     } catch (err: any) {
-      setError(`${err}`);
+      setError(err instanceof Error ? err.message : String(err));
     }
   };
 
@@ -591,11 +626,11 @@ const GameSetup = () => {
     setError(null);
     try {
       const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', {
-         body:{
+        body: {
           ...selectedLeague, team_name: selectedTeams2?.teams,
-          endpoint: "get_players_subs.php", method: "POST" 
+          endpoint: "get_players_subs.php", method: "POST"
         }
-        });
+      });
       if (!response.ok) {
         const err: Message = await response.json();
         setError(`error: ${err.message}`);
@@ -617,10 +652,10 @@ const GameSetup = () => {
   const handleFetchSetPlayerSubpattern = async () => {
     setError(null);
     try {
-      const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', { 
-        body:{
+      const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', {
+        body: {
           ...selectedLeague, team_name: selectedTeams2?.teams, data: playerSubPattern,
-          endpoint: "set_players_subs.php", method: "POST"  
+          endpoint: "set_players_subs.php", method: "POST"
         }
       });
       if (!response.ok) {
@@ -642,10 +677,12 @@ const GameSetup = () => {
   const handleFetchSetGetAlts = async () => {
     setError(null);
     try {
-      const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', { body:{
-        ...selectedLeague, team_name: selectedTeams2?.teams,
-        endpoint: "get_alts.php", method: "POST"  
-      }});
+      const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', {
+        body: {
+          ...selectedLeague, team_name: selectedTeams2?.teams,
+          endpoint: "get_alts.php", method: "POST"
+        }
+      });
       if (!response.ok) {
         const err: Message = await response.json();
         setError(`error: ${err.message}`);
@@ -735,8 +772,8 @@ const GameSetup = () => {
   }, [selectedTeams2])
 
   useEffect(() => { console.log("82 games schedule") }, [teamsSchedule])
-  useEffect(() => { 
-    console.log("game mode: ", schedule) 
+  useEffect(() => {
+    console.log("game mode: ", schedule)
     if (selectedTeams2 && selectedTeams1) {
       handlePredictMode()
     }
