@@ -261,7 +261,7 @@ const teamLogos: { [key: string]: string } = {
 
 const GameSetup = () => {
   //const { fetchWithAuth, isLoading } = useApi();
-  const { fetchWithAuth, isLoading } = useUser();
+  const { fetchWithAuth, isLoading, user } = useUser();
   const navigate = useNavigate();
   const [leagues, setLeagues] = useState<League[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -784,6 +784,7 @@ const GameSetup = () => {
     <div className="p-4 bg-background text-foreground">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-xl font-bold">NBA Game Simulation</h1>
+        <h2 className="text-xl font-bold">Welcome, {user?.name} {user?.family_name}</h2>
         <Sheet>
           <SheetTrigger asChild>
             <Button variant="outline" size="icon">
@@ -865,6 +866,7 @@ const GameSetup = () => {
         {activeView === 'instructions' &&
           <Instructions />
         }
+        {error && <p className="text-red-500 mt-4">{error}</p>}
       </div>
     </div>
   );

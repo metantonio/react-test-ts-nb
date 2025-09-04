@@ -312,7 +312,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
         <Button variant="outline" size="sm">Play by Play</Button>
       </div>
 
-      {error && <p className="text-red-500 mt-4">{error}</p>}
+      
 
       <div className="grid grid-cols-3 gap-4">
         <div className="col-span-2">
