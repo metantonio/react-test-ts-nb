@@ -277,7 +277,8 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
   const handlePlayGames = async () => {
     setIsSimulating(true);
     await handleFetchScoreBoard();
-    await handleFetchPlayByPlay();
+    await handleFetchPlayByPlay(); //check if this should comes here
+
     await handleFetchBoxScore();
     setIsSimulating(false);
   }
@@ -329,7 +330,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
 
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="outline" disabled={leagues?.length === 0} className={selectedLeague?"":'pulse-attention'}>
+                    <Button variant="outline" disabled={leagues?.length === 0} className={selectedLeague ? "" : 'pulse-attention'}>
                       {selectedLeague ? selectedLeague.league_name : "Choose League"}
                     </Button>
                   </DropdownMenuTrigger>
@@ -347,8 +348,8 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                 <div className="flex gap-2 mt-1">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      
-                      <Button variant="outline" className={`${selectedTeams1?"":"pulse-attention"}`} disabled={teams.length === 0}>
+
+                      <Button variant="outline" className={`${selectedTeams1 ? "" : "pulse-attention"}`} disabled={teams.length === 0}>
                         {selectedTeams1 ? selectedTeams1.teams : "Select Away Team"}
                       </Button>
                     </DropdownMenuTrigger>
@@ -362,7 +363,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                   </DropdownMenu>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="outline" className={`${selectedTeams2?"":"pulse-attention"}`} disabled={teams.length === 0}>
+                      <Button variant="outline" className={`${selectedTeams2 ? "" : "pulse-attention"}`} disabled={teams.length === 0}>
                         {selectedTeams2 ? selectedTeams2.teams : "Select Home Team"}
                       </Button>
                     </DropdownMenuTrigger>
@@ -377,10 +378,10 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                 </div>
               </div> : <></>}
               {selectedLeague && selectedTeams2 && schedule == "8200" ? <>
-              <label className="text-sm font-medium">Alts Subs (Home Team)</label>
-              <div className="grid grid-cols-1 gap-2 mt-4">
-                
-                <DropdownMenu>
+                <label className="text-sm font-medium">Alts Subs (Home Team)</label>
+                <div className="grid grid-cols-1 gap-2 mt-4">
+
+                  <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="outline" className="w-full" disabled={teams.length === 0}>
                         {getAltsSelected ? getAltsSelected : "Select Alts Sub"}
@@ -394,7 +395,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                       ))}
                     </DropdownMenuContent>
                   </DropdownMenu>
-              </div></>:<></>}
+                </div></> : <></>}
               {selectedLeague && (selectedTeams1 || selectedTeams2) ? <>
                 <div className="grid grid-cols-2 gap-2 mt-4">
                   <Sheet open={isSubPatternSheetOpen} onOpenChange={setIsSubPatternSheetOpen}>
@@ -417,7 +418,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                               <div className="flex items-center justify-between">
                                 <h2 className="text-xl font-bold mt-8 mb-4">{selectedTeams2?.teams}</h2>
                                 <Button variant="default" size="sm" onClick={() => exportToCSV(playerSubPattern || [], `${selectedTeams2?.teams}_4min_sub_pattern.csv`)}>Print</Button>
-                                <Button variant="default" size="sm" onClick={()=>{handleFetchSetPlayerSubpattern()}}>Set Pattern</Button>
+                                <Button variant="default" size="sm" onClick={() => { handleFetchSetPlayerSubpattern() }}>Set Pattern</Button>
                               </div>
                               <Table>
                                 <TableBody>
@@ -502,9 +503,9 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                               <TooltipProvider>
                                 <Tooltip>
                                   <TooltipTrigger asChild>
-                                    
-                                      <h3 className="font-bold mb-2 text-sm">Available Players <Info className="h-4 w-4 inline-block ml-1" /></h3>
-                                    
+
+                                    <h3 className="font-bold mb-2 text-sm">Available Players <Info className="h-4 w-4 inline-block ml-1" /></h3>
+
 
                                   </TooltipTrigger>
                                   <TooltipContent>
@@ -710,11 +711,11 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                   <CustomCheckbox id="save-pbp" checked={savePbp} onChange={setSavePbp} label="Save Play-by-Play (<=100 games)" />
                   <CustomCheckbox id="save-box" checked={saveBox} onChange={setSaveBox} label="Save Box Scores - no more than 15,000 games" />
                 </div>
-                <Button variant="outline" disabled={isLoading || isSimulating} className="mt-4" onClick={() => {
+                <Button variant="outline" disabled={isLoading || isSimulating} className="mt-4" onClick={async () => {
                   if (schedule == "predict") {
-                    handlePlayGames()
+                    await handlePlayGames()
                   } else {
-                    handlePlayGames()
+                    await handlePlayGames()
                   }
 
                 }}>
@@ -760,7 +761,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
 
           {teamsSchedule && teamsSchedule.length > 1 ?
             <div className="mt-2 border rounded-md max-h-96 overflow-y-auto bg-card text-card-foreground">
-              <div className="grid grid-cols-2 gap-3 mt-2 p-2 text-center">{selectedTeams2?.teams} Schedule<TeamLogo logo={teamLogos[selectedTeams2?.teams || '']} name={selectedTeams2?.teams || 'Home'}/> </div>
+              <div className="grid grid-cols-2 gap-3 mt-2 p-2 text-center">{selectedTeams2?.teams} Schedule<TeamLogo logo={teamLogos[selectedTeams2?.teams || '']} name={selectedTeams2?.teams || 'Home'} /> </div>
               <Table>
                 <TableHeader>
                   <TableHead>TEAM NAME</TableHead>
