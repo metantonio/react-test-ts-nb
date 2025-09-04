@@ -410,7 +410,7 @@ const GameSetup = () => {
         setError(`error: ${err.message}`);
         throw new Error('Failed to setup the initial game.');
       }
-      //await handleFetchScoreBoard();
+      await handleFetchScoreBoard();
     } catch (err: any) {
       setError(`${err}`);
     } finally {
@@ -477,7 +477,7 @@ const GameSetup = () => {
         setError(`error: ${err.message}`);
         throw new Error('Failed to predict play.');
       }
-      //await handleFetchScoreBoard();
+      await handleFetchScoreBoard();
     } catch (err: any) {
       setError(`${err}`);
     }

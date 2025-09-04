@@ -156,8 +156,8 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
     setBoxScore,
     playersTeam1,
     playersTeam2,
-    //handleFetchScoreBoard,
-    //handleFetchPlayByPlay,
+    handleFetchScoreBoard,
+    handleFetchPlayByPlay,
     handleFetchBoxScore,
     teamLogos,
     handleSchedule82,
@@ -276,8 +276,8 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
 
   const handlePlayGames = async () => {
     setIsSimulating(true);
-    //await handleFetchScoreBoard();
-    //await handleFetchPlayByPlay(); //check if this should comes here
+    await handleFetchScoreBoard();
+    await handleFetchPlayByPlay(); //check if this should comes here
 
     await handleFetchBoxScore();
 
