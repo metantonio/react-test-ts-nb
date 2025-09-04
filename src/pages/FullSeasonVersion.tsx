@@ -276,10 +276,14 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
 
   const handlePlayGames = async () => {
     setIsSimulating(true);
-    await handleFetchScoreBoard();
-    await handleFetchPlayByPlay(); //check if this should comes here
+    //await handleFetchScoreBoard();
+    //await handleFetchPlayByPlay(); //check if this should comes here
 
     await handleFetchBoxScore();
+
+    if(boxScore.length==0){
+      await handleFetchBoxScore();
+    }
     setIsSimulating(false);
   }
 
@@ -292,7 +296,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
         <Button variant="outline" size="sm">Raw Stats</Button>
         <Sheet>
           <SheetTrigger asChild>
-            <Button variant="outline" size="sm" disabled={isSimulating} className={`${boxScore.length === 0 ? "" : "pulse-attention"}`}>{boxScore.length === 0 ? "Show Box Score" : "Show Box Score (!)"}</Button>
+            <Button variant="outline" size="sm" disabled={isSimulating} className={`${boxScore.length <= 1 ? "" : "pulse-attention"}`}>{boxScore.length <= 1 ? "Show Box Score" : "Show Box Score (!)"}</Button>
           </SheetTrigger>
           <SheetContent className="overflow-y-auto">
             <SheetHeader>
@@ -759,7 +763,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
             </Table>
           </div>
 
-          {teamsSchedule && teamsSchedule.length > 1 ?
+          {teamsSchedule && teamsSchedule.length > 1 && selectedTeams2?.teams ?
             <div className="mt-2 border rounded-md max-h-96 overflow-y-auto bg-card text-card-foreground">
               <div className="grid grid-cols-2 gap-3 mt-2 p-2 text-center">{selectedTeams2?.teams} Schedule<TeamLogo logo={teamLogos[selectedTeams2?.teams || '']} name={selectedTeams2?.teams || 'Home'} /> </div>
               <Table>

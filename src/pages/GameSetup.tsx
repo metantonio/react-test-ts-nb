@@ -410,7 +410,7 @@ const GameSetup = () => {
         setError(`error: ${err.message}`);
         throw new Error('Failed to setup the initial game.');
       }
-      await handleFetchScoreBoard();
+      //await handleFetchScoreBoard();
     } catch (err: any) {
       setError(`${err}`);
     } finally {
@@ -784,44 +784,49 @@ const GameSetup = () => {
     <div className="p-4 bg-background text-foreground">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-xl font-bold">NBA Game Simulation</h1>
-        <h2 className="text-xl font-bold">Welcome, {user?.name} {user?.family_name}</h2>
-        <Sheet>
-          <SheetTrigger asChild>
-            <Button variant="outline" size="icon">
-              <Menu className="h-4 w-4" />
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="right" className="w-1/3">
-            <div className="flex flex-col h-full p-8">
-              <div className="flex-grow">
-                <Button
-                  variant={activeView === 'full-season' ? 'secondary' : 'ghost'}
-                  onClick={() => setActiveView('full-season')}
-                  className="justify-start mb-2 w-full"
-                >
-                  Full Season Version
-                </Button>
-                <Button
-                  variant={activeView === 'single-game' ? 'secondary' : 'ghost'}
-                  onClick={() => setActiveView('single-game')}
-                  className="justify-start mb-2 w-full"
-                >
-                  Single Game Version (hardcode data)
-                </Button>
-                <Button
-                  variant={activeView === 'instructions' ? 'secondary' : 'ghost'}
-                  onClick={() => setActiveView('instructions')}
-                  className="justify-start w-full"
-                >
-                  Instructions
+        <div className="flex items-center gap-4">
+          <div className="text-right">
+            <p className="text-base font-semibold">Welcome, {user?.name}</p>
+            <p className="text-xs text-muted-foreground">Ready to simulate?</p>
+          </div>
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="outline" size="icon">
+                <Menu className="h-4 w-4" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right" className="w-1/3">
+              <div className="flex flex-col h-full p-8">
+                <div className="flex-grow">
+                  <Button
+                    variant={activeView === 'full-season' ? 'secondary' : 'ghost'}
+                    onClick={() => setActiveView('full-season')}
+                    className="justify-start mb-2 w-full"
+                  >
+                    Full Season Version
+                  </Button>
+                  <Button
+                    variant={activeView === 'single-game' ? 'secondary' : 'ghost'}
+                    onClick={() => setActiveView('single-game')}
+                    className="justify-start mb-2 w-full"
+                  >
+                    Single Game Version (hardcode data)
+                  </Button>
+                  <Button
+                    variant={activeView === 'instructions' ? 'secondary' : 'ghost'}
+                    onClick={() => setActiveView('instructions')}
+                    className="justify-start w-full"
+                  >
+                    Instructions
+                  </Button>
+                </div>
+                <Button onClick={async () => { goLoginPage() }} disabled={isLoading} variant="outline" className="mt-auto">
+                  Sign Out
                 </Button>
               </div>
-              <Button onClick={async () => { goLoginPage() }} disabled={isLoading} variant="outline" className="mt-auto">
-                Sign Out
-              </Button>
-            </div>
-          </SheetContent>
-        </Sheet>
+            </SheetContent>
+          </Sheet>
+        </div>
       </div>
 
       <div className="mt-4">
