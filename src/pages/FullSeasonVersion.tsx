@@ -53,6 +53,12 @@ interface BoxScore {
   line_number: string;
 }
 
+interface BoxScoreFullSeason { //this is the boxScore of the full season game mode
+  text: string;
+  game_number: string;
+  line_number: string;
+}
+
 interface PlayerChar { //this scheme is shared with playerChar editable stats, so two values could refer to the same stat but it has different name depending if is editable or not
   name: string;
   position: string;
@@ -120,12 +126,15 @@ interface FullSeasonVersionProps {
   error: string | null;
   isLoading: boolean;
   boxScore: BoxScore[];
+  boxScoreFullSeason: BoxScoreFullSeason[];
   setBoxScore: React.Dispatch<React.SetStateAction<BoxScore[]>>;
+  setBoxScoreFullSeason: React.Dispatch<React.SetStateAction<BoxScoreFullSeason[]>>;
   playersTeam1: PlayerChar[];
   playersTeam2: PlayerChar[];
   handleFetchScoreBoard: () => Promise<void>;
   handleFetchPlayByPlay: () => Promise<void>;
   handleFetchBoxScore: () => Promise<void>;
+  handleFetchBoxScoreFullSeason: () => Promise<void>;
   handleSchedule82: () => Promise<void>;
   handleFetchPlayerSubpattern: () => Promise<PlayerSubPattern[] | null>;
   teamLogos: { [key: string]: string };
@@ -172,7 +181,10 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
     schedule,
     setSchedule,
     location,
-    setLocation
+    setLocation,
+    boxScoreFullSeason,
+    setBoxScoreFullSeason,
+    handleFetchBoxScoreFullSeason
   }
 ) => {
   //const [schedule, setSchedule] = useState('predict');
@@ -276,13 +288,15 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
 
   const handlePlayGames = async () => {
     setIsSimulating(true);
-    await handleFetchScoreBoard();
-    await handleFetchPlayByPlay(); //check if this should comes here
+    //await handleFetchScoreBoard(); //this is wrong in the full season mode
+    //await handleFetchPlayByPlay(); //check if this should comes here, is for single game mode
 
-    await handleFetchBoxScore();
+    //await handleFetchBoxScore();
+    await handleFetchBoxScoreFullSeason();
 
-    if(boxScore.length==0){
-      await handleFetchBoxScore();
+    if(boxScoreFullSeason.length==0){
+      //await handleFetchBoxScore();
+      await handleFetchBoxScoreFullSeason();
     }
     setIsSimulating(false);
   }
@@ -296,15 +310,15 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
         <Button variant="outline" size="sm">Raw Stats</Button>
         <Sheet>
           <SheetTrigger asChild>
-            <Button variant="outline" size="sm" disabled={isSimulating} className={`${boxScore.length <= 1 ? "" : "pulse-attention"}`}>{boxScore.length <= 1 ? "Show Box Score" : "Show Box Score (!)"}</Button>
+            <Button variant="outline" size="sm" disabled={isSimulating} className={`${boxScoreFullSeason.length <= 1 ? "" : "pulse-attention"}`}>{boxScoreFullSeason.length <= 1 ? "Show Box Score" : "Show Box Score (!)"}</Button>
           </SheetTrigger>
           <SheetContent className="overflow-y-auto">
             <SheetHeader>
               <SheetTitle>Box Score</SheetTitle>
             </SheetHeader>
             <div className="py-4" >
-              {boxScore.length > 0 ? (
-                <pre className="text-sm">{boxScore.map((item: any) => item.box_line).join('\n')}</pre>
+              {boxScoreFullSeason.length > 0 ? (
+                <pre className="text-sm">{boxScoreFullSeason.map((item: any) => item.text).join('\n')}</pre>
               ) : (
                 <p>No box score data available.</p>
               )}

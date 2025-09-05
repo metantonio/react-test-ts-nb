@@ -196,8 +196,14 @@ interface UpdatePlayByPlayResponse {
   playbyplay: PlayByPlay[];
 }
 
-interface BoxScore {
+interface BoxScore { //this is the boxScore of the single game mode, different from full season box score
   box_line: string;
+  game_number: string;
+  line_number: string;
+}
+
+interface BoxScoreFullSeason { //this is the boxScore of the full season game mode
+  text: string;
   game_number: string;
   line_number: string;
 }
@@ -273,6 +279,7 @@ const GameSetup = () => {
   const [isGameInitial, setIsGameInitial] = useState<boolean>(false);
   const [playByPlay, setPlayByPlay] = useState<PlayByPlay[]>([]);
   const [boxScore, setBoxScore] = useState<BoxScore[]>([]);
+  const [boxScoreFullSeason, setBoxScoreFullSeason] = useState<BoxScoreFullSeason[]>([]);
   const [playerSubPattern, setPlayerSubPattern] = useState<PlayerSubPattern[]>([]);
   const [getAlts, setGetAlts] = useState<GetAlts[]>([]);
   const [getAltsSelected, setGetAltsSelected] = useState("Default-")
@@ -400,7 +407,7 @@ const GameSetup = () => {
     }
   };
 
-  const handleSingleGameInitial = async () => {
+  const handleSingleGameInitial = async () => { //for single mode
     setError(null);
     setIsGameInitial(true);
     try {
@@ -457,7 +464,7 @@ const GameSetup = () => {
     }
   };
 
-  const handlePredictMode = async () => {
+  const handlePredictMode = async () => { //this is to use in the full season mode
     setError(null);
     try {
       const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', {
@@ -552,7 +559,7 @@ const GameSetup = () => {
     }
   };
 
-  const handleFetchPlayByPlay = async () => {
+  const handleFetchPlayByPlay = async () => { //this should be for the single game mode
     setError(null);
     try {
       const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', {
@@ -614,6 +621,52 @@ const GameSetup = () => {
       ) {
         const body = parsed as { boxscore: BoxScore[] };
         setBoxScore(body.boxscore);
+      } else {
+        throw new Error("Unexpected response format.");
+      }
+    } catch (err: any) {
+      setError(err instanceof Error ? err.message : String(err));
+    }
+  };
+
+  const handleFetchBoxScoreFullSeason = async () => {
+    setError(null);
+    try {
+      const response = await fetchWithAuth(`${API_URL}/conversionjs`, "POST", {
+        body: {
+          endpoint: "get_raw_box_scores.php",
+          method: "POST",
+        },
+      });
+
+      if (!response.ok) {
+        let errMsg = "Failed to fetch box score full season.";
+        try {
+          const err: Message = await response.json();
+          if (err?.message) errMsg = err.message;
+        } catch {
+          // si no se puede parsear el error, se deja el genérico
+        }
+        setError(`error: ${errMsg}`);
+        throw new Error(errMsg);
+      }
+
+      const data: BodyResponse = await response.json();
+
+      let parsed: unknown;
+      try {
+        parsed = JSON.parse(data.body);
+      } catch {
+        throw new Error("Invalid JSON in response body.");
+      }
+
+      if (
+        typeof parsed === "object" &&
+        parsed !== null &&
+        "data" in parsed
+      ) {
+        const body = parsed as { data: BoxScoreFullSeason[] };
+        setBoxScoreFullSeason(body.data);
       } else {
         throw new Error("Unexpected response format.");
       }
@@ -732,10 +785,10 @@ const GameSetup = () => {
       await handleSingleGameInitial();
     }
 
-    if (selectedTeams1 && selectedTeams2) {
+    if (selectedTeams1 && selectedTeams2 && activeView==="single-game") {
       loadGameInitial();
     }
-  }, [selectedTeams1, selectedTeams2]);
+  }, [selectedTeams1, selectedTeams2, activeView]);
 
   useEffect(() => {
     const loadPlayers = async () => {
@@ -745,7 +798,7 @@ const GameSetup = () => {
 
     if (selectedTeams1) {
       loadPlayers()
-      handlePredictPlay()
+      //handlePredictPlay()
     }
 
     if (selectedTeams2 && selectedTeams1) {
@@ -762,7 +815,7 @@ const GameSetup = () => {
 
     if (selectedTeams2) {
       loadPlayers()
-      handlePredictPlay()
+      //handlePredictPlay()
       handleFetchSetGetAlts()
     }
 
@@ -863,6 +916,9 @@ const GameSetup = () => {
             setSchedule={setSchedule}
             location={location}
             setLocation={setLocation}
+            handleFetchBoxScoreFullSeason={handleFetchBoxScoreFullSeason}
+            boxScoreFullSeason={boxScoreFullSeason}
+            setBoxScoreFullSeason={setBoxScoreFullSeason}
           />
         }
         {activeView === 'single-game' &&
