@@ -636,6 +636,7 @@ const GameSetup = () => {
         body: {
           endpoint: "get_raw_box_scores.php",
           method: "POST",
+          game_number: "ALL"
         },
       });
 
