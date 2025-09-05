@@ -484,7 +484,7 @@ const GameSetup = () => {
         setError(`error: ${err.message}`);
         throw new Error('Failed to predict play.');
       }
-      await handleFetchScoreBoard();
+      //await handleFetchScoreBoard(); //this is wrong in the full season mode
     } catch (err: any) {
       setError(`${err}`);
     }

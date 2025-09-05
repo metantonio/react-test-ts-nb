@@ -161,13 +161,13 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
     setSelectedTeams2,
     //error,
     isLoading,
-    boxScore,
-    setBoxScore,
+    //boxScore,
+    //setBoxScore,
     playersTeam1,
     playersTeam2,
-    handleFetchScoreBoard,
-    handleFetchPlayByPlay,
-    handleFetchBoxScore,
+    //handleFetchScoreBoard,
+    //handleFetchPlayByPlay,
+    //handleFetchBoxScore,
     teamLogos,
     handleSchedule82,
     teamsSchedule,
@@ -341,7 +341,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                   setSelectedLeague(null)
                   setSelectedTeams1(null)
                   setSelectedTeams2(null)
-                  setBoxScore([])
+                  setBoxScoreFullSeason([])
                   setTeamsSchedule([])
                   setIsClear(!isClear)
                 }}>Clear</Button>
