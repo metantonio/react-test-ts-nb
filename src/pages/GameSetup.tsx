@@ -446,7 +446,7 @@ const GameSetup = () => {
     }
   };
 
-  const handleFetchScoreBoard = async () => {
+  const handleFetchScoreBoard = async () => { //this is to use in the single season mode
     setError(null);
     try {
       const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', { body: { endpoint: "get_singlegame_stats.php", method: "POST" } });
@@ -485,6 +485,9 @@ const GameSetup = () => {
         throw new Error('Failed to predict play.');
       }
       //await handleFetchScoreBoard(); //this is wrong in the full season mode
+      if(schedule=="predict"){
+        await handleFetchBoxScoreFullSeason();
+      }
     } catch (err: any) {
       setError(`${err}`);
     }
@@ -921,9 +924,10 @@ const GameSetup = () => {
             setSchedule={setSchedule}
             location={location}
             setLocation={setLocation}
-            handleFetchBoxScoreFullSeason={handleFetchBoxScoreFullSeason}
+            //handleFetchBoxScoreFullSeason={handleFetchBoxScoreFullSeason}
             boxScoreFullSeason={boxScoreFullSeason}
             setBoxScoreFullSeason={setBoxScoreFullSeason}
+            handlePredictMode={handlePredictMode}
           />
         }
         {activeView === 'single-game' &&

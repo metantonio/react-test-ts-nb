@@ -134,7 +134,7 @@ interface FullSeasonVersionProps {
   handleFetchScoreBoard: () => Promise<void>;
   handleFetchPlayByPlay: () => Promise<void>;
   handleFetchBoxScore: () => Promise<void>;
-  handleFetchBoxScoreFullSeason: () => Promise<void>;
+  //handleFetchBoxScoreFullSeason: () => Promise<void>;
   handleSchedule82: () => Promise<void>;
   handleFetchPlayerSubpattern: () => Promise<PlayerSubPattern[] | null>;
   teamLogos: { [key: string]: string };
@@ -147,6 +147,7 @@ interface FullSeasonVersionProps {
   setSchedule: React.Dispatch<React.SetStateAction<string>>;
   location: string | null;
   setLocation: React.Dispatch<React.SetStateAction<string>>;
+  handlePredictMode: () => Promise<void | null>;
 }
 
 const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
@@ -184,7 +185,8 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
     setLocation,
     boxScoreFullSeason,
     setBoxScoreFullSeason,
-    handleFetchBoxScoreFullSeason
+    //handleFetchBoxScoreFullSeason,
+    handlePredictMode
   }
 ) => {
   //const [schedule, setSchedule] = useState('predict');
@@ -288,16 +290,17 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
 
   const handlePlayGames = async () => {
     setIsSimulating(true);
+    await handlePredictMode();
     //await handleFetchScoreBoard(); //this is wrong in the full season mode
     //await handleFetchPlayByPlay(); //check if this should comes here, is for single game mode
 
     //await handleFetchBoxScore();
-    await handleFetchBoxScoreFullSeason();
+    //await handleFetchBoxScoreFullSeason();
 
-    if(boxScoreFullSeason.length==0){
+    /* if(boxScoreFullSeason.length==0){
       //await handleFetchBoxScore();
       await handleFetchBoxScoreFullSeason();
-    }
+    } */
     setIsSimulating(false);
   }
 
