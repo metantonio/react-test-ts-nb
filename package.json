@@ -16,7 +16,8 @@
     "build": "tsc && vite build && electron-builder",
     "buildweb": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "wiki": "deepwiki-export --output-base-dir ./docs/test \"https://deepwiki.com/metantonio/react-test-ts-nb\" --keep-html"
   },
   "dependencies": {
     "@aws-amplify/auth": "^6.14.0",
