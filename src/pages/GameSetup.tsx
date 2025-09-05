@@ -788,8 +788,12 @@ const GameSetup = () => {
 
     if (selectedTeams1 && selectedTeams2 && activeView==="single-game") {
       loadGameInitial();
+    }else if(selectedTeams1 && selectedTeams2 && activeView==="full-season"){
+      if(schedule=="predict"){
+        handlePredictMode()
+      }
     }
-  }, [selectedTeams1, selectedTeams2, activeView]);
+  }, [activeView]);
 
   useEffect(() => {
     const loadPlayers = async () => {
