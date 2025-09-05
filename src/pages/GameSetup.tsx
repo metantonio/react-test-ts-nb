@@ -793,7 +793,8 @@ const GameSetup = () => {
       loadGameInitial();
     }else if(selectedTeams1 && selectedTeams2 && activeView==="full-season"){
       if(schedule=="predict"){
-        handlePredictMode()
+        //handlePredictMode()
+        console.log("a")
       }
     }
   }, [activeView]);
@@ -809,9 +810,9 @@ const GameSetup = () => {
       //handlePredictPlay()
     }
 
-    if (selectedTeams2 && selectedTeams1) {
+    /* if (selectedTeams2 && selectedTeams1) {
       handlePredictMode()
-    }
+    } */
 
   }, [selectedTeams1])
 
@@ -827,18 +828,18 @@ const GameSetup = () => {
       handleFetchSetGetAlts()
     }
 
-    if (selectedTeams2 && selectedTeams1) {
+    /* if (selectedTeams2 && selectedTeams1) {
       handlePredictMode()
-    }
+    } */
   }, [selectedTeams2])
 
   useEffect(() => { console.log("82 games schedule") }, [teamsSchedule])
-  useEffect(() => {
+  /* useEffect(() => {
     console.log("game mode: ", schedule)
     if (selectedTeams2 && selectedTeams1) {
       handlePredictMode()
     }
-  }, [schedule])
+  }, [schedule]) */
 
 
   return (
