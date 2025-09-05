@@ -6,7 +6,7 @@ import os
 import argparse
 
 BASE_URL = "https://deepwiki.com/"
-DEFAULT_OUT_DIR = "out"
+DEFAULT_OUT_DIR = "docs"
 
 
 def fetch_from_deepwiki(url, selector):
