@@ -482,7 +482,7 @@ const GameSetup = () => {
       if (!response.ok) {
         const err: Message = await response.json();
         setError(`error: ${err.message}`);
-        throw new Error('Failed to predict play.');
+        throw new Error(`${err.message}`);
       }
       //await handleFetchScoreBoard(); //this is wrong in the full season mode
       if(schedule=="predict"){
