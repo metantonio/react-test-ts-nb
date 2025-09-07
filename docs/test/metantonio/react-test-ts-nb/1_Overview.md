@@ -5,13 +5,13 @@
 
 The following files were used as context for generating this wiki page:
 
-- [package.json](package.json)
-- [src/components/ui/table.tsx](src/components/ui/table.tsx)
-- [src/layout.tsx](src/layout.tsx)
-- [src/lib/utils.ts](src/lib/utils.ts)
-- [src/pages/FullSeasonVersion.tsx](src/pages/FullSeasonVersion.tsx)
-- [src/pages/GameSetup.tsx](src/pages/GameSetup.tsx)
-- [src/player_subs_pattern.png](src/player_subs_pattern.png)
+- [package.json](/package.json)
+- [src/components/ui/table.tsx](/src/components/ui/table.tsx)
+- [src/layout.tsx](/src/layout.tsx)
+- [src/lib/utils.ts](/src/lib/utils.ts)
+- [src/pages/FullSeasonVersion.tsx](/src/pages/FullSeasonVersion.tsx)
+- [src/pages/GameSetup.tsx](/src/pages/GameSetup.tsx)
+- [src/player_subs_pattern.png](/src/player_subs_pattern.png)
 
 </details>
 
