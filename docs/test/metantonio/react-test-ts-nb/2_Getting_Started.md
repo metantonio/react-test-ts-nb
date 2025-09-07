@@ -5,13 +5,13 @@
 
 The following files were used as context for generating this wiki page:
 
-- [.env.example](.env.example)
-- [README.md](README.md)
-- [docs/2_Getting_Started.md](docs/2_Getting_Started.md)
-- [license.txt](license.txt)
-- [package.json](package.json)
-- [src/main.tsx](src/main.tsx)
-- [vite.config.ts](vite.config.ts)
+- [.env.example](/.env.example)
+- [README.md](/README.md)
+- [docs/2_Getting_Started.md](/docs/2_Getting_Started.md)
+- [license.txt](/license.txt)
+- [package.json](/package.json)
+- [src/main.tsx](/src/main.tsx)
+- [vite.config.ts](/vite.config.ts)
 
 </details>
 
@@ -19,7 +19,7 @@ The following files were used as context for generating this wiki page:
 
 This document provides installation, environment setup, and basic usage instructions for the NBA basketball simulation application. It covers setting up the development environment, configuring build targets, and running the application in both web browser and Electron desktop modes.
 
-For architectural details and design patterns, see [Architecture](#3). For information about the authentication system and AWS integration, see [Authentication System](#3.3). For details about the user interface components and game features, see [User Interface](#4).
+For architectural details and design patterns, see [Architecture](./3_Architecture.md). For information about the authentication system and AWS integration, see [Authentication System](./6_Authentication_System.md). For details about the user interface components and game features, see [User Interface](./8_User_Interface.md).
 
 ## Prerequisites
 
@@ -45,7 +45,7 @@ npm install
 
 The installation process downloads dependencies including React 18.3.1, TypeScript 5.8.3, Electron 30.0.1, and extensive UI component libraries from Radix UI and PrimeReact.
 
-**Sources:** [package.json:1-174]()
+**Sources:** [package.json:1-174](/package.json)
 
 ## Environment Configuration
 
@@ -85,7 +85,7 @@ graph TD
     BROWSER_BUILD --> REACT_APP
 ```
 
-**Sources:** [vite.config.ts:8-11](), [.env.example:1]()
+**Sources:** [vite.config.ts:8-11](/vite.config.ts), [.env.example:1](/.env.example)
 
 ## Development Workflows
 
@@ -137,7 +137,7 @@ graph TD
     end
 ```
 
-**Sources:** [src/main.tsx:8-19](), [package.json:14-15]()
+**Sources:** [src/main.tsx:8-19](/src/main.tsx), [package.json:14-15](/package.json)
 
 ## Build Commands
 
@@ -190,7 +190,7 @@ graph TD
     ELECTRON_BUILDER --> FILES
 ```
 
-**Sources:** [package.json:16-17](), [package.json:159-173]()
+**Sources:** [package.json:16-17](/package.json), [package.json:159-173](/package.json)
 
 ## Development Tools
 
@@ -214,7 +214,7 @@ npm run preview
 
 This serves the built application from the `dist/` directory using Vite's preview server.
 
-**Sources:** [package.json:18-19]()
+**Sources:** [package.json:18-19](/package.json)
 
 ## Project Structure
 
@@ -231,7 +231,7 @@ After installation and initial builds, the project contains these key directorie
 
 The build system generates different output directories based on the target platform, with `dist/` containing web assets and `dist-electron/` containing Electron-specific compiled code.
 
-**Sources:** [vite.config.ts:17-25]()
+**Sources:** [vite.config.ts:17-25](/vite.config.ts)
 
 ## Next Steps
 
@@ -244,4 +244,4 @@ After completing installation and setup:
 
 The application requires valid API credentials for the external basketball simulation service to access game data and run simulations. For information about state management and context providers, see [State Management](#3.2).
 
-**Sources:** [.env.example:2-5]()
+**Sources:** [.env.example:2-5](/.env.example)
