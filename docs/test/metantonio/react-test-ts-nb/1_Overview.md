@@ -23,7 +23,7 @@ This document provides a comprehensive overview of the NBA Basketball Simulation
 
 The application is designed with dual deployment capabilities, supporting both web browser deployment via Vite and desktop application deployment via Electron. This overview covers the core architecture, component relationships, and system integrations that enable the basketball simulation functionality.
 
-For detailed information about specific subsystems, see [Getting Started](#2) for setup instructions, [Architecture](#3) for technical details, [User Interface](#4) for component documentation, and [Game Features](#5) for simulation mechanics.
+For detailed information about specific subsystems, see [Getting Started](./2_Getting_Started.md) for setup instructions, [Architecture](./3_Architecture.md) for technical details, [User Interface](./8_User_Interface.md) for component documentation, and [Game Features](./14_Game_Features.md) for simulation mechanics.
 
 ## Application Architecture
 
@@ -90,7 +90,7 @@ graph TB
 
 **Application Entry and Provider Hierarchy**
 
-Sources: [/src/layout.tsx:87-103](/src/layout.tsx:87-103), [/src/main.tsx](/src/main.tsx)
+Sources: [/src/layout.tsx:87-103](/src/layout.tsx), [/src/main.tsx](/src/main.tsx)
 
 ### Component Relationships
 
@@ -154,7 +154,7 @@ graph TB
 
 **Core Component Architecture and Data Flow**
 
-Sources: [/src/pages/GameSetup.tsx:268-947](), [/src/pages/FullSeasonVersion.tsx:153-191]()
+Sources: [/src/pages/GameSetup.tsx:268-947](/src/pages/GameSetup.tsx), [/src/pages/FullSeasonVersion.tsx:153-191](/src/pages/FullSeasonVersion.tsx)
 
 ## Key Components
 
@@ -171,7 +171,7 @@ Key state management includes:
 - `scoreBoard`: Live game scoreboard data
 - `boxScore` and `boxScoreFullSeason`: Game statistics and results
 
-Sources: [/src/pages/GameSetup.tsx:268-279](), [/src/pages/GameSetup.tsx:287-367]()
+Sources: [/src/pages/GameSetup.tsx:268-279](/src/pages/GameSetup.tsx), [/src/pages/GameSetup.tsx:287-367](/src/pages/GameSetup.tsx)
 
 ### Simulation Components
 
@@ -185,7 +185,7 @@ The application includes two specialized simulation components:
 
 **SingleGameVersion**: Handles individual game simulations with real-time scoreboard updates and play-by-play tracking.
 
-Sources: [/src/pages/FullSeasonVersion.tsx:153-191](), [/src/pages/GameSetup.tsx:4-5]()
+Sources: [/src/pages/FullSeasonVersion.tsx:153-191](/src/pages/FullSeasonVersion.tsx), [/src/pages/GameSetup.tsx:4-5](/src/pages/GameSetup.tsx)
 
 ## Build System and Deployment
 
@@ -243,7 +243,7 @@ graph TB
 
 The application uses environment variable `VITE_APP_TARGET` to determine build configuration, enabling single-codebase deployment to both web browsers and Electron desktop applications.
 
-Sources: [/package.json:13-20](), [/package.json:158-173]()
+Sources: [/package.json:13-20](/package.json), [/package.json:158-173](/package.json)
 
 ## External Integrations
 
@@ -293,7 +293,7 @@ graph TB
 
 **AWS Cognito Integration Architecture**
 
-Sources: [/src/layout.tsx:27-49](), [/src/layout.tsx:73-77]()
+Sources: [/src/layout.tsx:27-49](/src/layout.tsx), [/src/layout.tsx:73-77](/src/layout.tsx)
 
 ### Basketball API Integration
 
@@ -310,7 +310,7 @@ Key API interactions include:
 - `handlePredictMode()`: Execute season simulations
 - `handleSingleGameInitial()`: Initialize single game simulations
 
-Sources: [/src/pages/GameSetup.tsx:371-447](), [/src/pages/GameSetup.tsx:467-494]()
+Sources: [/src/pages/GameSetup.tsx:371-447](/src/pages/GameSetup.tsx), [/src/pages/GameSetup.tsx:467-494](/src/pages/GameSetup.tsx)
 
 ## Technology Stack
 
@@ -328,4 +328,4 @@ The application leverages a comprehensive technology stack:
 | **Build Tools** | Vite 5.1.6, TypeScript compiler |
 | **Development** | ESLint, Electron DevTools |
 
-Sources: [/package.json:22-79](), [/package.json:114-156]()
+Sources: [/package.json:22-79](/package.json), [/package.json:114-156](/package.json)
