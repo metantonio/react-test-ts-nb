@@ -90,7 +90,7 @@ graph TB
 
 **Application Entry and Provider Hierarchy**
 
-Sources: [/src/layout.tsx:87-103](), [/src/main.tsx]()
+Sources: [/src/layout.tsx:87-103](/src/layout.tsx:87-103), [/src/main.tsx](/src/main.tsx)
 
 ### Component Relationships
 
