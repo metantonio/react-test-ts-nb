@@ -90,7 +90,7 @@ graph TB
 
 **Application Entry and Provider Hierarchy**
 
-Sources: [src/layout.tsx:87-103](), [src/main.tsx]()
+Sources: [/src/layout.tsx:87-103](), [/src/main.tsx]()
 
 ### Component Relationships
 
@@ -154,7 +154,7 @@ graph TB
 
 **Core Component Architecture and Data Flow**
 
-Sources: [src/pages/GameSetup.tsx:268-947](), [src/pages/FullSeasonVersion.tsx:153-191]()
+Sources: [/src/pages/GameSetup.tsx:268-947](), [/src/pages/FullSeasonVersion.tsx:153-191]()
 
 ## Key Components
 
@@ -171,7 +171,7 @@ Key state management includes:
 - `scoreBoard`: Live game scoreboard data
 - `boxScore` and `boxScoreFullSeason`: Game statistics and results
 
-Sources: [src/pages/GameSetup.tsx:268-279](), [src/pages/GameSetup.tsx:287-367]()
+Sources: [/src/pages/GameSetup.tsx:268-279](), [/src/pages/GameSetup.tsx:287-367]()
 
 ### Simulation Components
 
@@ -185,7 +185,7 @@ The application includes two specialized simulation components:
 
 **SingleGameVersion**: Handles individual game simulations with real-time scoreboard updates and play-by-play tracking.
 
-Sources: [src/pages/FullSeasonVersion.tsx:153-191](), [src/pages/GameSetup.tsx:4-5]()
+Sources: [/src/pages/FullSeasonVersion.tsx:153-191](), [/src/pages/GameSetup.tsx:4-5]()
 
 ## Build System and Deployment
 
@@ -243,7 +243,7 @@ graph TB
 
 The application uses environment variable `VITE_APP_TARGET` to determine build configuration, enabling single-codebase deployment to both web browsers and Electron desktop applications.
 
-Sources: [package.json:13-20](), [package.json:158-173]()
+Sources: [/package.json:13-20](), [/package.json:158-173]()
 
 ## External Integrations
 
@@ -293,7 +293,7 @@ graph TB
 
 **AWS Cognito Integration Architecture**
 
-Sources: [src/layout.tsx:27-49](), [src/layout.tsx:73-77]()
+Sources: [/src/layout.tsx:27-49](), [/src/layout.tsx:73-77]()
 
 ### Basketball API Integration
 
@@ -310,7 +310,7 @@ Key API interactions include:
 - `handlePredictMode()`: Execute season simulations
 - `handleSingleGameInitial()`: Initialize single game simulations
 
-Sources: [src/pages/GameSetup.tsx:371-447](), [src/pages/GameSetup.tsx:467-494]()
+Sources: [/src/pages/GameSetup.tsx:371-447](), [/src/pages/GameSetup.tsx:467-494]()
 
 ## Technology Stack
 
@@ -328,4 +328,4 @@ The application leverages a comprehensive technology stack:
 | **Build Tools** | Vite 5.1.6, TypeScript compiler |
 | **Development** | ESLint, Electron DevTools |
 
-Sources: [package.json:22-79](), [package.json:114-156]()
+Sources: [/package.json:22-79](), [/package.json:114-156]()
