@@ -7,7 +7,7 @@ The following files were used as context for generating this wiki page:
 
 - [.env.example](/.env.example)
 - [README.md](/README.md)
-- [docs/2_Getting_Started.md](/docs/2_Getting_Started.md)
+- [docs/2_Getting_Started.md](./2_Getting_Started.md)
 - [license.txt](/license.txt)
 - [package.json](/package.json)
 - [src/main.tsx](/src/main.tsx)
