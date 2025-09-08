@@ -5,17 +5,17 @@
 
 The following files were used as context for generating this wiki page:
 
-- [src/components/AppSidebar.tsx](src/components/AppSidebar.tsx)
-- [src/components/PlayerStatsTable.tsx](src/components/PlayerStatsTable.tsx)
-- [src/components/ProfileDropdown.tsx](src/components/ProfileDropdown.tsx)
-- [src/components/ProtectedRoute.tsx](src/components/ProtectedRoute.tsx)
-- [src/components/RoleGuard.tsx](src/components/RoleGuard.tsx)
-- [src/components/Scoreboard.tsx](src/components/Scoreboard.tsx)
-- [src/components/searchbox.tsx](src/components/searchbox.tsx)
-- [src/components/ui/CustomCheckbox.tsx](src/components/ui/CustomCheckbox.tsx)
-- [src/components/ui/calendar.tsx](src/components/ui/calendar.tsx)
-- [src/pages/auth/UpdatePassword.tsx](src/pages/auth/UpdatePassword.tsx)
-- [src/singlegame_image.png](src/singlegame_image.png)
+- [src/components/AppSidebar.tsx](/src/components/AppSidebar.tsx)
+- [src/components/PlayerStatsTable.tsx](/src/components/PlayerStatsTable.tsx)
+- [src/components/ProfileDropdown.tsx](/src/components/ProfileDropdown.tsx)
+- [src/components/ProtectedRoute.tsx](/src/components/ProtectedRoute.tsx)
+- [src/components/RoleGuard.tsx](/src/components/RoleGuard.tsx)
+- [src/components/Scoreboard.tsx](/src/components/Scoreboard.tsx)
+- [src/components/searchbox.tsx](/src/components/searchbox.tsx)
+- [src/components/ui/CustomCheckbox.tsx](/src/components/ui/CustomCheckbox.tsx)
+- [src/components/ui/calendar.tsx](/src/components/ui/calendar.tsx)
+- [src/pages/auth/UpdatePassword.tsx](/src/pages/auth/UpdatePassword.tsx)
+- [src/singlegame_image.png](/src/singlegame_image.png)
 
 </details>
 
@@ -23,7 +23,7 @@ The following files were used as context for generating this wiki page:
 
 This document covers the reusable UI components that form the foundation of the application's user interface. These components include data display tables, navigation elements, access control utilities, and custom form controls that are used throughout the application.
 
-For authentication-specific UI components, see [Authentication UI](#4.5). For game-specific interfaces, see [Game Setup Interface](#4.2) and [Game Simulation Interfaces](#4.3).
+For authentication-specific UI components, see [Authentication UI](./13_Authentication_UI.md). For game-specific interfaces, see [Game Setup Interface](./10_Game_Setup_Interface.md) and [Game Simulation Interfaces](./11_Game_Simulation_Interfaces.md).
 
 ## Component Architecture Overview
 
@@ -67,7 +67,7 @@ graph TB
     Calendar --> ReactDayPicker["react-day-picker"]
 ```
 
-Sources: [src/components/PlayerStatsTable.tsx:1-56](), [src/components/Scoreboard.tsx:1-101](), [src/components/AppSidebar.tsx:1-116](), [src/components/ProfileDropdown.tsx:1-120](), [src/components/RoleGuard.tsx:1-21](), [src/components/ProtectedRoute.tsx:1-22]()
+Sources: [src/components/PlayerStatsTable.tsx:1-56](/src/components/PlayerStatsTable.tsx), [src/components/Scoreboard.tsx:1-101](/src/components/Scoreboard.tsx), [src/components/AppSidebar.tsx:1-116](/src/components/AppSidebar.tsx), [src/components/ProfileDropdown.tsx:1-120](/src/components/ProfileDropdown.tsx), [src/components/RoleGuard.tsx:1-21](/src/components/RoleGuard.tsx), [src/components/ProtectedRoute.tsx:1-22](/src/components/ProtectedRoute.tsx)
 
 ## Data Display Components
 
@@ -97,7 +97,7 @@ interface PlayerStatsTableProps {
 }
 ```
 
-The component utilizes the shadcn/ui `Table` components for consistent styling and implements a `250px` fixed height container with overflow scrolling [src/components/PlayerStatsTable.tsx:28-29]().
+The component utilizes the shadcn/ui `Table` components for consistent styling and implements a `250px` fixed height container with overflow scrolling [src/components/PlayerStatsTable.tsx:28-29](/src/components/PlayerStatsTable.tsx).
 
 ### Scoreboard Component
 
@@ -126,9 +126,9 @@ interface ScoreBoard {
 }
 ```
 
-The component implements a `TeamLogo` subcomponent that handles both image URLs and text fallbacks [src/components/Scoreboard.tsx:47-49]().
+The component implements a `TeamLogo` subcomponent that handles both image URLs and text fallbacks [src/components/Scoreboard.tsx:47-49](/src/components/Scoreboard.tsx).
 
-Sources: [src/components/PlayerStatsTable.tsx:11-22](), [src/components/Scoreboard.tsx:3-22]()
+Sources: [src/components/PlayerStatsTable.tsx:11-22](/src/components/PlayerStatsTable.tsx), [src/components/Scoreboard.tsx:3-22](/src/components/Scoreboard.tsx)
 
 ## Navigation Components
 
@@ -171,7 +171,7 @@ graph LR
 - Company branding with logo
 - Toggle controls with chevron icons
 
-The sidebar uses a `menuItems` array with permission-based filtering [src/components/AppSidebar.tsx:27-33]() and implements a hidden state controlled by the `hide` boolean [src/components/AppSidebar.tsx:39]().
+The sidebar uses a `menuItems` array with permission-based filtering [src/components/AppSidebar.tsx:27-33](/src/components/AppSidebar.tsx) and implements a hidden state controlled by the `hide` boolean [src/components/AppSidebar.tsx:39](/src/components/AppSidebar.tsx).
 
 ### ProfileDropdown Component
 
@@ -184,9 +184,9 @@ The `ProfileDropdown` provides user account management with role switching capab
 - Password reset navigation
 - Logout functionality
 
-The component implements role-specific badge colors using the `getRoleBadgeColor` function [src/components/ProfileDropdown.tsx:35-42]() and handles demo role switching [src/components/ProfileDropdown.tsx:23-33]().
+The component implements role-specific badge colors using the `getRoleBadgeColor` function [src/components/ProfileDropdown.tsx:35-42](/src/components/ProfileDropdown.tsx) and handles demo role switching [src/components/ProfileDropdown.tsx:23-33](/src/components/ProfileDropdown.tsx).
 
-Sources: [src/components/AppSidebar.tsx:35-116](), [src/components/ProfileDropdown.tsx:17-120]()
+Sources: [src/components/AppSidebar.tsx:35-116](/src/components/AppSidebar.tsx), [src/components/ProfileDropdown.tsx:17-120](/src/components/ProfileDropdown.tsx)
 
 ## Access Control Components
 
@@ -220,7 +220,7 @@ interface RoleGuardProps {
 }
 ```
 
-The component performs permission checking using `hasPermission(permission)` from the UserContext [src/components/RoleGuard.tsx:14]().
+The component performs permission checking using `hasPermission(permission)` from the UserContext [src/components/RoleGuard.tsx:14](/src/components/RoleGuard.tsx).
 
 ### ProtectedRoute Component
 
@@ -232,9 +232,9 @@ The `ProtectedRoute` component provides route-level access control with automati
 - Token validation
 - Configurable redirect destination
 
-The component uses React Router's `Navigate` component for redirection when access is denied [src/components/ProtectedRoute.tsx:16]().
+The component uses React Router's `Navigate` component for redirection when access is denied [src/components/ProtectedRoute.tsx:16](/src/components/ProtectedRoute.tsx).
 
-Sources: [src/components/RoleGuard.tsx:5-21](), [src/components/ProtectedRoute.tsx:6-22]()
+Sources: [src/components/RoleGuard.tsx:5-21](), [src/components/ProtectedRoute.tsx:6-22](/src/components/ProtectedRoute.tsx)
 
 ## Form and Input Components
 
@@ -258,7 +258,7 @@ interface CustomCheckboxProps {
 }
 ```
 
-The component implements a custom visual design by hiding the native input [src/components/ui/CustomCheckbox.tsx:18]() and using a styled div with conditional SVG rendering [src/components/ui/CustomCheckbox.tsx:21-23]().
+The component implements a custom visual design by hiding the native input [src/components/ui/CustomCheckbox.tsx:18](/src/components/ui/CustomCheckbox.tsx) and using a styled div with conditional SVG rendering [src/components/ui/CustomCheckbox.tsx:21-23](/src/components/ui/CustomCheckbox.tsx).
 
 ### SearchBar Component
 
@@ -286,7 +286,7 @@ type FilterTag = {
 }
 ```
 
-The component manages filter options dynamically [src/components/searchbox.tsx:34-41]() and implements semicolon-triggered filter creation [src/components/searchbox.tsx:83-98]().
+The component manages filter options dynamically [src/components/searchbox.tsx:34-41](/src/components/searchbox.tsx) and implements semicolon-triggered filter creation [src/components/searchbox.tsx:83-98](/src/components/searchbox.tsx).
 
 ### Calendar Component
 
@@ -298,9 +298,9 @@ The `Calendar` component is a wrapper around the `react-day-picker` library with
 - Icon components for navigation arrows
 - Comprehensive day state styling
 
-The component extends `DayPicker` props [src/components/ui/calendar.tsx:8]() and implements custom class mappings for consistent styling [src/components/ui/calendar.tsx:20-53]().
+The component extends `DayPicker` props [src/components/ui/calendar.tsx:8](/src/components/ui/calendar.tsx) and implements custom class mappings for consistent styling [src/components/ui/calendar.tsx:20-53](/src/components/ui/calendar.tsx).
 
-Sources: [src/components/ui/CustomCheckbox.tsx:3-30](), [src/components/searchbox.tsx:22-218](), [src/components/ui/calendar.tsx:10-64]()
+Sources: [src/components/ui/CustomCheckbox.tsx:3-30](/src/components/ui/CustomCheckbox.tsx), [src/components/searchbox.tsx:22-218](/src/components/searchbox.tsx), [src/components/ui/calendar.tsx:10-64](/src/components/ui/calendar.tsx)
 
 ## Component Usage Patterns
 
@@ -332,4 +332,4 @@ Components use various state management approaches:
 - **URL State**: React Router integration for navigation state
 - **Controlled Components**: Props-based state management for form inputs
 
-Sources: [src/components/AppSidebar.tsx:24-38](), [src/components/ProfileDropdown.tsx:13-18](), [src/components/RoleGuard.tsx:12-14](), [src/components/ProtectedRoute.tsx:12-15]()
+Sources: [src/components/AppSidebar.tsx:24-38](/src/components/AppSidebar.tsx), [src/components/ProfileDropdown.tsx:13-18](/src/components/ProfileDropdown.tsx), [src/components/RoleGuard.tsx:12-14](/src/components/RoleGuard.tsx), [src/components/ProtectedRoute.tsx:12-15](/src/components/ProtectedRoute.tsx)
