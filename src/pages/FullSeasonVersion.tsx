@@ -190,7 +190,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
     setBoxScoreFullSeason,
     //handleFetchBoxScoreFullSeason,
     handlePredictMode,
-    scheduleMultiplier,
+    //scheduleMultiplier,
     setScheduleMultiplier
   }
 ) => {
