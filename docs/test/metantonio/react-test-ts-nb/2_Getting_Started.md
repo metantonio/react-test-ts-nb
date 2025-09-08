@@ -239,9 +239,9 @@ After completing installation and setup:
 
 1. Start development using `npm run web` for browser testing or `npm run dev` for desktop development
 2. Configure API credentials in the `.env` file for basketball simulation services  
-3. Review authentication setup documentation in [Authentication System](#3.3)
-4. Explore the primary game interface documentation in [Game Setup Interface](#4.2)
+3. Review authentication setup documentation in [Authentication System](./6_Authentication_System.md)
+4. Explore the primary game interface documentation in [Game Setup Interface](./10_Game_Setup_Interface.md)
 
-The application requires valid API credentials for the external basketball simulation service to access game data and run simulations. For information about state management and context providers, see [State Management](#3.2).
+The application requires valid API credentials for the external basketball simulation service to access game data and run simulations. For information about state management and context providers, see [State Management](./5_State_Management.md).
 
 **Sources:** [.env.example:2-5](/.env.example)

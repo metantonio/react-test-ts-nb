@@ -5,17 +5,17 @@
 
 The following files were used as context for generating this wiki page:
 
-- [.env.example](.env.example)
-- [src/components/MainLayout.tsx](src/components/MainLayout.tsx)
-- [src/layout.tsx](src/layout.tsx)
-- [src/main.tsx](src/main.tsx)
-- [vite.config.ts](vite.config.ts)
+- [.env.example](/.env.example)
+- [src/components/MainLayout.tsx](/src/components/MainLayout.tsx)
+- [src/layout.tsx](/src/layout.tsx)
+- [src/main.tsx](/src/main.tsx)
+- [vite.config.ts](/vite.config.ts)
 
 </details>
 
 
 
-This document covers the foundational architecture of the NBA simulation application, including entry points, provider stack configuration, routing system, and layout components. For information about state management patterns within these components, see [State Management](#3.2). For details about the authentication flows that integrate with this structure, see [Authentication System](#3.3).
+This document covers the foundational architecture of the NBA simulation application, including entry points, provider stack configuration, routing system, and layout components. For information about state management patterns within these components, see [State Management](./5_State_Management.md). For details about the authentication flows that integrate with this structure, see [Authentication System](./6_Authentication_System.md).
 
 ## Entry Points and Application Initialization
 
@@ -55,7 +55,7 @@ graph TD
     M --> N["Component Rendering"]
 ```
 
-Sources: [src/main.tsx:8-12](), [src/layout.tsx:87-103]()
+Sources: [src/main.tsx:8-12](/src/main.tsx), [src/layout.tsx:87-103](/src/layout.tsx)
 
 ## Provider Stack Architecture
 
@@ -98,7 +98,7 @@ graph TB
     end
 ```
 
-Sources: [src/layout.tsx:87-103]()
+Sources: [src/layout.tsx:87-103](/src/layout.tsx)
 
 ## Routing System
 
@@ -150,7 +150,7 @@ graph TD
     K --> P["LoginCognito"]
 ```
 
-Sources: [src/layout.tsx:51-85]()
+Sources: [src/layout.tsx:51-85](/src/layout.tsx)
 
 ## Layout Components
 
@@ -187,7 +187,7 @@ graph TB
     A --> G
 ```
 
-Sources: [src/components/MainLayout.tsx:6-18]()
+Sources: [src/components/MainLayout.tsx:6-18](/src/components/MainLayout.tsx)
 
 ### Layout Integration with Authentication
 
@@ -226,7 +226,7 @@ graph LR
     F --> H["AppLayout<br/>(web-only)"]
 ```
 
-Sources: [vite.config.ts:8-11](), [src/main.tsx:14-19]()
+Sources: [vite.config.ts:8-11](/vite.config.ts), [src/main.tsx:14-19](/src/main.tsx)
 
 ## Component Hierarchy Overview
 
@@ -267,4 +267,4 @@ graph TB
     end
 ```
 
-Sources: [src/main.tsx:8-12](), [src/layout.tsx:87-103](), [src/layout.tsx:51-85](), [src/components/MainLayout.tsx:6-18]()
+Sources: [src/main.tsx:8-12](/src/main.tsx), [src/layout.tsx:87-103](/src/layout.tsx), [src/layout.tsx:51-85](/src/layout.tsx), [src/components/MainLayout.tsx:6-18](/src/components/MainLayout.tsx)

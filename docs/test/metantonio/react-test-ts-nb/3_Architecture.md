@@ -5,12 +5,12 @@
 
 The following files were used as context for generating this wiki page:
 
-- [docs/1_Overview.md](docs/1_Overview.md)
-- [docs/3_Architecture.md](docs/3_Architecture.md)
-- [docs/4_Application_Structure.md](docs/4_Application_Structure.md)
-- [docs/5_State_Management.md](docs/5_State_Management.md)
-- [package.json](package.json)
-- [src/layout.tsx](src/layout.tsx)
+- [docs/1_Overview.md](./1_Overview.md)
+- [docs/3_Architecture.md](./3_Architecture.md)
+- [docs/4_Application_Structure.md](./4_Application_Structure.md)
+- [docs/5_State_Management.md](./5_State_Management.md)
+- [package.json](/package.json)
+- [src/layout.tsx](/src/layout.tsx)
 
 </details>
 
@@ -18,7 +18,7 @@ The following files were used as context for generating this wiki page:
 
 This document explains the core architectural patterns and design decisions of the NBA simulation application. It covers the React application structure, context-based state management system, conditional layout patterns, and dual-target build configuration that enables both web and desktop deployment from a single codebase.
 
-For specific implementation details about individual contexts, see [State Management](#3.2). For authentication flow specifics, see [Authentication System](#3.3). For build configuration details, see [Build System](#3.4).
+For specific implementation details about individual contexts, see [State Management](./5_State_Management.md). For authentication flow specifics, see [Authentication System](./6_Authentication_System.md). For build configuration details, see [Build System](./7_Build_System.md).
 
 ## System Architecture Overview
 
@@ -83,7 +83,7 @@ graph TB
     EnvTarget --> PackageJson
 ```
 
-Sources: [src/layout.tsx:87-103](), [src/main.tsx:8-12](), [vite.config.ts:8-11]()
+Sources: [src/layout.tsx:87-103](/src/layout.tsx), [src/main.tsx:8-12](/src/main.tsx), [vite.config.ts:8-11](/vite.config.ts)
 
 ### Provider Composition Architecture
 
@@ -118,7 +118,7 @@ graph LR
     CombinedContextType --> FullSeasonVersion
 ```
 
-Sources: [src/contexts/ApiContext.tsx:13-21](), [src/contexts/ApiContext.tsx:72-82]()
+Sources: [src/contexts/ApiContext.tsx:13-21](/src/contexts/ApiContext.tsx), [src/contexts/ApiContext.tsx:72-82](/src/contexts/ApiContext.tsx)
 
 ## Routing and Layout Selection System
 
@@ -165,7 +165,7 @@ graph TD
     CatchAll --> LoginAPI
 ```
 
-Sources: [src/layout.tsx:51-56](), [src/layout.tsx:68-82]()
+Sources: [src/layout.tsx:51-56](/src/layout.tsx), [src/layout.tsx:68-82](/src/layout.tsx)
 
 ## Context Aggregation Pattern
 
@@ -211,7 +211,7 @@ graph TB
     useApi --> Components
 ```
 
-Sources: [src/contexts/ApiContext.tsx:24-88](), [src/contexts/ApiContext.tsx:91-97]()
+Sources: [src/contexts/ApiContext.tsx:24-88](/src/contexts/ApiContext.tsx), [src/contexts/ApiContext.tsx:91-97](/src/contexts/ApiContext.tsx)
 
 ## Dual-Target Build Architecture
 
@@ -264,7 +264,7 @@ graph TD
     ElectronPlugin --> DevElectron
 ```
 
-Sources: [vite.config.ts:8-11](), [vite.config.ts:16-34](), [package.json:13-20]()
+Sources: [vite.config.ts:8-11](/vite.config.ts), [vite.config.ts:16-34](/vite.config.ts), [package.json:13-20](/package.json)
 
 ## Authentication System Integration
 
@@ -310,7 +310,7 @@ graph LR
     AmplifyConfig --> AWSCognito
 ```
 
-Sources: [src/layout.tsx:31-49](), [src/layout.tsx:73-77](), [src/contexts/ApiContext.tsx:45-70]()
+Sources: [src/layout.tsx:31-49](/src/layout.tsx), [src/layout.tsx:73-77](/src/layout.tsx), [src/contexts/ApiContext.tsx:45-70](/src/contexts/ApiContext)
 
 ## Application Initialization Sequence
 
@@ -340,4 +340,4 @@ sequenceDiagram
     Routes->>Routes: "Mount LoginAPI or GameSetup"
 ```
 
-Sources: [src/main.tsx:8-12](), [src/layout.tsx:87-103](), [src/layout.tsx:51-84]()
+Sources: [src/main.tsx:8-12](/src/main.tsx), [src/layout.tsx:87-103](/src/layout.tsx), [src/layout.tsx:51-84](/src/layout.tsx)
