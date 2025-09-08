@@ -148,6 +148,9 @@ interface FullSeasonVersionProps {
   location: string | null;
   setLocation: React.Dispatch<React.SetStateAction<string>>;
   handlePredictMode: () => Promise<void | null>;
+  scheduleMultiplier: number;
+  setScheduleMultiplier: React.Dispatch<React.SetStateAction<number>>;
+
 }
 
 const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
@@ -186,7 +189,9 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
     boxScoreFullSeason,
     setBoxScoreFullSeason,
     //handleFetchBoxScoreFullSeason,
-    handlePredictMode
+    handlePredictMode,
+    scheduleMultiplier,
+    setScheduleMultiplier
   }
 ) => {
   //const [schedule, setSchedule] = useState('predict');
@@ -720,11 +725,11 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                     </div>
                   </div>
                   <div className="border p-2 rounded-md bg-card text-card-foreground">
-                    <div className="flex flex-col space-y-1">
+                    <div className="flex flex-col space-y-1" aria-disabled={schedule==="fullseason"} >
                       <CustomRadio name="location" value="home" checked={location === 'home'} onChange={setLocation} label="Home" id="r4" />
-                      <CustomRadio name="location" value="away" checked={location === 'away'} onChange={setLocation} label="Away" id="r5" />
-                      <CustomRadio name="location" value="both" checked={location === 'both'} onChange={setLocation} label="Both" id="r6" />
-                      <CustomRadio name="location" value="neutral" checked={location === 'neutral'} onChange={setLocation} label="Neutral" id="r7" />
+                      <CustomRadio name="location" value="away" checked={location === 'away'} onChange={setLocation} label="Away" id="r5"/>
+                      <CustomRadio name="location" value="both" checked={location === 'both'} onChange={setLocation} label="Both" id="r6"/>
+                      <CustomRadio name="location" value="neutral" checked={location === 'neutral'} onChange={setLocation} label="Neutral" id="r7"/>
                     </div>
                   </div>
                 </div>
@@ -755,14 +760,17 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
             <Button variant="outline" onClick={() => {
               setMultiplier(100)
               handleSchedule82()
+              setScheduleMultiplier(82)
             }} disabled={selectedTeams2 == null}>82 Games</Button>
             <Button variant="outline" disabled={selectedTeams2 == null} onClick={() => {
               setMultiplier(10)
               handleSchedule82()
+              setScheduleMultiplier(820)
             }}>820 Games</Button>
             <Button variant="outline" disabled={selectedTeams2 == null} onClick={() => {
               setMultiplier(1)
               handleSchedule82()
+              setScheduleMultiplier(8200)
             }}>8200 Games</Button>
           </div>
           <div className="mt-2 border rounded-md max-h-96 overflow-y-auto bg-card text-card-foreground">

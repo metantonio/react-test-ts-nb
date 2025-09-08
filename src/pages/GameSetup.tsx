@@ -287,6 +287,7 @@ const GameSetup = () => {
   const [activeView, setActiveView] = useState('full-season');
   const [schedule, setSchedule] = useState('predict');
   const [location, setLocation] = useState('both');
+  const [scheduleMultiplier, setScheduleMultiplier] = useState(82);
   const [playersTeam1, setPlayersTeam1] = useState<PlayerChar[]>([{
     name: "",
     position: "",
@@ -469,7 +470,7 @@ const GameSetup = () => {
     try {
       const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', {
         body: {
-          endpoint: schedule == "predict" ? "play_predict.php" : schedule == "8200" ? "play_82" : "play_fsv", method: "POST",
+          endpoint: schedule == "predict" ? "play_predict.php" : schedule == "8200" ? "play_82.php" : "play_fsv.php", method: "POST",
           "league_name": selectedLeague?.league_name,
           "numgames": "normal",
           "homeaway": location,
@@ -929,6 +930,8 @@ const GameSetup = () => {
             boxScoreFullSeason={boxScoreFullSeason}
             setBoxScoreFullSeason={setBoxScoreFullSeason}
             handlePredictMode={handlePredictMode}
+            scheduleMultiplier={scheduleMultiplier}
+            setScheduleMultiplier={setScheduleMultiplier}
           />
         }
         {activeView === 'single-game' &&
