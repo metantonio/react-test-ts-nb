@@ -265,6 +265,9 @@ const teamLogos: { [key: string]: string } = {
   "Washington Wizards": "https://upload.wikimedia.org/wikipedia/en/0/02/Washington_Wizards_logo.svg",
 };
 
+const SIMULATION_URL = import.meta.env.VITE_APP_API_SIMULATION
+const API_KEY = import.meta.env.VITE_APP_API_KEY
+
 const GameSetup = () => {
   //const { fetchWithAuth, isLoading } = useApi();
   const { fetchWithAuth, isLoading, user } = useUser();
@@ -468,7 +471,8 @@ const GameSetup = () => {
   const handlePredictMode = async () => { //this is to use in the full season mode
     setError(null);
     try {
-      const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', {
+      //`${API_URL}/conversionjs to use apigateway, else use the api
+      const response = await fetchWithAuth(schedule == "predict"? `${API_URL}/conversionjs`: schedule == "fullseason"?`${SIMULATION_URL}/play_fsv.php`: `${SIMULATION_URL}/play_82.php`, 'POST', {
         body: {
           endpoint: schedule == "predict" ? "play_predict.php" : schedule == "8200" ? "play_82.php" : "play_fsv.php", method: "POST",
           "league_name": selectedLeague?.league_name,
@@ -477,8 +481,10 @@ const GameSetup = () => {
           "gamemode": schedule,
           "keeppbp": schedule == "8200" ? "Y" : "N",
           "gamearray": [{ "predicthome": selectedTeams2?.teams, "predictaway": selectedTeams1?.teams, "predictgames": "20" }],
-          "hometeam": selectedTeams2?.teams
-        }
+          "hometeam": selectedTeams2?.teams,
+          apikey: schedule == "predict" ? "" : API_KEY
+        },
+        apikey: schedule == "predict"? "" : API_KEY
       });
       if (!response.ok) {
         const err: Message = await response.json();
@@ -488,7 +494,10 @@ const GameSetup = () => {
       //await handleFetchScoreBoard(); //this is wrong in the full season mode
       if(schedule=="predict"){
         await handleFetchBoxScoreFullSeason();
+      }else{
+        await handleFetchBoxScoreFullSeason();
       }
+      //await handleFetchBoxScoreFullSeason();
     } catch (err: any) {
       setError(`${err}`);
     }

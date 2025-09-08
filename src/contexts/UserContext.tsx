@@ -234,7 +234,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
   
       const headers: Record<string, string> = {
         'Content-Type': 'application/json',
-        'Authorization': token || "",
+        'Authorization': nbaToken || "",
       };
 
       let tempBody = {...body}
