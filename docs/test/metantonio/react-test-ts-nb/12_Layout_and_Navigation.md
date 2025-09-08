@@ -5,12 +5,12 @@
 
 The following files were used as context for generating this wiki page:
 
-- [src/components/AppSidebar.tsx](src/components/AppSidebar.tsx)
-- [src/components/MainLayout.tsx](src/components/MainLayout.tsx)
-- [src/components/ProfileDropdown.tsx](src/components/ProfileDropdown.tsx)
-- [src/components/searchbox.tsx](src/components/searchbox.tsx)
-- [src/components/ui/calendar.tsx](src/components/ui/calendar.tsx)
-- [src/layout.tsx](src/layout.tsx)
+- [src/components/AppSidebar.tsx](/src/components/AppSidebar.tsx)
+- [src/components/MainLayout.tsx](/src/components/MainLayout.tsx)
+- [src/components/ProfileDropdown.tsx](/src/components/ProfileDropdown.tsx)
+- [src/components/searchbox.tsx](/src/components/searchbox.tsx)
+- [src/components/ui/calendar.tsx](/src/components/ui/calendar.tsx)
+- [src/layout.tsx](/src/layout.tsx)
 
 </details>
 
@@ -18,7 +18,7 @@ The following files were used as context for generating this wiki page:
 
 This document covers the NBA simulation application's layout system, routing architecture, and navigation components. The layout system provides a hierarchical provider structure with distinct layouts for authentication and game simulation interfaces.
 
-For information about the core UI components used within these layouts, see [Core Components](#4.1). For details about the game-specific interfaces that render within these layouts, see [Game Setup Interface](#4.2) and [Game Simulation Interfaces](#4.3).
+For information about the core UI components used within these layouts, see [Core Components](./9_Core_Components.md). For details about the game-specific interfaces that render within these layouts, see [Game Setup Interface](./10_Game_Setup_Interface.md) and [Game Simulation Interfaces](./11_Game_Simulation_Interfaces.md).
 
 ## Application Bootstrap Architecture
 
@@ -93,7 +93,7 @@ graph LR
     isAuthRoute --> RootPath
 ```
 
-Sources: [src/layout.tsx:44-62](), [src/layout.tsx:22-42]()
+Sources: [src/layout.tsx:44-62](/src/layout.tsx), [src/layout.tsx:22-42](/src/layout.tsx)
 
 ## Routing System
 
@@ -151,7 +151,7 @@ const isAuthRoute = location.pathname.startsWith("/login") || location.pathname 
 const Layout = isAuthRoute ? AuthLayout : DashboardLayout;
 ```
 
-Sources: [src/layout.tsx:22-42](), [src/layout.tsx:34-40]()
+Sources: [src/layout.tsx:22-42](/src/layout.tsx), [src/layout.tsx:34-40](/src/layout.tsx)
 
 ## Layout Components
 
@@ -198,7 +198,7 @@ The layout selection follows this pattern:
 | `pathname === "/"` | `AuthLayout` | Root authentication |
 | All other paths | `DashboardLayout` | Game simulation |
 
-Sources: [src/layout.tsx:16-18](), [src/layout.tsx:25-27]()
+Sources: [src/layout.tsx:16-18](/src/layout.tsx), [src/layout.tsx:25-27](/src/layout.tsx)
 
 ## Context Provider Hierarchy
 
@@ -268,7 +268,7 @@ The application includes dual notification systems:
 
 These provide toast notifications and sound notifications for user feedback.
 
-Sources: [src/layout.tsx:44-60](), [src/layout.tsx:6-9]()
+Sources: [src/layout.tsx:44-60](/src/layout.tsx), [src/layout.tsx:6-9](/src/layout.tsx)
 
 ## Navigation Integration
 
@@ -333,7 +333,7 @@ The route configuration implements implicit authentication guards:
 - **App Routes** (`/league`): Use `DashboardLayout`, render `GameSetup`
 - **Fallback**: All unknown routes redirect to authentication
 
-Sources: [src/layout.tsx:22-30](), [src/layout.tsx:34-40]()
+Sources: [src/layout.tsx:22-30](/src/layout.tsx), [src/layout.tsx:34-40](/src/layout.tsx)
 
 ## Navigation State Integration
 
@@ -368,4 +368,4 @@ graph TB
 
 The navigation system maintains active route highlighting through `location.pathname` comparison and provides seamless navigation through React Router integration.
 
-Sources: [src/components/AppSidebar.tsx:24-38](), [src/components/ProfileDropdown.tsx:13-19]()
+Sources: [src/components/AppSidebar.tsx:24-38](/src/components/AppSidebar.tsx), [src/components/ProfileDropdown.tsx:13-19](/src/components/ProfileDropdown.tsx)
