@@ -208,6 +208,16 @@ interface BoxScoreFullSeason { //this is the boxScore of the full season game mo
   line_number: string;
 }
 
+interface GameList { //this is the gameList of the full season game mode
+  game_number: string;
+  team_name1: string;
+  team_name2: string;
+  team1_homeaway: string;
+  team2_homeaway: string;
+  team_score1: string;
+  team_score2: string;
+}
+
 interface BoxScoreResponse {
   boxscore: BoxScore[];
 }
@@ -369,6 +379,7 @@ const GameSetup = () => {
     pctst: "",
     pctbs: ""
   }]);
+  const [gameList, setGameList] = useState<GameList[]>([])
 
   const API_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -495,7 +506,7 @@ const GameSetup = () => {
       if(schedule=="predict"){
         await handleFetchBoxScoreFullSeason();
       }else{
-        await handleFetchBoxScoreFullSeason();
+        await handleFetchGameListFullSeason();
       }
       //await handleFetchBoxScoreFullSeason();
     } catch (err: any) {
@@ -681,6 +692,53 @@ const GameSetup = () => {
       ) {
         const body = parsed as { data: BoxScoreFullSeason[] };
         setBoxScoreFullSeason(body.data);
+      } else {
+        throw new Error("Unexpected response format.");
+      }
+    } catch (err: any) {
+      setError(err instanceof Error ? err.message : String(err));
+    }
+  };
+
+  const handleFetchGameListFullSeason = async () => {
+    setError(null);
+    try {
+      const response = await fetchWithAuth(`${API_URL}/conversionjs`, "POST", {
+        body: {
+          endpoint: "get_played_game_list.php",
+          method: "POST",
+        },
+      });
+
+      if (!response.ok) {
+        let errMsg = "Failed to fetch box score full season.";
+        try {
+          const err: Message = await response.json();
+          if (err?.message) errMsg = err.message;
+        } catch {
+          // si no se puede parsear el error, se deja el genérico
+        }
+        setError(`error: ${errMsg}`);
+        throw new Error(errMsg);
+      }
+
+      const data: BodyResponse = await response.json();
+      console.log("gamelist1: ",data)
+      let parsed: unknown;
+      try {
+        parsed = JSON.parse(data.body);
+      } catch {
+        throw new Error("Invalid JSON in response body.");
+      }
+
+      if (
+        typeof parsed === "object" &&
+        parsed !== null &&
+        "data" in parsed
+      ) {
+        const body = parsed as { data: GameList[] };
+        console.log("gamelist2: ",body.data)
+        setGameList(body.data);
       } else {
         throw new Error("Unexpected response format.");
       }
