@@ -5,16 +5,16 @@
 
 The following files were used as context for generating this wiki page:
 
-- [docs/1_Overview.md](docs/1_Overview.md)
-- [docs/3_Architecture.md](docs/3_Architecture.md)
-- [docs/4_Application_Structure.md](docs/4_Application_Structure.md)
-- [docs/5_State_Management.md](docs/5_State_Management.md)
-- [src/LoginAPI.tsx](src/LoginAPI.tsx)
-- [src/contexts/ApiContext.tsx](src/contexts/ApiContext.tsx)
-- [src/contexts/AppStateContext.tsx](src/contexts/AppStateContext.tsx)
-- [src/contexts/NotificationContext.tsx](src/contexts/NotificationContext.tsx)
-- [src/contexts/UserContext.tsx](src/contexts/UserContext.tsx)
-- [src/hooks/useFetch.tsx](src/hooks/useFetch.tsx)
+- [docs/1_Overview.md](./1_Overview.md)
+- [docs/3_Architecture.md](./3_Architecture.md)
+- [docs/4_Application_Structure.md](./4_Application_Structure.md)
+- [docs/5_State_Management.md](./5_State_Management.md)
+- [src/LoginAPI.tsx](/src/LoginAPI.tsx)
+- [src/contexts/ApiContext.tsx](/src/contexts/ApiContext.tsx)
+- [src/contexts/AppStateContext.tsx](/src/contexts/AppStateContext.tsx)
+- [src/contexts/NotificationContext.tsx](/src/contexts/NotificationContext.tsx)
+- [src/contexts/UserContext.tsx](/src/contexts/UserContext.tsx)
+- [src/hooks/useFetch.tsx](/src/hooks/useFetch.tsx)
 
 </details>
 
@@ -24,7 +24,7 @@ The following files were used as context for generating this wiki page:
 
 This document covers the React Context-based state management system used throughout the NBA simulation application. The system implements a dual authentication architecture with context aggregation patterns that combine multiple specialized contexts into unified interfaces. This eliminates prop drilling while maintaining separation of concerns across user authentication, API authentication, application state, and notifications.
 
-For information about AWS Amplify authentication specifically, see [Authentication System](#3.3). For details about API integration patterns, see [API Integration](#6).
+For information about AWS Amplify authentication specifically, see [Authentication System](./6_Authentication_System.md). For details about API integration patterns, see [API Integration](./17_API_Integration.md).
 
 ## Dual Authentication Context Architecture
 
@@ -71,7 +71,7 @@ graph TD
     ApiProvider --> LoginAPI
 ```
 
-**Sources:** [src/contexts/UserContext.tsx:32-47](), [src/contexts/ApiContext.tsx:12-21](), [src/layout.tsx:44-60]()
+**Sources:** [src/contexts/UserContext.tsx:32-47](/src/contexts/UserContext.tsx), [src/contexts/ApiContext.tsx:12-21](/src/contexts/ApiContext.tsx), [src/layout.tsx:44-60](/src/layout.tsx)
 
 ### Authentication System Comparison
 
@@ -83,7 +83,7 @@ graph TD
 | **Primary Hook** | `useUser()` | `useApi()` |
 | **fetchWithAuth** | Dual token system | API credentials system |
 
-**Sources:** [src/contexts/UserContext.tsx:32-47](), [src/contexts/ApiContext.tsx:5-21]()
+**Sources:** [src/contexts/UserContext.tsx:32-47](/src/contexts/UserContext.tsx), [src/contexts/ApiContext.tsx:5-21](/src/contexts/ApiContext.tsx)
 
 ## UserContext - AWS Amplify Authentication System
 
@@ -124,7 +124,7 @@ graph TD
     UserObject --> AuthNBA
 ```
 
-**Sources:** [src/contexts/UserContext.tsx:17-30](), [src/contexts/UserContext.tsx:32-47]()
+**Sources:** [src/contexts/UserContext.tsx:17-30](/src/contexts/UserContext.tsx), [src/contexts/UserContext.tsx:32-47](/src/contexts/UserContext.tsx)
 
 ### Dual Token Authentication System
 
@@ -152,7 +152,7 @@ sequenceDiagram
     UC-->>Comp: "Response"
 ```
 
-**Sources:** [src/contexts/UserContext.tsx:84-109](), [src/contexts/UserContext.tsx:166-175](), [src/contexts/UserContext.tsx:230-257]()
+**Sources:** [src/contexts/UserContext.tsx:84-109](/src/contexts/UserContext.tsx), [src/contexts/UserContext.tsx:166-175](/src/contexts/UserContext.tsx), [src/contexts/UserContext.tsx:230-257](/src/contexts/UserContext.tsx)
 
 ### Role-Based Permission System
 
@@ -202,7 +202,7 @@ graph LR
     FetchWithAuthMethod --> CombinedInterface
 ```
 
-**Sources:** [src/contexts/ApiContext.tsx:12-21](), [src/contexts/ApiContext.tsx:30-32](), [src/contexts/ApiContext.tsx:81-91]()
+**Sources:** [src/contexts/ApiContext.tsx:12-21](/src/contexts/ApiContext.tsx), [src/contexts/ApiContext.tsx:30-32](/src/contexts/ApiContext.tsx), [src/contexts/ApiContext.tsx:81-91](/src/contexts/ApiContext.tsx)
 
 ### Basketball API Authentication Flow
 
@@ -226,7 +226,7 @@ sequenceDiagram
     API-->>Login: "Response"
 ```
 
-**Sources:** [src/contexts/ApiContext.tsx:34-39](), [src/contexts/ApiContext.tsx:53-78]()
+**Sources:** [src/contexts/ApiContext.tsx:34-39](/src/contexts/ApiContext.tsx), [src/contexts/ApiContext.tsx:53-78](/src/contexts/ApiContext.tsx)
 
 ## Individual Context Slice Implementations
 
@@ -253,7 +253,7 @@ graph LR
     AppActions --> UseMemo
 ```
 
-**Sources:** [src/contexts/AppStateContext.tsx:4-7](), [src/contexts/AppStateContext.tsx:18-21](), [src/contexts/AppStateContext.tsx:43-50]()
+**Sources:** [src/contexts/AppStateContext.tsx:4-7](src/contexts/AppStateContext.tsx), [src/contexts/AppStateContext.tsx:18-21](src/contexts/AppStateContext.tsx), [src/contexts/AppStateContext.tsx:43-50](src/contexts/AppStateContext.tsx)
 
 ### NotificationContext - Toast Notification Management
 
@@ -274,7 +274,7 @@ graph TD
     DismissAction --> FilterArray["setNotifications(current.filter(n => n.id !== id))"]
 ```
 
-**Sources:** [src/contexts/NotificationContext.tsx:4-8](), [src/contexts/NotificationContext.tsx:31-36](), [src/contexts/NotificationContext.tsx:38-41]()
+**Sources:** [src/contexts/NotificationContext.tsx:4-8](src/contexts/NotificationContext.tsx), [src/contexts/NotificationContext.tsx:31-36](src/contexts/NotificationContext.tsx), [src/contexts/NotificationContext.tsx:38-41](src/contexts/NotificationContext.tsx)
 
 ### UserContext Implementation Details
 
@@ -295,7 +295,7 @@ The `UserContext` integrates with AWS Amplify through the `AuthService` and impl
 | `fetchWithAuth` | Dual token HTTP requests | [src/contexts/UserContext.tsx:230-257]() |
 | `hasPermission` | Role-based access control | [src/contexts/UserContext.tsx:196-206]() |
 
-**Sources:** [src/contexts/UserContext.tsx:32-47](), [src/contexts/UserContext.tsx:124-163](), [src/contexts/UserContext.tsx:230-257]()
+**Sources:** [src/contexts/UserContext.tsx:32-47](src/contexts/UserContext.tsx), [src/contexts/UserContext.tsx:124-163](src/contexts/UserContext.tsx), [src/contexts/UserContext.tsx:230-257](src/contexts/UserContext.tsx)
 
 ## State Access Patterns
 
@@ -339,7 +339,7 @@ graph LR
     CombinedContextType --> ApiFetch
 ```
 
-**Sources:** [src/contexts/UserContext.tsx:291-297](), [src/contexts/ApiContext.tsx:100-106]()
+**Sources:** [src/contexts/UserContext.tsx:291-297](/src/contexts/UserContext.tsx), [src/contexts/ApiContext.tsx:100-106](/src/contexts/ApiContext.tsx)
 
 ### Context Provider Hierarchy in Application
 
@@ -347,14 +347,14 @@ The application establishes a specific provider nesting order in the layout syst
 
 | Layer | Provider | Purpose | File Reference |
 |-------|----------|---------|----------------|
-| 1 | `QueryClientProvider` | TanStack Query client | [src/layout.tsx:44]() |
-| 2 | `UserProvider` | AWS Amplify authentication | [src/layout.tsx:45]() |
-| 3 | `ApiProvider` | Basketball API + context aggregation | [src/layout.tsx:46]() |
-| 4 | `TooltipProvider` | UI tooltip system | [src/layout.tsx:47]() |
-| 5 | `HashRouter` | Client-side routing | [src/layout.tsx:50]() |
-| 6 | `SidebarProvider` | Sidebar state management | [src/layout.tsx:51]() |
+| 1 | `QueryClientProvider` | TanStack Query client | [src/layout.tsx:44](/src/layout.tsx) |
+| 2 | `UserProvider` | AWS Amplify authentication | [src/layout.tsx:45](/src/layout.tsx) |
+| 3 | `ApiProvider` | Basketball API + context aggregation | [src/layout.tsx:46](/src/layout.tsx) |
+| 4 | `TooltipProvider` | UI tooltip system | [src/layout.tsx:47](/src/layout.tsx) |
+| 5 | `HashRouter` | Client-side routing | [src/layout.tsx:50](/src/layout.tsx) |
+| 6 | `SidebarProvider` | Sidebar state management | [src/layout.tsx:51](/src/layout.tsx) |
 
-**Sources:** [src/layout.tsx:44-60]()
+**Sources:** [src/layout.tsx:44-60](/src/layout.tsx)
 
 ### Error Handling and Runtime Validation
 
@@ -375,7 +375,7 @@ graph TD
     ThrowError --> UseApiValidation
 ```
 
-**Sources:** [src/contexts/UserContext.tsx:293-296](), [src/contexts/ApiContext.tsx:102-105]()
+**Sources:** [src/contexts/UserContext.tsx:293-296](/src/contexts/UserContext.tsx), [src/contexts/ApiContext.tsx:102-105](/src/contexts/ApiContext.tsx)
 
 ## Performance Optimizations
 
@@ -383,8 +383,8 @@ graph TD
 
 Both `AppStateContext` and `NotificationContext` implement `useMemo` to stabilize context values:
 
-- `AppStateContext` memoizes the complete state object at [src/contexts/AppStateContext.tsx:43-50]()
-- `NotificationContext` memoizes the return value at [src/contexts/NotificationContext.tsx:45-49]()
+- `AppStateContext` memoizes the complete state object at [/src/contexts/AppStateContext.tsx:43-50]()
+- `NotificationContext` memoizes the return value at [/src/contexts/NotificationContext.tsx:45-49]()
 - Functions are wrapped in `useCallback` to prevent recreation on every render
 
 ### Context Composition Benefits
@@ -394,4 +394,4 @@ The aggregation pattern provides several performance advantages:
 - Memoized slice implementations prevent cascading updates
 - Centralized state access eliminates multiple context subscriptions per component
 
-**Sources:** [src/contexts/ApiContext.tsx:72-82](), [src/contexts/AppStateContext.tsx:43-50](), [src/contexts/NotificationContext.tsx:45-49]()
+**Sources:** [src/contexts/ApiContext.tsx:72-82](/src/contexts/ApiContext), [src/contexts/AppStateContext.tsx:43-50](/src/contexts/AppStateContext.tsx), [src/contexts/NotificationContext.tsx:45-49](/src/contexts/NotificationContext.tsx)
