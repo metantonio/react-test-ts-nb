@@ -5,14 +5,14 @@
 
 The following files were used as context for generating this wiki page:
 
-- [src/components/AppSidebar.tsx](src/components/AppSidebar.tsx)
-- [src/components/PlayerStatsTable.tsx](src/components/PlayerStatsTable.tsx)
-- [src/components/ProfileDropdown.tsx](src/components/ProfileDropdown.tsx)
-- [src/components/Scoreboard.tsx](src/components/Scoreboard.tsx)
-- [src/components/searchbox.tsx](src/components/searchbox.tsx)
-- [src/components/ui/calendar.tsx](src/components/ui/calendar.tsx)
-- [src/index.css](src/index.css)
-- [src/styles/index.css](src/styles/index.css)
+- [src/components/AppSidebar.tsx](/src/components/AppSidebar.tsx)
+- [src/components/PlayerStatsTable.tsx](/src/components/PlayerStatsTable.tsx)
+- [src/components/ProfileDropdown.tsx](/src/components/ProfileDropdown.tsx)
+- [src/components/Scoreboard.tsx](/src/components/Scoreboard.tsx)
+- [src/components/searchbox.tsx](/src/components/searchbox.tsx)
+- [src/components/ui/calendar.tsx](/src/components/ui/calendar.tsx)
+- [src/index.css](/src/index.css)
+- [src/styles/index.css](/src/styles/index.css)
 
 </details>
 
@@ -20,7 +20,7 @@ The following files were used as context for generating this wiki page:
 
 This document covers the user interface architecture, components, and styling systems of the NBA basketball simulation application. It includes the core UI component library, theming system, layout structures, and interactive game elements.
 
-For authentication-specific UI components, see [Authentication UI](#4.5). For game simulation interface details, see [Game Features](#5). For build system and styling configurations, see [Build System](#3.4) and [Styling and Theming](#7.1).
+For authentication-specific UI components, see [Authentication UI](./13_Authentication_UI.md). For game simulation interface details, see [Game Features](./14_Game_Features.md). For build system and styling configurations, see [Build System](./7_Build_System.md) and [Styling and Theming](./19_Styling_and_Theming.md).
 
 ## UI Architecture Overview
 
@@ -53,7 +53,7 @@ graph TB
     style H fill:#fff5ee,stroke:#333,stroke-width:2px
 ```
 
-**Sources:** [src/index.css:1-439](), [src/styles/index.css:1-203](), [src/components/ui/calendar.tsx:1-64]()
+**Sources:** [src/index.css:1-439](/src/index.css), [src/styles/index.css:1-203](/src/styles/index.css), [src/components/ui/calendar.tsx:1-64](/src/components/ui/calendar.tsx)
 
 ## Theme and Styling System
 
@@ -92,7 +92,7 @@ The theme system defines comprehensive color schemes in [src/index.css:6-83]() w
 | Sidebar | `--sidebar-background: 210 72% 22%` | `--sidebar-background: 240 5.9% 10%` | Navigation sidebar |
 | Destructive | `--destructive: 0 84.2% 60.2%` | `--destructive: 0 62.8% 30.6%` | Error states |
 
-**Sources:** [src/index.css:5-84](), [src/styles/index.css:8-11]()
+**Sources:** [src/index.css:5-84](/src/index.css), [src/styles/index.css:8-11](/src/styles/index.css)
 
 ### Custom Animation System
 
@@ -116,12 +116,12 @@ graph TB
     style D fill:#ffebee,stroke:#333,stroke-width:2px
 ```
 
-Key animation implementations in [src/index.css:367-439]():
+Key animation implementations in [src/index.css:367-439](/src/index.css):
 - Basketball bounce animation with physics-based scaling and rotation
 - Pulse attention animation for call-to-action buttons
 - Accessibility support with `prefers-reduced-motion` media query
 
-**Sources:** [src/index.css:367-439](), [src/index.css:216-282]()
+**Sources:** [src/index.css:367-439](/src/index.css), [src/index.css:216-282](/src/index.css)
 
 ## Core UI Components
 
@@ -151,13 +151,13 @@ graph TB
     style E fill:#fff5ee,stroke:#333,stroke-width:2px
 ```
 
-The `PlayerStatsTable` component in [src/components/PlayerStatsTable.tsx:24-56]() implements:
+The `PlayerStatsTable` component in [src/components/PlayerStatsTable.tsx:24-56](/src/components/PlayerStatsTable.tsx) implements:
 - Fixed-height scrollable container for large datasets
 - Responsive design with dark theme support
 - Structured data display for basketball statistics
 - TypeScript interfaces for type safety
 
-**Sources:** [src/components/PlayerStatsTable.tsx:1-57]()
+**Sources:** [src/components/PlayerStatsTable.tsx:1-57](/src/components/PlayerStatsTable.tsx)
 
 #### Scoreboard Component
 
@@ -181,13 +181,13 @@ graph TB
     style I fill:#fff5ee,stroke:#333,stroke-width:2px
 ```
 
-The `Scoreboard` component in [src/components/Scoreboard.tsx:24-99]() features:
+The `Scoreboard` component in [src/components/Scoreboard.tsx:24-99](/src/components/Scoreboard.tsx) features:
 - Real-time game state display with animated possession indicators
 - Conditional logo rendering with fallback team initials
 - Responsive layout with basketball-themed styling
 - Team offense/defense state visualization
 
-**Sources:** [src/components/Scoreboard.tsx:1-101]()
+**Sources:** [src/components/Scoreboard.tsx:1-101](/src/components/Scoreboard.tsx)
 
 ### Navigation Components
 
@@ -214,13 +214,13 @@ graph TB
     style F fill:#fff5ee,stroke:#333,stroke-width:2px
 ```
 
-The sidebar system in [src/components/AppSidebar.tsx:35-116]() implements:
+The sidebar system in [src/components/AppSidebar.tsx:35-116](/src/components/AppSidebar.tsx) implements:
 - Collapsible navigation with icon-only and expanded states
 - Role-based menu item visibility using `UserContext`
 - Responsive design with conditional content display
 - Integration with React Router for navigation state
 
-Navigation menu structure defined in [src/components/AppSidebar.tsx:27-33]():
+Navigation menu structure defined in [src/components/AppSidebar.tsx:27-33](/src/components/AppSidebar.tsx):
 
 | Menu Item | Route | Icon | Required Permission |
 |-----------|-------|------|-------------------|
@@ -230,7 +230,7 @@ Navigation menu structure defined in [src/components/AppSidebar.tsx:27-33]():
 | Analytics | `/adminpanel/analytics` | `BarChart3` | `view_all` |
 | Settings | `/adminpanel/settings` | `Settings` | `view_all` |
 
-**Sources:** [src/components/AppSidebar.tsx:1-117]()
+**Sources:** [src/components/AppSidebar.tsx:1-117](/src/components/AppSidebar.tsx)
 
 #### ProfileDropdown Component
 
@@ -255,13 +255,13 @@ graph TB
     style I fill:#fff5ee,stroke:#333,stroke-width:2px
 ```
 
-The profile dropdown in [src/components/ProfileDropdown.tsx:17-120]() provides:
+The profile dropdown in [src/components/ProfileDropdown.tsx:17-120](/src/components/ProfileDropdown.tsx) provides:
 - User role visualization with color-coded badges
 - Administrative role switching functionality
 - Account management actions (password reset, logout)
 - Integration with authentication context and routing
 
-Role badge color mapping in [src/components/ProfileDropdown.tsx:35-42]():
+Role badge color mapping in [src/components/ProfileDropdown.tsx:35-42](/src/components/ProfileDropdown.tsx):
 
 ```typescript
 getRoleBadgeColor = (role: UserRole) => {
@@ -271,7 +271,7 @@ getRoleBadgeColor = (role: UserRole) => {
 }
 ```
 
-**Sources:** [src/components/ProfileDropdown.tsx:1-121]()
+**Sources:** [src/components/ProfileDropdown.tsx:1-121](/src/components/ProfileDropdown.tsx)
 
 ## Advanced UI Components
 
@@ -304,13 +304,13 @@ graph TB
     style M fill:#fff5ee,stroke:#333,stroke-width:2px
 ```
 
-The advanced search component in [src/components/searchbox.tsx:27-218]() implements:
+The advanced search component in [src/components/searchbox.tsx:27-218](/src/components/searchbox.tsx) implements:
 - Dynamic filter tag system with semicolon-triggered creation
 - Real-time search with immediate parent callback updates
 - Available filter management to prevent duplicate filters
 - Comprehensive keyboard and mouse interaction handling
 
-Filter configuration in [src/components/searchbox.tsx:34-41]():
+Filter configuration in [src/components/searchbox.tsx:34-41](/src/components/searchbox.tsx):
 
 | Filter Type | Available Values | Source |
 |-------------|-----------------|--------|
@@ -319,7 +319,7 @@ Filter configuration in [src/components/searchbox.tsx:34-41]():
 | `category` | Unique categories | `data.map(item => item.category)` |
 | `status` | `['active', 'inactive']` | Static values |
 
-**Sources:** [src/components/searchbox.tsx:1-218]()
+**Sources:** [src/components/searchbox.tsx:1-218](/src/components/searchbox.tsx)
 
 ## Component Integration Patterns
 
@@ -360,7 +360,7 @@ The UI system demonstrates several key integration patterns:
 3. **Callback Communication**: Advanced components like `SearchBox` communicate state changes to parent components
 4. **Consistent Theming**: All components utilize the centralized CSS custom property system
 
-**Sources:** [src/components/AppSidebar.tsx:24-38](), [src/components/ProfileDropdown.tsx:13-19](), [src/components/searchbox.tsx:22-75]()
+**Sources:** [src/components/AppSidebar.tsx:24-38](/src/components/AppSidebar.tsx), [src/components/ProfileDropdown.tsx:13-19](/src/components/ProfileDropdown.tsx), [src/components/searchbox.tsx:22-75](/src/components/searchbox.tsx)
 
 ## Design System Conventions
 
@@ -404,11 +404,11 @@ The application employs a hybrid styling approach:
 3. **Component-Specific CSS**: Complex animations and specialized styling
 4. **Conditional Classes**: Dynamic styling based on state and props
 
-Example from [src/components/Scoreboard.tsx:52-97]():
+Example from [src/components/Scoreboard.tsx:52-97](/src/components/Scoreboard.tsx):
 ```typescript
 className={`w-4 h-4 rounded-full bg-red-500 transition-opacity duration-300 ${
   isHomeTeamOffense ? 'opacity-100 animate-pulse' : 'opacity-0'
 }`}
 ```
 
-**Sources:** [src/components/PlayerStatsTable.tsx:24-56](), [src/components/Scoreboard.tsx:24-99](), [src/components/AppSidebar.tsx:35-116](), [src/index.css:1-439]()
+**Sources:** [src/components/PlayerStatsTable.tsx:24-56](/src/components/PlayerStatsTable.tsx), [src/components/Scoreboard.tsx:24-99](/src/components/Scoreboard.tsx), [src/components/AppSidebar.tsx:35-116](/src/components/AppSidebar.tsx), [src/index.css:1-439](/src/index.css)
