@@ -5,14 +5,14 @@
 
 The following files were used as context for generating this wiki page:
 
-- [.env.example](.env.example)
-- [README.md](README.md)
-- [electron/main.ts](electron/main.ts)
-- [license.txt](license.txt)
-- [package-lock.json](package-lock.json)
-- [package.json](package.json)
-- [src/main.tsx](src/main.tsx)
-- [vite.config.ts](vite.config.ts)
+- [.env.example](/.env.example)
+- [README.md](/README.md)
+- [electron/main.ts](/electron/main.ts)
+- [license.txt](/license.txt)
+- [package-lock.json](/package-lock.json)
+- [package.json](/package.json)
+- [src/main.tsx](/src/main.tsx)
+- [vite.config.ts](/vite.config.ts)
 
 </details>
 
@@ -20,7 +20,7 @@ The following files were used as context for generating this wiki page:
 
 This document covers the Vite-based build system that enables dual-target deployment to both web browsers and Electron desktop applications from a single codebase. The build system uses environment variables and conditional configuration to support multiple development and production workflows.
 
-For information about the overall application architecture, see [Architecture](#3). For development workflows and setup instructions, see [Getting Started](#2).
+For information about the overall application architecture, see [Architecture](./3_Architecture.md). For development workflows and setup instructions, see [Getting Started](./2_Getting_Started.md).
 
 ## Overview
 
@@ -73,7 +73,7 @@ graph TB
     ELECTRON_BUILD --> RELEASE
 ```
 
-Sources: [package.json:13-21](), [vite.config.ts:8-37](), [README.md:38-86]()
+Sources: [package.json:13-21](/package.json), [vite.config.ts:8-37](/vite.config.ts), [README.md:38-86](/README.md)
 
 ## Build Configuration
 
@@ -112,7 +112,7 @@ graph TD
     ELECTRON_PLUGIN --> RENDERER_CONFIG
 ```
 
-Sources: [vite.config.ts:1-37]()
+Sources: [vite.config.ts:1-37](/vite.config.ts)
 
 The configuration file loads environment variables and conditionally includes the Electron plugin only when `VITE_APP_TARGET=electron`. The `isElectron` boolean controls plugin inclusion through array filtering.
 
@@ -127,7 +127,7 @@ The `package.json` defines four primary build scripts that handle different deve
 | `buildweb` | `tsc && vite build` | Web production build | `dist/` directory |
 | `build` | `tsc && vite build && electron-builder` | Electron production build | `dist-electron/` and `release/` |
 
-Sources: [package.json:13-21]()
+Sources: [package.json:13-21](/package.json)
 
 ### Build Script Flow
 
@@ -158,7 +158,7 @@ graph LR
     VITE_BUILD --> ELECTRON_BUILDER
 ```
 
-Sources: [package.json:13-21]()
+Sources: [package.json:13-21](/package.json)
 
 ## Development Workflow
 
@@ -176,7 +176,7 @@ The development workflow varies based on the target platform:
 - Requires `VITE_APP_TARGET=electron` environment variable
 - Supports main process and renderer process development
 
-Sources: [README.md:40-60](), [vite.config.ts:10-16]()
+Sources: [README.md:40-60](/README.md), [vite.config.ts:10-16](/vite.config.ts)
 
 ## Production Builds
 
@@ -216,7 +216,7 @@ sequenceDiagram
     BUILDER->>OUTPUTS: "dist-electron/ & release/"
 ```
 
-Sources: [package.json:16-17](), [README.md:62-86]()
+Sources: [package.json:16-17](/package.json), [README.md:62-86](/README.md)
 
 ## Output Artifacts
 
@@ -263,7 +263,7 @@ graph TD
     RELEASE_DIR --> EXECUTABLES
 ```
 
-Sources: [package.json:158](), [README.md:74-86]()
+Sources: [package.json:158](/package.json), [README.md:74-86](/README.md)
 
 ## Configuration Files
 
@@ -296,6 +296,6 @@ graph TD
     VITE_CONFIG -.-> IS_ELECTRON["isElectron conditional"]
 ```
 
-Sources: [vite.config.ts:9-10](), [package.json:158](), [electron/main.ts:1](), [.env.example:1]()
+Sources: [vite.config.ts:9-10](/vite.config.ts), [package.json:158](/package.json), [electron/main.ts:1](/electron/main.ts), [.env.example:1](/.env.example)
 
 The build system provides a flexible, environment-driven approach to supporting both web and desktop deployment targets through conditional configuration and unified tooling.
