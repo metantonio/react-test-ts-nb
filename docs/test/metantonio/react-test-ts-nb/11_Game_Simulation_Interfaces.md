@@ -5,15 +5,15 @@
 
 The following files were used as context for generating this wiki page:
 
-- [src/components/PlayerStatsTable.tsx](src/components/PlayerStatsTable.tsx)
-- [src/components/Scoreboard.tsx](src/components/Scoreboard.tsx)
-- [src/components/ui/table.tsx](src/components/ui/table.tsx)
-- [src/gamesetup_result_image.png](src/gamesetup_result_image.png)
-- [src/lib/utils.ts](src/lib/utils.ts)
-- [src/pages/FullSeasonVersion.tsx](src/pages/FullSeasonVersion.tsx)
-- [src/pages/Instructions.tsx](src/pages/Instructions.tsx)
-- [src/pages/SingleGameVersion.tsx](src/pages/SingleGameVersion.tsx)
-- [src/player_subs_pattern.png](src/player_subs_pattern.png)
+- [src/components/PlayerStatsTable.tsx](/src/components/PlayerStatsTable.tsx)
+- [src/components/Scoreboard.tsx](/src/components/Scoreboard.tsx)
+- [src/components/ui/table.tsx](/src/components/ui/table.tsx)
+- [src/gamesetup_result_image.png](/src/gamesetup_result_image.png)
+- [src/lib/utils.ts](/src/lib/utils.ts)
+- [src/pages/FullSeasonVersion.tsx](/src/pages/FullSeasonVersion.tsx)
+- [src/pages/Instructions.tsx](/src/pages/Instructions.tsx)
+- [src/pages/SingleGameVersion.tsx](/src/pages/SingleGameVersion.tsx)
+- [src/player_subs_pattern.png](/src/player_subs_pattern.png)
 
 </details>
 
@@ -21,7 +21,7 @@ The following files were used as context for generating this wiki page:
 
 This document covers the user interface components responsible for basketball game simulation, including both full season and single game simulation modes. These interfaces provide controls for configuring simulations, displaying real-time results, and managing complex basketball-specific features like player substitution patterns.
 
-For information about the underlying game simulation logic and mechanics, see [Basketball Simulation](#5.1). For the main orchestration interface that routes users to these simulation modes, see [Game Setup Interface](#4.2).
+For information about the underlying game simulation logic and mechanics, see [Basketball Simulation](./15_Basketball_Simulation.md). For the main orchestration interface that routes users to these simulation modes, see [Game Setup Interface](./10_Game_Setup_Interface.md).
 
 ## Full Season Simulation Interface
 
@@ -61,7 +61,7 @@ graph TB
     end
 ```
 
-Sources: [src/pages/FullSeasonVersion.tsx:1-1413]()
+Sources: [src/pages/FullSeasonVersion.tsx:1-1413](/src/pages/FullSeasonVersion.tsx)
 
 ### Key Interfaces and Data Structures
 
@@ -76,7 +76,7 @@ The full season interface relies on several TypeScript interfaces that define th
 | `PlayerSubPattern` | 4-minute substitution intervals | `pos1`, `pos2`, `pos3`, `pos4`, `pos5` |
 | `BoxScoreFullSeason` | Season game results | `text`, `game_number`, `line_number` |
 
-Sources: [src/pages/FullSeasonVersion.tsx:37-151]()
+Sources: [src/pages/FullSeasonVersion.tsx:37-151](/src/pages/FullSeasonVersion.tsx)
 
 ### Player Substitution Management
 
@@ -104,7 +104,7 @@ graph LR
 
 The system prevents duplicate player assignments within the same 4-minute interval and provides visual feedback through the `handleDrop` function.
 
-Sources: [src/pages/FullSeasonVersion.tsx:216-242](), [src/pages/FullSeasonVersion.tsx:245-279]()
+Sources: [src/pages/FullSeasonVersion.tsx:216-242](/src/pages/FullSeasonVersion.tsx), [src/pages/FullSeasonVersion.tsx:245-279](/src/pages/FullSeasonVersion.tsx)
 
 ### Sheet-Based Data Display
 
@@ -114,7 +114,7 @@ The interface uses sheet components to display various types of simulation data:
 - **Player Statistics Sheet**: Shows detailed player stats for both teams with CSV export functionality
 - **Substitution Pattern Sheet**: Full-screen drag-and-drop interface for managing player rotations
 
-Sources: [src/pages/FullSeasonVersion.tsx:314-333](), [src/pages/FullSeasonVersion.tsx:569-708]()
+Sources: [src/pages/FullSeasonVersion.tsx:314-333](/src/pages/FullSeasonVersion.tsx), [src/pages/FullSeasonVersion.tsx:569-708](/src/pages/FullSeasonVersion.tsx)
 
 ## Single Game Simulation Interface
 
@@ -147,7 +147,7 @@ graph TB
     end
 ```
 
-Sources: [src/pages/SingleGameVersion.tsx:46-56]()
+Sources: [src/pages/SingleGameVersion.tsx:46-56](/src/pages/SingleGameVersion.tsx)
 
 ### Real-time Game Display
 
@@ -160,7 +160,7 @@ The single game interface provides multiple synchronized views of the ongoing si
 | Play-by-Play Feed | Game commentary | `playByPlayData` |
 | Box Score Display | Detailed game statistics | `boxScoreData` |
 
-Sources: [src/pages/SingleGameVersion.tsx:14-44](), [src/pages/SingleGameVersion.tsx:125-175]()
+Sources: [src/pages/SingleGameVersion.tsx:14-44](/src/pages/SingleGameVersion.tsx), [src/pages/SingleGameVersion.tsx:125-175](/src/pages/SingleGameVersion.tsx)
 
 ## Supporting Components
 
@@ -196,7 +196,7 @@ graph LR
 
 The scoreboard uses conditional styling to indicate which team has possession and includes fallback team abbreviations when logos are unavailable.
 
-Sources: [src/components/Scoreboard.tsx:3-49](), [src/components/Scoreboard.tsx:52-98]()
+Sources: [src/components/Scoreboard.tsx:3-49](/src/components/Scoreboard.tsx), [src/components/Scoreboard.tsx:52-98](/src/components/Scoreboard.tsx)
 
 ### Player Statistics Table
 
@@ -224,7 +224,7 @@ graph TB
     end
 ```
 
-Sources: [src/components/PlayerStatsTable.tsx:11-54]()
+Sources: [src/components/PlayerStatsTable.tsx:11-54](/src/components/PlayerStatsTable.tsx)
 
 ## Data Flow and State Management
 
@@ -251,7 +251,7 @@ sequenceDiagram
     FSV-->>U: Display Results
 ```
 
-Sources: [src/pages/FullSeasonVersion.tsx:115-151](), [src/pages/FullSeasonVersion.tsx:291-305]()
+Sources: [src/pages/FullSeasonVersion.tsx:115-151](/src/pages/FullSeasonVersion.tsx), [src/pages/FullSeasonVersion.tsx:291-305](/src/pages/FullSeasonVersion.tsx)
 
 ### State Coordination
 
@@ -264,7 +264,7 @@ Both simulation interfaces manage complex state through props passed from the pa
 | UI Controls | `schedule`, `location`, `getAltsSelected` | `pauseOptions`, `displayOptions` |
 | Player Management | `playersTeam1/2`, `playerSubPattern` | Real-time player stats |
 
-Sources: [src/pages/FullSeasonVersion.tsx:115-151](), [src/pages/SingleGameVersion.tsx:46-56]()
+Sources: [src/pages/FullSeasonVersion.tsx:115-151](/src/pages/FullSeasonVersion.tsx), [src/pages/SingleGameVersion.tsx:46-56](/src/pages/SingleGameVersion.tsx)
 
 ## User Interaction Patterns
 
@@ -280,4 +280,4 @@ The interfaces implement several visual feedback mechanisms:
 - **Toast Notifications**: Error and success messages for user actions
 - **Drag Feedback**: Visual cues during player substitution management
 
-Sources: [src/pages/FullSeasonVersion.tsx:354-365](), [src/pages/FullSeasonVersion.tsx:227-232](), [src/lib/utils.ts:8-42]()
+Sources: [src/pages/FullSeasonVersion.tsx:354-365](/src/pages/FullSeasonVersion.tsx), [src/pages/FullSeasonVersion.tsx:227-232](/src/pages/FullSeasonVersion.tsx), [src/lib/utils.ts:8-42](/src/lib/utils.ts)
