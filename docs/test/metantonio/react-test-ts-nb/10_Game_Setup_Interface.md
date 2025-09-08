@@ -5,7 +5,7 @@
 
 The following files were used as context for generating this wiki page:
 
-- [src/pages/GameSetup.tsx](src/pages/GameSetup.tsx)
+- [src/pages/GameSetup.tsx](/src/pages/GameSetup.tsx)
 
 </details>
 
@@ -13,11 +13,11 @@ The following files were used as context for generating this wiki page:
 
 ## Purpose and Scope
 
-The `GameSetup` component serves as the central orchestration point for basketball game simulations in the NBA simulation application. Located at [src/pages/GameSetup.tsx](), this component manages league selection, team configuration, and game initialization through a comprehensive state management system that coordinates with external basketball simulation APIs.
+The `GameSetup` component serves as the central orchestration point for basketball game simulations in the NBA simulation application. Located at [src/pages/GameSetup.tsx](/src/pages/GameSetup.tsx), this component manages league selection, team configuration, and game initialization through a comprehensive state management system that coordinates with external basketball simulation APIs.
 
 The component implements a Sheet-based navigation interface supporting full season simulation, single game modes, and user instructions. It acts as the primary data orchestrator that bridges user selections with the underlying simulation engine through the `useUser` context system, providing authenticated API access and user state management.
 
-For simulation execution details, see [Basketball Simulation](#5.1). For authentication prerequisites, see [Authentication System](#3.3).
+For simulation execution details, see [Basketball Simulation](./15_Basketball_Simulation.md). For authentication prerequisites, see [Authentication System](./6_Authentication_System.md).
 
 ## Component Architecture Overview
 
@@ -72,7 +72,7 @@ graph TD
 - **Instructions**: User documentation and guidance
 - **Sheet Navigation**: Side panel menu for mode switching and user controls
 
-Sources: [src/pages/GameSetup.tsx:268-946](), [src/pages/GameSetup.tsx:854-890](), [src/pages/GameSetup.tsx:895-938]()
+Sources: [src/pages/GameSetup.tsx:268-946](/src/pages/GameSetup.tsx), [src/pages/GameSetup.tsx:854-890](/src/pages/GameSetup.tsx), [src/pages/GameSetup.tsx:895-938](/src/pages/GameSetup.tsx)
 
 ## Data Flow and State Management
 
@@ -130,7 +130,7 @@ graph TD
 **State Initialization Pattern:**
 Each state variable follows a defensive initialization pattern with default empty or null values to prevent runtime errors during the loading sequence. The component includes detailed default player objects with all required statistical fields.
 
-Sources: [src/pages/GameSetup.tsx:767-834](), [src/pages/GameSetup.tsx:272-367]()
+Sources: [src/pages/GameSetup.tsx:767-834](/src/pages/GameSetup.tsx), [src/pages/GameSetup.tsx:272-367](/src/pages/GameSetup.tsx)
 
 ## API Integration Points
 
@@ -194,7 +194,7 @@ graph LR
 | `handleSchedule82` | `get_82_game_schedule.php` | POST | League + team | `setTeamsSchedule` |
 | `handleFetchBoxScoreFullSeason` | `get_raw_box_scores.php` | POST | Game number filter | `setBoxScoreFullSeason` |
 
-Sources: [src/pages/GameSetup.tsx:369-760]()
+Sources: [src/pages/GameSetup.tsx:369-760](/src/pages/GameSetup.tsx)
 
 ## TypeScript Interface System
 
@@ -257,7 +257,7 @@ graph TD
 **API Response Pattern:**
 All API responses follow a consistent wrapper pattern where data arrays are contained within a `data` property, except `ScoreBoardResponse` which uses `scoreboard` and `UpdatePlayByPlayResponse` which uses `playbyplay`.
 
-Sources: [src/pages/GameSetup.tsx:13-233]()
+Sources: [src/pages/GameSetup.tsx:13-233](/src/pages/GameSetup.tsx)
 
 ## Team Logo Management System
 
@@ -295,7 +295,7 @@ The `teamLogos` constant provides a complete mapping of NBA team names to their 
 - External CDN hosting via Wikipedia Commons
 - Direct team name key matching with API response data
 
-Sources: [src/pages/GameSetup.tsx:235-266](), [src/pages/GameSetup.tsx:918]()
+Sources: [src/pages/GameSetup.tsx:235-266](/src/pages/GameSetup.tsx), [src/pages/GameSetup.tsx:918](/src/pages/GameSetup.tsx)
 
 ## Error Handling and Loading States
 
@@ -313,4 +313,4 @@ The component implements consistent error handling and loading state management 
 3. Parse error responses and set descriptive error messages
 4. Display errors in UI components
 
-Sources: [src/pages/GameSetup.tsx:230](), [src/pages/GameSetup.tsx:235](), [src/pages/GameSetup.tsx:319-331]()
+Sources: [src/pages/GameSetup.tsx:230](/src/pages/GameSetup.tsx), [src/pages/GameSetup.tsx:235](/src/pages/GameSetup.tsx), [src/pages/GameSetup.tsx:319-331](/src/pages/GameSetup.tsx)
