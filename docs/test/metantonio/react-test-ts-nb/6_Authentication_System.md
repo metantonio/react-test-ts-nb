@@ -5,10 +5,10 @@
 
 The following files were used as context for generating this wiki page:
 
-- [src/contexts/AuthService.ts](src/contexts/AuthService.ts)
-- [src/contexts/UserContext.tsx](src/contexts/UserContext.tsx)
-- [src/pages/auth/loginCognito.tsx](src/pages/auth/loginCognito.tsx)
-- [src/pages/auth/signup.tsx](src/pages/auth/signup.tsx)
+- [src/contexts/AuthService.ts](/src/contexts/AuthService.ts)
+- [src/contexts/UserContext.tsx](/src/contexts/UserContext.tsx)
+- [src/pages/auth/loginCognito.tsx](/src/pages/auth/loginCognito.tsx)
+- [src/pages/auth/signup.tsx](/src/pages/auth/signup.tsx)
 
 </details>
 
@@ -16,7 +16,7 @@ The following files were used as context for generating this wiki page:
 
 ## Purpose and Scope
 
-This document covers the dual authentication system implemented in the NBA simulation application. The system supports both AWS Cognito user account authentication and API key-based authentication for accessing basketball simulation services. For information about the broader state management architecture, see [State Management](#3.2). For details about the user interface components, see [Authentication UI](#4.5).
+This document covers the dual authentication system implemented in the NBA simulation application. The system supports both AWS Cognito user account authentication and API key-based authentication for accessing basketball simulation services. For information about the broader state management architecture, see [State Management](./5_State_Management.md). For details about the user interface components, see [Authentication UI](./13_Authentication_UI.md).
 
 The authentication system provides unified user session management, token handling, permission-based access control, and seamless integration between user accounts and API service credentials.
 
@@ -56,7 +56,7 @@ graph TB
     end
 ```
 
-Sources: [src/contexts/UserContext.tsx:1-298](), [src/pages/auth/loginCognito.tsx:1-314](), [src/pages/auth/signup.tsx:1-321](), [src/LoginAPI.tsx:1-172](), [src/contexts/AuthService.ts:1-62]()
+Sources: [src/contexts/UserContext.tsx:1-298](/src/contexts/UserContext.tsx), [src/pages/auth/loginCognito.tsx:1-314](/src/pages/auth/loginCognito.tsx), [src/pages/auth/signup.tsx:1-321](/src/pages/auth/signup.tsx), [src/LoginAPI.tsx:1-172](/src/LoginAPI.tsx), [src/contexts/AuthService.ts:1-62](/[src/contexts/AuthService.ts)
 
 ## AWS Cognito Authentication
 
@@ -87,12 +87,12 @@ The `Signup` component handles user registration with the following key features
 
 | Feature | Implementation | Location |
 |---------|----------------|----------|
-| Form validation | `validateForm()` function | [src/pages/auth/signup.tsx:68-89]() |
-| User attributes | Custom fields including `custom:string` for NBA token | [src/pages/auth/signup.tsx:110-116]() |
-| Confirmation flow | Two-step process with email verification | [src/pages/auth/signup.tsx:124-130]() |
-| Code resending | `handleResendCode()` for retry functionality | [src/pages/auth/signup.tsx:176-195]() |
+| Form validation | `validateForm()` function | [src/pages/auth/signup.tsx:68-89](/src/pages/auth/signup.tsx:) |
+| User attributes | Custom fields including `custom:string` for NBA token | [src/pages/auth/signup.tsx:110-116](/src/pages/auth/signup.tsx) |
+| Confirmation flow | Two-step process with email verification | [src/pages/auth/signup.tsx:124-130](/src/pages/auth/signup.tsx) |
+| Code resending | `handleResendCode()` for retry functionality | [src/pages/auth/signup.tsx:176-195](/src/pages/auth/signup.tsx) |
 
-Sources: [src/pages/auth/signup.tsx:35-321](), [src/pages/auth/ConfirmationForm:1-210]()
+Sources: [src/pages/auth/signup.tsx:35-321](/src/pages/auth/signup.tsx), [src/pages/auth/ConfirmationForm:1-210](/src/pages/auth/ConfirmationForm.tsx)
 
 ### Login Flow and Session Management
 
@@ -117,11 +117,11 @@ The authentication process extracts multiple token types and user attributes thr
 
 | Token/Attribute | Purpose | Source | Code Location |
 |-----------------|---------|--------|---------------|
-| `idToken` | Primary authentication token | `session.tokens.idToken` | [src/pages/auth/loginCognito.tsx:62]() |
-| `accessToken` | Role assignment via groups | `session.tokens.accessToken` | [src/contexts/UserContext.tsx:87]() |
-| `custom:string` | NBA API authorization token | `idToken.payload["custom:string"]` | [src/contexts/UserContext.tsx:102]() |
-| `authorizationNBA` | Additional NBA authorization | `idToken.payload["authorizationNBA"]` | [src/contexts/UserContext.tsx:103]() |
-| `cognito:groups` | User role assignment | `accessToken.payload["cognito:groups"]` | [src/contexts/UserContext.tsx:88]() |
+| `idToken` | Primary authentication token | `session.tokens.idToken` | [src/pages/auth/loginCognito.tsx:62](/src/pages/auth/loginCognito.tsx) |
+| `accessToken` | Role assignment via groups | `session.tokens.accessToken` | [src/contexts/UserContext.tsx:87](/src/contexts/UserContext.tsx) |
+| `custom:string` | NBA API authorization token | `idToken.payload["custom:string"]` | [src/contexts/UserContext.tsx:102](/src/contexts/UserContext.tsx) |
+| `authorizationNBA` | Additional NBA authorization | `idToken.payload["authorizationNBA"]` | [src/contexts/UserContext.tsx:103](/src/contexts/UserContext.tsx) |
+| `cognito:groups` | User role assignment | `accessToken.payload["cognito:groups"]` | [src/contexts/UserContext.tsx:88](/src/contexts/UserContext.tsx) |
 
 #### User Mapping Process
 
@@ -145,7 +145,7 @@ graph TB
     FamilyName --> AppUser
 ```
 
-Sources: [src/pages/auth/loginCognito.tsx:59-82](), [src/contexts/UserContext.tsx:84-109]()
+Sources: [src/pages/auth/loginCognito.tsx:59-82](/src/pages/auth/loginCognito.tsx), [src/contexts/UserContext.tsx:84-109](/src/contexts/UserContext.tsx)
 
 ## API Key Authentication
 
@@ -168,7 +168,7 @@ The API authentication stores credentials for direct service access:
 - **Authorization**: Service authorization token
 - **Direct Storage**: Credentials stored in `ApiContext` for immediate use
 
-Sources: [src/LoginAPI.tsx:27-172]()
+Sources: [src/LoginAPI.tsx:27-172](/src/LoginAPI.tsx)
 
 ## User Context and State Management
 
@@ -223,7 +223,7 @@ The authentication system implements role-based access control:
 | `developer` | `view_all`, `add_edit_records`, `delete_records`, `edit_profile` | Development access without user management |
 | `guest` | `view_all` | Read-only access |
 
-Sources: [src/contexts/UserContext.tsx:196-206]()
+Sources: [src/contexts/UserContext.tsx:196-206](/src/contexts/UserContext.tsx)
 
 ### Authentication Service Layer
 
@@ -252,7 +252,7 @@ graph TB
 | `signOut()` | `await signOut()` | `boolean` | Returns `false` on error |
 | `refreshSession()` | `await fetchAuthSession({forceRefresh: true})` | `string \| null` | Returns `null` on error |
 
-Sources: [src/contexts/AuthService.ts:4-61]()
+Sources: [src/contexts/AuthService.ts:4-61](/src/contexts/AuthService.ts)
 
 ## Dual Authentication Integration
 
@@ -293,7 +293,7 @@ graph TB
 - **NBA Token**: Injected into request body as `authorization` field for service access
 - **Source**: NBA token extracted from Cognito `idToken.payload["custom:string"]`
 
-Sources: [src/contexts/UserContext.tsx:230-257]()
+Sources: [src/contexts/UserContext.tsx:230-257](/src/contexts/UserContext.tsx)
 
 ### Authentication State Lifecycle
 
@@ -329,12 +329,12 @@ stateDiagram-v2
 
 | Function | Trigger | State Changes | Code Location |
 |----------|---------|---------------|---------------|
-| `loadUser()` | `useEffect` on mount | `Loading → Authenticated/Unauthenticated` | [src/contexts/UserContext.tsx:124-163]() |
-| `login()` | LoginCognito success | `Unauthenticated → Authenticated` | [src/contexts/UserContext.tsx:166-175]() |
-| `logout()` | User action | `Authenticated → Unauthenticated` | [src/contexts/UserContext.tsx:177-188]() |
-| `validateToken()` | Token expiration check | Validation without state change | [src/contexts/UserContext.tsx:217-228]() |
+| `loadUser()` | `useEffect` on mount | `Loading → Authenticated/Unauthenticated` | [src/contexts/UserContext.tsx:124-163](/src/contexts/UserContext.tsx) |
+| `login()` | LoginCognito success | `Unauthenticated → Authenticated` | [src/contexts/UserContext.tsx:166-175](/src/contexts/UserContext.tsx) |
+| `logout()` | User action | `Authenticated → Unauthenticated` | [src/contexts/UserContext.tsx:177-188](/src/contexts/UserContext.tsx) |
+| `validateToken()` | Token expiration check | Validation without state change | [src/contexts/UserContext.tsx:217-228](/src/contexts/UserContext.tsx) |
 
-Sources: [src/contexts/UserContext.tsx:124-188](), [src/contexts/UserContext.tsx:217-228]()
+Sources: [src/contexts/UserContext.tsx:124-188](/src/contexts/UserContext.tsx), [/src/contexts/UserContext.tsx:217-228](/src/contexts/UserContext.tsx)
 
 ## Key Components Summary
 
@@ -348,4 +348,4 @@ Sources: [src/contexts/UserContext.tsx:124-188](), [src/contexts/UserContext.tsx
 
 The authentication system provides a robust foundation for securing the NBA simulation application while maintaining flexibility for both user account management and service integration.
 
-Sources: [src/contexts/UserContext.tsx:1-298](), [src/pages/auth/loginCognito.tsx:1-314](), [src/LoginAPI.tsx:1-172](), [src/pages/auth/signup.tsx:1-321](), [src/contexts/AuthService.ts:1-62]()
+Sources: [src/contexts/UserContext.tsx:1-298](/src/contexts/UserContext.tsx), [src/pages/auth/loginCognito.tsx:1-314](/src/pages/auth/loginCognito.tsx), [src/LoginAPI.tsx:1-172](/src/LoginAPI.tsx), [src/pages/auth/signup.tsx:1-321](/src/pages/auth/signup.tsx), [src/contexts/AuthService.ts:1-62](/src/contexts/AuthService.ts)
