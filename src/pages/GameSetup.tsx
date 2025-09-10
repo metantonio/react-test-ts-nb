@@ -483,23 +483,28 @@ const GameSetup = () => {
     setError(null);
     try {
       //`${API_URL}/conversionjs to use apigateway, else use the api
-      const response = await fetchWithAuth(schedule == "predict"? `${API_URL}/conversionjs`: schedule == "fullseason"?`${SIMULATION_URL}/play_fsv.php`: `${SIMULATION_URL}/play_82.php`, 'POST', {
+      //const response = await fetchWithAuth(schedule == "predict"? `${API_URL}/conversionjs`: schedule == "fullseason"?`${SIMULATION_URL}/play_fsv.php`: `${SIMULATION_URL}/play_82.php`, 'POST', {
+      const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', {
         body: {
           endpoint: schedule == "predict" ? "play_predict.php" : schedule == "8200" ? "play_82.php" : "play_fsv.php", method: "POST",
           "league_name": selectedLeague?.league_name,
           "numgames": "normal",
-          "homeaway": schedule != "fullseason" ? location: "home",
+          "homeaway": schedule != "fullseason" ? location : "home",
           "gamemode": schedule,
           "keeppbp": schedule == "8200" ? "Y" : "N",
           "gamearray": [{ "predicthome": selectedTeams2?.teams, "predictaway": selectedTeams1?.teams, "predictgames": "20" }],
           "hometeam": selectedTeams2?.teams,
           apikey: schedule == "predict" ? "" : API_KEY
         },
-        apikey: schedule == "predict"? "" : API_KEY
+        apikey: schedule == "predict" ? "" : API_KEY
       });
       if (!response.ok) {
         const err: Message = await response.json();
         setError(`error: ${err.message}`);
+        if (schedule != "predict") {
+          await handleFetchBoxScoreFullSeason();
+          await handleFetchGameListFullSeason();
+        }
         throw new Error(`${err.message}`);
       }
       //await handleFetchScoreBoard(); //this is wrong in the full season mode
@@ -724,7 +729,7 @@ const GameSetup = () => {
       }
 
       const data: BodyResponse = await response.json();
-      console.log("gamelist1: ",data)
+      console.log("gamelist1: ", data)
       let parsed: unknown;
       try {
         parsed = JSON.parse(data.body);
@@ -738,7 +743,7 @@ const GameSetup = () => {
         "data" in parsed
       ) {
         const body = parsed as { data: GameList[] };
-        console.log("gamelist2: ",body.data)
+        console.log("gamelist2: ", body.data)
         setGameList(body.data);
       } else {
         throw new Error("Unexpected response format.");
@@ -858,10 +863,10 @@ const GameSetup = () => {
       await handleSingleGameInitial();
     }
 
-    if (selectedTeams1 && selectedTeams2 && activeView==="single-game") {
+    if (selectedTeams1 && selectedTeams2 && activeView === "single-game") {
       loadGameInitial();
-    }else if(selectedTeams1 && selectedTeams2 && activeView==="full-season"){
-      if(schedule=="predict"){
+    } else if (selectedTeams1 && selectedTeams2 && activeView === "full-season") {
+      if (schedule == "predict") {
         //handlePredictMode()
         console.log("a")
       }
