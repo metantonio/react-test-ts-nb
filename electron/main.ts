@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, session } from 'electron'
 import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
 import path from 'node:path'
@@ -77,5 +77,17 @@ app.on('activate', () => {
   createWindow;
 }); */
 app.whenReady().then(() => {
+  session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
+    if (details.url.startsWith('http://api.bballsports.com/simulationAPI/')) {
+      callback({
+        responseHeaders: {
+          ...details.responseHeaders,
+          'Access-Control-Allow-Origin': ['*'],
+        },
+      });
+    } else {
+      callback({ responseHeaders: details.responseHeaders });
+    }
+  });
   checkAndApplyUpdates(createWindow);
 });

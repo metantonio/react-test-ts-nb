@@ -71,7 +71,8 @@ const Signup = () => {
     }
 
     //const emailRegex = /^[^\s@]+@[^\s@]+\\.[^\s@]+$/;
-    const emailRegex = /^[^+@]+@[^@]+$/;
+    //const emailRegex = /^[^+@]+@[^@]+$/;
+    const emailRegex = /^[^@]+@[^@]+$/;
     if (!emailRegex.test(form.email)) {
       throw new Error("Please enter a valid email address with @ and without +");
     }

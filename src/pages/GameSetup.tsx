@@ -488,7 +488,7 @@ const GameSetup = () => {
           endpoint: schedule == "predict" ? "play_predict.php" : schedule == "8200" ? "play_82.php" : "play_fsv.php", method: "POST",
           "league_name": selectedLeague?.league_name,
           "numgames": "normal",
-          "homeaway": location,
+          "homeaway": schedule != "fullseason" ? location: "home",
           "gamemode": schedule,
           "keeppbp": schedule == "8200" ? "Y" : "N",
           "gamearray": [{ "predicthome": selectedTeams2?.teams, "predictaway": selectedTeams1?.teams, "predictgames": "20" }],
@@ -503,12 +503,13 @@ const GameSetup = () => {
         throw new Error(`${err.message}`);
       }
       //await handleFetchScoreBoard(); //this is wrong in the full season mode
-      if(schedule=="predict"){
+      /* if(schedule=="predict"){
         await handleFetchBoxScoreFullSeason();
       }else{
         await handleFetchGameListFullSeason();
-      }
-      //await handleFetchBoxScoreFullSeason();
+      } */
+      await handleFetchBoxScoreFullSeason();
+      await handleFetchGameListFullSeason();
     } catch (err: any) {
       setError(`${err}`);
     }
