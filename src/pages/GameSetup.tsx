@@ -482,39 +482,73 @@ const GameSetup = () => {
   const handlePredictMode = async () => { //this is to use in the full season mode
     setError(null);
     try {
+      let body;
+      if (schedule == "predict") {
+        body = {
+          body: {
+            endpoint: "play_predict.php",
+            method: "POST",
+            "league_name": selectedLeague?.league_name,
+            "numgames": "normal",
+            "homeaway": location || "home",
+            "gamemode": schedule,
+            "keeppbp": "N",
+            "gamearray": [{ "predicthome": selectedTeams2?.teams, "predictaway": selectedTeams1?.teams, "predictgames": "20" }],
+            "hometeam": selectedTeams2?.teams,
+            //apikey: schedule == "predict" ? "" : API_KEY
+          },
+          //apikey: schedule == "predict" ? "" : API_KEY
+        }
+      } else if (schedule == "fullseason") {
+        body = {
+          body: {
+            endpoint: "play_fsv.php",
+            method: "POST",
+            "league_name": selectedLeague?.league_name,
+            "numgames": "normal",
+            "homeaway": "home",
+            "gamemode": schedule,
+            "keeppbp": "N",
+            //apikey: API_KEY
+          },
+          //apikey: API_KEY
+        }
+      } else {
+        body = {
+          body: {
+            endpoint: "play_82.php",
+            method: "POST",
+            "league_name": selectedLeague?.league_name,
+            "numgames": "normal",
+            "homeaway": location,
+            "gamemode": schedule,
+            "keeppbp": "Y",
+            "hometeam": selectedTeams2?.teams,
+            //apikey: API_KEY
+          },
+          //apikey: API_KEY
+        }
+      }
       //`${API_URL}/conversionjs to use apigateway, else use the api
       //const response = await fetchWithAuth(schedule == "predict"? `${API_URL}/conversionjs`: schedule == "fullseason"?`${SIMULATION_URL}/play_fsv.php`: `${SIMULATION_URL}/play_82.php`, 'POST', {
-      const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', {
-        body: {
-          endpoint: schedule == "predict" ? "play_predict.php" : schedule == "8200" ? "play_82.php" : "play_fsv.php", method: "POST",
-          "league_name": selectedLeague?.league_name,
-          "numgames": "normal",
-          "homeaway": schedule != "fullseason" ? location : "home",
-          "gamemode": schedule,
-          "keeppbp": schedule == "8200" ? "Y" : "N",
-          "gamearray": [{ "predicthome": selectedTeams2?.teams, "predictaway": selectedTeams1?.teams, "predictgames": "20" }],
-          "hometeam": selectedTeams2?.teams,
-          apikey: schedule == "predict" ? "" : API_KEY
-        },
-        apikey: schedule == "predict" ? "" : API_KEY
-      });
+      const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', body);
       if (!response.ok) {
         const err: Message = await response.json();
         setError(`error: ${err.message}`);
-        if (schedule != "predict") {
-          await handleFetchBoxScoreFullSeason();
+
+        await handleFetchBoxScoreFullSeason();
+        if (schedule == "fullseason") {
           await handleFetchGameListFullSeason();
         }
+
         throw new Error(`${err.message}`);
       }
-      //await handleFetchScoreBoard(); //this is wrong in the full season mode
-      /* if(schedule=="predict"){
-        await handleFetchBoxScoreFullSeason();
-      }else{
+
+      if (schedule == "fullseason") {
         await handleFetchGameListFullSeason();
-      } */
+      }
       await handleFetchBoxScoreFullSeason();
-      await handleFetchGameListFullSeason();
+      //await handleFetchScoreBoard(); //this is wrong in the full season mode
     } catch (err: any) {
       setError(`${err}`);
     }
