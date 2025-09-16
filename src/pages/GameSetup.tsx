@@ -483,7 +483,7 @@ const GameSetup = () => {
   const handlePredictMode = async () => { //this is to use in the full season mode
     setError(null);
     try {
-      let body: { body: { [key: string]: any } , [key: string]: any};
+      let body: { body: { [key: string]: any }, [key: string]: any };
       let response;
       if (schedule == "predict") {
         body = {
@@ -532,25 +532,26 @@ const GameSetup = () => {
         }
       }
       //`${API_URL}/conversionjs to use apigateway, else use the api
-      if (import.meta.env.VITE_APP_TARGET === "electron") {
+      if (ELECTRON === "electron") {
         if ('body' in body && typeof body.body === 'object' && body.body !== null) {
           body.body.apikey = API_KEY;
           body.apikey = API_KEY;
+          
         }
-        response = await fetchWithAuth(schedule == "predict" ? `${SIMULATION_URL}/play_predict.php` : schedule == "fullseason" ? `${SIMULATION_URL}/play_fsv.php` : `${SIMULATION_URL}/play_82.php`, 'POST', body)
+        //delete body.body.authorization;
+        response = await fetchWithAuth(schedule == "predict" ? `${SIMULATION_URL}/play_predict.php` : schedule == "fullseason" ? `${SIMULATION_URL}/play_fsv.php` : `${SIMULATION_URL}/play_82.php`, 'POST', {...body.body})
       }
       else {
         response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', body)
       }
-      ;
       if (!response.ok) {
         const err: Message = await response.json();
         setError(`error: ${err.message}`);
 
-        await handleFetchBoxScoreFullSeason();
+        /* await handleFetchBoxScoreFullSeason();
         if (schedule == "fullseason") {
           await handleFetchGameListFullSeason();
-        }
+        } */
 
         throw new Error(`${err.message}`);
       }
@@ -707,13 +708,23 @@ const GameSetup = () => {
   const handleFetchBoxScoreFullSeason = async () => {
     setError(null);
     try {
-      const response = await fetchWithAuth(`${API_URL}/conversionjs`, "POST", {
-        body: {
-          endpoint: "get_raw_box_scores.php",
+      let response;
+      if (ELECTRON === "electron") {
+
+        response = await fetchWithAuth(`${SIMULATION_URL}/get_raw_box_scores.php`, 'POST', {
           method: "POST",
           game_number: "ALL"
-        },
-      });
+        })
+      } else {
+        response = await fetchWithAuth(`${API_URL}/conversionjs`, "POST", {
+          body: {
+            endpoint: "get_raw_box_scores.php",
+            method: "POST",
+            game_number: "ALL"
+          },
+        });
+      }
+
 
       if (!response.ok) {
         let errMsg = "Failed to fetch box score full season.";
@@ -754,12 +765,19 @@ const GameSetup = () => {
   const handleFetchGameListFullSeason = async () => {
     setError(null);
     try {
-      const response = await fetchWithAuth(`${API_URL}/conversionjs`, "POST", {
-        body: {
-          endpoint: "get_played_game_list.php",
-          method: "POST",
-        },
-      });
+      let response;
+      if (ELECTRON === "electron") {
+
+        response = await fetchWithAuth(`${SIMULATION_URL}/get_played_game_list.php`, 'POST', {})
+      } else {
+        response = await fetchWithAuth(`${API_URL}/conversionjs`, "POST", {
+          body: {
+            endpoint: "get_played_game_list.php",
+            method: "POST",
+          },
+        });
+      }
+
 
       if (!response.ok) {
         let errMsg = "Failed to fetch box score full season.";

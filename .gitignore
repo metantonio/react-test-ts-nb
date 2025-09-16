@@ -30,3 +30,4 @@ out/*
 # Configuration files
 .env
 electron-builder.json5
+electron-builder.json

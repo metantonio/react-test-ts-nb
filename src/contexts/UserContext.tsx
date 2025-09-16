@@ -226,34 +226,41 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
       return false;
     }
   };
-
+  const API_KEY = import.meta.env.VITE_APP_API_KEY
   const fetchWithAuth = useCallback(async (url: string, method: HttpMethod = 'GET', body: any = {}) => {
       if (!token) {
         throw new Error('API credentials are not set. Please login first.');
       }
+
+      if (!nbaToken) {
+        throw new Error('NBA API credentials are not set. Please login first.');
+      }
   
-      const headers: Record<string, string> = {
+      try {
+        const headers: Record<string, string> = {
         'Content-Type': 'application/json',
         'Authorization': nbaToken || "",
       };
-
-      let tempBody = {...body}
-      tempBody["body"]["authorization"] = nbaToken
-      const requestBody = {
-        ...body,
-        authorization: nbaToken,
-      };
   
-      const config: RequestInit = {
-        method,
-        headers,
-      };
+        const config: RequestInit = {
+          method,
+          headers,
+        };
   
-      if (method !== 'GET' && method !== 'DELETE') {
-        config.body = JSON.stringify(tempBody);
+        if (method !== 'GET') {
+          const requestBody = { ...body, authorization: nbaToken || "", apikey: API_KEY || "" };
+          if(requestBody.body){
+            requestBody.body.authorization = nbaToken || ""
+          }
+          config.body = JSON.stringify(requestBody);
+        }
+  
+        return fetch(url, config);
+      } catch (error) {
+        console.log("error con fetchwithauth")
+         throw new Error(`FetchWithAuth error: ${error}`);
       }
-  
-      return fetch(url, config);
+      
     }, [nbaToken]);
 
   useEffect(()=>{
