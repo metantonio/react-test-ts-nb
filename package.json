@@ -19,6 +19,7 @@
     "preview": "vite preview",
     "wiki": "deepwiki-export --output-base-dir ./docs/test \"https://deepwiki.com/metantonio/react-test-ts-nb\" --keep-html"
   },
+  "main": "dist-electron/main.js",
   "dependencies": {
     "@aws-amplify/auth": "^6.14.0",
     "@googlemaps/js-api-loader": "^1.16.8",
@@ -154,21 +155,5 @@
     "vite": "^5.1.6",
     "vite-plugin-electron": "^0.28.6",
     "vite-plugin-electron-renderer": "^0.14.5"
-  },
-  "main": "dist-electron/main.js",
-  "build": {
-    "appId": "com.example.react-nba-qlx",
-    "productName": "React NBA QLX",
-    "files": [
-      "dist/",
-      "dist-electron/",
-      "vite.svg"
-    ],
-    "win": {
-      "icon": "vite.svg"
-    },
-    "mac": {
-      "icon": "vite.svg"
-    }
   }
 }
