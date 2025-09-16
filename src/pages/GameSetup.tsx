@@ -277,6 +277,7 @@ const teamLogos: { [key: string]: string } = {
 
 const SIMULATION_URL = import.meta.env.VITE_APP_API_SIMULATION
 const API_KEY = import.meta.env.VITE_APP_API_KEY
+const ELECTRON = import.meta.env.VITE_APP_TARGET
 
 const GameSetup = () => {
   //const { fetchWithAuth, isLoading } = useApi();
@@ -482,7 +483,8 @@ const GameSetup = () => {
   const handlePredictMode = async () => { //this is to use in the full season mode
     setError(null);
     try {
-      let body;
+      let body: { body: { [key: string]: any } , [key: string]: any};
+      let response;
       if (schedule == "predict") {
         body = {
           body: {
@@ -530,8 +532,17 @@ const GameSetup = () => {
         }
       }
       //`${API_URL}/conversionjs to use apigateway, else use the api
-      //const response = await fetchWithAuth(schedule == "predict"? `${API_URL}/conversionjs`: schedule == "fullseason"?`${SIMULATION_URL}/play_fsv.php`: `${SIMULATION_URL}/play_82.php`, 'POST', {
-      const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', body);
+      if (import.meta.env.VITE_APP_TARGET === "electron") {
+        if ('body' in body && typeof body.body === 'object' && body.body !== null) {
+          body.body.apikey = API_KEY;
+          body.apikey = API_KEY;
+        }
+        response = await fetchWithAuth(schedule == "predict" ? `${SIMULATION_URL}/play_predict.php` : schedule == "fullseason" ? `${SIMULATION_URL}/play_fsv.php` : `${SIMULATION_URL}/play_82.php`, 'POST', body)
+      }
+      else {
+        response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', body)
+      }
+      ;
       if (!response.ok) {
         const err: Message = await response.json();
         setError(`error: ${err.message}`);
