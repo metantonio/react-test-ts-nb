@@ -214,8 +214,8 @@ interface GameList { //this is the gameList of the full season game mode
   team_name2: string;
   team1_homeaway: string;
   team2_homeaway: string;
-  team_score1: string;
-  team_score2: string;
+  team1_score: string;
+  team2_score: string;
 }
 
 interface GameListResponse { //this is the gameList of the full season game mode
@@ -802,11 +802,10 @@ const GameSetup = () => {
         throw new Error(errMsg);
       }
 
-      if (ELECTRON === "electron") { 
+      if (ELECTRON === "electron") {
         const data: GameListResponse = await response.json();
         setGameList(data.data);
-      }
-      else {
+      } else {
         const data: BodyResponse = await response.json();
         console.log("gamelist1: ", data)
         let parsed: unknown;
@@ -1086,6 +1085,7 @@ const GameSetup = () => {
             handlePredictMode={handlePredictMode}
             scheduleMultiplier={scheduleMultiplier}
             setScheduleMultiplier={setScheduleMultiplier}
+            gameList={gameList}
           />
         }
         {activeView === 'single-game' &&

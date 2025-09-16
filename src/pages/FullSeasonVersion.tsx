@@ -111,6 +111,15 @@ interface GetAlts {
   alt_sub: string;
 }
 
+interface GameList { //this is the gameList of the full season game mode
+  game_number: string;
+  team_name1: string;
+  team_name2: string;
+  team1_homeaway: string;
+  team2_homeaway: string;
+  team1_score: string;
+  team2_score: string;
+}
 
 interface FullSeasonVersionProps {
   leagues: League[];
@@ -150,7 +159,7 @@ interface FullSeasonVersionProps {
   handlePredictMode: () => Promise<void | null>;
   scheduleMultiplier: number;
   setScheduleMultiplier: React.Dispatch<React.SetStateAction<number>>;
-
+  gameList: GameList[];
 }
 
 const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
@@ -191,7 +200,8 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
     //handleFetchBoxScoreFullSeason,
     handlePredictMode,
     //scheduleMultiplier,
-    setScheduleMultiplier
+    setScheduleMultiplier,
+    gameList
   }
 ) => {
   //const [schedule, setSchedule] = useState('predict');
@@ -338,7 +348,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
         <Button variant="outline" size="sm">Play by Play</Button>
       </div>
 
-      
+
 
       <div className="grid grid-cols-3 gap-4">
         <div className="col-span-2">
@@ -725,11 +735,11 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                     </div>
                   </div>
                   <div className="border p-2 rounded-md bg-card text-card-foreground">
-                    <div className="flex flex-col space-y-1" aria-disabled={schedule==="fullseason"} >
+                    <div className="flex flex-col space-y-1" aria-disabled={schedule === "fullseason"} >
                       <CustomRadio name="location" value="home" checked={location === 'home'} onChange={setLocation} label="Home" id="r4" />
-                      <CustomRadio name="location" value="away" checked={location === 'away'} onChange={setLocation} label="Away" id="r5"/>
-                      <CustomRadio name="location" value="both" checked={location === 'both'} onChange={setLocation} label="Both" id="r6"/>
-                      <CustomRadio name="location" value="neutral" checked={location === 'neutral'} onChange={setLocation} label="Neutral" id="r7"/>
+                      <CustomRadio name="location" value="away" checked={location === 'away'} onChange={setLocation} label="Away" id="r5" />
+                      <CustomRadio name="location" value="both" checked={location === 'both'} onChange={setLocation} label="Both" id="r6" />
+                      <CustomRadio name="location" value="neutral" checked={location === 'neutral'} onChange={setLocation} label="Neutral" id="r7" />
                     </div>
                   </div>
                 </div>
@@ -748,8 +758,50 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                   {isSimulating && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   PLAY GAMES
                 </Button>
+                {gameList.length > 0 && schedule === "fullseason" ? (
+                    <div className="mt-4 border rounded-md bg-card text-card-foreground">
+                      <h3 className="text-lg font-semibold p-4 border-b">Full Season Game List</h3>
+                      <div className="max-h-[400px] overflow-y-auto">
+                        <Table>
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead className="w-[80px]">Game #</TableHead>
+                              <TableHead>Team 1</TableHead>
+                              <TableHead className="w-[50px] text-center">H/A</TableHead>
+                              <TableHead className="w-[80px] text-right">Score</TableHead>
+                              <TableHead>Team 2</TableHead>
+                              <TableHead className="w-[50px] text-center">H/A</TableHead>
+                              <TableHead className="w-[80px] text-right">Score</TableHead>
+                            </TableRow>
+                          </TableHeader>
+                          <TableBody>
+                            {gameList.map((game: GameList) => (
+                              <TableRow key={game.game_number}>
+                                <TableCell className="font-medium">{game.game_number}</TableCell>
+                                <TableCell>
+                                  <div className="flex items-center gap-2">
+                                    <TeamLogo logo={teamLogos[game.team_name1]} name={game.team_name1} />
+                                    <span>{game.team_name1}</span>
+                                  </div>
+                                </TableCell>
+                                <TableCell className="text-center">{game.team1_homeaway}</TableCell>
+                                <TableCell className="text-right font-bold">{game.team1_score}</TableCell>
+                                <TableCell>
+                                  <div className="flex items-center gap-2">
+                                    <TeamLogo logo={teamLogos[game.team_name2]} name={game.team_name2} />
+                                    <span>{game.team_name2}</span>
+                                  </div>
+                                </TableCell>
+                                <TableCell className="text-center">{game.team2_homeaway}</TableCell>
+                                <TableCell className="text-right font-bold">{game.team2_score}</TableCell>
+                              </TableRow>
+                            ))}
+                          </TableBody>
+                        </Table>
+                      </div>
+                    </div>
+                  ) : <></>}
               </> : <></>}
-
             </div>
           </div>
         </div>
