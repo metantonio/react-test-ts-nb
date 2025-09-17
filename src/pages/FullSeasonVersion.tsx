@@ -160,6 +160,7 @@ interface FullSeasonVersionProps {
   scheduleMultiplier: number;
   setScheduleMultiplier: React.Dispatch<React.SetStateAction<number>>;
   gameList: GameList[];
+  setGameList: React.Dispatch<React.SetStateAction<GameList[]>>;
 }
 
 const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
@@ -201,7 +202,8 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
     handlePredictMode,
     //scheduleMultiplier,
     setScheduleMultiplier,
-    gameList
+    gameList,
+    setGameList
   }
 ) => {
   //const [schedule, setSchedule] = useState('predict');
@@ -361,6 +363,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                   setSelectedTeams2(null)
                   setBoxScoreFullSeason([])
                   setTeamsSchedule([])
+                  setGameList([])
                   setIsClear(!isClear)
                 }}>Clear</Button>
 

@@ -1086,6 +1086,7 @@ const GameSetup = () => {
             scheduleMultiplier={scheduleMultiplier}
             setScheduleMultiplier={setScheduleMultiplier}
             gameList={gameList}
+            setGameList={setGameList}
           />
         }
         {activeView === 'single-game' &&
