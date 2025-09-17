@@ -761,50 +761,51 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                   {isSimulating && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   PLAY GAMES
                 </Button>
-                {gameList.length > 0 && schedule === "fullseason" ? (
-                    <div className="mt-4 border rounded-md bg-card text-card-foreground">
-                      <h3 className="text-lg font-semibold p-4 border-b">Full Season Game List</h3>
-                      <Button variant="default" size="sm" onClick={() => exportToCSV(gameList || [], `${selectedTeams2?.teams}_fullseason_game_list.csv`)}>Print</Button>
-                      <div className="max-h-[400px] overflow-y-auto">
-                        <Table>
-                          <TableHeader>
-                            <TableRow>
-                              <TableHead className="w-[80px]">Game #</TableHead>
-                              <TableHead>Team 1</TableHead>
-                              <TableHead className="w-[50px] text-center">H/A</TableHead>
-                              <TableHead className="w-[80px] text-right">Score</TableHead>
-                              <TableHead>Team 2</TableHead>
-                              <TableHead className="w-[50px] text-center">H/A</TableHead>
-                              <TableHead className="w-[80px] text-right">Score</TableHead>
+                {gameList.length > 0 && (schedule === "fullseason" || schedule === "predict") ? (
+                  <div className="mt-4 border rounded-md bg-card text-card-foreground">
+                    <Button variant="default" size="sm" onClick={() => exportToCSV(gameList || [], `${selectedTeams2?.teams}_fullseason_game_list.csv`)}>Print</Button>
+
+                    <h3 className="text-lg font-semibold p-4 border-b">Games List</h3>
+                    <div className="max-h-[400px] overflow-y-auto">
+                      <Table>
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead className="w-[85px]">Game #</TableHead>
+                            <TableHead>Team 1</TableHead>
+                            <TableHead className="w-[50px] text-center">H/A</TableHead>
+                            <TableHead className="w-[80px] text-right">Score</TableHead>
+                            <TableHead>Team 2</TableHead>
+                            <TableHead className="w-[50px] text-center">H/A</TableHead>
+                            <TableHead className="w-[80px] text-right">Score</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {gameList.map((game: GameList) => (
+                            <TableRow key={game.game_number}>
+                              <TableCell className="font-medium">{game.game_number}</TableCell>
+                              <TableCell>
+                                <div className="flex items-center gap-2">
+                                  <TeamLogo logo={teamLogos[game.team_name1]} name={game.team_name1} />
+                                  <span>{game.team_name1}</span>
+                                </div>
+                              </TableCell>
+                              <TableCell className="text-center">{game.team1_homeaway}</TableCell>
+                              <TableCell className="text-right font-bold">{game.team1_score}</TableCell>
+                              <TableCell>
+                                <div className="flex items-center gap-2">
+                                  <TeamLogo logo={teamLogos[game.team_name2]} name={game.team_name2} />
+                                  <span>{game.team_name2}</span>
+                                </div>
+                              </TableCell>
+                              <TableCell className="text-center">{game.team2_homeaway}</TableCell>
+                              <TableCell className="text-right font-bold">{game.team2_score}</TableCell>
                             </TableRow>
-                          </TableHeader>
-                          <TableBody>
-                            {gameList.map((game: GameList) => (
-                              <TableRow key={game.game_number}>
-                                <TableCell className="font-medium">{game.game_number}</TableCell>
-                                <TableCell>
-                                  <div className="flex items-center gap-2">
-                                    <TeamLogo logo={teamLogos[game.team_name1]} name={game.team_name1} />
-                                    <span>{game.team_name1}</span>
-                                  </div>
-                                </TableCell>
-                                <TableCell className="text-center">{game.team1_homeaway}</TableCell>
-                                <TableCell className="text-right font-bold">{game.team1_score}</TableCell>
-                                <TableCell>
-                                  <div className="flex items-center gap-2">
-                                    <TeamLogo logo={teamLogos[game.team_name2]} name={game.team_name2} />
-                                    <span>{game.team_name2}</span>
-                                  </div>
-                                </TableCell>
-                                <TableCell className="text-center">{game.team2_homeaway}</TableCell>
-                                <TableCell className="text-right font-bold">{game.team2_score}</TableCell>
-                              </TableRow>
-                            ))}
-                          </TableBody>
-                        </Table>
-                      </div>
+                          ))}
+                        </TableBody>
+                      </Table>
                     </div>
-                  ) : <></>}
+                  </div>
+                ) : <></>}
               </> : <></>}
             </div>
           </div>
@@ -813,19 +814,19 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
         <div className="col-span-1">
           <Button variant="outline" className="w-full">Zero Schedule</Button>
           <div className="grid grid-cols-3 gap-2 mt-2">
-            <Button variant="outline" onClick={async() => {
+            <Button variant="outline" onClick={async () => {
               setScheduleMultiplier("82")
               setMultiplier(100)
               await handleSchedule82()
-              
+
             }} disabled={selectedTeams2 == null}>82 Games</Button>
-            <Button variant="outline" disabled={selectedTeams2 == null} onClick={async() => {
+            <Button variant="outline" disabled={selectedTeams2 == null} onClick={async () => {
               setScheduleMultiplier("820")
               setMultiplier(10)
               await handleSchedule82()
-              
+
             }}>820 Games</Button>
-            <Button variant="outline" disabled={selectedTeams2 == null} onClick={async() => {
+            <Button variant="outline" disabled={selectedTeams2 == null} onClick={async () => {
               setScheduleMultiplier("8200")
               setMultiplier(1)
               await handleSchedule82()

@@ -570,9 +570,11 @@ const GameSetup = () => {
           handleFetchGameListFullSeason(),
           handleFetchBoxScoreFullSeason()])
       } else if (schedule == "predict") {
-        await handleFetchBoxScoreFullSeason();
+        await Promise.all([
+          handleFetchGameListFullSeason(),
+          handleFetchBoxScoreFullSeason()])
       } else {
-        handleFetchGameListFullSeason()
+        //handleFetchGameListFullSeason()
       }
 
       //await handleFetchScoreBoard(); //this is wrong in the full season mode
