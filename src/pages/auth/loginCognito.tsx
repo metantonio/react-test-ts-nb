@@ -112,7 +112,11 @@ const LoginCognito = () => {
     }
   };
 
-
+  useEffect(() => {
+    Object.keys(localStorage).forEach(key => {
+      if (key.startsWith("Cognito")) localStorage.removeItem(key);
+    });
+  }, [])
 
 
   return (

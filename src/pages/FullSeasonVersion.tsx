@@ -157,8 +157,8 @@ interface FullSeasonVersionProps {
   location: string | null;
   setLocation: React.Dispatch<React.SetStateAction<string>>;
   handlePredictMode: () => Promise<void | null>;
-  scheduleMultiplier: number;
-  setScheduleMultiplier: React.Dispatch<React.SetStateAction<number>>;
+  scheduleMultiplier: string;
+  setScheduleMultiplier: React.Dispatch<React.SetStateAction<string>>;
   gameList: GameList[];
   setGameList: React.Dispatch<React.SetStateAction<GameList[]>>;
 }
@@ -813,20 +813,22 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
         <div className="col-span-1">
           <Button variant="outline" className="w-full">Zero Schedule</Button>
           <div className="grid grid-cols-3 gap-2 mt-2">
-            <Button variant="outline" onClick={() => {
+            <Button variant="outline" onClick={async() => {
+              setScheduleMultiplier("82")
               setMultiplier(100)
-              handleSchedule82()
-              setScheduleMultiplier(82)
+              await handleSchedule82()
+              
             }} disabled={selectedTeams2 == null}>82 Games</Button>
-            <Button variant="outline" disabled={selectedTeams2 == null} onClick={() => {
+            <Button variant="outline" disabled={selectedTeams2 == null} onClick={async() => {
+              setScheduleMultiplier("820")
               setMultiplier(10)
-              handleSchedule82()
-              setScheduleMultiplier(820)
+              await handleSchedule82()
+              
             }}>820 Games</Button>
-            <Button variant="outline" disabled={selectedTeams2 == null} onClick={() => {
+            <Button variant="outline" disabled={selectedTeams2 == null} onClick={async() => {
+              setScheduleMultiplier("8200")
               setMultiplier(1)
-              handleSchedule82()
-              setScheduleMultiplier(8200)
+              await handleSchedule82()
             }}>8200 Games</Button>
           </div>
           <div className="mt-2 border rounded-md max-h-96 overflow-y-auto bg-card text-card-foreground">

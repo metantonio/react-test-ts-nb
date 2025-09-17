@@ -309,7 +309,7 @@ const GameSetup = () => {
   const [activeView, setActiveView] = useState('full-season');
   const [schedule, setSchedule] = useState('predict');
   const [location, setLocation] = useState('both');
-  const [scheduleMultiplier, setScheduleMultiplier] = useState(82);
+  const [scheduleMultiplier, setScheduleMultiplier] = useState("82");
   const [playersTeam1, setPlayersTeam1] = useState<PlayerChar[]>([{
     name: "",
     position: "",
@@ -531,7 +531,7 @@ const GameSetup = () => {
             "league_name": selectedLeague?.league_name,
             "numgames": "normal",
             "homeaway": location,
-            "gamemode": schedule,
+            "gamemode": scheduleMultiplier,
             "keeppbp": "Y",
             "hometeam": selectedTeams2?.teams,
             //apikey: API_KEY
@@ -569,8 +569,10 @@ const GameSetup = () => {
         await Promise.all([
           handleFetchGameListFullSeason(),
           handleFetchBoxScoreFullSeason()])
-      } else {
+      } else if (schedule == "predict") {
         await handleFetchBoxScoreFullSeason();
+      } else {
+        handleFetchGameListFullSeason()
       }
 
       //await handleFetchScoreBoard(); //this is wrong in the full season mode
