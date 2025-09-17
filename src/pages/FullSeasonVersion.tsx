@@ -764,6 +764,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                 {gameList.length > 0 && schedule === "fullseason" ? (
                     <div className="mt-4 border rounded-md bg-card text-card-foreground">
                       <h3 className="text-lg font-semibold p-4 border-b">Full Season Game List</h3>
+                      <Button variant="default" size="sm" onClick={() => exportToCSV(gameList || [], `${selectedTeams2?.teams}_fullseason_game_list.csv`)}>Print</Button>
                       <div className="max-h-[400px] overflow-y-auto">
                         <Table>
                           <TableHeader>
