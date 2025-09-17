@@ -113,10 +113,27 @@ const LoginCognito = () => {
   };
 
   useEffect(() => {
-    Object.keys(localStorage).forEach(key => {
-      if (key.startsWith("Cognito")) localStorage.removeItem(key);
-    });
-  }, [])
+    const fileStr = localStorage.getItem("file");
+    console.log(fileStr)
+    if (fileStr) {
+      try {
+        const fileObj = JSON.parse(fileStr);
+
+        // Filtrar las claves que NO empiezan por Cognito
+        const newFileObj: Record<string, unknown> = {};
+        Object.keys(fileObj).forEach((key) => {
+          if (!key.startsWith("Cognito")) {
+            newFileObj[key] = fileObj[key];
+          }
+        });
+
+        // Guardar el objeto actualizado
+        localStorage.setItem("file", JSON.stringify(newFileObj));
+      } catch (err) {
+        console.error("Error al limpiar file en localStorage:", err);
+      }
+    }
+  }, []);
 
 
   return (
