@@ -18,6 +18,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { authService } from '@/contexts/AuthService';
 
 type FormState = {
   username: string;
@@ -113,26 +114,18 @@ const LoginCognito = () => {
   };
 
   useEffect(() => {
-    const fileStr = localStorage.getItem("file");
-    console.log(fileStr)
-    if (fileStr) {
-      try {
-        const fileObj = JSON.parse(fileStr);
 
-        // Filtrar las claves que NO empiezan por Cognito
-        const newFileObj: Record<string, unknown> = {};
-        Object.keys(fileObj).forEach((key) => {
-          if (!key.startsWith("Cognito")) {
-            newFileObj[key] = fileObj[key];
-          }
-        });
-
-        // Guardar el objeto actualizado
-        localStorage.setItem("file", JSON.stringify(newFileObj));
-      } catch (err) {
-        console.error("Error al limpiar file en localStorage:", err);
-      }
+    const logoutCog = async() => {
+      await authService.signOut() 
     }
+    logoutCog()
+    // Recorre todas las claves del localStorage
+    Object.keys(localStorage).forEach((key) => {
+      if (key.startsWith("CognitoIdentityServiceProvider")) {
+        localStorage.removeItem(key);
+      }
+    });
+    localStorage.clear(); //clear all
   }, []);
 
 

@@ -919,6 +919,7 @@ const GameSetup = () => {
 
   const goLoginPage = async () => {
     await authService.signOut()
+    localStorage.clear();
     navigate('/')
   }
 
