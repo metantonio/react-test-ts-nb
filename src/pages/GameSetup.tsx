@@ -395,7 +395,7 @@ const GameSetup = () => {
   const handleFetchLeagues = async () => {
     setError(null);
     try {
-      const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', { body: { method: "POST", endpoint: "get_leagues.php", content: "form" } });
+      const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', { body: { method: "POST", endpoint: "get_leagues.php", content: "json" } });
       if (!response.ok) {
         const err: Message = await response.json();
         setError(`error: ${err.message}`);
@@ -415,7 +415,7 @@ const GameSetup = () => {
   const handleFetchTeams = async () => {
     setError(null);
     try {
-      const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', { body: { ...selectedLeague, method: "POST", endpoint: "get_teams.php" } });
+      const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', { body: { ...selectedLeague, method: "POST", endpoint: "get_teams.php", content: "json" } });
       if (!response.ok) {
         const err: Message = await response.json();
         setError(`error: ${err.message}`);
@@ -423,8 +423,9 @@ const GameSetup = () => {
       }
       //const data: TeamsResponse = await response.json();
       const data: BodyResponse = await response.json();
+      console.log("teams: ", data)
       const body: { data: Teams[] } = JSON.parse(data.body)
-      console.log(body.data)
+      console.log("parsed teams: ",body.data)
       setTeams(body.data);
     } catch (err: any) {
       setError(`${err}`);
@@ -540,7 +541,7 @@ const GameSetup = () => {
         }
       }
       //`${API_URL}/conversionjs to use apigateway, else use the api
-      if (ELECTRON === "electron") {
+      if (ELECTRON === "electron" || ELECTRON === "web") {
         if ('body' in body && typeof body.body === 'object' && body.body !== null) {
           body.body.apikey = API_KEY;
           body.apikey = API_KEY;
@@ -564,8 +565,12 @@ const GameSetup = () => {
 
         throw new Error(`${err.message}`);
       }
+      console.log("was ok")
+      await Promise.all([
+          handleFetchGameListFullSeason(),
+          handleFetchBoxScoreFullSeason()])
 
-      if (schedule == "fullseason") {
+      /* if (schedule == "fullseason") {
         await Promise.all([
           handleFetchGameListFullSeason(),
           handleFetchBoxScoreFullSeason()])
@@ -574,8 +579,10 @@ const GameSetup = () => {
           handleFetchGameListFullSeason(),
           handleFetchBoxScoreFullSeason()])
       } else {
-        //handleFetchGameListFullSeason()
-      }
+        await Promise.all([
+          handleFetchGameListFullSeason(),
+          handleFetchBoxScoreFullSeason()])
+      } */
 
       //await handleFetchScoreBoard(); //this is wrong in the full season mode
     } catch (err: any) {
@@ -726,7 +733,7 @@ const GameSetup = () => {
     setError(null);
     try {
       let response;
-      if (ELECTRON === "electron") {
+      if (ELECTRON === "electron" || ELECTRON === "web") {
 
         response = await fetchWithAuth(`${SIMULATION_URL}/get_raw_box_scores.php`, 'POST', {
           //method: "POST",
@@ -755,7 +762,7 @@ const GameSetup = () => {
         throw new Error(errMsg);
       }
 
-      if (ELECTRON === "electron") {
+      if (ELECTRON === "electron" || ELECTRON === "web") {
         const data: BoxScoreFullSeasonResponse = await response.json();
         setBoxScoreFullSeason(data.data);
       } else {
@@ -781,7 +788,7 @@ const GameSetup = () => {
     setError(null);
     try {
       let response;
-      if (ELECTRON === "electron") {
+      if (ELECTRON === "electron" || ELECTRON === "web") {
 
         response = await fetchWithAuth(`${SIMULATION_URL}/get_played_game_list.php`, 'POST', {})
       } else {
@@ -806,7 +813,7 @@ const GameSetup = () => {
         throw new Error(errMsg);
       }
 
-      if (ELECTRON === "electron") {
+      if (ELECTRON === "electron" || ELECTRON === "web") {
         const data: GameListResponse = await response.json();
         setGameList(data.data);
       } else {
