@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Table,
   TableBody,
@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/tooltip";
 import { useToast } from "@/hooks/use-toast";
 import { exportToCSV } from '@/lib/utils';
+import CustomCheckbox from './ui/CustomCheckbox';
 
 interface PlayerSubPattern {
   pos1: string;
@@ -55,37 +56,52 @@ const SubstitutionPatternSheet: React.FC<SubstitutionPatternSheetProps> = ({
   onSetPattern,
 }) => {
   const { toast } = useToast();
-
-  const handleDrop = (e: React.DragEvent, intervalIndex: number, posKey: keyof PlayerSubPattern) => {
-    const playerName = e.dataTransfer.getData("player_name");
-    if (playerName && playerSubPattern) {
-      const currentIntervalPattern = playerSubPattern[intervalIndex];
-
-      const isDuplicate = Object.values(currentIntervalPattern).some(
-        (name) => name === playerName
-      );
-
-      if (isDuplicate) {
-        toast({
-          title: "Duplicate Player",
-          description: `Player ${playerName} is already in this 4-minute pattern.`,
-          variant: "destructive",
-        });
-        return;
-      }
-
-      const newPlayerSubPattern = [...playerSubPattern];
-      newPlayerSubPattern[intervalIndex] = {
-        ...newPlayerSubPattern[intervalIndex],
-        [posKey]: playerName,
-      };
-      setPlayerSubPattern(newPlayerSubPattern);
-    }
-  };
+  const [allowAnyPosition, setAllowAnyPosition] = useState(false);
 
   const positions: { key: keyof PlayerSubPattern, label: string }[] = [
     { key: 'pos1', label: 'C' }, { key: 'pos2', label: 'PF' }, { key: 'pos3', label: 'SF' }, { key: 'pos4', label: 'SG' }, { key: 'pos5', label: 'PG' },
   ];
+
+  const handleDrop = (e: React.DragEvent, intervalIndex: number, posKey: keyof PlayerSubPattern) => {
+    const playerDataJSON = e.dataTransfer.getData("player_data");
+    if (!playerDataJSON || !playerSubPattern) return;
+
+    const { name: playerName, position: playerPosition } = JSON.parse(playerDataJSON);
+
+    const currentIntervalPattern = playerSubPattern[intervalIndex];
+
+    const isDuplicate = Object.values(currentIntervalPattern).some(
+      (name) => name === playerName
+    );
+
+    if (isDuplicate) {
+      toast({
+        title: "Duplicate Player",
+        description: `Player ${playerName} is already in this 4-minute pattern.`,
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (!allowAnyPosition) {
+      const targetPosition = positions.find(p => p.key === posKey)?.label;
+      if (targetPosition && !playerPosition.includes(targetPosition)) {
+          toast({
+              title: "Invalid Position",
+              description: `Player ${playerName} (${playerPosition}) cannot be placed in the ${targetPosition} slot.`,
+              variant: "destructive",
+          });
+          return;
+      }
+  }
+
+    const newPlayerSubPattern = [...playerSubPattern];
+    newPlayerSubPattern[intervalIndex] = {
+      ...newPlayerSubPattern[intervalIndex],
+      [posKey]: playerName,
+    };
+    setPlayerSubPattern(newPlayerSubPattern);
+  };
 
   return (
     <div className="flex gap-2 mt-4 text-xs">
@@ -97,10 +113,18 @@ const SubstitutionPatternSheet: React.FC<SubstitutionPatternSheetProps> = ({
       ) : (
         <>
           <div className="overflow-auto pr-2" style={{ height: 'calc(100vh - 150px)' }}>
-            <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between">
               <h2 className="text-xl font-bold mt-8 mb-4">{selectedTeam?.teams}</h2>
-              <Button variant="default" size="sm" onClick={() => exportToCSV(playerSubPattern || [], `${selectedTeam?.teams}_4min_sub_pattern.csv`)}>Print</Button>
-              <Button variant="default" size="sm" onClick={onSetPattern}>Set Pattern</Button>
+              <div className="flex items-center gap-4">
+                  <CustomCheckbox
+                      id="allow-any-position"
+                      checked={allowAnyPosition}
+                      onChange={setAllowAnyPosition}
+                      label="Allow any position"
+                  />
+                  <Button variant="default" size="sm" onClick={() => exportToCSV(playerSubPattern || [], `${selectedTeam?.teams}_4min_sub_pattern.csv`)}>Print</Button>
+                  <Button variant="default" size="sm" onClick={onSetPattern}>Set Pattern</Button>
+              </div>
             </div>
             <Table>
               <TableBody>
@@ -207,7 +231,7 @@ const SubstitutionPatternSheet: React.FC<SubstitutionPatternSheetProps> = ({
                       <TableCell
                         className="cursor-pointer hover:bg-muted"
                         draggable="true"
-                        onDragStart={(e) => e.dataTransfer.setData("player_name", player.name)}
+                        onDragStart={(e) => e.dataTransfer.setData("player_data", JSON.stringify({ name: player.name, position: player.positions }))}
                       >
                         {player.name}
                       </TableCell>

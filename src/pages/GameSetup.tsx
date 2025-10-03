@@ -850,7 +850,8 @@ const GameSetup = () => {
       const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', {
         body: {
           ...selectedLeague, team_name: selectedTeams2?.teams,
-          endpoint: "get_players_subs.php", method: "POST"
+          endpoint: "get_players_subs.php", method: "POST",
+          alt_sub: getAltsSelected
         }
       });
       if (!response.ok) {
@@ -877,7 +878,8 @@ const GameSetup = () => {
       const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', {
         body: {
           ...selectedLeague, team_name: selectedTeams2?.teams, data: playerSubPattern,
-          endpoint: "set_players_subs.php", method: "POST"
+          endpoint: "set_players_subs.php", method: "POST",
+          alt_sub: getAltsSelected
         }
       });
       if (!response.ok) {
@@ -902,7 +904,7 @@ const GameSetup = () => {
       const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', {
         body: {
           ...selectedLeague, team_name: selectedTeams2?.teams,
-          endpoint: "get_alts.php", method: "POST"
+          endpoint: "get_alts.php", method: "POST",
         }
       });
       if (!response.ok) {
