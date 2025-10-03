@@ -57,6 +57,13 @@ const SubstitutionPatternSheet: React.FC<SubstitutionPatternSheetProps> = ({
 }) => {
   const { toast } = useToast();
   const [allowAnyPosition, setAllowAnyPosition] = useState(false);
+  const [isSettingPattern, setIsSettingPattern] = useState(false);
+
+  const handleSetPatternClick = async () => {
+    setIsSettingPattern(true);
+    await onSetPattern();
+    setIsSettingPattern(false);
+  }
 
   const positions: { key: keyof PlayerSubPattern, label: string }[] = [
     { key: 'pos1', label: 'C' }, { key: 'pos2', label: 'PF' }, { key: 'pos3', label: 'SF' }, { key: 'pos4', label: 'SG' }, { key: 'pos5', label: 'PG' },
@@ -123,7 +130,10 @@ const SubstitutionPatternSheet: React.FC<SubstitutionPatternSheetProps> = ({
                       label="Allow any position"
                   />
                   <Button variant="default" size="sm" onClick={() => exportToCSV(playerSubPattern || [], `${selectedTeam?.teams}_4min_sub_pattern.csv`)}>Print</Button>
-                  <Button variant="default" size="sm" onClick={onSetPattern}>Set Pattern</Button>
+                  <Button variant="default" size="sm" onClick={handleSetPatternClick} disabled={isSettingPattern}>
+                    {isSettingPattern && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    Set Pattern
+                  </Button>
               </div>
             </div>
             <Table>
