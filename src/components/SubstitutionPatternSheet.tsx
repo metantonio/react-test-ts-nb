@@ -58,12 +58,13 @@ const SubstitutionPatternSheet: React.FC<SubstitutionPatternSheetProps> = ({
   const { toast } = useToast();
   const [allowAnyPosition, setAllowAnyPosition] = useState(false);
   const [isSettingPattern, setIsSettingPattern] = useState(false);
+  const [highlightedPlayer, setHighlightedPlayer] = useState<string | null>(null);
 
   const handleSetPatternClick = async () => {
     setIsSettingPattern(true);
     await onSetPattern();
     setIsSettingPattern(false);
-  }
+  };
 
   const positions: { key: keyof PlayerSubPattern, label: string }[] = [
     { key: 'pos1', label: 'C' }, { key: 'pos2', label: 'PF' }, { key: 'pos3', label: 'SF' }, { key: 'pos4', label: 'SG' }, { key: 'pos5', label: 'PG' },
@@ -110,6 +111,14 @@ const SubstitutionPatternSheet: React.FC<SubstitutionPatternSheetProps> = ({
     setPlayerSubPattern(newPlayerSubPattern);
   };
 
+  const handlePlayerClick = (playerName: string | null) => {
+    if (playerName && playerName.trim() !== '') {
+      setHighlightedPlayer(prev => prev === playerName ? null : playerName);
+    } else {
+      setHighlightedPlayer(null);
+    }
+  };
+
   return (
     <div className="flex gap-2 mt-4 text-xs">
       {isFetching ? (
@@ -149,11 +158,26 @@ const SubstitutionPatternSheet: React.FC<SubstitutionPatternSheetProps> = ({
                   <TableRow key={`q1-${pos.key}`} className=''>
                     {posIndex === 0 && <TableCell rowSpan={5} className="align-middle text-center font-bold w-16 bg-gray tb-border">Qtr1</TableCell>}
                     <TableCell className="font-bold border w-12 bg-danger">{pos.label}</TableCell>
-                    <TableCell className="cursor-pointer hover:bg-muted border bg-muted" onDragOver={(e) => e.preventDefault()} onDrop={(e) => handleDrop(e, 0, pos.key)}>{playerSubPattern[0][pos.key]}</TableCell>
+                    <TableCell 
+                      className={`cursor-pointer hover:bg-muted border bg-muted ${playerSubPattern[0][pos.key] === highlightedPlayer ? 'bg-yellow-300' : ''}`}
+                      onDragOver={(e) => e.preventDefault()} 
+                      onDrop={(e) => handleDrop(e, 0, pos.key)}
+                      onClick={() => handlePlayerClick(playerSubPattern[0][pos.key])}
+                    >{playerSubPattern[0][pos.key]}</TableCell>
                     <TableCell className="font-bold border w-12 bg-danger">{pos.label}</TableCell>
-                    <TableCell className="cursor-pointer hover:bg-muted border bg-muted" onDragOver={(e) => e.preventDefault()} onDrop={(e) => handleDrop(e, 1, pos.key)}>{playerSubPattern[1][pos.key]}</TableCell>
+                    <TableCell 
+                      className={`cursor-pointer hover:bg-muted border bg-muted ${playerSubPattern[1][pos.key] === highlightedPlayer ? 'bg-yellow-300' : ''}`}
+                      onDragOver={(e) => e.preventDefault()} 
+                      onDrop={(e) => handleDrop(e, 1, pos.key)}
+                      onClick={() => handlePlayerClick(playerSubPattern[1][pos.key])}
+                    >{playerSubPattern[1][pos.key]}</TableCell>
                     <TableCell className="font-bold border w-12 bg-danger">{pos.label}</TableCell>
-                    <TableCell className="cursor-pointer hover:bg-muted border bg-muted" onDragOver={(e) => e.preventDefault()} onDrop={(e) => handleDrop(e, 2, pos.key)}>{playerSubPattern[2][pos.key]}</TableCell>
+                    <TableCell 
+                      className={`cursor-pointer hover:bg-muted border bg-muted ${playerSubPattern[2][pos.key] === highlightedPlayer ? 'bg-yellow-300' : ''}`}
+                      onDragOver={(e) => e.preventDefault()} 
+                      onDrop={(e) => handleDrop(e, 2, pos.key)}
+                      onClick={() => handlePlayerClick(playerSubPattern[2][pos.key])}
+                    >{playerSubPattern[2][pos.key]}</TableCell>
                   </TableRow>
                 ))}
                 {/* QTR 2 */}
@@ -167,11 +191,26 @@ const SubstitutionPatternSheet: React.FC<SubstitutionPatternSheetProps> = ({
                   <TableRow key={`q2-${pos.key}`}>
                     {posIndex === 0 && <TableCell rowSpan={5} className="align-middle text-center font-bold w-16 bg-gray tb-border">Qtr2</TableCell>}
                     <TableCell className="font-bold border w-12 bg-danger">{pos.label}</TableCell>
-                    <TableCell className="cursor-pointer hover:bg-muted border bg-muted" onDragOver={(e) => e.preventDefault()} onDrop={(e) => handleDrop(e, 3, pos.key)}>{playerSubPattern[3][pos.key]}</TableCell>
+                    <TableCell 
+                      className={`cursor-pointer hover:bg-muted border bg-muted ${playerSubPattern[3][pos.key] === highlightedPlayer ? 'bg-yellow-300' : ''}`}
+                      onDragOver={(e) => e.preventDefault()} 
+                      onDrop={(e) => handleDrop(e, 3, pos.key)}
+                      onClick={() => handlePlayerClick(playerSubPattern[3][pos.key])}
+                    >{playerSubPattern[3][pos.key]}</TableCell>
                     <TableCell className="font-bold border w-12 bg-danger">{pos.label}</TableCell>
-                    <TableCell className="cursor-pointer hover:bg-muted border bg-muted" onDragOver={(e) => e.preventDefault()} onDrop={(e) => handleDrop(e, 4, pos.key)}>{playerSubPattern[4][pos.key]}</TableCell>
+                    <TableCell 
+                      className={`cursor-pointer hover:bg-muted border bg-muted ${playerSubPattern[4][pos.key] === highlightedPlayer ? 'bg-yellow-300' : ''}`}
+                      onDragOver={(e) => e.preventDefault()} 
+                      onDrop={(e) => handleDrop(e, 4, pos.key)}
+                      onClick={() => handlePlayerClick(playerSubPattern[4][pos.key])}
+                    >{playerSubPattern[4][pos.key]}</TableCell>
                     <TableCell className="font-bold border w-12 bg-danger">{pos.label}</TableCell>
-                    <TableCell className="cursor-pointer hover:bg-muted border bg-muted" onDragOver={(e) => e.preventDefault()} onDrop={(e) => handleDrop(e, 5, pos.key)}>{playerSubPattern[5][pos.key]}</TableCell>
+                    <TableCell 
+                      className={`cursor-pointer hover:bg-muted border bg-muted ${playerSubPattern[5][pos.key] === highlightedPlayer ? 'bg-yellow-300' : ''}`}
+                      onDragOver={(e) => e.preventDefault()} 
+                      onDrop={(e) => handleDrop(e, 5, pos.key)}
+                      onClick={() => handlePlayerClick(playerSubPattern[5][pos.key])}
+                    >{playerSubPattern[5][pos.key]}</TableCell>
                   </TableRow>
                 ))}
 
@@ -186,11 +225,26 @@ const SubstitutionPatternSheet: React.FC<SubstitutionPatternSheetProps> = ({
                   <TableRow key={`q3-${pos.key}`}>
                     {posIndex === 0 && <TableCell rowSpan={5} className="align-middle text-center font-bold w-16 bg-gray tb-border">Qtr3</TableCell>}
                     <TableCell className="font-bold border w-12 bg-danger">{pos.label}</TableCell>
-                    <TableCell className="cursor-pointer hover:bg-muted border bg-muted" onDragOver={(e) => e.preventDefault()} onDrop={(e) => handleDrop(e, 6, pos.key)}>{playerSubPattern[6][pos.key]}</TableCell>
+                    <TableCell 
+                      className={`cursor-pointer hover:bg-muted border bg-muted ${playerSubPattern[6][pos.key] === highlightedPlayer ? 'bg-yellow-300' : ''}`}
+                      onDragOver={(e) => e.preventDefault()} 
+                      onDrop={(e) => handleDrop(e, 6, pos.key)}
+                      onClick={() => handlePlayerClick(playerSubPattern[6][pos.key])}
+                    >{playerSubPattern[6][pos.key]}</TableCell>
                     <TableCell className="font-bold border w-12 bg-danger">{pos.label}</TableCell>
-                    <TableCell className="cursor-pointer hover:bg-muted border bg-muted" onDragOver={(e) => e.preventDefault()} onDrop={(e) => handleDrop(e, 7, pos.key)}>{playerSubPattern[7][pos.key]}</TableCell>
+                    <TableCell 
+                      className={`cursor-pointer hover:bg-muted border bg-muted ${playerSubPattern[7][pos.key] === highlightedPlayer ? 'bg-yellow-300' : ''}`}
+                      onDragOver={(e) => e.preventDefault()} 
+                      onDrop={(e) => handleDrop(e, 7, pos.key)}
+                      onClick={() => handlePlayerClick(playerSubPattern[7][pos.key])}
+                    >{playerSubPattern[7][pos.key]}</TableCell>
                     <TableCell className="font-bold border w-12 bg-danger">{pos.label}</TableCell>
-                    <TableCell className="cursor-pointer hover:bg-muted border bg-muted" onDragOver={(e) => e.preventDefault()} onDrop={(e) => handleDrop(e, 8, pos.key)}>{playerSubPattern[8][pos.key]}</TableCell>
+                    <TableCell 
+                      className={`cursor-pointer hover:bg-muted border bg-muted ${playerSubPattern[8][pos.key] === highlightedPlayer ? 'bg-yellow-300' : ''}`}
+                      onDragOver={(e) => e.preventDefault()} 
+                      onDrop={(e) => handleDrop(e, 8, pos.key)}
+                      onClick={() => handlePlayerClick(playerSubPattern[8][pos.key])}
+                    >{playerSubPattern[8][pos.key]}</TableCell>
                   </TableRow>
                 ))}
 
@@ -205,11 +259,26 @@ const SubstitutionPatternSheet: React.FC<SubstitutionPatternSheetProps> = ({
                   <TableRow key={`q4-${pos.key}`}>
                     {posIndex === 0 && <TableCell rowSpan={5} className="align-middle text-center font-bold w-16 bg-gray tb-border">Qtr4</TableCell>}
                     <TableCell className="font-bold border w-12 bg-danger">{pos.label}</TableCell>
-                    <TableCell className="cursor-pointer hover:bg-muted border bg-muted" onDragOver={(e) => e.preventDefault()} onDrop={(e) => handleDrop(e, 9, pos.key)}>{playerSubPattern[9][pos.key]}</TableCell>
+                    <TableCell 
+                      className={`cursor-pointer hover:bg-muted border bg-muted ${playerSubPattern[9][pos.key] === highlightedPlayer ? 'bg-yellow-300' : ''}`}
+                      onDragOver={(e) => e.preventDefault()} 
+                      onDrop={(e) => handleDrop(e, 9, pos.key)}
+                      onClick={() => handlePlayerClick(playerSubPattern[9][pos.key])}
+                    >{playerSubPattern[9][pos.key]}</TableCell>
                     <TableCell className="font-bold border w-12 bg-danger">{pos.label}</TableCell>
-                    <TableCell className="cursor-pointer hover:bg-muted border bg-muted" onDragOver={(e) => e.preventDefault()} onDrop={(e) => handleDrop(e, 10, pos.key)}>{playerSubPattern[10][pos.key]}</TableCell>
+                    <TableCell 
+                      className={`cursor-pointer hover:bg-muted border bg-muted ${playerSubPattern[10][pos.key] === highlightedPlayer ? 'bg-yellow-300' : ''}`}
+                      onDragOver={(e) => e.preventDefault()} 
+                      onDrop={(e) => handleDrop(e, 10, pos.key)}
+                      onClick={() => handlePlayerClick(playerSubPattern[10][pos.key])}
+                    >{playerSubPattern[10][pos.key]}</TableCell>
                     <TableCell className="font-bold border w-12 bg-danger">{pos.label}</TableCell>
-                    <TableCell className="cursor-pointer hover:bg-muted border bg-muted" onDragOver={(e) => e.preventDefault()} onDrop={(e) => handleDrop(e, 11, pos.key)}>{playerSubPattern[11][pos.key]}</TableCell>
+                    <TableCell 
+                      className={`cursor-pointer hover:bg-muted border bg-muted ${playerSubPattern[11][pos.key] === highlightedPlayer ? 'bg-yellow-300' : ''}`}
+                      onDragOver={(e) => e.preventDefault()} 
+                      onDrop={(e) => handleDrop(e, 11, pos.key)}
+                      onClick={() => handlePlayerClick(playerSubPattern[11][pos.key])}
+                    >{playerSubPattern[11][pos.key]}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -239,9 +308,14 @@ const SubstitutionPatternSheet: React.FC<SubstitutionPatternSheetProps> = ({
                   {playersTeam2.map(player => (
                     <TableRow key={player.name} className='bg-muted'>
                       <TableCell
-                        className="cursor-pointer hover:bg-muted"
+                        className={`cursor-pointer hover:bg-muted ${player.name === highlightedPlayer ? 'bg-yellow-300' : ''}`}
                         draggable="true"
-                        onDragStart={(e) => e.dataTransfer.setData("player_data", JSON.stringify({ name: player.name, position: player.positions }))}
+                        onDragStart={(e) => {
+                          e.dataTransfer.setData("player_data", JSON.stringify({ name: player.name, position: player.positions }));
+                          setHighlightedPlayer(player.name);
+                        }}
+                        onDragEnd={() => setHighlightedPlayer(null)}
+                        onClick={() => handlePlayerClick(player.name)}
                       >
                         {player.name}
                       </TableCell>
