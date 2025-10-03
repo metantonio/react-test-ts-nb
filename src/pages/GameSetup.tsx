@@ -302,7 +302,7 @@ const GameSetup = () => {
   const [playByPlay, setPlayByPlay] = useState<PlayByPlay[]>([]);
   const [boxScore, setBoxScore] = useState<BoxScore[]>([]);
   const [boxScoreFullSeason, setBoxScoreFullSeason] = useState<BoxScoreFullSeason[]>([]);
-  const [playerSubPattern, setPlayerSubPattern] = useState<PlayerSubPattern[]>([]);
+  const [playerSubPattern, setPlayerSubPattern] = useState<PlayerSubPattern[] | null>([]);
   const [getAlts, setGetAlts] = useState<GetAlts[]>([]);
   const [getAltsSelected, setGetAltsSelected] = useState("Default-")
   const [scoreBoard, setScoreBoard] = useState<ScoreBoard | null>(null);
@@ -1099,6 +1099,8 @@ const GameSetup = () => {
             setScheduleMultiplier={setScheduleMultiplier}
             gameList={gameList}
             setGameList={setGameList}
+            playerSubPattern={playerSubPattern}
+            setPlayerSubPattern={setPlayerSubPattern}
           />
         }
         {activeView === 'single-game' &&

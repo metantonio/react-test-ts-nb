@@ -26,7 +26,7 @@ import {
   SheetTrigger
 } from '@/components/ui/sheet';
 import { Loader2, Info } from 'lucide-react';
-import { useToast } from "@/hooks/use-toast";
+import SubstitutionPatternSheet from '@/components/SubstitutionPatternSheet';
 import {
   Tooltip,
   TooltipContent,
@@ -161,6 +161,8 @@ interface FullSeasonVersionProps {
   setScheduleMultiplier: React.Dispatch<React.SetStateAction<string>>;
   gameList: GameList[];
   setGameList: React.Dispatch<React.SetStateAction<GameList[]>>;
+  playerSubPattern: PlayerSubPattern[] | null;
+  setPlayerSubPattern: React.Dispatch<React.SetStateAction<PlayerSubPattern[] | null>>;
 }
 
 const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
@@ -203,7 +205,9 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
     //scheduleMultiplier,
     setScheduleMultiplier,
     gameList,
-    setGameList
+    setGameList,
+    playerSubPattern,
+    setPlayerSubPattern
   }
 ) => {
   //const [schedule, setSchedule] = useState('predict');
@@ -213,10 +217,8 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
   const [isClear, setIsClear] = useState(false)
   const [isSimulating, setIsSimulating] = useState(false);
   const [multiplier, setMultiplier] = useState(100)
-  const [playerSubPattern, setPlayerSubPattern] = useState<PlayerSubPattern[] | null>([]);
   const [isSubPatternSheetOpen, setIsSubPatternSheetOpen] = useState(false);
   const [isFetchingSubPattern, setIsFetchingSubPattern] = useState(false);
-  const { toast } = useToast();
 
   const handleSubPatternClick = async () => {
     setIsFetchingSubPattern(true);
@@ -228,71 +230,6 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
     }
     setIsSubPatternSheetOpen(true);
     setIsFetchingSubPattern(false);
-  };
-
-  const handleDrop = (e: React.DragEvent, intervalIndex: number, posKey: keyof PlayerSubPattern) => {
-    const playerName = e.dataTransfer.getData("player_name");
-    if (playerName && playerSubPattern) {
-      const currentIntervalPattern = playerSubPattern[intervalIndex];
-
-      // Check for duplicate player in the current 4-minute interval
-      const isDuplicate = Object.values(currentIntervalPattern).some(
-        (name) => name === playerName
-      );
-
-      if (isDuplicate) {
-        toast({
-          title: "Duplicate Player",
-          description: `Player ${playerName} is already in this 4-minute pattern.`,
-          variant: "destructive",
-        });
-        return; // Prevent the drop
-      }
-
-      const newPlayerSubPattern = [...playerSubPattern];
-      newPlayerSubPattern[intervalIndex] = {
-        ...newPlayerSubPattern[intervalIndex],
-        [posKey]: playerName,
-      };
-      setPlayerSubPattern(newPlayerSubPattern);
-    }
-  };
-
-
-  const positions: { key: keyof PlayerSubPattern, label: string }[] = [
-    { key: 'pos1', label: 'C' }, { key: 'pos2', label: 'PF' }, { key: 'pos3', label: 'SF' }, { key: 'pos4', label: 'SG' }, { key: 'pos5', label: 'PG' },
-  ];
-
-  const timeIntervals = [
-    '0-4', '4-8', '8-12', '12-16', '16-20', '20-24', '24-28', '28-32', '32-36', '36-40', '40-44', '44-48',
-  ];
-
-  const renderInterval = (intervalIndex: number) => {
-    if (!playerSubPattern || playerSubPattern.length !== 12) return null;
-    const data = playerSubPattern[intervalIndex];
-    return (
-      <div>
-        <div className="font-bold text-center mb-2">{timeIntervals[intervalIndex]}</div>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[50px]">Pos</TableHead>
-              <TableHead>Name</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {positions.map(pos => (
-              <TableRow key={pos.key}>
-                <TableCell>{pos.label}</TableCell>
-                <TableCell className="cursor-pointer hover:bg-muted">
-                  {data[pos.key]}
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
-    );
   };
 
   let gameCounter = 0
@@ -437,6 +374,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                 </div></> : <></>}
               {selectedLeague && (selectedTeams1 || selectedTeams2) ? <>
                 <div className="grid grid-cols-2 gap-2 mt-4">
+                  {/* START Sheet of 4 minute substitution pattern */}
                   <Sheet open={isSubPatternSheetOpen} onOpenChange={setIsSubPatternSheetOpen}>
                     <SheetTrigger asChild>
                       <Button variant="outline" onClick={handleSubPatternClick} disabled={schedule !== "8200" || isFetchingSubPattern}>Substitution Pattern</Button>
@@ -445,145 +383,17 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                       <SheetHeader>
                         <SheetTitle>4 Minute Substitution Pattern - {selectedTeams2?.teams}</SheetTitle>
                       </SheetHeader>
-                      <div className="flex gap-2 mt-4 text-xs">
-                        {isFetchingSubPattern ? (
-                          <div className="flex flex-col items-center justify-center w-full h-full min-h-[300px]">
-                            <Loader2 className="h-8 w-8 animate-spin" />
-                            <p className="mt-2">Loading player substitution data...</p>
-                          </div>
-                        ) : (
-                          <>
-                            <div className="overflow-auto pr-2" style={{ height: 'calc(100vh - 150px)' }}>
-                              <div className="flex items-center justify-between">
-                                <h2 className="text-xl font-bold mt-8 mb-4">{selectedTeams2?.teams}</h2>
-                                <Button variant="default" size="sm" onClick={() => exportToCSV(playerSubPattern || [], `${selectedTeams2?.teams}_4min_sub_pattern.csv`)}>Print</Button>
-                                <Button variant="default" size="sm" onClick={() => { handleFetchSetPlayerSubpattern() }}>Set Pattern</Button>
-                              </div>
-                              <Table>
-                                <TableBody>
-                                  {/* QTR 1 */}
-                                  <TableRow>
-                                    <TableHead colSpan={1} className="w-16"></TableHead>
-                                    <TableHead colSpan={2} className="text-center font-bold border tb-border">0-4 min</TableHead>
-                                    <TableHead colSpan={2} className="text-center font-bold border tb-border">4-8 min</TableHead>
-                                    <TableHead colSpan={2} className="text-center font-bold border tb-border">8-12 min</TableHead>
-                                  </TableRow>
-                                  {playerSubPattern && playerSubPattern.length === 12 && positions.map((pos, posIndex) => (
-                                    <TableRow key={`q1-${pos.key}`} className=''>
-                                      {posIndex === 0 && <TableCell rowSpan={5} className="align-middle text-center font-bold w-16 bg-gray tb-border">Qtr1</TableCell>}
-                                      <TableCell className="font-bold border w-12 bg-danger">{pos.label}</TableCell>
-                                      <TableCell className="cursor-pointer hover:bg-muted border bg-muted" onDragOver={(e) => e.preventDefault()} onDrop={(e) => handleDrop(e, 0, pos.key)}>{playerSubPattern[0][pos.key]}</TableCell>
-                                      <TableCell className="font-bold border w-12 bg-danger">{pos.label}</TableCell>
-                                      <TableCell className="cursor-pointer hover:bg-muted border bg-muted" onDragOver={(e) => e.preventDefault()} onDrop={(e) => handleDrop(e, 1, pos.key)}>{playerSubPattern[1][pos.key]}</TableCell>
-                                      <TableCell className="font-bold border w-12 bg-danger">{pos.label}</TableCell>
-                                      <TableCell className="cursor-pointer hover:bg-muted border bg-muted" onDragOver={(e) => e.preventDefault()} onDrop={(e) => handleDrop(e, 2, pos.key)}>{playerSubPattern[2][pos.key]}</TableCell>
-                                    </TableRow>
-                                  ))}
-                                  {/* QTR 2 */}
-                                  <TableRow>
-                                    <TableHead colSpan={1} className="w-16"></TableHead>
-                                    <TableHead colSpan={2} className="text-center font-bold border tb-border">12-16 min</TableHead>
-                                    <TableHead colSpan={2} className="text-center font-bold border tb-border">16-20 min</TableHead>
-                                    <TableHead colSpan={2} className="text-center font-bold border tb-border">20-24 min</TableHead>
-                                  </TableRow>
-                                  {playerSubPattern && playerSubPattern.length === 12 && positions.map((pos, posIndex) => (
-                                    <TableRow key={`q2-${pos.key}`}>
-                                      {posIndex === 0 && <TableCell rowSpan={5} className="align-middle text-center font-bold w-16 bg-gray tb-border">Qtr2</TableCell>}
-                                      <TableCell className="font-bold border w-12 bg-danger">{pos.label}</TableCell>
-                                      <TableCell className="cursor-pointer hover:bg-muted border bg-muted" onDragOver={(e) => e.preventDefault()} onDrop={(e) => handleDrop(e, 3, pos.key)}>{playerSubPattern[3][pos.key]}</TableCell>
-                                      <TableCell className="font-bold border w-12 bg-danger">{pos.label}</TableCell>
-                                      <TableCell className="cursor-pointer hover:bg-muted border bg-muted" onDragOver={(e) => e.preventDefault()} onDrop={(e) => handleDrop(e, 4, pos.key)}>{playerSubPattern[4][pos.key]}</TableCell>
-                                      <TableCell className="font-bold border w-12 bg-danger">{pos.label}</TableCell>
-                                      <TableCell className="cursor-pointer hover:bg-muted border bg-muted" onDragOver={(e) => e.preventDefault()} onDrop={(e) => handleDrop(e, 5, pos.key)}>{playerSubPattern[5][pos.key]}</TableCell>
-                                    </TableRow>
-                                  ))}
-
-                                  {/* QTR 3 */}
-                                  <TableRow>
-                                    <TableHead colSpan={1} className="w-16"></TableHead>
-                                    <TableHead colSpan={2} className="text-center font-bold border tb-border">24-28 min</TableHead>
-                                    <TableHead colSpan={2} className="text-center font-bold border tb-border">28-32 min</TableHead>
-                                    <TableHead colSpan={2} className="text-center font-bold border tb-border">32-36 min</TableHead>
-                                  </TableRow>
-                                  {playerSubPattern && playerSubPattern.length === 12 && positions.map((pos, posIndex) => (
-                                    <TableRow key={`q3-${pos.key}`}>
-                                      {posIndex === 0 && <TableCell rowSpan={5} className="align-middle text-center font-bold w-16 bg-gray tb-border">Qtr3</TableCell>}
-                                      <TableCell className="font-bold border w-12 bg-danger">{pos.label}</TableCell>
-                                      <TableCell className="cursor-pointer hover:bg-muted border bg-muted" onDragOver={(e) => e.preventDefault()} onDrop={(e) => handleDrop(e, 6, pos.key)}>{playerSubPattern[6][pos.key]}</TableCell>
-                                      <TableCell className="font-bold border w-12 bg-danger">{pos.label}</TableCell>
-                                      <TableCell className="cursor-pointer hover:bg-muted border bg-muted" onDragOver={(e) => e.preventDefault()} onDrop={(e) => handleDrop(e, 7, pos.key)}>{playerSubPattern[7][pos.key]}</TableCell>
-                                      <TableCell className="font-bold border w-12 bg-danger">{pos.label}</TableCell>
-                                      <TableCell className="cursor-pointer hover:bg-muted border bg-muted" onDragOver={(e) => e.preventDefault()} onDrop={(e) => handleDrop(e, 8, pos.key)}>{playerSubPattern[8][pos.key]}</TableCell>
-                                    </TableRow>
-                                  ))}
-
-                                  {/* QTR 4 */}
-                                  <TableRow>
-                                    <TableHead colSpan={1} className="w-16"></TableHead>
-                                    <TableHead colSpan={2} className="text-center font-bold border tb-border">36-40 min</TableHead>
-                                    <TableHead colSpan={2} className="text-center font-bold border tb-border">40-44 min</TableHead>
-                                    <TableHead colSpan={2} className="text-center font-bold border tb-border">44-48 min</TableHead>
-                                  </TableRow>
-                                  {playerSubPattern && playerSubPattern.length === 12 && positions.map((pos, posIndex) => (
-                                    <TableRow key={`q4-${pos.key}`}>
-                                      {posIndex === 0 && <TableCell rowSpan={5} className="align-middle text-center font-bold w-16 bg-gray tb-border">Qtr4</TableCell>}
-                                      <TableCell className="font-bold border w-12 bg-danger">{pos.label}</TableCell>
-                                      <TableCell className="cursor-pointer hover:bg-muted border bg-muted" onDragOver={(e) => e.preventDefault()} onDrop={(e) => handleDrop(e, 9, pos.key)}>{playerSubPattern[9][pos.key]}</TableCell>
-                                      <TableCell className="font-bold border w-12 bg-danger">{pos.label}</TableCell>
-                                      <TableCell className="cursor-pointer hover:bg-muted border bg-muted" onDragOver={(e) => e.preventDefault()} onDrop={(e) => handleDrop(e, 10, pos.key)}>{playerSubPattern[10][pos.key]}</TableCell>
-                                      <TableCell className="font-bold border w-12 bg-danger">{pos.label}</TableCell>
-                                      <TableCell className="cursor-pointer hover:bg-muted border bg-muted" onDragOver={(e) => e.preventDefault()} onDrop={(e) => handleDrop(e, 11, pos.key)}>{playerSubPattern[11][pos.key]}</TableCell>
-                                    </TableRow>
-                                  ))}
-                                </TableBody>
-                              </Table>
-                            </div>
-                            <div className="w-1/3 border-l pl-2 mx-4">
-                              <TooltipProvider>
-                                <Tooltip>
-                                  <TooltipTrigger asChild>
-
-                                    <h3 className="font-bold mb-2 text-sm">Available Players <Info className="h-4 w-4 inline-block ml-1" /></h3>
-
-
-                                  </TooltipTrigger>
-                                  <TooltipContent>
-                                    <p>Drag players from here to the substitution pattern table</p>
-                                  </TooltipContent>
-                                </Tooltip>
-                              </TooltipProvider>
-                              <div className="overflow-y-auto" style={{ height: 'calc(100vh - 200px)' }}>
-                                <Table>
-                                  <TableHeader>
-                                    <TableRow>
-                                      <TableHead>Name</TableHead>
-                                      <TableHead>Pos</TableHead>
-                                      <TableHead>Ht</TableHead>
-                                    </TableRow>
-                                  </TableHeader>
-                                  <TableBody>
-                                    {playersTeam2.map(player => (
-                                      <TableRow key={player.name} className='bg-muted'>
-                                        <TableCell
-                                          className="cursor-pointer hover:bg-muted"
-                                          draggable="true"
-                                          onDragStart={(e) => e.dataTransfer.setData("player_name", player.name)}
-                                        >
-                                          {player.name}
-                                        </TableCell>
-                                        <TableCell className="cursor-pointer hover:bg-muted">{player.positions}</TableCell>
-                                        <TableCell className="cursor-pointer hover:bg-muted">{player.height}</TableCell>
-                                      </TableRow>
-                                    ))}
-                                  </TableBody>
-                                </Table>
-                              </div>
-                            </div>
-                          </>
-                        )}
-                      </div>
+                      <SubstitutionPatternSheet
+                        isFetching={isFetchingSubPattern}
+                        playerSubPattern={playerSubPattern}
+                        setPlayerSubPattern={setPlayerSubPattern}
+                        playersTeam2={playersTeam2}
+                        selectedTeam={selectedTeams2}
+                        onSetPattern={handleFetchSetPlayerSubpattern}
+                      />
                     </SheetContent>
                   </Sheet>
+                  {/* END Sheet of 4 minute substitution pattern */}
                   <Sheet>
                     <SheetTrigger asChild>
                       <Button variant="outline">Actual Player Statistics</Button>
