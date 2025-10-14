@@ -596,7 +596,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                               <TableCell className="font-medium">{game.game_number}</TableCell>
                               <TableCell>
                                 <div className="flex items-center gap-2">
-                                  <TeamLogo logo={teamLogos[game.team_name1]} name={game.team_name1} />
+                                  {/* <TeamLogo logo={teamLogos[game.team_name1]} name={game.team_name1} /> */}
                                   <span>{game.team_name1}</span>
                                 </div>
                               </TableCell>
@@ -604,7 +604,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                               <TableCell className="text-right font-bold">{game.team1_score}</TableCell>
                               <TableCell>
                                 <div className="flex items-center gap-2">
-                                  <TeamLogo logo={teamLogos[game.team_name2]} name={game.team_name2} />
+                                 {/*  <TeamLogo logo={teamLogos[game.team_name2]} name={game.team_name2} /> */}
                                   <span>{game.team_name2}</span>
                                 </div>
                               </TableCell>
