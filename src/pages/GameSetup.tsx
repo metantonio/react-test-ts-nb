@@ -530,9 +530,9 @@ const GameSetup = () => {
             endpoint: "play_82.php",
             method: "POST",
             "league_name": selectedLeague?.league_name,
-            "numgames": "normal",
+            "numgames": scheduleMultiplier == "82"? "normal": scheduleMultiplier,
             "homeaway": location,
-            "gamemode": scheduleMultiplier,
+            "gamemode": schedule,
             "keeppbp": "Y",
             "hometeam": selectedTeams2?.teams,
             //apikey: API_KEY
