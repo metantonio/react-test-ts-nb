@@ -561,6 +561,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                   <CustomCheckbox id="save-box" checked={saveBox} onChange={setSaveBox} label="Save Box Scores - no more than 15,000 games" />
                 </div>
                 <Button variant="outline" disabled={isLoading || isSimulating} className="mt-4" onClick={async () => {
+                  setGameList([])
                   if (schedule == "predict") {
                     await handlePlayGames()
                   } else {
@@ -571,7 +572,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                   {isSimulating && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   PLAY GAMES
                 </Button>
-                {gameList.length > 0 && (schedule === "fullseason" || schedule === "predict") ? (
+                {gameList.length > 0 /* && (schedule === "fullseason" || schedule === "predict") */ ? (
                   <div className="mt-4 border rounded-md bg-card text-card-foreground">
                     <Button variant="default" size="sm" onClick={() => exportToCSV(gameList || [], `${selectedTeams2?.teams}_fullseason_game_list.csv`)}>Print</Button>
 
