@@ -415,7 +415,7 @@ const GameSetup = () => {
   const handleFetchTeams = async () => {
     setError(null);
     try {
-      const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', { body: { ...selectedLeague, method: "POST", endpoint: "get_teams.php", content: "json" } });
+      const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', { body: { ...selectedLeague, method: "POST", endpoint: "get_teams.php", content: "json", alt_sub: getAltsSelected } });
       if (!response.ok) {
         const err: Message = await response.json();
         setError(`error: ${err.message}`);
@@ -436,7 +436,7 @@ const GameSetup = () => {
     setError(null);
     setIsGameInitial(true);
     try {
-      const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', { body: { endpoint: "playsinglegame_initial.php", method: "POST", homeaway: location, awayleague_name: selectedLeague?.league_name, homeleague_name: selectedLeague?.league_name, hometeam: selectedTeams2?.teams, awayteam: selectedTeams1?.teams } });
+      const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', { body: { endpoint: "playsinglegame_initial.php", method: "POST", homeaway: location, awayleague_name: selectedLeague?.league_name, homeleague_name: selectedLeague?.league_name, hometeam: selectedTeams2?.teams, awayteam: selectedTeams1?.teams, alt_sub: getAltsSelected } });
       if (!response.ok) {
         const err: Message = await response.json();
         setError(`error: ${err.message}`);
@@ -474,7 +474,7 @@ const GameSetup = () => {
   const handleFetchScoreBoard = async () => { //this is to use in the single season mode
     setError(null);
     try {
-      const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', { body: { endpoint: "get_singlegame_stats.php", method: "POST" } });
+      const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', { body: { endpoint: "get_singlegame_stats.php", method: "POST", alt_sub: getAltsSelected } });
       if (!response.ok) {
         const err: Message = await response.json();
         setError(`error: ${err.message}`);
@@ -506,6 +506,7 @@ const GameSetup = () => {
             "keeppbp": "N",
             "gamearray": [{ "predicthome": selectedTeams2?.teams, "predictaway": selectedTeams1?.teams, "predictgames": "20" }],
             "hometeam": selectedTeams2?.teams,
+            alt_sub: getAltsSelected
             //apikey: schedule == "predict" ? "" : API_KEY
           },
           //apikey: schedule == "predict" ? "" : API_KEY
@@ -520,6 +521,7 @@ const GameSetup = () => {
             "homeaway": "home",
             "gamemode": schedule,
             "keeppbp": "N",
+            alt_sub: getAltsSelected
             //apikey: API_KEY
           },
           //apikey: API_KEY
@@ -535,6 +537,7 @@ const GameSetup = () => {
             "gamemode": schedule,
             "keeppbp": "Y",
             "hometeam": selectedTeams2?.teams,
+            alt_sub: getAltsSelected
             //apikey: API_KEY
           },
           //apikey: API_KEY
@@ -596,7 +599,8 @@ const GameSetup = () => {
       const response = await fetchWithAuth(`${API_URL}/conversion.js`, 'POST', {
         body: {
           endpoint: "playsinglegame_step.php", method: "POST",
-          options: "4"
+          options: "4",
+          alt_sub: getAltsSelected
         }
       });
       if (!response.ok) {
@@ -616,7 +620,8 @@ const GameSetup = () => {
       const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', {
         body: {
           ...selectedLeague, team_name: selectedTeams1?.teams,
-          endpoint: "get_actual_player_stats.php", method: "POST"
+          endpoint: "get_actual_player_stats.php", method: "POST",
+          alt_sub: getAltsSelected
         }
       });
       if (!response.ok) {
@@ -641,7 +646,8 @@ const GameSetup = () => {
         body: {
           ...selectedLeague,
           endpoint: "get_actual_player_stats.php", method: "POST",
-          team_name: selectedTeams2?.teams
+          team_name: selectedTeams2?.teams,
+          alt_sub: getAltsSelected
         }
       });
       if (!response.ok) {
@@ -664,7 +670,8 @@ const GameSetup = () => {
     try {
       const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', {
         body: {
-          endpoint: "get_singlegame_pbp.php", method: "POST"
+          endpoint: "get_singlegame_pbp.php", method: "POST",
+          alt_sub: getAltsSelected
         }
       }
       );
@@ -690,6 +697,7 @@ const GameSetup = () => {
         body: {
           endpoint: "get_singlegame_box.php",
           method: "POST",
+          alt_sub: getAltsSelected
         },
       });
 
@@ -737,14 +745,16 @@ const GameSetup = () => {
 
         response = await fetchWithAuth(`${SIMULATION_URL}/get_raw_box_scores.php`, 'POST', {
           //method: "POST",
-          game_number: "ALL"
+          game_number: "ALL",
+          alt_sub: getAltsSelected
         })
       } else {
         response = await fetchWithAuth(`${API_URL}/conversionjs`, "POST", {
           body: {
             endpoint: "get_raw_box_scores.php",
             method: "POST",
-            game_number: "ALL"
+            game_number: "ALL",
+            alt_sub: getAltsSelected
           },
         });
       }
@@ -790,12 +800,13 @@ const GameSetup = () => {
       let response;
       if (ELECTRON === "electron" || ELECTRON === "web") {
 
-        response = await fetchWithAuth(`${SIMULATION_URL}/get_played_game_list.php`, 'POST', {})
+        response = await fetchWithAuth(`${SIMULATION_URL}/get_played_game_list.php`, 'POST', {alt_sub: getAltsSelected})
       } else {
         response = await fetchWithAuth(`${API_URL}/conversionjs`, "POST", {
           body: {
             endpoint: "get_played_game_list.php",
             method: "POST",
+            alt_sub: getAltsSelected
           },
         });
       }
@@ -875,13 +886,36 @@ const GameSetup = () => {
   const handleFetchSetPlayerSubpattern = async () => {
     setError(null);
     try {
-      const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', {
+      let body: { body: { [key: string]: any }, [key: string]: any };
+      let response;
+      body = {
+        body:{
+          ...selectedLeague, team_name: selectedTeams2?.teams, data: playerSubPattern,
+          endpoint: "set_players_subs.php", method: "POST",
+          alt_sub: getAltsSelected
+        }}
+
+      if (ELECTRON === "electron" || ELECTRON === "web") {
+        if ('body' in body && typeof body.body === 'object' && body.body !== null) {
+          body.body.apikey = API_KEY;
+          body.apikey = API_KEY;
+          delete body.body.method;
+          delete body.body.endpoint
+        }
+        //delete body.body.authorization;
+        response = await fetchWithAuth(`${SIMULATION_URL}/set_players_subs.php`, 'POST', { ...body.body })
+      }
+      else {
+        response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', body)
+      }
+
+      /* const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', {
         body: {
           ...selectedLeague, team_name: selectedTeams2?.teams, data: playerSubPattern,
           endpoint: "set_players_subs.php", method: "POST",
           alt_sub: getAltsSelected
         }
-      });
+      }); */
       if (!response.ok) {
         const err: Message = await response.json();
         setError(`error: ${err.message}`);
@@ -918,6 +952,7 @@ const GameSetup = () => {
       const body: { data: GetAlts[] } = JSON.parse(data.body)
       console.log("Alts: ", body.data)
       setGetAlts(body.data)
+      setGetAltsSelected(body.data[0].alt_sub)
       //return data.data
       return
     } catch (err: any) {
