@@ -952,7 +952,8 @@ const GameSetup = () => {
       const body: { data: GetAlts[] } = JSON.parse(data.body)
       console.log("Alts: ", body.data)
       setGetAlts(body.data)
-      setGetAltsSelected(body.data[0].alt_sub)
+      //setGetAltsSelected(body.data[0].alt_sub)
+      setGetAltsSelected("Default-")
       //return data.data
       return
     } catch (err: any) {
@@ -981,7 +982,7 @@ const GameSetup = () => {
     if (selectedLeague) {
       loadTeams();
       if (selectedTeams2) {
-        setGetAltsSelected("Default-")
+        //setGetAltsSelected("Default-")
         handleFetchSetGetAlts()
       }
     }
