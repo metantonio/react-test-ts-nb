@@ -1058,7 +1058,7 @@ const GameSetup = () => {
     }
   };
 
-  const handleFetchSetPlayerDraft = async () => {
+  const handleFetchSetPlayerDraft = async (): Promise<void> => {
     setError(null);
     try {
       let body: { body: { [key: string]: any }, [key: string]: any };
@@ -1103,7 +1103,6 @@ const GameSetup = () => {
       return
     } catch (err: any) {
       setError(`${err}`);
-      return null
     }
   };
 

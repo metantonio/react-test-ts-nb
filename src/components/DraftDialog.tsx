@@ -23,6 +23,8 @@ import {
   TableRow,
 } from '@/components/ui/table';
 
+import { Loader2 } from 'lucide-react';
+
 // Keep the existing interfaces from FullSeasonVersion.tsx
 interface League {
   league_name: string;
@@ -61,7 +63,7 @@ interface DraftDialogProps {
   setSelectedLeagueDraft: (league: League | null) => void;
   selectedTeamDraft: Team | null;
   setSelectedTeamDraft: (team: Team | null) => void;
-  onSave: () => void;
+  onSave: () => Promise<void>;
   draftActions: DraftAction[];
   setDraftActions: React.Dispatch<React.SetStateAction<DraftAction[]>>;
   handleFetchTeamsDraft: () => void;
@@ -86,12 +88,24 @@ const DraftDialog: React.FC<DraftDialogProps> = ({
   handleFetchTeamsDraft,
 }) => {
   const [draggedPlayer, setDraggedPlayer] = useState<PlayerChar | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     if (selectedLeagueDraft) {
       handleFetchTeamsDraft();
     }
   }, [selectedLeagueDraft]);
+
+  const handleSave = async () => {
+    setIsSaving(true);
+    try {
+      await onSave();
+      onOpenChange(false);
+    } finally {
+      setIsSaving(false);
+      setDraftActions([])
+    }
+  };
 
   const handleDragStart = (
     e: React.DragEvent<HTMLTableRowElement>,
@@ -249,13 +263,11 @@ const DraftDialog: React.FC<DraftDialogProps> = ({
           </div>
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
+          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isSaving}>
             Cancel
           </Button>
-          <Button onClick={() => {
-            onSave();
-            onOpenChange(false);
-          }}>
+          <Button onClick={handleSave} disabled={isSaving}>
+            {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Save Changes
           </Button>
         </DialogFooter>

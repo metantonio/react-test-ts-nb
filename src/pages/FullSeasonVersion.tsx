@@ -182,7 +182,7 @@ interface FullSeasonVersionProps {
   setSelectedTeamDraft: React.Dispatch<React.SetStateAction<Team | null>>;
   playersTeamDraft: PlayerChar[];
   handleFetchTeamsDraft: () => Promise<void>;
-  handleFetchSetPlayerDraft: () => Promise<void | null>;
+  handleFetchSetPlayerDraft: () => Promise<void>;
   teamsDraft: Team[];
 }
 
@@ -385,7 +385,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                   </DropdownMenu>
                 </div>
               </div> : <></>}
-              {selectedLeague && selectedTeams2 && schedule == "8200" ? <>
+              {selectedLeague && selectedTeams2 ? <>
                 <label className="text-sm font-medium">Alts Subs (Home Team)</label>
                 <div className="grid grid-cols-1 gap-2 mt-4">
 
