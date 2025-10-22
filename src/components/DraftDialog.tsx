@@ -152,11 +152,11 @@ const DraftDialog: React.FC<DraftDialogProps> = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl h-[80vh]">
+      <DialogContent className="max-w-5xl w-full h-[90vh] flex flex-col">
         <DialogHeader>
           <DialogTitle>Draft Players</DialogTitle>
         </DialogHeader>
-        <div className="grid grid-cols-2 gap-4 h-full">
+        <div className="grid md:grid-cols-2 gap-4 flex-grow min-h-0">
           <div className="border p-2 rounded-md overflow-y-auto">
             <h3 className="text-lg font-semibold mb-2">{currentTeam?.teams}</h3>
             <Table>
@@ -182,7 +182,7 @@ const DraftDialog: React.FC<DraftDialogProps> = ({
             </Table>
           </div>
           <div className="border p-2 rounded-md flex flex-col">
-            <div className="flex gap-2 mb-2">
+            <div className="flex flex-col md:flex-row gap-2 mb-2">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" className="w-full">
