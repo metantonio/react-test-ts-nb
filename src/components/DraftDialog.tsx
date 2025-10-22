@@ -157,32 +157,34 @@ const DraftDialog: React.FC<DraftDialogProps> = ({
           <DialogTitle>Draft Players</DialogTitle>
         </DialogHeader>
         <div className="grid md:grid-cols-2 gap-4 flex-grow min-h-0">
-          <div className="border p-2 rounded-md overflow-y-auto">
-            <h3 className="text-lg font-semibold mb-2">{currentTeam?.teams}</h3>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Player</TableHead>
-                  <TableHead>Position</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {displayedCurrentPlayers.map(player => (
-                  <TableRow
-                    key={player.name}
-                    onDragOver={handleDragOver}
-                    onDrop={e => handleDrop(e, player)}
-                    className="cursor-pointer"
-                  >
-                    <TableCell>{player.name}</TableCell>
-                    <TableCell>{player.positions}</TableCell>
+          <div className="border p-2 rounded-md flex flex-col overflow-hidden">
+            <h3 className="text-lg font-semibold mb-2 flex-shrink-0">{currentTeam?.teams}</h3>
+            <div className="overflow-y-auto flex-grow">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Player</TableHead>
+                    <TableHead>Position</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {displayedCurrentPlayers.map(player => (
+                    <TableRow
+                      key={player.name}
+                      onDragOver={handleDragOver}
+                      onDrop={e => handleDrop(e, player)}
+                      className="cursor-pointer"
+                    >
+                      <TableCell>{player.name}</TableCell>
+                      <TableCell>{player.positions}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           </div>
-          <div className="border p-2 rounded-md flex flex-col">
-            <div className="flex flex-col md:flex-row gap-2 mb-2">
+          <div className="border p-2 rounded-md flex flex-col overflow-hidden">
+            <div className="flex flex-col md:flex-row gap-2 mb-2 flex-shrink-0">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" className="w-full">
