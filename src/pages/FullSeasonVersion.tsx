@@ -352,13 +352,12 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                 </DropdownMenu>
               </div>
               {selectedLeague ? <div className="mt-2">
-                <label className="text-sm font-medium text-center">Away Team - Home Team</label>
+                {/* <label className="text-sm font-medium text-center">Away Team - Home Team</label> */}
                 <div className="flex gap-2 mt-1">
-                  <DropdownMenu>
+                  {schedule != '8200' ? <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-
                       <Button variant="outline" className={`${selectedTeams1 ? "" : "pulse-attention"}`} disabled={teams.length === 0}>
-                        {selectedTeams1 ? selectedTeams1.teams : "Select Away Team"}
+                        {selectedTeams1 ? `Away Team: ${selectedTeams1.teams}` : "Select Away Team"}
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent style={{ backgroundColor: 'var(--bg-color-component)' }} className="h-[200px] overflow-y-auto">
@@ -368,11 +367,12 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                         </DropdownMenuItem>
                       ))}
                     </DropdownMenuContent>
-                  </DropdownMenu>
+                  </DropdownMenu> : <></>
+                  }
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="outline" className={`${selectedTeams2 ? "" : "pulse-attention"}`} disabled={teams.length === 0}>
-                        {selectedTeams2 ? selectedTeams2.teams : "Select Home Team"}
+                        {selectedTeams2 ? `Home Team: ${selectedTeams2.teams}` : "Select Home Team"}
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent style={{ backgroundColor: 'var(--bg-color-component)' }} className="h-[200px] overflow-y-auto">
@@ -636,7 +636,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                               <TableCell className="text-right font-bold">{game.team1_score}</TableCell>
                               <TableCell>
                                 <div className="flex items-center gap-2">
-                                 {/*  <TeamLogo logo={teamLogos[game.team_name2]} name={game.team_name2} /> */}
+                                  {/*  <TeamLogo logo={teamLogos[game.team_name2]} name={game.team_name2} /> */}
                                   <span>{game.team_name2}</span>
                                 </div>
                               </TableCell>
