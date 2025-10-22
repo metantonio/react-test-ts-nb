@@ -9,6 +9,7 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Menu } from 'lucide-react';
 import { authService } from '@/contexts/AuthService';
 import { useUser } from '@/contexts/UserContext';
+import { StringToBoolean } from 'class-variance-authority/types';
 
 interface Message {
   message: string;
@@ -250,6 +251,16 @@ interface BoxScoreFullSeasonResponse {
   data: BoxScoreFullSeason[];
 }
 
+interface DraftAction {
+  action: 'replace';
+  original_league: string;
+  original_team: string;
+  original_player: string;
+  new_player_league: string;
+  new_player_team: string;
+  new_player_name: string;
+}
+
 const teamLogos: { [key: string]: string } = {
   "Atlanta Hawks": "https://upload.wikimedia.org/wikipedia/en/2/24/Atlanta_Hawks_logo.svg",
   "Boston Celtics": "https://upload.wikimedia.org/wikipedia/en/8/8f/Boston_Celtics.svg",
@@ -389,6 +400,49 @@ const GameSetup = () => {
     pctbs: ""
   }]);
   const [gameList, setGameList] = useState<GameList[]>([])
+  const [draftActions, setDraftActions] = useState<DraftAction[]>([])
+  const [selectedLeagueDraft, setSelectedLeagueDraft] = useState<League | null>(null);
+  const [selectedTeamsDraft, setSelectedTeamsDraft] = useState<Teams | null>(null);
+  const [playersTeamDraft, setPlayersTeamDraft] = useState<PlayerChar[]>([{
+    name: "",
+    position: "",
+    poss_fact: "",
+    two_pt_fg_pct: "",
+    ft_pct: "",
+    pct_shot: "",
+    three_pt_pct_shot: "",
+    pct_fouled: "",
+    pct_to: "",
+    pct_pass: "",
+    off_reb: "",
+    def_reb: "",
+    def_fg_pct: "",
+    pct_pf: "",
+    pct_st: "",
+    pct_bs: "",
+    year: "",
+    team_code: "",
+    height: "",
+    deny_fact: "",
+    g: "",
+    min: "",
+    ming: "",
+    ptsg: "",
+    positions: "",
+    fgpct: "",
+    scorefgpct: "",
+    twoptfgpct: "",
+    threeptfgpct: "",
+    ftpct: "",
+    offreb: "",
+    defreb: "",
+    totreb: "",
+    defrat: "",
+    pctpf: "",
+    pctst: "",
+    pctbs: ""
+  }]);
+  const [teamsDraft, setTeamsDraft] = useState<Teams[]>([{ teams: "N/A" }]);
 
   const API_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -427,6 +481,23 @@ const GameSetup = () => {
       const body: { data: Teams[] } = JSON.parse(data.body)
       console.log("parsed teams: ",body.data)
       setTeams(body.data);
+    } catch (err: any) {
+      setError(`${err}`);
+    }
+  };
+
+  const handleFetchTeamsDraft = async () => {
+    setError(null);
+    try {
+      const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', { body: { ...selectedLeagueDraft, method: "POST", endpoint: "get_teams.php", content: "json", alt_sub: getAltsSelected } });
+      if (!response.ok) {
+        const err: Message = await response.json();
+        setError(`error: ${err.message}`);
+        throw new Error('Failed to fetch teams.');
+      }
+      const data: BodyResponse = await response.json();
+      const body: { data: Teams[] } = JSON.parse(data.body)
+      setTeamsDraft(body.data);
     } catch (err: any) {
       setError(`${err}`);
     }
@@ -644,7 +715,7 @@ const GameSetup = () => {
     try {
       const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', {
         body: {
-          ...selectedLeague,
+          ...selectedLeague, 
           endpoint: "get_actual_player_stats.php", method: "POST",
           team_name: selectedTeams2?.teams,
           alt_sub: getAltsSelected
@@ -661,6 +732,31 @@ const GameSetup = () => {
       await handleSchedule82()
     } catch (err: any) {
       //console.log("error: ", err)
+      setError(`${err}`);
+    }
+  };
+
+  const handleFetchPlayersTeamDraft = async () => {
+    setError(null);
+    try {
+      const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', {
+        body: {
+          ...selectedLeagueDraft, 
+          endpoint: "get_actual_player_stats.php", 
+          method: "POST",
+          team_name: selectedTeamsDraft?.teams,
+          alt_sub: getAltsSelected
+        }
+      });
+      if (!response.ok) {
+        const err: Message = await response.json();
+        setError(`error: ${err.message}`);
+        throw new Error('Failed to fetch draftable players.');
+      }
+      const data: BodyResponse = await response.json();
+      const body: { data: PlayerChar[] } = JSON.parse(data.body)
+      setPlayersTeamDraft(body.data);
+    } catch (err: any) {
       setError(`${err}`);
     }
   };
@@ -962,6 +1058,55 @@ const GameSetup = () => {
     }
   };
 
+  const handleFetchSetPlayerDraft = async () => {
+    setError(null);
+    try {
+      let body: { body: { [key: string]: any }, [key: string]: any };
+      let response;
+      body = {
+        body:{
+          ...selectedLeague, team_name: selectedTeams2?.teams, data: draftActions,
+          endpoint: "set_players_drafts.php", method: "POST",
+          alt_sub: getAltsSelected
+        }}
+
+      if (ELECTRON === "electron" || ELECTRON === "web") {
+        if ('body' in body && typeof body.body === 'object' && body.body !== null) {
+          body.body.apikey = API_KEY;
+          body.apikey = API_KEY;
+          delete body.body.method;
+          delete body.body.endpoint
+        }
+        //delete body.body.authorization;
+        response = await fetchWithAuth(`${SIMULATION_URL}/set_players_drafts.php`, 'POST', { ...body.body })
+      }
+      else {
+        response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', body)
+      }
+
+      /* const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', {
+        body: {
+          ...selectedLeague, team_name: selectedTeams2?.teams, data: playerSubPattern,
+          endpoint: "set_players_subs.php", method: "POST",
+          alt_sub: getAltsSelected
+        }
+      }); */
+      if (!response.ok) {
+        const err: Message = await response.json();
+        setError(`error: ${err.message}`);
+        throw new Error('Failed to fetch players sub pattern.');
+
+      }
+      //const data: PlayerSubPatternResponse = await response.json();
+      //setPlayerSubPattern(data.data);
+      //return data.data
+      return
+    } catch (err: any) {
+      setError(`${err}`);
+      return null
+    }
+  };
+
   const goLoginPage = async () => {
     await authService.signOut()
     localStorage.clear();
@@ -1036,6 +1181,18 @@ const GameSetup = () => {
       handlePredictMode()
     } */
   }, [selectedTeams2])
+
+  useEffect(() => {
+    if (selectedLeagueDraft) {
+      handleFetchTeamsDraft();
+    }
+  }, [selectedLeagueDraft]);
+
+  useEffect(() => {
+    if (selectedTeamsDraft) {
+      handleFetchPlayersTeamDraft();
+    }
+  }, [selectedTeamsDraft]);
 
   useEffect(() => { console.log("82 games schedule") }, [teamsSchedule])
   /* useEffect(() => {
@@ -1139,6 +1296,16 @@ const GameSetup = () => {
             setGameList={setGameList}
             playerSubPattern={playerSubPattern}
             setPlayerSubPattern={setPlayerSubPattern}
+            draftActions={draftActions}
+            setDraftActions={setDraftActions}
+            selectedLeagueDraft={selectedLeagueDraft}
+            setSelectedLeagueDraft={setSelectedLeagueDraft}
+            selectedTeamDraft={selectedTeamsDraft}
+            setSelectedTeamDraft={setSelectedTeamsDraft}
+            playersTeamDraft={playersTeamDraft}
+            handleFetchTeamsDraft={handleFetchTeamsDraft}
+            handleFetchSetPlayerDraft={handleFetchSetPlayerDraft}
+            teamsDraft={teamsDraft}
           />
         }
         {activeView === 'single-game' &&

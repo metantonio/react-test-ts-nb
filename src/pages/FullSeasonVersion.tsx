@@ -33,6 +33,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import DraftDialog from '@/components/DraftDialog';
 
 interface League {
   league_name: string;
@@ -121,6 +122,16 @@ interface GameList { //this is the gameList of the full season game mode
   team2_score: string;
 }
 
+interface DraftAction {
+  action: 'replace';
+  original_league: string;
+  original_team: string;
+  original_player: string;
+  new_player_league: string;
+  new_player_team: string;
+  new_player_name: string;
+}
+
 interface FullSeasonVersionProps {
   leagues: League[];
   selectedLeague: League | null;
@@ -163,6 +174,16 @@ interface FullSeasonVersionProps {
   setGameList: React.Dispatch<React.SetStateAction<GameList[]>>;
   playerSubPattern: PlayerSubPattern[] | null;
   setPlayerSubPattern: React.Dispatch<React.SetStateAction<PlayerSubPattern[] | null>>;
+  draftActions: DraftAction[];
+  setDraftActions: React.Dispatch<React.SetStateAction<DraftAction[]>>;
+  selectedLeagueDraft: League | null;
+  setSelectedLeagueDraft: React.Dispatch<React.SetStateAction<League | null>>;
+  selectedTeamDraft: Team | null;
+  setSelectedTeamDraft: React.Dispatch<React.SetStateAction<Team | null>>;
+  playersTeamDraft: PlayerChar[];
+  handleFetchTeamsDraft: () => Promise<void>;
+  handleFetchSetPlayerDraft: () => Promise<void | null>;
+  teamsDraft: Team[];
 }
 
 const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
@@ -207,7 +228,17 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
     gameList,
     setGameList,
     playerSubPattern,
-    setPlayerSubPattern
+    setPlayerSubPattern,
+    draftActions,
+    setDraftActions,
+    selectedLeagueDraft,
+    setSelectedLeagueDraft,
+    selectedTeamDraft,
+    setSelectedTeamDraft,
+    playersTeamDraft,
+    handleFetchTeamsDraft,
+    handleFetchSetPlayerDraft,
+    teamsDraft,
   }
 ) => {
   //const [schedule, setSchedule] = useState('predict');
@@ -219,6 +250,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
   const [multiplier, setMultiplier] = useState(100)
   const [isSubPatternSheetOpen, setIsSubPatternSheetOpen] = useState(false);
   const [isFetchingSubPattern, setIsFetchingSubPattern] = useState(false);
+  const [isDraftDialogOpen, setIsDraftDialogOpen] = useState(false);
 
   const handleSubPatternClick = async () => {
     setIsFetchingSubPattern(true);
@@ -534,7 +566,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                       </>
                     </SheetContent>
                   </Sheet>
-                  <Button variant="outline" disabled>Draft Players</Button>
+                  <Button variant="outline" onClick={() => setIsDraftDialogOpen(true)}>Draft Players</Button>
                   <Button variant="outline" disabled>Change Player Characteristics</Button>
 
                 </div>
@@ -692,6 +724,24 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
           }
         </div>
       </div>
+      <DraftDialog
+        open={isDraftDialogOpen}
+        onOpenChange={setIsDraftDialogOpen}
+        leagues={leagues}
+        teams={teamsDraft}
+        currentTeamPlayers={playersTeam2}
+        currentTeam={selectedTeams2}
+        currentLeague={selectedLeague}
+        draftablePlayers={playersTeamDraft}
+        selectedLeagueDraft={selectedLeagueDraft}
+        setSelectedLeagueDraft={setSelectedLeagueDraft}
+        selectedTeamDraft={selectedTeamDraft}
+        setSelectedTeamDraft={setSelectedTeamDraft}
+        onSave={handleFetchSetPlayerDraft}
+        draftActions={draftActions}
+        setDraftActions={setDraftActions}
+        handleFetchTeamsDraft={handleFetchTeamsDraft}
+      />
     </div>
   );
 
