@@ -422,13 +422,13 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                 </div>
               </div> : <></>}
               {selectedLeague && selectedTeams2 ? <>
-                <label className="text-sm font-medium">Alts Subs (Home Team)</label>
+                {/* <label className="text-sm font-medium">Alts Subs (Home Team)</label> */}
                 <div className="grid grid-cols-1 gap-2 mt-4">
 
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="outline" className="w-full" disabled={teams.length === 0}>
-                        {getAltsSelected ? getAltsSelected : "Select Alts Sub"}
+                        {getAltsSelected ? `Alts Subs (Home Team): ${getAltsSelected}` : "Select Alts Sub"}
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent style={{ backgroundColor: 'var(--bg-color-component)' }} className="h-[200px] overflow-y-auto">
