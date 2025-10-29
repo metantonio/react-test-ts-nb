@@ -31,3 +31,5 @@ out/*
 .env
 electron-builder.json5
 electron-builder.json
+actions.txt
+actions_error.txt

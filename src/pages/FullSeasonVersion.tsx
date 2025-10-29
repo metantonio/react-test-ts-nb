@@ -307,11 +307,47 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
             </SheetHeader>
             <div className="py-4" >
               {boxScoreFullSeason.length > 0 ? (
-                <pre className="text-sm">{boxScoreFullSeason.map((item: any) => item.text).join('\n')}</pre>
+                (() => {
+                  const games = boxScoreFullSeason.reduce((acc, item) => {
+                    const gameNum = item.game_number;
+                    if (!acc[gameNum]) {
+                      acc[gameNum] = [];
+                    }
+                    acc[gameNum].push(item.text);
+                    return acc;
+                  }, {} as Record<string, string[]>);
+
+                  return Object.entries(games).map(([gameNum, lines]) => (
+                    <div key={gameNum} id={`game-${gameNum}`}>
+                      <pre className="text-sm">{lines.join('\n')}</pre>
+                    </div>
+                  ));
+                })()
               ) : (
                 <p>No box score data available.</p>
               )}
             </div>
+            {boxScoreFullSeason.length > 0 && (
+              <div style={{ position: 'fixed', bottom: '20px', right: '20px', zIndex: 50 }}>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline">Go to Game</Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent style={{ backgroundColor: 'var(--bg-color-component)' }} className="h-[200px] overflow-y-auto">
+                    {[...new Set(boxScoreFullSeason.map(item => item.game_number))].sort((a, b) => parseInt(a) - parseInt(b)).map(gameNum => (
+                      <DropdownMenuItem key={gameNum} onSelect={() => {
+                        const element = document.getElementById(`game-${gameNum}`);
+                        if (element) {
+                          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                      }}>
+                        Game {gameNum}
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            )}
           </SheetContent>
         </Sheet>
         <Button variant="outline" size="sm">Sortable Stats</Button>

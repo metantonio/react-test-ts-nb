@@ -1,1 +1,17 @@
-@src/pages/GameSetup.tsx @src/pages/FullSeasonVersion.tsx quiero crear una ventana emergente al pisar el botón de draft players que esta en FullSeasonVersion. Dicha ventana debería cargar la lista de jugadores del equipo actual (variable playersTeams2 para los jugadores yselectedTeams2 para el equipo) en la liga actual (variable selectedLeague), además debería tener la opción para elegir el nuevo jugador que quiero que puede estar en otra league (variable selectedLeagueDraft), en otro equipo (variable selectedTeamsDraft) y la lista de jugadores a elegir de este equipo estaría en la variable playersTeamDraft. Algo importante es que una vez reemplazado los jugadores en el UI haciendo un drag over debe actualizarse la variable draftActions con replace como valor en la clave action, además debe haber un botón para guardar los cambios en el backend y este botón llamaría a la función handleFetchSetPlayerDraft        
+en @FullSeasonVersion.tsx tengo el botón que muestra un sheet con el box score, algo que quiero agregar extra es que al momento de abrir el sheet con el box score, en la esquina inferior derecha esté un dropdown fijo (que se quede fijo en esa parte de la pantalla), y este dropdown debe tener listado los distinto games, ejemplo: Game      3, lo importante es que al momento de elegir una de las opciones del dropdown el sheet debe hacer scroll hasta la sección donde se encuentra el game. Lo que hace que tener cuidado es con que lo que refleja el sheet es texto, este es un fragmento del sheet: <Sheet>
+          <SheetTrigger asChild>
+            <Button variant="outline" size="sm" disabled={isSimulating} className={`${boxScoreFullSeason.length <= 1 ? "" : "pulse-attention"}`}>{boxScoreFullSeason.length <= 1 ? "Show Box Score" : "Show Box Score (!)"}</Button>
+          </SheetTrigger>
+          <SheetContent className="overflow-y-auto">
+            <SheetHeader>
+              <SheetTitle>Box Score</SheetTitle>
+            </SheetHeader>
+            <div className="py-4" >
+              {boxScoreFullSeason.length > 0 ? (
+                <pre className="text-sm">{boxScoreFullSeason.map((item: any) => item.text).join('\n')}</pre>
+              ) : (
+                <p>No box score data available.</p>
+              )}
+            </div>
+          </SheetContent>
+        </Sheet>
