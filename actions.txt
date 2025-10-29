@@ -1,17 +1,20 @@
-en @FullSeasonVersion.tsx tengo el botón que muestra un sheet con el box score, algo que quiero agregar extra es que al momento de abrir el sheet con el box score, en la esquina inferior derecha esté un dropdown fijo (que se quede fijo en esa parte de la pantalla), y este dropdown debe tener listado los distinto games, ejemplo: Game      3, lo importante es que al momento de elegir una de las opciones del dropdown el sheet debe hacer scroll hasta la sección donde se encuentra el game. Lo que hace que tener cuidado es con que lo que refleja el sheet es texto, este es un fragmento del sheet: <Sheet>
-          <SheetTrigger asChild>
-            <Button variant="outline" size="sm" disabled={isSimulating} className={`${boxScoreFullSeason.length <= 1 ? "" : "pulse-attention"}`}>{boxScoreFullSeason.length <= 1 ? "Show Box Score" : "Show Box Score (!)"}</Button>
-          </SheetTrigger>
-          <SheetContent className="overflow-y-auto">
-            <SheetHeader>
-              <SheetTitle>Box Score</SheetTitle>
-            </SheetHeader>
-            <div className="py-4" >
-              {boxScoreFullSeason.length > 0 ? (
-                <pre className="text-sm">{boxScoreFullSeason.map((item: any) => item.text).join('\n')}</pre>
-              ) : (
-                <p>No box score data available.</p>
-              )}
-            </div>
-          </SheetContent>
-        </Sheet>
+en @FullSeasonVersion.tsx tengo la sección en la que escojo zero schedule, 82 games, 820 games y 8200 games. Quiero que se ilumine el botón que tenga la opción activa en ese momento, este es la sección:
+<div className="grid grid-cols-3 gap-2 mt-2">
+            <Button variant="outline" onClick={async () => {
+              setScheduleMultiplier("82")
+              setMultiplier(100)
+              await handleSchedule82()
+
+            }} disabled={selectedTeams2 == null}>82 Games</Button>
+            <Button variant="outline" disabled={selectedTeams2 == null} onClick={async () => {
+              setScheduleMultiplier("820")
+              setMultiplier(10)
+              await handleSchedule82()
+
+            }}>820 Games</Button>
+            <Button variant="outline" disabled={selectedTeams2 == null} onClick={async () => {
+              setScheduleMultiplier("8200")
+              setMultiplier(1)
+              await handleSchedule82()
+            }}>8200 Games</Button>
+          </div>

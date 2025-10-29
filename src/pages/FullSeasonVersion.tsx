@@ -223,7 +223,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
     setBoxScoreFullSeason,
     //handleFetchBoxScoreFullSeason,
     handlePredictMode,
-    //scheduleMultiplier,
+    scheduleMultiplier,
     setScheduleMultiplier,
     gameList,
     setGameList,
@@ -691,21 +691,24 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
         </div>
 
         <div className="col-span-1">
-          <Button variant="outline" className="w-full">Zero Schedule</Button>
+          <Button variant={!scheduleMultiplier || scheduleMultiplier === '' ? 'default' : 'outline'} className="w-full" onClick={() => {
+              setScheduleMultiplier("")
+              setTeamsSchedule([{ teams: "N/A", games: "0" }])
+            }}>Zero Schedule</Button>
           <div className="grid grid-cols-3 gap-2 mt-2">
-            <Button variant="outline" onClick={async () => {
+            <Button variant={scheduleMultiplier === '82' ? 'default' : 'outline'} onClick={async () => {
               setScheduleMultiplier("82")
               setMultiplier(100)
               await handleSchedule82()
 
             }} disabled={selectedTeams2 == null}>82 Games</Button>
-            <Button variant="outline" disabled={selectedTeams2 == null} onClick={async () => {
+            <Button variant={scheduleMultiplier === '820' ? 'default' : 'outline'} disabled={selectedTeams2 == null} onClick={async () => {
               setScheduleMultiplier("820")
               setMultiplier(10)
               await handleSchedule82()
 
             }}>820 Games</Button>
-            <Button variant="outline" disabled={selectedTeams2 == null} onClick={async () => {
+            <Button variant={scheduleMultiplier === '8200' ? 'default' : 'outline'} disabled={selectedTeams2 == null} onClick={async () => {
               setScheduleMultiplier("8200")
               setMultiplier(1)
               await handleSchedule82()
