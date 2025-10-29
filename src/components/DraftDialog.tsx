@@ -144,7 +144,7 @@ const DraftDialog: React.FC<DraftDialogProps> = ({
         // Optimistically update UI
         // This is a simple replacement. You might want a more sophisticated state management
         const updatedPlayers = currentTeamPlayers.map(p =>
-            p.name === targetPlayer.name ? { ...draggedPlayer, name: `${draggedPlayer.name} (Drafted)` } : p
+            p.name === targetPlayer.name ? { ...draggedPlayer, name: `${draggedPlayer.name}` } : p
         );
         // This optimistic update is visual only. The actual state `playersTeam2` is not changed here.
         // A more robust solution would involve lifting the state up or using a context.

@@ -1097,6 +1097,7 @@ const GameSetup = () => {
         throw new Error('Failed to fetch players sub pattern.');
 
       }
+      await handleFetchPlayersTeam2();
       //const data: PlayerSubPatternResponse = await response.json();
       //setPlayerSubPattern(data.data);
       //return data.data
@@ -1145,7 +1146,7 @@ const GameSetup = () => {
         console.log("a")
       }
     }
-  }, [activeView]);
+  }, [activeView, getAltsSelected]);
 
   useEffect(() => {
     const loadPlayers = async () => {
