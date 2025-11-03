@@ -653,7 +653,9 @@ const GameSetup = () => {
       console.log("was ok")
       await Promise.all([
           handleFetchGameListFullSeason(),
-          handleFetchBoxScoreFullSeason()])
+          handleFetchBoxScoreFullSeason(),
+          handleFetchPlayByPlayFullSeason()
+        ])
 
       /* if (schedule == "fullseason") {
         await Promise.all([
@@ -999,8 +1001,11 @@ const GameSetup = () => {
 
       if (ELECTRON === "electron" || ELECTRON === "web") {
         const data: UpdateGetPlayByPlayResponse = await response.json();
-        //const body: { data: GetPlayByPlay[] } = JSON.parse(data.data);
-        setPlayByPlay(data.data);
+        const transformedData = data.data.map(item => ({
+          color: item.color,
+          pbp_line: item.text,
+        }));
+        setPlayByPlay(transformedData);
       } else {
         const data: BodyResponse = await response.json();
         const parsed = JSON.parse(data.body);
@@ -1010,7 +1015,11 @@ const GameSetup = () => {
           "data" in parsed
         ) {
           const body = parsed as { data: GetPlayByPlay[] };
-          setPlayByPlay(body.data);
+          const transformedData = body.data.map(item => ({
+            color: item.color,
+            pbp_line: item.text,
+          }));
+          setPlayByPlay(transformedData);
         } else {
           throw new Error("Unexpected response format.");
         }
@@ -1343,6 +1352,7 @@ const GameSetup = () => {
             handleFetchScoreBoard={handleFetchScoreBoard}
             handleFetchPlayByPlay={handleFetchPlayByPlay}
             handleFetchBoxScore={handleFetchBoxScore}
+            handleFetchPlayByPlayFullSeason={handleFetchPlayByPlayFullSeason}
             handleSchedule82={handleSchedule82}
             handleFetchPlayerSubpattern={handleFetchPlayerSubpattern}
             teamLogos={teamLogos}

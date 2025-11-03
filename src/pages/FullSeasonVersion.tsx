@@ -154,6 +154,7 @@ interface FullSeasonVersionProps {
   handleFetchScoreBoard: () => Promise<void>;
   handleFetchPlayByPlay: () => Promise<void>;
   handleFetchBoxScore: () => Promise<void>;
+  handleFetchPlayByPlayFullSeason: () => Promise<void>;
   //handleFetchBoxScoreFullSeason: () => Promise<void>;
   handleSchedule82: () => Promise<void>;
   handleFetchPlayerSubpattern: () => Promise<PlayerSubPattern[] | null>;
@@ -205,6 +206,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
     //handleFetchScoreBoard,
     //handleFetchPlayByPlay,
     //handleFetchBoxScore,
+    handleFetchPlayByPlayFullSeason,
     teamLogos,
     handleSchedule82,
     teamsSchedule,
@@ -352,7 +354,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
         </Sheet>
         <Button variant="outline" size="sm">Sortable Stats</Button>
         <Button variant="outline" size="sm">Sortable Box Scores</Button>
-        <Button variant="outline" size="sm">Play by Play</Button>
+        <Button variant="outline" size="sm" onClick={handleFetchPlayByPlayFullSeason}>Play by Play</Button>
       </div>
 
 
