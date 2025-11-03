@@ -654,7 +654,7 @@ const GameSetup = () => {
       await Promise.all([
           handleFetchGameListFullSeason(),
           handleFetchBoxScoreFullSeason(),
-          handleFetchPlayByPlayFullSeason()
+          handleFetchPlayByPlayFullSeason("1")
         ])
 
       /* if (schedule == "fullseason") {
@@ -964,7 +964,7 @@ const GameSetup = () => {
     }
   };
 
-  const handleFetchPlayByPlayFullSeason = async () => {
+  const handleFetchPlayByPlayFullSeason = async (gameNumber: string) => {
     setError(null);
     try {
       let response;
@@ -972,7 +972,7 @@ const GameSetup = () => {
 
         response = await fetchWithAuth(`${SIMULATION_URL}/get_play_by_play.php`, 'POST', {
           //method: "POST",
-          game_number: "1",
+          game_number: gameNumber || "1",
           alt_sub: getAltsSelected
         })
       } else {
@@ -980,7 +980,7 @@ const GameSetup = () => {
           body: {
             endpoint: "get_play_by_play.php",
             method: "POST",
-            game_number: "1",
+            game_number: gameNumber || "1",
             alt_sub: getAltsSelected
           },
         });
@@ -1344,7 +1344,7 @@ const GameSetup = () => {
             handleFetchScoreBoard={handleFetchScoreBoard}
             //handleFetchPlayByPlay={handleFetchPlayByPlay}
             handleFetchBoxScore={handleFetchBoxScore}
-            //handleFetchPlayByPlayFullSeason={handleFetchPlayByPlayFullSeason}
+            handleFetchPlayByPlayFullSeason={handleFetchPlayByPlayFullSeason}
             handleSchedule82={handleSchedule82}
             handleFetchPlayerSubpattern={handleFetchPlayerSubpattern}
             teamLogos={teamLogos}

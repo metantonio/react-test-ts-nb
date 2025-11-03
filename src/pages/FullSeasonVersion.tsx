@@ -161,7 +161,7 @@ interface FullSeasonVersionProps {
   handleFetchScoreBoard: () => Promise<void>;
   //handleFetchPlayByPlay: () => Promise<void>;
   handleFetchBoxScore: () => Promise<void>;
-  //handleFetchPlayByPlayFullSeason: () => Promise<void>;
+  handleFetchPlayByPlayFullSeason: (gameNumber: string) => Promise<void>;
   //handleFetchBoxScoreFullSeason: () => Promise<void>;
   handleSchedule82: () => Promise<void>;
   handleFetchPlayerSubpattern: () => Promise<PlayerSubPattern[] | null>;
@@ -215,7 +215,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
     //handleFetchScoreBoard,
     //handleFetchPlayByPlay,
     //handleFetchBoxScore,
-    //handleFetchPlayByPlayFullSeason,
+    handleFetchPlayByPlayFullSeason,
     teamLogos,
     handleSchedule82,
     teamsSchedule,
@@ -264,6 +264,12 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
   const [isSubPatternSheetOpen, setIsSubPatternSheetOpen] = useState(false);
   const [isFetchingSubPattern, setIsFetchingSubPattern] = useState(false);
   const [isDraftDialogOpen, setIsDraftDialogOpen] = useState(false);
+  const [isPbpSheetOpen, setIsPbpSheetOpen] = useState(false);
+
+  const handlePbpForGame = async (gameNumber: string) => {
+    await handleFetchPlayByPlayFullSeason(gameNumber);
+    setIsPbpSheetOpen(true);
+  }
 
   const handleSubPatternClick = async () => {
     setIsFetchingSubPattern(true);
@@ -365,9 +371,12 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
         </Sheet>
         <Button variant="outline" size="sm">Sortable Stats</Button>
         <Button variant="outline" size="sm">Sortable Box Scores</Button>
-        <Sheet>
+        <Sheet open={isPbpSheetOpen} onOpenChange={setIsPbpSheetOpen}>
           <SheetTrigger asChild>
-            <Button variant="outline" size="sm" disabled={isSimulating} className={`${playByPlay.length <= 1 ? "" : "pulse-attention"}`}>Play by Play</Button>
+            <Button variant="outline" size="sm" onClick={async () => {
+              await handleFetchPlayByPlayFullSeason("1");
+              setIsPbpSheetOpen(true);
+            }}>Play by Play</Button>
           </SheetTrigger>
           <SheetContent className="overflow-y-auto">
             <SheetHeader>
@@ -750,10 +759,11 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                             <TableHead>Team 2</TableHead>
                             <TableHead className="w-[50px] text-center">H/A</TableHead>
                             <TableHead className="w-[80px] text-right">Score</TableHead>
+                            {schedule === "8200" && <TableHead></TableHead>}
                           </TableRow>
                         </TableHeader>
                         <TableBody>
-                          {gameList.map((game: GameList) => (
+                          {gameList.map((game: GameList, index: number) => (
                             <TableRow key={game.game_number}>
                               <TableCell className="font-medium">{game.game_number}</TableCell>
                               <TableCell>
@@ -772,6 +782,11 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                               </TableCell>
                               <TableCell className="text-center">{game.team2_homeaway}</TableCell>
                               <TableCell className="text-right font-bold">{game.team2_score}</TableCell>
+                              {schedule === "8200" && (
+                                <TableCell>
+                                  <Button onClick={() => handlePbpForGame((index + 1).toString())}>PBP</Button>
+                                </TableCell>
+                              )}
                             </TableRow>
                           ))}
                         </TableBody>
