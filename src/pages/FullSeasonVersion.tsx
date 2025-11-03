@@ -387,12 +387,36 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
 
                   return Object.entries(games).map(([gameNum, lines]) => (
                     <div key={gameNum} id={`game-pbp-${gameNum}`}>
-                      <h4 className="font-bold text-lg mt-4">Game {gameNum}</h4>
-                      {lines.map((line, index) => (
-                        <p key={index} style={{ color: line.color }}>
-                          {line.text}
-                        </p>
-                      ))}
+                      <h4 className="font-bold text-lg mt-4 text-center">Game {gameNum}</h4>
+                      <Table className="border">
+                        <TableHeader>
+                          <TableRow>
+                            <TableHead className="w-1/2 text-center">Home Team</TableHead>
+                            <TableHead className="w-1/2 text-center">Away Team</TableHead>
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {lines.map((line, index) => (
+                            <TableRow key={index}>
+                              {line.color === '0' ? (
+                                <TableCell colSpan={2} className="text-center font-bold">
+                                  {line.text}
+                                </TableCell>
+                              ) : line.color === '2' ? (
+                                <>
+                                  <TableCell className="text-left">{line.text}</TableCell>
+                                  <TableCell></TableCell>
+                                </>
+                              ) : (
+                                <>
+                                  <TableCell></TableCell>
+                                  <TableCell className="text-right">{line.text}</TableCell>
+                                </>
+                              )}
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
                     </div>
                   ));
                 })()
