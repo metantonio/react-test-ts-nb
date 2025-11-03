@@ -321,7 +321,7 @@ const GameSetup = () => {
   const [selectedTeams1, setSelectedTeams1] = useState<Teams | null>(null);
   const [selectedTeams2, setSelectedTeams2] = useState<Teams | null>(null);
   const [isGameInitial, setIsGameInitial] = useState<boolean>(false);
-  const [playByPlay, setPlayByPlay] = useState<GetPlayByPlay[] | null>([]);
+  const [playByPlay, setPlayByPlay] = useState<GetPlayByPlay[]>([]);
   const [boxScore, setBoxScore] = useState<BoxScore[]>([]);
   const [boxScoreFullSeason, setBoxScoreFullSeason] = useState<BoxScoreFullSeason[]>([]);
   const [playerSubPattern, setPlayerSubPattern] = useState<PlayerSubPattern[] | null>([]);

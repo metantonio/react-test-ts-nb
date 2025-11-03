@@ -178,8 +178,8 @@ interface FullSeasonVersionProps {
   handlePredictMode: () => Promise<void | null>;
   scheduleMultiplier: string;
   setScheduleMultiplier: React.Dispatch<React.SetStateAction<string>>;
-  playByPlay: GetPlayByPlay[] | null;
-  setPlayByPlay: React.Dispatch<React.SetStateAction<GetPlayByPlay[] | null>>;
+  playByPlay: GetPlayByPlay[];
+  setPlayByPlay: React.Dispatch<React.SetStateAction<GetPlayByPlay[]>>;
   gameList: GameList[];
   setGameList: React.Dispatch<React.SetStateAction<GameList[]>>;
   playerSubPattern: PlayerSubPattern[] | null;
@@ -367,7 +367,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
         <Button variant="outline" size="sm">Sortable Box Scores</Button>
         <Sheet>
           <SheetTrigger asChild>
-            <Button variant="outline" size="sm">Play by Play</Button>
+            <Button variant="outline" size="sm" disabled={isSimulating} className={`${playByPlay.length <= 1 ? "" : "pulse-attention"}`}>Play by Play</Button>
           </SheetTrigger>
           <SheetContent className="overflow-y-auto">
             <SheetHeader>
