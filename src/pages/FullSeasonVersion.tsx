@@ -132,6 +132,13 @@ interface DraftAction {
   new_player_name: string;
 }
 
+interface GetPlayByPlay { //full season mode
+  color: string;
+  line_number: string;
+  game_number: string;
+  text: string;
+}
+
 interface FullSeasonVersionProps {
   leagues: League[];
   selectedLeague: League | null;
@@ -152,9 +159,9 @@ interface FullSeasonVersionProps {
   playersTeam1: PlayerChar[];
   playersTeam2: PlayerChar[];
   handleFetchScoreBoard: () => Promise<void>;
-  handleFetchPlayByPlay: () => Promise<void>;
+  //handleFetchPlayByPlay: () => Promise<void>;
   handleFetchBoxScore: () => Promise<void>;
-  handleFetchPlayByPlayFullSeason: () => Promise<void>;
+  //handleFetchPlayByPlayFullSeason: () => Promise<void>;
   //handleFetchBoxScoreFullSeason: () => Promise<void>;
   handleSchedule82: () => Promise<void>;
   handleFetchPlayerSubpattern: () => Promise<PlayerSubPattern[] | null>;
@@ -171,6 +178,8 @@ interface FullSeasonVersionProps {
   handlePredictMode: () => Promise<void | null>;
   scheduleMultiplier: string;
   setScheduleMultiplier: React.Dispatch<React.SetStateAction<string>>;
+  playByPlay: GetPlayByPlay[] | null;
+  setPlayByPlay: React.Dispatch<React.SetStateAction<GetPlayByPlay[] | null>>;
   gameList: GameList[];
   setGameList: React.Dispatch<React.SetStateAction<GameList[]>>;
   playerSubPattern: PlayerSubPattern[] | null;
@@ -206,7 +215,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
     //handleFetchScoreBoard,
     //handleFetchPlayByPlay,
     //handleFetchBoxScore,
-    handleFetchPlayByPlayFullSeason,
+    //handleFetchPlayByPlayFullSeason,
     teamLogos,
     handleSchedule82,
     teamsSchedule,
@@ -227,6 +236,8 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
     handlePredictMode,
     scheduleMultiplier,
     setScheduleMultiplier,
+    playByPlay,
+    //setPlayByPlay,
     gameList,
     setGameList,
     playerSubPattern,
@@ -354,7 +365,64 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
         </Sheet>
         <Button variant="outline" size="sm">Sortable Stats</Button>
         <Button variant="outline" size="sm">Sortable Box Scores</Button>
-        <Button variant="outline" size="sm" onClick={handleFetchPlayByPlayFullSeason}>Play by Play</Button>
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button variant="outline" size="sm">Play by Play</Button>
+          </SheetTrigger>
+          <SheetContent className="overflow-y-auto">
+            <SheetHeader>
+              <SheetTitle>Play by Play</SheetTitle>
+            </SheetHeader>
+            <div className="py-4">
+              {playByPlay && playByPlay.length > 0 ? (
+                (() => {
+                  const games = playByPlay.reduce((acc, item) => {
+                    const gameNum = item.game_number;
+                    if (!acc[gameNum]) {
+                      acc[gameNum] = [];
+                    }
+                    acc[gameNum].push(item);
+                    return acc;
+                  }, {} as Record<string, GetPlayByPlay[]>);
+
+                  return Object.entries(games).map(([gameNum, lines]) => (
+                    <div key={gameNum} id={`game-pbp-${gameNum}`}>
+                      <h4 className="font-bold text-lg mt-4">Game {gameNum}</h4>
+                      {lines.map((line, index) => (
+                        <p key={index} style={{ color: line.color }}>
+                          {line.text}
+                        </p>
+                      ))}
+                    </div>
+                  ));
+                })()
+              ) : (
+                <p>No Play by Play data available.</p>
+              )}
+            </div>
+            {playByPlay && playByPlay.length > 0 && (
+              <div style={{ position: 'fixed', bottom: '20px', right: '20px', zIndex: 50 }}>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline">Go to Game</Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent style={{ backgroundColor: 'var(--bg-color-component)' }} className="h-[200px] overflow-y-auto">
+                    {[...new Set(playByPlay.map(item => item.game_number))].sort((a, b) => parseInt(a) - parseInt(b)).map(gameNum => (
+                      <DropdownMenuItem key={gameNum} onSelect={() => {
+                        const element = document.getElementById(`game-pbp-${gameNum}`);
+                        if (element) {
+                          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                        }
+                      }}>
+                        Game {gameNum}
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            )}
+          </SheetContent>
+        </Sheet>
       </div>
 
 

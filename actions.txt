@@ -1,1 +1,1 @@
-en @GameSetup.tsx acomoda la función handleFetchPlayByPlayFullSeason()
+en @GameSetup.tsx @FullSeasonVersion.tx acomoda el estado playByPlay ya que no es pasado al componente FullSeasonVersion, por otro lado en el componente de FullSeasonVersion hay que acomodar el sheet de Play by Play, para que se adapte a la estructura correctamente del estado playByPlay. Ten encuenta que el estado playByPlay tiene la interface GetPlayByPlay[]

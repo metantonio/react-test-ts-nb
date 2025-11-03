@@ -321,7 +321,7 @@ const GameSetup = () => {
   const [selectedTeams1, setSelectedTeams1] = useState<Teams | null>(null);
   const [selectedTeams2, setSelectedTeams2] = useState<Teams | null>(null);
   const [isGameInitial, setIsGameInitial] = useState<boolean>(false);
-  const [playByPlay, setPlayByPlay] = useState<PlayByPlay[] | null>([]);
+  const [playByPlay, setPlayByPlay] = useState<GetPlayByPlay[] | null>([]);
   const [boxScore, setBoxScore] = useState<BoxScore[]>([]);
   const [boxScoreFullSeason, setBoxScoreFullSeason] = useState<BoxScoreFullSeason[]>([]);
   const [playerSubPattern, setPlayerSubPattern] = useState<PlayerSubPattern[] | null>([]);
@@ -774,7 +774,7 @@ const GameSetup = () => {
     }
   };
 
-  const handleFetchPlayByPlay = async () => { //this should be for the single game mode
+  /* const handleFetchPlayByPlay = async () => { //this should be for the single game mode
     setError(null);
     try {
       const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', {
@@ -797,7 +797,7 @@ const GameSetup = () => {
     } catch (err: any) {
       setError(`${err}`);
     }
-  };
+  }; */
 
   const handleFetchBoxScore = async () => {
     setError(null);
@@ -1001,11 +1001,7 @@ const GameSetup = () => {
 
       if (ELECTRON === "electron" || ELECTRON === "web") {
         const data: UpdateGetPlayByPlayResponse = await response.json();
-        const transformedData = data.data.map(item => ({
-          color: item.color,
-          pbp_line: item.text,
-        }));
-        setPlayByPlay(transformedData);
+        setPlayByPlay(data.data);
       } else {
         const data: BodyResponse = await response.json();
         const parsed = JSON.parse(data.body);
@@ -1015,11 +1011,7 @@ const GameSetup = () => {
           "data" in parsed
         ) {
           const body = parsed as { data: GetPlayByPlay[] };
-          const transformedData = body.data.map(item => ({
-            color: item.color,
-            pbp_line: item.text,
-          }));
-          setPlayByPlay(transformedData);
+          setPlayByPlay(body.data);
         } else {
           throw new Error("Unexpected response format.");
         }
@@ -1350,9 +1342,9 @@ const GameSetup = () => {
             playersTeam1={playersTeam1}
             playersTeam2={playersTeam2}
             handleFetchScoreBoard={handleFetchScoreBoard}
-            handleFetchPlayByPlay={handleFetchPlayByPlay}
+            //handleFetchPlayByPlay={handleFetchPlayByPlay}
             handleFetchBoxScore={handleFetchBoxScore}
-            handleFetchPlayByPlayFullSeason={handleFetchPlayByPlayFullSeason}
+            //handleFetchPlayByPlayFullSeason={handleFetchPlayByPlayFullSeason}
             handleSchedule82={handleSchedule82}
             handleFetchPlayerSubpattern={handleFetchPlayerSubpattern}
             teamLogos={teamLogos}
@@ -1371,6 +1363,8 @@ const GameSetup = () => {
             handlePredictMode={handlePredictMode}
             scheduleMultiplier={scheduleMultiplier}
             setScheduleMultiplier={setScheduleMultiplier}
+            playByPlay={playByPlay}
+            setPlayByPlay={setPlayByPlay}
             gameList={gameList}
             setGameList={setGameList}
             playerSubPattern={playerSubPattern}
