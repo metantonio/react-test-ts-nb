@@ -193,8 +193,19 @@ interface PlayByPlay {
   pbp_line: string;
 }
 
+interface GetPlayByPlay { //full season mode
+  color: string;
+  line_number: string;
+  game_number: string;
+  text: string;
+}
+
 interface UpdatePlayByPlayResponse {
   playbyplay: PlayByPlay[];
+}
+
+interface UpdateGetPlayByPlayResponse {
+  data: GetPlayByPlay[];
 }
 
 interface BoxScore { //this is the boxScore of the single game mode, different from full season box score
@@ -310,7 +321,7 @@ const GameSetup = () => {
   const [selectedTeams1, setSelectedTeams1] = useState<Teams | null>(null);
   const [selectedTeams2, setSelectedTeams2] = useState<Teams | null>(null);
   const [isGameInitial, setIsGameInitial] = useState<boolean>(false);
-  const [playByPlay, setPlayByPlay] = useState<PlayByPlay[]>([]);
+  const [playByPlay, setPlayByPlay] = useState<PlayByPlay[] | null>([]);
   const [boxScore, setBoxScore] = useState<BoxScore[]>([]);
   const [boxScoreFullSeason, setBoxScoreFullSeason] = useState<BoxScoreFullSeason[]>([]);
   const [playerSubPattern, setPlayerSubPattern] = useState<PlayerSubPattern[] | null>([]);
@@ -946,6 +957,64 @@ const GameSetup = () => {
         }
       }
 
+    } catch (err: any) {
+      setError(err instanceof Error ? err.message : String(err));
+    }
+  };
+
+  const handleFetchPlayByPlayFullSeason = async () => {
+    setError(null);
+    try {
+      let response;
+      if (ELECTRON === "electron" || ELECTRON === "web") {
+
+        response = await fetchWithAuth(`${SIMULATION_URL}/get_play_by_play.php`, 'POST', {
+          //method: "POST",
+          game_number: "ALL",
+          alt_sub: getAltsSelected
+        })
+      } else {
+        response = await fetchWithAuth(`${API_URL}/conversionjs`, "POST", {
+          body: {
+            endpoint: "get_play_by_play.php",
+            method: "POST",
+            game_number: "ALL",
+            alt_sub: getAltsSelected
+          },
+        });
+      }
+
+
+      if (!response.ok) {
+        let errMsg = "Failed to fetch play by play in full season mode.";
+        try {
+          const err: Message = await response.json();
+          if (err?.message) errMsg = err.message;
+        } catch {
+          // si no se puede parsear el error, se deja el genérico
+        }
+        setError(`error: ${errMsg}`);
+        throw new Error(errMsg);
+      }
+
+      if (ELECTRON === "electron" || ELECTRON === "web") {
+        const data: UpdateGetPlayByPlayResponse = await response.json();
+        //const body: { data: GetPlayByPlay[] } = JSON.parse(data.data);
+        setPlayByPlay(data.data);
+      } else {
+        const data: BodyResponse = await response.json();
+        const parsed = JSON.parse(data.body);
+        if (
+          typeof parsed === "object" &&
+          parsed !== null &&
+          "data" in parsed
+        ) {
+          const body = parsed as { data: GetPlayByPlay[] };
+          setPlayByPlay(body.data);
+        } else {
+          throw new Error("Unexpected response format.");
+        }
+      }
     } catch (err: any) {
       setError(err instanceof Error ? err.message : String(err));
     }

@@ -1,1 +1,1 @@
-en @GameSetup.tsx tengo la variable teamLogos que tiene los equipos y logos, pero estos logos se guardan en caché? algo que me gustaría es que las imagenes se guarden en cache para no tener que descargalas nuevamente si hay un cambio de ventana, etc.
+en @GameSetup.tsx acomoda la función handleFetchPlayByPlayFullSeason()
