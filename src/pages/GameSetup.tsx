@@ -972,7 +972,7 @@ const GameSetup = () => {
 
         response = await fetchWithAuth(`${SIMULATION_URL}/get_play_by_play.php`, 'POST', {
           //method: "POST",
-          game_number: "ALL",
+          game_number: "1",
           alt_sub: getAltsSelected
         })
       } else {
@@ -980,7 +980,7 @@ const GameSetup = () => {
           body: {
             endpoint: "get_play_by_play.php",
             method: "POST",
-            game_number: "ALL",
+            game_number: "1",
             alt_sub: getAltsSelected
           },
         });
