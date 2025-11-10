@@ -171,6 +171,8 @@ interface FullSeasonVersionProps {
   //setGetAlts: React.Dispatch<React.SetStateAction<GetAlts[]>>;
   getAltsSelected: string | null;
   setGetAltsSelected: React.Dispatch<React.SetStateAction<string>>;
+  keepPlayByPlay: string | null;
+  setKeepPlayByPlay: React.Dispatch<React.SetStateAction<string>>;
   schedule: string | null;
   setSchedule: React.Dispatch<React.SetStateAction<string>>;
   location: string | null;
@@ -252,11 +254,13 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
     handleFetchTeamsDraft,
     handleFetchSetPlayerDraft,
     teamsDraft,
+    keepPlayByPlay,
+    setKeepPlayByPlay
   }
 ) => {
   //const [schedule, setSchedule] = useState('predict');
   //const [location, setLocation] = useState('both');
-  const [savePbp, setSavePbp] = useState(false);
+  const [savePbp, setSavePbp] = useState(true);
   const [saveBox, setSaveBox] = useState(true);
   const [isClear, setIsClear] = useState(false)
   const [isSimulating, setIsSimulating] = useState(false);
@@ -728,7 +732,20 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                   </div>
                 </div>
                 <div className="mt-4 space-y-2">
-                  <CustomCheckbox id="save-pbp" checked={savePbp} onChange={setSavePbp} label="Save Play-by-Play (<=100 games)" />
+                  <CustomCheckbox id="save-pbp" checked={keepPlayByPlay === 'Y'} onChange={() => {
+                    setSavePbp(!savePbp)
+                    if (keepPlayByPlay === 'Y') {
+                      console.log("keeppbp: ", keepPlayByPlay, "should be changed to N, may be not time to change")
+                      setKeepPlayByPlay("N")
+                      console.log("keeppbp: ", keepPlayByPlay, "should be now N")
+                    } else {
+                      console.log("keeppbp: ", keepPlayByPlay, "should be changed to Y, may be not time to change")
+                      setKeepPlayByPlay("Y")
+                      console.log("keeppbp: ", keepPlayByPlay, "should be now Y")
+                    }
+
+                  }
+                  } label="Save Play-by-Play (<=100 games)" />
                   <CustomCheckbox id="save-box" checked={saveBox} onChange={setSaveBox} label="Save Box Scores - no more than 15,000 games" />
                 </div>
                 <Button variant="outline" disabled={isLoading || isSimulating} className="mt-4" onClick={async () => {
@@ -759,7 +776,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                             <TableHead>Team 2</TableHead>
                             <TableHead className="w-[50px] text-center">H/A</TableHead>
                             <TableHead className="w-[80px] text-right">Score</TableHead>
-                            {schedule === "8200" && <TableHead></TableHead>}
+                            {keepPlayByPlay === "Y" && <TableHead className="w-[50px] text-center">PbP</TableHead>}
                           </TableRow>
                         </TableHeader>
                         <TableBody>
@@ -782,7 +799,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                               </TableCell>
                               <TableCell className="text-center">{game.team2_homeaway}</TableCell>
                               <TableCell className="text-right font-bold">{game.team2_score}</TableCell>
-                              {schedule === "8200" && (
+                              {keepPlayByPlay === "Y" && index < 100 && (
                                 <TableCell>
                                   <Button onClick={() => handlePbpForGame((index + 1).toString())}>PBP</Button>
                                 </TableCell>
@@ -801,9 +818,9 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
 
         <div className="col-span-1">
           <Button variant={!scheduleMultiplier || scheduleMultiplier === '' ? 'default' : 'outline'} className="w-full" onClick={() => {
-              setScheduleMultiplier("")
-              setTeamsSchedule([{ teams: "N/A", games: "0" }])
-            }}>Zero Schedule</Button>
+            setScheduleMultiplier("")
+            setTeamsSchedule([{ teams: "N/A", games: "0" }])
+          }}>Zero Schedule</Button>
           <div className="grid grid-cols-3 gap-2 mt-2">
             <Button variant={scheduleMultiplier === '82' ? 'default' : 'outline'} onClick={async () => {
               setScheduleMultiplier("82")

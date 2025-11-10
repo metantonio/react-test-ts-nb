@@ -327,6 +327,7 @@ const GameSetup = () => {
   const [playerSubPattern, setPlayerSubPattern] = useState<PlayerSubPattern[] | null>([]);
   const [getAlts, setGetAlts] = useState<GetAlts[]>([]);
   const [getAltsSelected, setGetAltsSelected] = useState("Default-")
+  const [keepPlayByPlay, setKeepPlayByPlay] = useState("N")
   const [scoreBoard, setScoreBoard] = useState<ScoreBoard | null>(null);
   const [activeView, setActiveView] = useState('full-season');
   const [schedule, setSchedule] = useState('predict');
@@ -585,7 +586,7 @@ const GameSetup = () => {
             "numgames": "normal",
             "homeaway": location || "home",
             "gamemode": schedule,
-            "keeppbp": "N",
+            "keeppbp": keepPlayByPlay,
             "gamearray": [{ "predicthome": selectedTeams2?.teams, "predictaway": selectedTeams1?.teams, "predictgames": "20" }],
             "hometeam": selectedTeams2?.teams,
             alt_sub: getAltsSelected
@@ -602,7 +603,7 @@ const GameSetup = () => {
             "numgames": "normal",
             "homeaway": "home",
             "gamemode": schedule,
-            "keeppbp": "N",
+            "keeppbp": keepPlayByPlay,
             alt_sub: getAltsSelected
             //apikey: API_KEY
           },
@@ -617,7 +618,7 @@ const GameSetup = () => {
             "numgames": scheduleMultiplier == "82"? "normal": scheduleMultiplier,
             "homeaway": location,
             "gamemode": schedule,
-            "keeppbp": "Y",
+            "keeppbp": keepPlayByPlay,
             "hometeam": selectedTeams2?.teams,
             alt_sub: getAltsSelected
             //apikey: API_KEY
@@ -1379,6 +1380,8 @@ const GameSetup = () => {
             handleFetchTeamsDraft={handleFetchTeamsDraft}
             handleFetchSetPlayerDraft={handleFetchSetPlayerDraft}
             teamsDraft={teamsDraft}
+            keepPlayByPlay={keepPlayByPlay}
+            setKeepPlayByPlay={setKeepPlayByPlay}
           />
         }
         {activeView === 'single-game' &&
