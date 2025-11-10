@@ -201,7 +201,7 @@ const DraftDialog: React.FC<DraftDialogProps> = ({
             <div className="flex flex-col md:flex-row gap-2 mb-2 flex-shrink-0">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="outline" className="w-full">
+                  <Button variant="outline" className={`${selectedLeagueDraft ? "w-full" : "pulse-attention w-full"}`}>
                     {selectedLeagueDraft ? selectedLeagueDraft.league_name : 'Select League'}
                   </Button>
                 </DropdownMenuTrigger>
@@ -221,7 +221,7 @@ const DraftDialog: React.FC<DraftDialogProps> = ({
               </DropdownMenu>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="outline" className="w-full" disabled={!selectedLeagueDraft}>
+                  <Button variant="outline" className={`${selectedTeamDraft ? "w-full" : "pulse-attention w-full"}`} disabled={!selectedLeagueDraft}>
                     {selectedTeamDraft ? selectedTeamDraft.teams : 'Select Team'}
                   </Button>
                 </DropdownMenuTrigger>

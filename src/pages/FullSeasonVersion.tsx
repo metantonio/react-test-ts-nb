@@ -139,6 +139,10 @@ interface GetPlayByPlay { //full season mode
   text: string;
 }
 
+interface RawStats { //raw (pre-formatted) text for the last user executed game simulation
+  textlines: string;
+}
+
 interface FullSeasonVersionProps {
   leagues: League[];
   selectedLeague: League | null;
@@ -156,6 +160,7 @@ interface FullSeasonVersionProps {
   boxScoreFullSeason: BoxScoreFullSeason[];
   setBoxScore: React.Dispatch<React.SetStateAction<BoxScore[]>>;
   setBoxScoreFullSeason: React.Dispatch<React.SetStateAction<BoxScoreFullSeason[]>>;
+  rawStats: RawStats[];
   playersTeam1: PlayerChar[];
   playersTeam2: PlayerChar[];
   handleFetchScoreBoard: () => Promise<void>;
@@ -255,7 +260,8 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
     handleFetchSetPlayerDraft,
     teamsDraft,
     keepPlayByPlay,
-    setKeepPlayByPlay
+    setKeepPlayByPlay,
+    rawStats
   }
 ) => {
   //const [schedule, setSchedule] = useState('predict');
@@ -319,7 +325,39 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
     <div>
       <div className="flex gap-2 mb-4 border-b-2 border-border pb-2">
         <Button variant="outline" size="sm">Game Setup</Button>
-        <Button variant="outline" size="sm">Raw Stats</Button>
+        {/* <Button variant="outline" size="sm">Raw Stats</Button> */}
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button variant="outline" size="sm" disabled={isSimulating} className={`${rawStats.length <= 1 ? "" : "pulse-attention"}`}>{rawStats.length <= 1 ? "Raw Stats" : "Raw Stats (!)"}</Button>
+          </SheetTrigger>
+          <SheetContent className="overflow-y-auto">
+            <SheetHeader>
+              <SheetTitle>Raw Stats</SheetTitle>
+            </SheetHeader>
+            <div className="py-4">
+              {rawStats.length > 0 ? (
+                (() => {
+                  const games = rawStats.reduce((acc, item) => {
+                    const gameNum = item.textlines;
+                    if (!acc[gameNum]) {
+                      acc[gameNum] = [];
+                    }
+                    acc[gameNum].push(item.textlines);
+                    return acc;
+                  }, {} as Record<string, string[]>);
+
+                  return Object.entries(games).map(([gameNum, lines]) => (
+                    <div key={gameNum} id={`game-${gameNum}`}>
+                      <pre className="text-sm">{lines.join('\n')}</pre>
+                    </div>
+                  ));
+                })()
+              ) : (
+                <p>No box score data available.</p>
+              )}
+            </div>
+          </SheetContent>
+        </Sheet>
         <Sheet>
           <SheetTrigger asChild>
             <Button variant="outline" size="sm" disabled={isSimulating} className={`${boxScoreFullSeason.length <= 1 ? "" : "pulse-attention"}`}>{boxScoreFullSeason.length <= 1 ? "Show Box Score" : "Show Box Score (!)"}</Button>
@@ -377,7 +415,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
         <Button variant="outline" size="sm">Sortable Box Scores</Button>
         <Sheet open={isPbpSheetOpen} onOpenChange={setIsPbpSheetOpen}>
           <SheetTrigger asChild>
-            <Button variant="outline" size="sm" onClick={async () => {
+            <Button variant="outline" size="sm" disabled={isSimulating} className={`${playByPlay.length <= 1 ? "" : "pulse-attention"}`} onClick={async () => {
               await handleFetchPlayByPlayFullSeason("1");
               setIsPbpSheetOpen(true);
             }}>Play by Play</Button>
@@ -552,7 +590,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                   {/* START Sheet of 4 minute substitution pattern */}
                   <Sheet open={isSubPatternSheetOpen} onOpenChange={setIsSubPatternSheetOpen}>
                     <SheetTrigger asChild>
-                      <Button variant="outline" onClick={handleSubPatternClick} disabled={schedule !== "8200" || isFetchingSubPattern}>Substitution Pattern</Button>
+                      <Button variant="outline" onClick={handleSubPatternClick} disabled={isFetchingSubPattern}>Substitution Pattern</Button>
                     </SheetTrigger>
                     <SheetContent className="max-w-none w-[100vw] overflow-y-auto">
                       <SheetHeader>
@@ -745,7 +783,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                     }
 
                   }
-                  } label="Save Play-by-Play (<=100 games)" />
+                  } label="Save and Show Play-by-Play (<=100 games)" />
                   <CustomCheckbox id="save-box" checked={saveBox} onChange={setSaveBox} label="Save Box Scores - no more than 15,000 games" />
                 </div>
                 <Button variant="outline" disabled={isLoading || isSimulating} className="mt-4" onClick={async () => {

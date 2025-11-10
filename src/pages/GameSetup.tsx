@@ -220,6 +220,14 @@ interface BoxScoreFullSeason { //this is the boxScore of the full season game mo
   line_number: string;
 }
 
+interface RawStats { //raw (pre-formatted) text for the last user executed game simulation
+  textlines: string;
+}
+
+interface RawStatsResponse {
+  data: RawStats[]
+}
+
 interface GameList { //this is the gameList of the full season game mode
   game_number: string;
   team_name1: string;
@@ -324,6 +332,7 @@ const GameSetup = () => {
   const [playByPlay, setPlayByPlay] = useState<GetPlayByPlay[]>([]);
   const [boxScore, setBoxScore] = useState<BoxScore[]>([]);
   const [boxScoreFullSeason, setBoxScoreFullSeason] = useState<BoxScoreFullSeason[]>([]);
+  const [rawStats, setRawStats] = useState<RawStats[]>([]);
   const [playerSubPattern, setPlayerSubPattern] = useState<PlayerSubPattern[] | null>([]);
   const [getAlts, setGetAlts] = useState<GetAlts[]>([]);
   const [getAltsSelected, setGetAltsSelected] = useState("Default-")
@@ -655,7 +664,8 @@ const GameSetup = () => {
       await Promise.all([
           handleFetchGameListFullSeason(),
           handleFetchBoxScoreFullSeason(),
-          handleFetchPlayByPlayFullSeason("1")
+          handleFetchPlayByPlayFullSeason("1"),
+          handleFetchRawStats()
         ])
 
       /* if (schedule == "fullseason") {
@@ -895,6 +905,63 @@ const GameSetup = () => {
         ) {
           const body = parsed as { data: BoxScoreFullSeason[] };
           setBoxScoreFullSeason(body.data);
+        } else {
+          throw new Error("Unexpected response format.");
+        }
+      }
+    } catch (err: any) {
+      setError(err instanceof Error ? err.message : String(err));
+    }
+  };
+
+  const handleFetchRawStats = async () => {
+    setError(null);
+    try {
+      let response;
+      if (ELECTRON === "electron" || ELECTRON === "web") {
+
+        response = await fetchWithAuth(`${SIMULATION_URL}/get_raw_stats.php`, 'POST', {
+          //method: "POST",
+          game_number: "ALL",
+          alt_sub: getAltsSelected
+        })
+      } else {
+        response = await fetchWithAuth(`${API_URL}/conversionjs`, "POST", {
+          body: {
+            endpoint: "/get_raw_stats.php",
+            method: "POST",
+            game_number: "ALL",
+            alt_sub: getAltsSelected
+          },
+        });
+      }
+
+
+      if (!response.ok) {
+        let errMsg = "Failed to fetch box score full season.";
+        try {
+          const err: Message = await response.json();
+          if (err?.message) errMsg = err.message;
+        } catch {
+          // si no se puede parsear el error, se deja el genérico
+        }
+        setError(`error: ${errMsg}`);
+        throw new Error(errMsg);
+      }
+
+      if (ELECTRON === "electron" || ELECTRON === "web") {
+        const data: RawStatsResponse = await response.json();
+        setRawStats(data.data);
+      } else {
+        const data: BodyResponse = await response.json();
+        const parsed = JSON.parse(data.body);
+        if (
+          typeof parsed === "object" &&
+          parsed !== null &&
+          "data" in parsed
+        ) {
+          const body = parsed as { data: RawStats[] };
+          setRawStats(body.data);
         } else {
           throw new Error("Unexpected response format.");
         }
@@ -1382,6 +1449,7 @@ const GameSetup = () => {
             teamsDraft={teamsDraft}
             keepPlayByPlay={keepPlayByPlay}
             setKeepPlayByPlay={setKeepPlayByPlay}
+            rawStats={rawStats}
           />
         }
         {activeView === 'single-game' &&
