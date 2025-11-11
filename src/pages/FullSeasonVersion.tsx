@@ -336,22 +336,9 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
             </SheetHeader>
             <div className="py-4">
               {rawStats.length > 0 ? (
-                (() => {
-                  const games = rawStats.reduce((acc, item) => {
-                    const gameNum = item.textlines;
-                    if (!acc[gameNum]) {
-                      acc[gameNum] = [];
-                    }
-                    acc[gameNum].push(item.textlines);
-                    return acc;
-                  }, {} as Record<string, string[]>);
-
-                  return Object.entries(games).map(([gameNum, lines]) => (
-                    <div key={gameNum} id={`game-${gameNum}`}>
-                      <pre className="text-sm">{lines.join('\n')}</pre>
-                    </div>
-                  ));
-                })()
+                <pre className="text-sm">
+                  {rawStats.map(item => item.textlines).join('\n')}
+                </pre>
               ) : (
                 <p>No box score data available.</p>
               )}
