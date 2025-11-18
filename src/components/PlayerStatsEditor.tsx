@@ -12,11 +12,12 @@ import { Input } from '@/components/ui/input';
 import { Loader2 } from 'lucide-react';
 import { exportToCSV } from '@/lib/utils';
 
-interface PlayerChar {
+export interface EditablePlayerStats {
     name: string;
     position: string;
     poss_fact: string;
     two_pt_fg_pct: string;
+    three_pt_fg_pct: string;
     ft_pct: string;
     pct_shot: string;
     three_pt_pct_shot: string;
@@ -33,30 +34,13 @@ interface PlayerChar {
     team_code: string;
     height: string;
     deny_fact: string;
-    g: string;
-    min: string;
-    ming: string;
-    ptsg: string;
-    positions: string;
-    fgpct: string;
-    scorefgpct: string;
-    twoptfgpct: string;
-    threeptfgpct: string;
-    ftpct: string;
-    offreb: string;
-    defreb: string;
-    totreb: string;
-    defrat: string;
-    pctpf: string;
-    pctst: string;
-    pctbs: string;
-    [key: string]: string; // Allow dynamic access
+    [key: string]: string | undefined;
 }
 
 interface PlayerStatsEditorProps {
-    players: PlayerChar[];
+    players: EditablePlayerStats[];
     teamName: string;
-    onSave: (updatedPlayers: PlayerChar[]) => Promise<void>;
+    onSave: (updatedPlayers: EditablePlayerStats[]) => Promise<void>;
     isLoading: boolean;
 }
 
@@ -66,7 +50,7 @@ const PlayerStatsEditor: React.FC<PlayerStatsEditorProps> = ({
     onSave,
     isLoading,
 }) => {
-    const [editedPlayers, setEditedPlayers] = useState<PlayerChar[]>([]);
+    const [editedPlayers, setEditedPlayers] = useState<EditablePlayerStats[]>([]);
     const [isSaving, setIsSaving] = useState(false);
 
     useEffect(() => {
@@ -91,6 +75,7 @@ const PlayerStatsEditor: React.FC<PlayerStatsEditorProps> = ({
     const editableFields = [
         { key: 'poss_fact', label: 'Poss Fact' },
         { key: 'two_pt_fg_pct', label: '2Pt FG%' },
+        { key: 'three_pt_fg_pct', label: '3Pt FG%' },
         { key: 'three_pt_pct_shot', label: '3Pt Shot%' },
         { key: 'ft_pct', label: 'FT%' },
         { key: 'pct_shot', label: '% Shot' },

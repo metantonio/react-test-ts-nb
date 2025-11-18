@@ -34,7 +34,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import DraftDialog from '@/components/DraftDialog';
-import PlayerStatsEditor from '@/components/PlayerStatsEditor';
+import PlayerStatsEditor, { EditablePlayerStats } from '@/components/PlayerStatsEditor';
 import { useUser } from '@/contexts/UserContext';
 import { useToast } from "@/hooks/use-toast";
 
@@ -293,7 +293,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
   // Player Stats Editor State
   const { fetchWithAuth } = useUser();
   const { toast } = useToast();
-  const [editablePlayers, setEditablePlayers] = useState<PlayerChar[]>([]);
+  const [editablePlayers, setEditablePlayers] = useState<EditablePlayerStats[]>([]);
   const [isStatsEditorOpen, setIsStatsEditorOpen] = useState(false);
   const [isFetchingStats, setIsFetchingStats] = useState(false);
 
@@ -318,7 +318,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
       }
 
       const data: BodyResponse = await response.json();
-      const body: { data: PlayerChar[] } = JSON.parse(data.body);
+      const body: { data: EditablePlayerStats[] } = JSON.parse(data.body);
       setEditablePlayers(body.data);
     } catch (err: any) {
       toast({
@@ -331,23 +331,17 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
     }
   };
 
-  const handleSavePlayerStats = async (updatedPlayers: PlayerChar[]) => {
+  const handleSavePlayerStats = async (updatedPlayers: EditablePlayerStats[]) => {
     if (!selectedTeams2 || !selectedLeague) return;
 
     try {
-      // Format data as per actions.txt example
-      // The example shows "data" as an array of objects with pos1..pos5 for subs, 
-      // but for stats it should likely be the player objects.
-      // Assuming the API expects the array of players directly or wrapped.
-      // Based on get_players_chars returning { data: [...] }, we'll send { data: [...] }
-
       const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', {
         body: {
           endpoint: "set_players_chars.php",
           method: "POST",
           league_name: selectedLeague.league_name,
           team_name: selectedTeams2.teams,
-          alt_sub: getAltsSelected, // Assuming we save to the selected alt_sub
+          alt_sub: getAltsSelected,
           data: updatedPlayers
         }
       });
