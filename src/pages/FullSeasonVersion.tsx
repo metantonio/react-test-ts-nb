@@ -34,6 +34,17 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import DraftDialog from '@/components/DraftDialog';
+import PlayerStatsEditor from '@/components/PlayerStatsEditor';
+import { useUser } from '@/contexts/UserContext';
+import { useToast } from "@/hooks/use-toast";
+
+interface Message {
+  message: string;
+}
+
+interface BodyResponse {
+  body: string;
+}
 
 interface League {
   league_name: string;
@@ -98,6 +109,7 @@ interface PlayerChar { //this scheme is shared with playerChar editable stats, s
   pctpf: string;
   pctst: string;
   pctbs: string;
+  [key: string]: any;
 }
 
 interface PlayerSubPattern {
@@ -203,6 +215,8 @@ interface FullSeasonVersionProps {
   teamsDraft: Team[];
 }
 
+const API_URL = import.meta.env.VITE_API_BASE_URL;
+
 const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
   {
     leagues,
@@ -275,6 +289,95 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
   const [isFetchingSubPattern, setIsFetchingSubPattern] = useState(false);
   const [isDraftDialogOpen, setIsDraftDialogOpen] = useState(false);
   const [isPbpSheetOpen, setIsPbpSheetOpen] = useState(false);
+
+  // Player Stats Editor State
+  const { fetchWithAuth } = useUser();
+  const { toast } = useToast();
+  const [editablePlayers, setEditablePlayers] = useState<PlayerChar[]>([]);
+  const [isStatsEditorOpen, setIsStatsEditorOpen] = useState(false);
+  const [isFetchingStats, setIsFetchingStats] = useState(false);
+
+  const handleFetchEditablePlayerStats = async () => {
+    if (!selectedTeams2 || !selectedLeague) return;
+
+    setIsFetchingStats(true);
+    try {
+      const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', {
+        body: {
+          endpoint: "get_players_chars.php",
+          method: "POST",
+          league_name: selectedLeague.league_name,
+          team_name: selectedTeams2.teams,
+          alt_sub: getAltsSelected
+        }
+      });
+
+      if (!response.ok) {
+        const err: Message = await response.json();
+        throw new Error(err.message);
+      }
+
+      const data: BodyResponse = await response.json();
+      const body: { data: PlayerChar[] } = JSON.parse(data.body);
+      setEditablePlayers(body.data);
+    } catch (err: any) {
+      toast({
+        title: "Error fetching stats",
+        description: err.message,
+        variant: "destructive"
+      });
+    } finally {
+      setIsFetchingStats(false);
+    }
+  };
+
+  const handleSavePlayerStats = async (updatedPlayers: PlayerChar[]) => {
+    if (!selectedTeams2 || !selectedLeague) return;
+
+    try {
+      // Format data as per actions.txt example
+      // The example shows "data" as an array of objects with pos1..pos5 for subs, 
+      // but for stats it should likely be the player objects.
+      // Assuming the API expects the array of players directly or wrapped.
+      // Based on get_players_chars returning { data: [...] }, we'll send { data: [...] }
+
+      const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', {
+        body: {
+          endpoint: "set_players_chars.php",
+          method: "POST",
+          league_name: selectedLeague.league_name,
+          team_name: selectedTeams2.teams,
+          alt_sub: getAltsSelected, // Assuming we save to the selected alt_sub
+          data: updatedPlayers
+        }
+      });
+
+      if (!response.ok) {
+        const err: Message = await response.json();
+        throw new Error(err.message);
+      }
+
+      toast({
+        title: "Success",
+        description: "Player statistics saved successfully.",
+      });
+
+      // Refresh the data
+      await handleFetchEditablePlayerStats();
+
+    } catch (err: any) {
+      toast({
+        title: "Error saving stats",
+        description: err.message,
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleStatsEditorClick = async () => {
+    await handleFetchEditablePlayerStats();
+    setIsStatsEditorOpen(true);
+  };
 
   const handlePbpForGame = async (gameNumber: string) => {
     await handleFetchPlayByPlayFullSeason(gameNumber);
@@ -735,7 +838,30 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
                     </SheetContent>
                   </Sheet>
                   <Button variant="outline" onClick={() => setIsDraftDialogOpen(true)}>Draft Players</Button>
-                  <Button variant="outline" disabled>Change Player Characteristics</Button>
+                  <Sheet open={isStatsEditorOpen} onOpenChange={setIsStatsEditorOpen}>
+                    <SheetTrigger asChild>
+                      <Button variant="outline" onClick={handleStatsEditorClick} disabled={isFetchingStats}>Change Player Characteristics</Button>
+                    </SheetTrigger>
+                    <SheetContent className="max-w-none w-[100vw] overflow-y-auto">
+                      <SheetHeader>
+                        <SheetTitle>Edit Player Characteristics</SheetTitle>
+                      </SheetHeader>
+                      <div className="mt-4">
+                        {isFetchingStats ? (
+                          <div className="flex justify-center p-8">
+                            <Loader2 className="h-8 w-8 animate-spin" />
+                          </div>
+                        ) : (
+                          <PlayerStatsEditor
+                            players={editablePlayers}
+                            teamName={selectedTeams2?.teams || ''}
+                            onSave={handleSavePlayerStats}
+                            isLoading={isFetchingStats}
+                          />
+                        )}
+                      </div>
+                    </SheetContent>
+                  </Sheet>
 
                 </div>
 

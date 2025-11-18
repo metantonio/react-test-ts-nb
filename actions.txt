@@ -1,30 +1,72 @@
-@FullSeasonVersion.txs @GameSetup.tsx En la siguiente sección de código se renderiza los raw stats, pero por alguna razón las líneas parecen duplicarse en la renderización y ya comprobé que el backend entrega data sin duplicados. A continuación el fragmento de código: 
-<SheetContent className="overflow-y-auto">
-            <SheetHeader>
-              <SheetTitle>Raw Stats</SheetTitle>
-            </SheetHeader>
-            <div className="py-4">
-              {rawStats.length > 0 ? (
-                (() => {
-                  const games = rawStats.reduce((acc, item) => {
-                    const gameNum = item.textlines;
-                    if (!acc[gameNum]) {
-                      acc[gameNum] = [];
-                    }
-                    acc[gameNum].push(item.textlines);
-                    return acc;
-                  }, {} as Record<string, string[]>);
+POST Set player sub positions
+http://api.bballsports.com/simulationAPI/set_players_subs.php
+Assign a season/teams 4-minute substitution pattern by sending 12 record array of 5 player
+positions. Note this is saved to the user's account.
+AUTHORIZATION Bearer Token
+BODY json
+{"apikey":"7acfca7442404d6c8cd8322a06671b79",
+"league_name":"PRO2017-18",
+"alt_sub": "Default-",
+"team_name":"Golden State Warriors",
+"data":[{"pos1":"Zaza Pachulia","pos2":"Draymond Green","pos3":"Kevin Durant","pos4":"Klay
+Thompson","pos5":"Stephen Curry"},{"pos1":"JaVale McGee","pos2":"Kevon Looney","pos3":"Kevin
+Durant","pos4":"Klay Thompson","pos5":"Shaun Livingston"},{"pos1":"Jordan Bell","pos2":"Draymond
+Green","pos3":"Andre Iguodala","pos4":"Patrick McCaw","pos5":"Stephen Curry"},{"pos1":"David
+West","pos2":"Omri Casspi","pos3":"Nick Young","pos4":"Klay Thompson","pos5":"Andre
+Iguodala"},{"pos1":"Jordan Bell","pos2":"Kevon Looney","pos3":"Nick Young","pos4":"Patrick
+McCaw","pos5":"Quinn Cook"},{"pos1":"David West","pos2":"Draymond Green","pos3":"Kevin
+Durant","pos4":"Klay Thompson","pos5":"Quinn Cook"},{"pos1":"Zaza Pachulia","pos2":"Draymond
+Green","pos3":"Kevin Durant","pos4":"Klay Thompson","pos5":"Stephen Curry"},{"pos1":"Kevon
+Looney","pos2":"Draymond Green","pos3":"Kevin Durant","pos4":"Nick Young","pos5":"Shaun
+Livingston"},{"pos1":"JaVale McGee","pos2":"Omri Casspi","pos3":"Nick Young","pos4":"Klay
+Thompson","pos5":"Andre Iguodala"},{"pos1":"Jordan Bell","pos2":"Draymond Green","pos3":"Andre
+Iguodala","pos4":"Patrick McCaw","pos5":"Shaun Livingston"},{"pos1":"David West","pos2":"Kevin
+Durant","pos3":"Andre Iguodala","pos4":"Klay Thompson","pos5":"Stephen Curry"},{"pos1":"Zaza
+Pachulia","pos2":"Draymond Green","pos3":"Kevin Durant","pos4":"Stephen Curry","pos5":"Stephen Curry"}]
+}
 
-                  return Object.entries(games).map(([gameNum, lines]) => (
-                    <div key={gameNum} id={`game-${gameNum}`}>
-                      <pre className="text-sm">{lines.join('\n')}</pre>
-                    </div>
-                  ));
-                })()
-              ) : (
-                <p>No box score data available.</p>
-              )}
-            </div>
-          </SheetContent>
+Example request
+curl --location --request POST
+'http://api.bballsports.com/simulationAPI/set_players_subs.php'
+\
+--header 'Authorization: 0751qaqp7qjnit2ag2ln8knfi3' \
+--data-raw '{"apikey":"7acfca7442404d6c8cd8322a06671b79",
+"league_name":"PRO2017-18",
+"team_name":"Golden State Warriors",
+"alt_sub": "Default",
+"data":[{"pos1":"Zaza Pachulia","pos2":"Draymond
+Green","pos3":"Kevin Durant","pos4":"Klay
+Thompson","pos5":"Stephen Curry"},{"pos1":"JaVale
+McGee","pos2":"Kevon Looney","pos3":"Kevin Durant","pos4":"Klay
+Thompson","pos5":"Shaun Livingston"},{"pos1":"Jordan
+Bell","pos2":"Draymond Green","pos3":"Andre
 
-Revisando, se ha determinado que game_number no existe en la interface de RawStats por lo que puede estar mal ejecutado el bloque de código
+Iguodala","pos4":"Patrick McCaw","pos5":"Stephen
+Curry"},{"pos1":"David West","pos2":"Omri Casspi","pos3":"Nick
+Young","pos4":"Klay Thompson","pos5":"Andre
+Iguodala"},{"pos1":"Jordan Bell","pos2":"Kevon
+Looney","pos3":"Nick Young","pos4":"Patrick McCaw","pos5":"Quinn
+Cook"},{"pos1":"David West","pos2":"Draymond
+Green","pos3":"Kevin Durant","pos4":"Klay
+Thompson","pos5":"Quinn Cook"},{"pos1":"Zaza
+Pachulia","pos2":"Draymond Green","pos3":"Kevin
+Durant","pos4":"Klay Thompson","pos5":"Stephen
+Curry"},{"pos1":"Kevon Looney","pos2":"Draymond
+Green","pos3":"Kevin Durant","pos4":"Nick Young","pos5":"Shaun
+Livingston"},{"pos1":"JaVale McGee","pos2":"Omri
+Casspi","pos3":"Nick Young","pos4":"Klay Thompson","pos5":"Andre
+Iguodala"},{"pos1":"Jordan Bell","pos2":"Draymond
+Green","pos3":"Andre Iguodala","pos4":"Patrick
+McCaw","pos5":"Shaun Livingston"},{"pos1":"David
+West","pos2":"Kevin Durant","pos3":"Andre Iguodala","pos4":"Klay
+Thompson","pos5":"Stephen Curry"},{"pos1":"Zaza
+Pachulia","pos2":"Draymond Green","pos3":"Kevin
+Durant","pos4":"Stephen Curry","pos5":"Stephen Curry"}]
+}'
+Example response
+{
+"status": "true",
+"message": "",
+"username": "Guest137004905",
+"data": ""
+}
