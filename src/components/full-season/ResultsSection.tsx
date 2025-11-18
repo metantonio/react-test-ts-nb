@@ -140,8 +140,8 @@ const ResultsSection: React.FC<ResultsSectionProps> = ({
             <CardContent>
                 <Tabs defaultValue="games" className="w-full">
                     <TabsList className="grid w-full grid-cols-2">
-                        <TabsTrigger value="games">Game List ({gameList.length})</TabsTrigger>
-                        <TabsTrigger value="schedule">Schedule</TabsTrigger>
+                        <TabsTrigger value="games" style={{ border: "1px white solid" }}>Game List ({gameList.length})</TabsTrigger>
+                        <TabsTrigger value="schedule" style={{ border: "1px white solid" }}>Schedule</TabsTrigger>
                     </TabsList>
 
                     <TabsContent value="games" className="space-y-4">
