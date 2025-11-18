@@ -1,15 +1,13 @@
-> react-nba-qlx@1.0.46 buildweb
+npm run buildweb
+
+> react-nba-qlx@1.0.52 buildweb
 > tsc && vite build
 
-src/pages/GameSetup.tsx:657:11 - error TS2554: Expected 1 arguments, but got 0.
+src/pages/FullSeasonVersion.tsx:524:9 - error TS2322: Type '{ open: boolean; onOpenChange: Dispatch<SetStateAction<boolean>>; leagues: League[]; selectedLeagueDraft: League | null; setSelectedLeagueDraft: Dispatch<...>; ... 7 more ...; setDraftActions: Dispatch<...>; }' is not assignable to type 'IntrinsicAttributes & DraftDialogProps'.
+  Property 'handleFetchSetPlayerDraft' does not exist on type 'IntrinsicAttributes & DraftDialogProps'. Did you mean 'handleFetchTeamsDraft'?
 
-657           handleFetchPlayByPlayFullSeason()
-              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-  src/pages/GameSetup.tsx:967:50
-    967   const handleFetchPlayByPlayFullSeason = async (gameNumber: string) => {
-                                                         ~~~~~~~~~~~~~~~~~~
-    An argument for 'gameNumber' was not provided.
+524         handleFetchSetPlayerDraft={handleFetchSetPlayerDraft}
+            ~~~~~~~~~~~~~~~~~~~~~~~~~   
 
 
-Found 1 error in src/pages/GameSetup.tsx:657
+Found 1 error in src/pages/FullSeasonVersion.tsx:524
