@@ -280,6 +280,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
     setKeepPlayByPlay,
     rawStats,
     boxScoreFullSeason,
+    setPlayByPlay,
   }
 ) => {
   //const [schedule, setSchedule] = useState('predict');
@@ -450,6 +451,17 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
               setBoxScoreFullSeason([]);
               setTeamsSchedule([]);
               setGameList([]);
+              setGetAltsSelected("");
+              setSchedule("predict");
+              setLocation("both");
+              setScheduleMultiplier("");
+              setPlayByPlay([]);
+              setPlayerSubPattern(null);
+              setDraftActions([]);
+              setSelectedLeagueDraft(null);
+              setSelectedTeamDraft(null);
+              setMultiplier(100);
+              setEditablePlayers([]);
               setIsClear(!isClear);
             }}
           />

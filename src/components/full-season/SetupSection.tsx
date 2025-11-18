@@ -55,7 +55,7 @@ const SetupSection: React.FC<SetupSectionProps> = ({
                     <label className="text-sm font-medium text-muted-foreground">Select League</label>
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <Button variant="outline" className={`w-full justify-between ${!selectedLeague ? 'border-primary/50' : ''}`}>
+                            <Button variant="outline" className={`w-full justify-between ${!selectedLeague ? 'border-primary/50 pulse-attention' : ''}`}>
                                 {selectedLeague ? selectedLeague.league_name : "Choose League..."}
                             </Button>
                         </DropdownMenuTrigger>
@@ -77,7 +77,7 @@ const SetupSection: React.FC<SetupSectionProps> = ({
                                 <label className="text-sm font-medium text-muted-foreground">Away Team</label>
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
-                                        <Button variant="outline" className="w-full justify-between">
+                                        <Button variant="outline" className={`${selectedTeams1 ? "w-full justify-between" : "w-full justify-between pulse-attention"}`}>
                                             {selectedTeams1 ? selectedTeams1.teams : "Select Away Team..."}
                                         </Button>
                                     </DropdownMenuTrigger>
@@ -96,7 +96,7 @@ const SetupSection: React.FC<SetupSectionProps> = ({
                             <label className="text-sm font-medium text-muted-foreground">Home Team</label>
                             <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
-                                    <Button variant="outline" className="w-full justify-between">
+                                    <Button variant="outline" className={`${selectedTeams2 ? "w-full justify-between" : "w-full justify-between pulse-attention"}`}>
                                         {selectedTeams2 ? selectedTeams2.teams : "Select Home Team..."}
                                     </Button>
                                 </DropdownMenuTrigger>

@@ -8,6 +8,14 @@ import PlayerStatsEditor, { EditablePlayerStats } from '@/components/PlayerStats
 import { exportToCSV } from '@/lib/utils';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
+interface PlayerSubPattern {
+    pos1: string;
+    pos2: string;
+    pos3: string;
+    pos4: string;
+    pos5: string;
+}
+
 interface TeamToolsSectionProps {
     selectedLeague: any;
     selectedTeams1: any;
@@ -18,8 +26,8 @@ interface TeamToolsSectionProps {
     setIsSubPatternSheetOpen: (open: boolean) => void;
     isFetchingSubPattern: boolean;
     handleSubPatternClick: () => void;
-    playerSubPattern: any[] | null;
-    setPlayerSubPattern: any;
+    playerSubPattern: PlayerSubPattern[] | null;
+    setPlayerSubPattern: React.Dispatch<React.SetStateAction<PlayerSubPattern[] | null>>;
     handleFetchSetPlayerSubpattern: () => Promise<void | null>;
     isStatsEditorOpen: boolean;
     setIsStatsEditorOpen: (open: boolean) => void;

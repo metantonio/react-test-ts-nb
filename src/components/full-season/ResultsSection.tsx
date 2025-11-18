@@ -139,9 +139,9 @@ const ResultsSection: React.FC<ResultsSectionProps> = ({
             </CardHeader>
             <CardContent>
                 <Tabs defaultValue="games" className="w-full">
-                    <TabsList className="w-full">
-                        <TabsTrigger value="games" className="flex-1">Game List ({gameList.length})</TabsTrigger>
-                        <TabsTrigger value="schedule" className="flex-1">Schedule</TabsTrigger>
+                    <TabsList className="grid w-full grid-cols-2">
+                        <TabsTrigger value="games">Game List ({gameList.length})</TabsTrigger>
+                        <TabsTrigger value="schedule">Schedule</TabsTrigger>
                     </TabsList>
 
                     <TabsContent value="games" className="space-y-4">
