@@ -219,6 +219,7 @@ interface FullSeasonVersionProps {
   teamsDraft: Team[];
   currentDraftPlayers: PlayerChar[];
   handleFetchCurrentDraftPlayers: () => Promise<void>;
+  subPatternAvailablePlayers: PlayerChar[];
 }
 
 const API_URL = import.meta.env.VITE_API_BASE_URL;
@@ -285,6 +286,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
     setPlayByPlay,
     currentDraftPlayers,
     handleFetchCurrentDraftPlayers,
+    subPatternAvailablePlayers,
   }
 ) => {
   //const [schedule, setSchedule] = useState('predict');
@@ -482,6 +484,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
             selectedTeams2={selectedTeams2}
             playersTeam1={playersTeam1}
             playersTeam2={playersTeam2}
+            availablePlayers={subPatternAvailablePlayers}
             isSubPatternSheetOpen={isSubPatternSheetOpen}
             setIsSubPatternSheetOpen={setIsSubPatternSheetOpen}
             isFetchingSubPattern={isFetchingSubPattern}

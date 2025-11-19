@@ -22,6 +22,7 @@ interface TeamToolsSectionProps {
     selectedTeams2: any;
     playersTeam1: any[];
     playersTeam2: any[];
+    availablePlayers: any[];
     isSubPatternSheetOpen: boolean;
     setIsSubPatternSheetOpen: (open: boolean) => void;
     isFetchingSubPattern: boolean;
@@ -44,6 +45,7 @@ const TeamToolsSection: React.FC<TeamToolsSectionProps> = ({
     selectedTeams2,
     playersTeam1,
     playersTeam2,
+    availablePlayers,
     isSubPatternSheetOpen,
     setIsSubPatternSheetOpen,
     isFetchingSubPattern,
@@ -94,7 +96,7 @@ const TeamToolsSection: React.FC<TeamToolsSectionProps> = ({
                             isFetching={isFetchingSubPattern}
                             playerSubPattern={playerSubPattern}
                             setPlayerSubPattern={setPlayerSubPattern}
-                            playersTeam2={playersTeam2}
+                            availablePlayers={availablePlayers}
                             selectedTeam={selectedTeams2}
                             onSetPattern={handleFetchSetPlayerSubpattern}
                         />

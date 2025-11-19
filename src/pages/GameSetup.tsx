@@ -480,6 +480,7 @@ const GameSetup = () => {
   }]);
   const [teamsDraft, setTeamsDraft] = useState<Teams[]>([{ teams: "N/A" }]);
   const [currentDraftPlayers, setCurrentDraftPlayers] = useState<PlayerChar[]>([]);
+  const [subPatternAvailablePlayers, setSubPatternAvailablePlayers] = useState<PlayerChar[]>([]);
 
   const API_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -1193,10 +1194,56 @@ const GameSetup = () => {
 
       }
       //const data: PlayerSubPatternResponse = await response.json();
+      //const data: PlayerSubPatternResponse = await response.json();
       const data: BodyResponse = await response.json();
-      const body: { data: PlayerSubPattern[] } = JSON.parse(data.body)
+      const body: { data: PlayerSubPattern[], rightdata?: any[] } = JSON.parse(data.body)
       console.log("Player Subs: ", body)
       setPlayerSubPattern(body.data);
+
+      if (body.rightdata) {
+        const mappedAvailablePlayers: PlayerChar[] = body.rightdata.map((p: any) => ({
+          name: p.player_name,
+          positions: p.positions,
+          height: p.height,
+          year: p.year,
+          team_code: p.team_code,
+          // Default values for other required fields
+          position: "",
+          poss_fact: "",
+          two_pt_fg_pct: "",
+          ft_pct: "",
+          pct_shot: "",
+          three_pt_pct_shot: "",
+          pct_fouled: "",
+          pct_to: "",
+          pct_pass: "",
+          off_reb: "",
+          def_reb: "",
+          def_fg_pct: "",
+          pct_pf: "",
+          pct_st: "",
+          pct_bs: "",
+          deny_fact: "",
+          g: "",
+          min: "",
+          ming: "",
+          ptsg: "",
+          fgpct: "",
+          scorefgpct: "",
+          twoptfgpct: "",
+          threeptfgpct: "",
+          ftpct: "",
+          offreb: "",
+          defreb: "",
+          totreb: "",
+          defrat: "",
+          pctpf: "",
+          pctst: "",
+          pctbs: ""
+        }));
+        setSubPatternAvailablePlayers(mappedAvailablePlayers);
+      }
+
       return body.data
     } catch (err: any) {
       setError(`${err}`);
@@ -1527,6 +1574,7 @@ const GameSetup = () => {
             setGameList={setGameList}
             playerSubPattern={playerSubPattern}
             setPlayerSubPattern={setPlayerSubPattern}
+            subPatternAvailablePlayers={subPatternAvailablePlayers}
             draftActions={draftActions}
             setDraftActions={setDraftActions}
             selectedLeagueDraft={selectedLeagueDraft}
@@ -1542,6 +1590,7 @@ const GameSetup = () => {
             rawStats={rawStats}
             currentDraftPlayers={currentDraftPlayers}
             handleFetchCurrentDraftPlayers={handleFetchCurrentDraftPlayers}
+
           />
         }
         {activeView === 'single-game' &&

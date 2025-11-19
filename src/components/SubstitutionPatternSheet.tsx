@@ -42,7 +42,7 @@ interface SubstitutionPatternSheetProps {
   isFetching: boolean;
   playerSubPattern: PlayerSubPattern[] | null;
   setPlayerSubPattern: React.Dispatch<React.SetStateAction<PlayerSubPattern[] | null>>;
-  playersTeam2: PlayerChar[];
+  availablePlayers: PlayerChar[];
   selectedTeam: Team | null;
   onSetPattern: () => Promise<void | null>;
 }
@@ -51,7 +51,7 @@ const SubstitutionPatternSheet: React.FC<SubstitutionPatternSheetProps> = ({
   isFetching,
   playerSubPattern,
   setPlayerSubPattern,
-  playersTeam2,
+  availablePlayers,
   selectedTeam,
   onSetPattern,
 }) => {
@@ -313,7 +313,7 @@ const SubstitutionPatternSheet: React.FC<SubstitutionPatternSheetProps> = ({
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {playersTeam2.map(player => (
+                  {availablePlayers.map(player => (
                     <TableRow key={player.name} className='bg-muted'>
                       <TableCell
                         className={`cursor-pointer hover:bg-muted ${player.name === highlightedPlayer ? 'bg-yellow-300' : ''}`}
