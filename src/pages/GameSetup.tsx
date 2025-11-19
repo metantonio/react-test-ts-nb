@@ -270,6 +270,21 @@ interface BoxScoreFullSeasonResponse {
   data: BoxScoreFullSeason[];
 }
 
+interface GetPlayersData {
+  player_name: string;
+  positions: string;
+  height: string;
+  orig_year: string;
+  orig_team_code: string;
+}
+
+interface GetPlayersResponse {
+  status: string;
+  message: string;
+  username: string;
+  data: GetPlayersData[];
+}
+
 interface DraftAction {
   action: 'replace';
   original_league: string;
@@ -464,6 +479,7 @@ const GameSetup = () => {
     pctbs: ""
   }]);
   const [teamsDraft, setTeamsDraft] = useState<Teams[]>([{ teams: "N/A" }]);
+  const [currentDraftPlayers, setCurrentDraftPlayers] = useState<PlayerChar[]>([]);
 
   const API_URL = import.meta.env.VITE_API_BASE_URL;
 
@@ -500,7 +516,7 @@ const GameSetup = () => {
       const data: BodyResponse = await response.json();
       console.log("teams: ", data)
       const body: { data: Teams[] } = JSON.parse(data.body)
-      console.log("parsed teams: ",body.data)
+      console.log("parsed teams: ", body.data)
       setTeams(body.data);
     } catch (err: any) {
       setError(`${err}`);
@@ -624,7 +640,7 @@ const GameSetup = () => {
             endpoint: "play_82.php",
             method: "POST",
             "league_name": selectedLeague?.league_name,
-            "numgames": scheduleMultiplier == "82"? "normal": scheduleMultiplier,
+            "numgames": scheduleMultiplier == "82" ? "normal" : scheduleMultiplier,
             "homeaway": location,
             "gamemode": schedule,
             "keeppbp": keepPlayByPlay,
@@ -662,11 +678,11 @@ const GameSetup = () => {
       }
       console.log("was ok")
       await Promise.all([
-          handleFetchGameListFullSeason(),
-          handleFetchBoxScoreFullSeason(),
-          handleFetchPlayByPlayFullSeason("1"),
-          handleFetchRawStats()
-        ])
+        handleFetchGameListFullSeason(),
+        handleFetchBoxScoreFullSeason(),
+        handleFetchPlayByPlayFullSeason("1"),
+        handleFetchRawStats()
+      ])
 
       /* if (schedule == "fullseason") {
         await Promise.all([
@@ -739,7 +755,7 @@ const GameSetup = () => {
     try {
       const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', {
         body: {
-          ...selectedLeague, 
+          ...selectedLeague,
           endpoint: "get_actual_player_stats.php", method: "POST",
           team_name: selectedTeams2?.teams,
           alt_sub: getAltsSelected
@@ -765,8 +781,8 @@ const GameSetup = () => {
     try {
       const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', {
         body: {
-          ...selectedLeagueDraft, 
-          endpoint: "get_actual_player_stats.php", 
+          ...selectedLeagueDraft,
+          endpoint: "get_actual_player_stats.php",
           method: "POST",
           team_name: selectedTeamsDraft?.teams,
           alt_sub: getAltsSelected
@@ -780,6 +796,77 @@ const GameSetup = () => {
       const data: BodyResponse = await response.json();
       const body: { data: PlayerChar[] } = JSON.parse(data.body)
       setPlayersTeamDraft(body.data);
+    } catch (err: any) {
+      setError(`${err}`);
+    }
+  };
+
+  const handleFetchCurrentDraftPlayers = async () => {
+    setError(null);
+    try {
+      const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', {
+        body: {
+          league_name: selectedLeague?.league_name,
+          team_name: selectedTeams2?.teams,
+          alt_sub: getAltsSelected || "Default-",
+          endpoint: "get_players.php",
+          method: "POST"
+        }
+      });
+
+      if (!response.ok) {
+        const err: Message = await response.json();
+        setError(`error: ${err.message}`);
+        throw new Error('Failed to fetch current draft players.');
+      }
+
+      const data: BodyResponse = await response.json();
+      const body: GetPlayersResponse = JSON.parse(data.body);
+
+      if (body.status === "true" && body.data) {
+        // Map to PlayerChar interface (partial)
+        const mappedPlayers: PlayerChar[] = body.data.map(p => ({
+          name: p.player_name,
+          positions: p.positions,
+          height: p.height,
+          year: p.orig_year,
+          team_code: p.orig_team_code,
+          // Fill other required fields with empty strings or defaults as they are not needed for the draft dialog display
+          position: "",
+          poss_fact: "",
+          two_pt_fg_pct: "",
+          ft_pct: "",
+          pct_shot: "",
+          three_pt_pct_shot: "",
+          pct_fouled: "",
+          pct_to: "",
+          pct_pass: "",
+          off_reb: "",
+          def_reb: "",
+          def_fg_pct: "",
+          pct_pf: "",
+          pct_st: "",
+          pct_bs: "",
+          deny_fact: "",
+          g: "",
+          min: "",
+          ming: "",
+          ptsg: "",
+          fgpct: "",
+          scorefgpct: "",
+          twoptfgpct: "",
+          threeptfgpct: "",
+          ftpct: "",
+          offreb: "",
+          defreb: "",
+          totreb: "",
+          defrat: "",
+          pctpf: "",
+          pctst: "",
+          pctbs: ""
+        }));
+        setCurrentDraftPlayers(mappedPlayers);
+      }
     } catch (err: any) {
       setError(`${err}`);
     }
@@ -977,7 +1064,7 @@ const GameSetup = () => {
       let response;
       if (ELECTRON === "electron" || ELECTRON === "web") {
 
-        response = await fetchWithAuth(`${SIMULATION_URL}/get_played_game_list.php`, 'POST', {alt_sub: getAltsSelected})
+        response = await fetchWithAuth(`${SIMULATION_URL}/get_played_game_list.php`, 'POST', { alt_sub: getAltsSelected })
       } else {
         response = await fetchWithAuth(`${API_URL}/conversionjs`, "POST", {
           body: {
@@ -1123,11 +1210,12 @@ const GameSetup = () => {
       let body: { body: { [key: string]: any }, [key: string]: any };
       let response;
       body = {
-        body:{
+        body: {
           ...selectedLeague, team_name: selectedTeams2?.teams, data: playerSubPattern,
           endpoint: "set_players_subs.php", method: "POST",
           alt_sub: getAltsSelected
-        }}
+        }
+      }
 
       if (ELECTRON === "electron" || ELECTRON === "web") {
         if ('body' in body && typeof body.body === 'object' && body.body !== null) {
@@ -1202,11 +1290,12 @@ const GameSetup = () => {
       let body: { body: { [key: string]: any }, [key: string]: any };
       let response;
       body = {
-        body:{
+        body: {
           ...selectedLeague, team_name: selectedTeams2?.teams, data: draftActions,
           endpoint: "set_players_drafts.php", method: "POST",
           alt_sub: getAltsSelected
-        }}
+        }
+      }
 
       if (ELECTRON === "electron" || ELECTRON === "web") {
         if ('body' in body && typeof body.body === 'object' && body.body !== null) {
@@ -1329,6 +1418,7 @@ const GameSetup = () => {
   useEffect(() => {
     if (selectedTeamsDraft) {
       handleFetchPlayersTeamDraft();
+      handleFetchCurrentDraftPlayers();
     }
   }, [selectedTeamsDraft]);
 
@@ -1450,6 +1540,8 @@ const GameSetup = () => {
             keepPlayByPlay={keepPlayByPlay}
             setKeepPlayByPlay={setKeepPlayByPlay}
             rawStats={rawStats}
+            currentDraftPlayers={currentDraftPlayers}
+            handleFetchCurrentDraftPlayers={handleFetchCurrentDraftPlayers}
           />
         }
         {activeView === 'single-game' &&

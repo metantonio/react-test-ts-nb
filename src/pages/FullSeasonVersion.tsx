@@ -217,6 +217,8 @@ interface FullSeasonVersionProps {
   handleFetchTeamsDraft: () => Promise<void>;
   handleFetchSetPlayerDraft: () => Promise<void>;
   teamsDraft: Team[];
+  currentDraftPlayers: PlayerChar[];
+  handleFetchCurrentDraftPlayers: () => Promise<void>;
 }
 
 const API_URL = import.meta.env.VITE_API_BASE_URL;
@@ -281,6 +283,8 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
     rawStats,
     boxScoreFullSeason,
     setPlayByPlay,
+    currentDraftPlayers,
+    handleFetchCurrentDraftPlayers,
   }
 ) => {
   //const [schedule, setSchedule] = useState('predict');
@@ -404,6 +408,12 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
   useEffect(() => {
     console.log("should reset all")
   }, [isClear])
+
+  useEffect(() => {
+    if (isDraftDialogOpen) {
+      handleFetchCurrentDraftPlayers();
+    }
+  }, [isDraftDialogOpen]);
 
   const handlePlayGames = async () => {
     setIsSimulating(true);
@@ -534,7 +544,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
         selectedLeagueDraft={selectedLeagueDraft}
         setSelectedLeagueDraft={setSelectedLeagueDraft}
         teams={teamsDraft}
-        currentTeamPlayers={playersTeam2}
+        currentTeamPlayers={currentDraftPlayers}
         currentTeam={selectedTeams2}
         currentLeague={selectedLeague}
         selectedTeamDraft={selectedTeamDraft}

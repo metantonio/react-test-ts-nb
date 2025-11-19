@@ -1,1 +1,39 @@
-Algo debo estar pasando mal, ya que antes funcionaba bien pero a pesar de que el backend me envia los datos correctamente, no puedo mostar en el frontend los datos de substituion pattern, agregué una interface PlayerSubPattern para que el frontend pueda entender los datos que el backend me envia pero aún así no logro mostrarlos en el componente SubstitutionPatternSheet.tsx
+en @DraftDialog.tsx tengo un error conceptual que proviene de la variable currentTeamPlayers, el problema es que la lista de jugadores actuales para este compoenente en particular no viene del endpoint get_players_chars.php, sino que viene del endpoint get_players.php el cual no está definido en @GameSetup.tsx, por lo tanto definiré como se encuentra en la documentación y por favor defínelo luego de forma que coincida con el formato de los otros endpoints.
+
+En la documentación se define el endpoint get_players.php como:
+curl --location --request POST
+'http://api.bballsports.com/simulationAPI/get_players.php' \
+--header 'Authorization: 0751qaqp7qjnit2ag2ln8knfi3' \
+--data-raw '{"apikey":"7acfca7442404d6c8cd8322a06671b79",
+"league_name":"PRO2017-18",
+"team_name":"Cleveland Cavaliers".
+"alt_sub":"Default-"
+}'
+Example response truncated
+{
+"status": "true",
+"message": "",
+"username": "Guest137004905",
+"data": [
+{
+"player_name": "Kevin Love",
+"positions": "C PF ",
+"height": "6.10",
+"orig_year": "1718 ",
+"orig_team_code": "cle"
+},
+{
+"player_name": "Lebron James",
+"positions": "PF SF ",
+"height": "6.08",
+"orig_year": "1718 ",
+
+"orig_team_code": "cle"
+},
+{
+"player_name": "Jeff Green",
+"positions": "SF PF ",
+"height": "6.08",
+"orig_year": "1718 ",
+"orig_team_code": "cle"
+}]}
