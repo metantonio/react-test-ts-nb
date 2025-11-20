@@ -1,8 +1,1 @@
-en @GameSetup.tsx quiero agregar el endpoint reset_league.php es un endpoint que resetea la liga y la base de datos sólo para el usuario que lo usa gracias al token que se envía en el header, por lo que debes usar fecthWithAuth para esto.
-
-Ahora bien el endpoint reset_league.php envía lo siguiente en el body:
-{"apikey":"{{apikey}}",
- "league_name":"PRO2010-11"
-}
-
-por otro lado, el botón que debe activar este endpoint debe estar en la sección que se encuentra en @TeamToolsSection.tsx, y debe aparecer una ventana de diálogo en inglés que advierta al usuario que al usar este botón se reestablecerá la base de datos de los jugadores y equipos por defecto y que por lo tanto si está seguro de querer proceder.
+en @TeamToolsSection.tsx, el botón de Reset League ya existe y su funcionalidad es correcta, pero cuando se hace click en el botón debería mostrar una loading o algo que le haga saber al usuario que la petición está en proceso, además de la ventana de diálogo que ya existe para confirmar si se desea proceder

@@ -74,6 +74,21 @@ const TeamToolsSection: React.FC<TeamToolsSectionProps> = ({
     setIsDraftDialogOpen,
     onResetLeague,
 }) => {
+    const [isResetting, setIsResetting] = React.useState(false);
+    const [isResetDialogOpen, setIsResetDialogOpen] = React.useState(false);
+
+    const handleResetConfirm = async () => {
+        setIsResetting(true);
+        try {
+            await onResetLeague();
+            setIsResetDialogOpen(false);
+        } catch (error) {
+            console.error("Failed to reset league:", error);
+        } finally {
+            setIsResetting(false);
+        }
+    };
+
     if (!selectedLeague || (!selectedTeams1 && !selectedTeams2)) {
         return (
             <Card className="w-full opacity-50 pointer-events-none">
@@ -247,7 +262,7 @@ const TeamToolsSection: React.FC<TeamToolsSectionProps> = ({
             </CardContent>
             <CardContent className="grid grid-cols-1 gap-3">
                 {/* Reset League Button */}
-                <AlertDialog>
+                <AlertDialog open={isResetDialogOpen} onOpenChange={setIsResetDialogOpen}>
                     <AlertDialogTrigger asChild>
                         <Button variant="destructive" className="h-auto py-4 flex flex-col gap-2">
                             <Trash2 className="h-6 w-6" />
@@ -262,8 +277,21 @@ const TeamToolsSection: React.FC<TeamToolsSectionProps> = ({
                             </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
-                            <AlertDialogCancel>Cancel</AlertDialogCancel>
-                            <AlertDialogAction onClick={onResetLeague}>Continue</AlertDialogAction>
+                            <AlertDialogCancel disabled={isResetting}>Cancel</AlertDialogCancel>
+                            <Button
+                                variant="destructive"
+                                onClick={handleResetConfirm}
+                                disabled={isResetting}
+                            >
+                                {isResetting ? (
+                                    <>
+                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                        Resetting...
+                                    </>
+                                ) : (
+                                    'Continue'
+                                )}
+                            </Button>
                         </AlertDialogFooter>
                     </AlertDialogContent>
                 </AlertDialog>

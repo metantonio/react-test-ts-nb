@@ -59,7 +59,7 @@ const ResultsSection: React.FC<ResultsSectionProps> = ({
     );
 
     return (
-        <Card className="w-full h-full">
+        <Card className="w-full">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle>Results & Schedule</CardTitle>
                 <div className="flex gap-2">
