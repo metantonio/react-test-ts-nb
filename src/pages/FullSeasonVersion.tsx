@@ -220,6 +220,7 @@ interface FullSeasonVersionProps {
   currentDraftPlayers: PlayerChar[];
   handleFetchCurrentDraftPlayers: () => Promise<void>;
   subPatternAvailablePlayers: PlayerChar[];
+  onResetLeague: () => Promise<void>;
 }
 
 const API_URL = import.meta.env.VITE_API_BASE_URL;
@@ -287,6 +288,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
     currentDraftPlayers,
     handleFetchCurrentDraftPlayers,
     subPatternAvailablePlayers,
+    onResetLeague,
   }
 ) => {
   //const [schedule, setSchedule] = useState('predict');
@@ -499,6 +501,7 @@ const FullSeasonVersion: React.FC<FullSeasonVersionProps> = (
             editablePlayers={editablePlayers}
             handleSavePlayerStats={handleSavePlayerStats}
             setIsDraftDialogOpen={setIsDraftDialogOpen}
+            onResetLeague={onResetLeague}
           />
 
           <SimulationSettings

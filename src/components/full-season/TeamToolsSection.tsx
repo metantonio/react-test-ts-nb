@@ -2,11 +2,22 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-import { Loader2, Users, Edit, FileText, BarChart2 } from 'lucide-react';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { Loader2, Users, Edit, FileText, BarChart2, Trash2 } from 'lucide-react';
 import SubstitutionPatternSheet from '@/components/SubstitutionPatternSheet';
 import PlayerStatsEditor, { EditablePlayerStats } from '@/components/PlayerStatsEditor';
 import { exportToCSV } from '@/lib/utils';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 interface PlayerSubPattern {
     pos1: string;
@@ -37,6 +48,7 @@ interface TeamToolsSectionProps {
     editablePlayers: EditablePlayerStats[];
     handleSavePlayerStats: (players: EditablePlayerStats[]) => Promise<void>;
     setIsDraftDialogOpen: (open: boolean) => void;
+    onResetLeague: () => Promise<void>;
 }
 
 const TeamToolsSection: React.FC<TeamToolsSectionProps> = ({
@@ -60,6 +72,7 @@ const TeamToolsSection: React.FC<TeamToolsSectionProps> = ({
     editablePlayers,
     handleSavePlayerStats,
     setIsDraftDialogOpen,
+    onResetLeague,
 }) => {
     if (!selectedLeague || (!selectedTeams1 && !selectedTeams2)) {
         return (
@@ -229,6 +242,28 @@ const TeamToolsSection: React.FC<TeamToolsSectionProps> = ({
                         </div>
                     </SheetContent>
                 </Sheet>
+
+                {/* Reset League Button */}
+                <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                        <Button variant="destructive" className="h-auto py-4 flex flex-col gap-2">
+                            <Trash2 className="h-6 w-6" />
+                            <span className="text-xs">Reset League</span>
+                        </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                        <AlertDialogHeader>
+                            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                                This action cannot be undone. This will permanently delete your current league progress and reset all player data to default values.
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction onClick={onResetLeague}>Continue</AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
             </CardContent>
         </Card>
     );

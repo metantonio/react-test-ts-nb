@@ -802,6 +802,35 @@ const GameSetup = () => {
     }
   };
 
+  const handleResetLeague = async () => {
+    setError(null);
+    try {
+      const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', {
+        body: {
+          endpoint: "reset_league.php",
+          method: "POST",
+          league_name: selectedLeague?.league_name,
+          apikey: API_KEY
+        }
+      });
+
+      if (!response.ok) {
+        const err: Message = await response.json();
+        setError(`error: ${err.message}`);
+        throw new Error('Failed to reset league.');
+      }
+
+      // Refresh data after reset
+      await handleFetchLeagues();
+      setSelectedLeague(null);
+      setTeams([{ teams: "N/A" }]);
+
+    } catch (err: any) {
+      setError(`${err}`);
+      throw err; // Re-throw to handle in UI if needed
+    }
+  };
+
   const handleFetchCurrentDraftPlayers = async () => {
     setError(null);
     try {
@@ -1577,6 +1606,8 @@ const GameSetup = () => {
             subPatternAvailablePlayers={subPatternAvailablePlayers}
             draftActions={draftActions}
             setDraftActions={setDraftActions}
+            onResetLeague={handleResetLeague}
+
             selectedLeagueDraft={selectedLeagueDraft}
             setSelectedLeagueDraft={setSelectedLeagueDraft}
             selectedTeamDraft={selectedTeamsDraft}
