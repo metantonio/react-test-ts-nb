@@ -243,6 +243,9 @@ const TeamToolsSection: React.FC<TeamToolsSectionProps> = ({
                     </SheetContent>
                 </Sheet>
 
+
+            </CardContent>
+            <CardContent className="grid grid-cols-1 gap-3">
                 {/* Reset League Button */}
                 <AlertDialog>
                     <AlertDialogTrigger asChild>
