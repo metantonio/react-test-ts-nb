@@ -1,4 +1,5 @@
 import React from 'react';
+import HelpModal from '@/components/ui/HelpModal';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
@@ -105,7 +106,12 @@ const TeamToolsSection: React.FC<TeamToolsSectionProps> = ({
     return (
         <Card className="w-full">
             <CardHeader>
-                <CardTitle>2. Team Tools</CardTitle>
+                <CardTitle className="flex justify-between items-center">
+                    <div className="flex items-center gap-2">
+                        <span>2. Team Tools</span>
+                        <HelpModal title="Full Season Simulation" contentKey="fullSeason" />
+                    </div>
+                </CardTitle>
             </CardHeader>
             <CardContent className="grid grid-cols-2 gap-3">
                 {/* Substitution Pattern */}

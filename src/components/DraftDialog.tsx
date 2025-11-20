@@ -1,5 +1,7 @@
 
 import React, { useState, useMemo, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { HelpCircle } from 'lucide-react';
 import {
   Dialog,
   DialogContent,
@@ -22,7 +24,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-
+import HelpModal from '@/components/ui/HelpModal';
 import { Loader2 } from 'lucide-react';
 
 // Keep the existing interfaces from FullSeasonVersion.tsx
@@ -129,25 +131,25 @@ const DraftDialog: React.FC<DraftDialogProps> = ({
 
     // Prevent dropping on the same list
     if (draftablePlayers.find(p => p.name === draggedPlayer.name)) {
-        const newAction: DraftAction = {
-            action: 'replace',
-            original_league: currentLeague.league_name,
-            original_team: currentTeam.teams,
-            original_player: targetPlayer.name,
-            new_player_league: selectedLeagueDraft.league_name,
-            new_player_team: selectedTeamDraft.teams,
-            new_player_name: draggedPlayer.name,
-        };
+      const newAction: DraftAction = {
+        action: 'replace',
+        original_league: currentLeague.league_name,
+        original_team: currentTeam.teams,
+        original_player: targetPlayer.name,
+        new_player_league: selectedLeagueDraft.league_name,
+        new_player_team: selectedTeamDraft.teams,
+        new_player_name: draggedPlayer.name,
+      };
 
-        setDraftActions(prevActions => [...prevActions, newAction]);
+      setDraftActions(prevActions => [...prevActions, newAction]);
 
-        // Optimistically update UI
-        // This is a simple replacement. You might want a more sophisticated state management
-        const updatedPlayers = currentTeamPlayers.map(p =>
-            p.name === targetPlayer.name ? { ...draggedPlayer, name: `${draggedPlayer.name}` } : p
-        );
-        // This optimistic update is visual only. The actual state `playersTeam2` is not changed here.
-        // A more robust solution would involve lifting the state up or using a context.
+      // Optimistically update UI
+      // This is a simple replacement. You might want a more sophisticated state management
+      const updatedPlayers = currentTeamPlayers.map(p =>
+        p.name === targetPlayer.name ? { ...draggedPlayer, name: `${draggedPlayer.name}` } : p
+      );
+      // This optimistic update is visual only. The actual state `playersTeam2` is not changed here.
+      // A more robust solution would involve lifting the state up or using a context.
     }
 
     setDraggedPlayer(null);
@@ -168,7 +170,14 @@ const DraftDialog: React.FC<DraftDialogProps> = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-5xl w-full h-[90vh] flex flex-col">
         <DialogHeader>
-          <DialogTitle>Draft Players</DialogTitle>
+          <div className="flex justify-between items-center pr-8">
+            <DialogTitle>Draft Players</DialogTitle>
+
+            <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground hover:text-primary">
+              <HelpModal title="Draft Players" contentKey="draftingPlayers" />
+            </Button>
+
+          </div>
         </DialogHeader>
         <div className="grid md:grid-cols-2 gap-4 flex-grow min-h-0">
           <div className="border p-2 rounded-md flex flex-col overflow-hidden">

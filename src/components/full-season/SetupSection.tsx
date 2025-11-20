@@ -1,4 +1,5 @@
 import React from 'react';
+import HelpModal from '@/components/ui/HelpModal';
 import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
@@ -43,7 +44,10 @@ const SetupSection: React.FC<SetupSectionProps> = ({
         <Card className="w-full">
             <CardHeader>
                 <CardTitle className="flex justify-between items-center">
-                    <span>1. Game Setup</span>
+                    <div className="flex items-center gap-2">
+                        <span>1. Game Setup</span>
+                        <HelpModal title="Game Setup" contentKey="gameSetup" />
+                    </div>
                     <Button variant="ghost" size="sm" onClick={onClear} className="text-muted-foreground hover:text-destructive">
                         Reset All
                     </Button>

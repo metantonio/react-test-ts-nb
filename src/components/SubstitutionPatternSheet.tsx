@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import {
   Table,
   TableBody,
@@ -8,7 +9,7 @@ import {
   TableCell,
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
-import { Loader2, Info } from 'lucide-react';
+import { Loader2, Info, HelpCircle } from 'lucide-react';
 import {
   Tooltip,
   TooltipContent,
@@ -18,6 +19,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { exportToCSV } from '@/lib/utils';
 import CustomCheckbox from './ui/CustomCheckbox';
+import HelpModal from '@/components/ui/HelpModal';
 
 interface PlayerSubPattern {
   pos1: string;
@@ -138,7 +140,14 @@ const SubstitutionPatternSheet: React.FC<SubstitutionPatternSheetProps> = ({
             </div> */}
 
             <div className="flex items-center justify-between">
-              <h2 className="text-xl font-bold mt-8 mb-4">{selectedTeam?.teams}</h2>
+              <div className="flex items-center gap-2">
+                <h2 className="text-xl font-bold mt-8 mb-4">{selectedTeam?.teams}</h2>
+
+                <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground hover:text-primary">
+                  <HelpModal title="Substitution Pattern" contentKey="substitutionPattern" />
+                </Button>
+
+              </div>
               <div className="flex items-center gap-4">
                 <CustomCheckbox
                   id="allow-any-position"
