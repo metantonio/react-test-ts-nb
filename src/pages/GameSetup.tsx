@@ -606,7 +606,7 @@ const GameSetup = () => {
       if (schedule == "predict") {
         body = {
           body: {
-            endpoint: "play_predict.php",
+            endpoint: "play_predict_fast.php",
             method: "POST",
             "league_name": selectedLeague?.league_name,
             "numgames": "normal",
@@ -623,7 +623,7 @@ const GameSetup = () => {
       } else if (schedule == "fullseason") {
         body = {
           body: {
-            endpoint: "play_fsv.php",
+            endpoint: "play_fsv_fast.php",
             method: "POST",
             "league_name": selectedLeague?.league_name,
             "numgames": "normal",
@@ -638,7 +638,7 @@ const GameSetup = () => {
       } else {
         body = {
           body: {
-            endpoint: "play_82.php",
+            endpoint: "play_82_fast.php",
             method: "POST",
             "league_name": selectedLeague?.league_name,
             "numgames": scheduleMultiplier == "82" ? "normal" : scheduleMultiplier,
@@ -661,7 +661,7 @@ const GameSetup = () => {
           delete body.body.endpoint
         }
         //delete body.body.authorization;
-        response = await fetchWithAuth(schedule == "predict" ? `${SIMULATION_URL}/play_predict.php` : schedule == "fullseason" ? `${SIMULATION_URL}/play_fsv.php` : `${SIMULATION_URL}/play_82.php`, 'POST', { ...body.body })
+        response = await fetchWithAuth(schedule == "predict" ? `${SIMULATION_URL}/play_predict_fast.php` : schedule == "fullseason" ? `${SIMULATION_URL}/play_fsv_fast.php` : `${SIMULATION_URL}/play_82_fast.php`, 'POST', { ...body.body })
       }
       else {
         response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', body)
