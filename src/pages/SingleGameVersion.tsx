@@ -356,19 +356,19 @@ const SingleGameVersion: React.FC<SingleGameVersionProps> = ({
   );
 
   return (
-    <div className="p-4 bg-background text-foreground text-xs">
+    <div className="p-2 md:p-4 bg-background text-foreground text-xs md:text-sm">
       {/* Top Controls */}
-      <div className="grid grid-cols-12 gap-4 mb-2">
-        <div className="col-span-2 flex flex-col gap-2">
-          <Button size="sm" onClick={handleStartGame} disabled={isLoading || isGameStarted}>
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-4 mb-2">
+        <div className="col-span-1 md:col-span-2 flex flex-row md:flex-col gap-2 overflow-x-auto md:overflow-visible">
+          <Button size="sm" onClick={handleStartGame} disabled={isLoading || isGameStarted} className="flex-1 md:flex-none">
             {isLoading ? "Loading..." : "Start Game"}
           </Button>
 
           <Sheet open={isStatsOpen} onOpenChange={setIsStatsOpen}>
             <SheetTrigger asChild>
-              <Button size="sm">Actual Player Statistics</Button>
+              <Button size="sm" className="flex-1 md:flex-none">Player Stats</Button>
             </SheetTrigger>
-            <SheetContent className="w-[800px] sm:w-[540px] overflow-y-auto" side="left">
+            <SheetContent className="w-full sm:w-[540px] overflow-y-auto" side="left">
               <SheetHeader>
                 <SheetTitle>Actual Player Statistics</SheetTitle>
               </SheetHeader>
@@ -424,15 +424,19 @@ const SingleGameVersion: React.FC<SingleGameVersionProps> = ({
             </SheetContent>
           </Sheet>
 
-          <Button size="sm" disabled>Pause Game</Button>
+          <Button size="sm" disabled className="flex-1 md:flex-none">Pause</Button>
         </div>
-        <div className="col-span-2 border rounded-md p-2">
-          <h3 className="font-bold text-center">Away Team</h3>
-          <CustomRadio name="away-team-mode" value="manual" checked={awayTeamMode === 'manual'} onChange={setAwayTeamMode} label="Manual Pass" id="away-manual" />
-          <CustomRadio name="away-team-mode" value="auto" checked={awayTeamMode === 'auto'} onChange={setAwayTeamMode} label="Auto Pass" id="away-auto" />
-          <CustomRadio name="away-team-mode" value="computer" checked={awayTeamMode === 'computer'} onChange={setAwayTeamMode} label="Computer" id="away-computer" />
+
+        <div className="col-span-1 md:col-span-2 border rounded-md p-2">
+          <h3 className="font-bold text-center mb-1">Away Team</h3>
+          <div className="flex flex-row md:flex-col gap-2 md:gap-0 justify-around">
+            <CustomRadio name="away-team-mode" value="manual" checked={awayTeamMode === 'manual'} onChange={setAwayTeamMode} label="Manual" id="away-manual" />
+            <CustomRadio name="away-team-mode" value="auto" checked={awayTeamMode === 'auto'} onChange={setAwayTeamMode} label="Auto" id="away-auto" />
+            <CustomRadio name="away-team-mode" value="computer" checked={awayTeamMode === 'computer'} onChange={setAwayTeamMode} label="Comp" id="away-computer" />
+          </div>
         </div>
-        <div className="col-span-4">
+
+        <div className="col-span-1 md:col-span-4">
           {/* Setup Section */}
           <div className="flex flex-col gap-2 p-2 border rounded-md">
             <div className="flex gap-2">
@@ -442,7 +446,7 @@ const SingleGameVersion: React.FC<SingleGameVersionProps> = ({
                 // Trigger team fetch when league changes
                 setTimeout(() => handleFetchTeams(), 0);
               }}>
-                <SelectTrigger className="h-8">
+                <SelectTrigger className="h-8 w-full">
                   <SelectValue placeholder="League" />
                 </SelectTrigger>
                 <SelectContent>
@@ -457,7 +461,7 @@ const SingleGameVersion: React.FC<SingleGameVersionProps> = ({
                 const team = teams.find(t => t.teams === val);
                 setSelectedTeams1(team || null);
               }}>
-                <SelectTrigger className="h-8">
+                <SelectTrigger className="h-8 w-full">
                   <SelectValue placeholder="Away Team" />
                 </SelectTrigger>
                 <SelectContent>
@@ -470,7 +474,7 @@ const SingleGameVersion: React.FC<SingleGameVersionProps> = ({
                 const team = teams.find(t => t.teams === val);
                 setSelectedTeams2(team || null);
               }}>
-                <SelectTrigger className="h-8">
+                <SelectTrigger className="h-8 w-full">
                   <SelectValue placeholder="Home Team" />
                 </SelectTrigger>
                 <SelectContent>
@@ -482,106 +486,116 @@ const SingleGameVersion: React.FC<SingleGameVersionProps> = ({
             </div>
           </div>
         </div>
-        <div className="col-span-2 border rounded-md p-2">
-          <h3 className="font-bold text-center">Home Team</h3>
-          <CustomRadio name="home-team-mode" value="manual" checked={homeTeamMode === 'manual'} onChange={setHomeTeamMode} label="Manual Pass" id="home-manual" />
-          <CustomRadio name="home-team-mode" value="auto" checked={homeTeamMode === 'auto'} onChange={setHomeTeamMode} label="Auto Pass" id="home-auto" />
-          <CustomRadio name="home-team-mode" value="computer" checked={homeTeamMode === 'computer'} onChange={setHomeTeamMode} label="Computer" id="home-computer" />
+
+        <div className="col-span-1 md:col-span-2 border rounded-md p-2">
+          <h3 className="font-bold text-center mb-1">Home Team</h3>
+          <div className="flex flex-row md:flex-col gap-2 md:gap-0 justify-around">
+            <CustomRadio name="home-team-mode" value="manual" checked={homeTeamMode === 'manual'} onChange={setHomeTeamMode} label="Manual" id="home-manual" />
+            <CustomRadio name="home-team-mode" value="auto" checked={homeTeamMode === 'auto'} onChange={setHomeTeamMode} label="Auto" id="home-auto" />
+            <CustomRadio name="home-team-mode" value="computer" checked={homeTeamMode === 'computer'} onChange={setHomeTeamMode} label="Comp" id="home-computer" />
+          </div>
         </div>
-        <div className="col-span-2 border rounded-md p-2">
-          <h3 className="font-bold text-center">Pause Options</h3>
-          <CustomRadio name="pause-options" value="each-line" checked={pauseOptions === 'each-line'} onChange={setPauseOptions} label="Pause after each line" id="pause-line" />
-          <CustomRadio name="pause-options" value="each-possession" checked={pauseOptions === 'each-possession'} onChange={setPauseOptions} label="Pause after each possession" id="pause-possession" />
-          <CustomRadio name="pause-options" value="end-of-quarter" checked={pauseOptions === 'end-of-quarter'} onChange={setPauseOptions} label="Pause after end of quarter" id="pause-quarter" />
-          <CustomRadio name="pause-options" value="do-not-pause" checked={pauseOptions === 'do-not-pause'} onChange={setPauseOptions} label="Do not pause" id="pause-none" />
+
+        <div className="col-span-1 md:col-span-2 border rounded-md p-2">
+          <h3 className="font-bold text-center mb-1">Pause Options</h3>
+          <div className="flex flex-wrap md:flex-col gap-2 md:gap-0 justify-around">
+            <CustomRadio name="pause-options" value="each-line" checked={pauseOptions === 'each-line'} onChange={setPauseOptions} label="Line" id="pause-line" />
+            <CustomRadio name="pause-options" value="each-possession" checked={pauseOptions === 'each-possession'} onChange={setPauseOptions} label="Poss" id="pause-possession" />
+            <CustomRadio name="pause-options" value="end-of-quarter" checked={pauseOptions === 'end-of-quarter'} onChange={setPauseOptions} label="Qtr" id="pause-quarter" />
+            <CustomRadio name="pause-options" value="do-not-pause" checked={pauseOptions === 'do-not-pause'} onChange={setPauseOptions} label="None" id="pause-none" />
+          </div>
         </div>
-        <div className="col-start-11 col-span-2">
+
+        <div className="col-span-1 md:col-start-11 md:col-span-2">
           <Button size="sm" className="w-full" onClick={() => setIsGameStarted(false)}>Reset Game</Button>
         </div>
       </div>
 
       {/* Main Scoreboard and Display Options */}
-      <div className="grid grid-cols-12 gap-4 mb-2 p-2 border rounded-md">
-        <div className="col-span-3 flex flex-col items-center">
-          <div className="font-bold text-lg">{selectedTeams1?.teams || "Away"}</div>
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-4 mb-2 p-2 border rounded-md">
+        <div className="col-span-1 md:col-span-3 flex flex-row md:flex-col items-center justify-between md:justify-center">
+          <div className="font-bold text-lg md:text-xl">{selectedTeams1?.teams || "Away"}</div>
           {selectedTeams1 && <TeamLogo logo={teamLogos[selectedTeams1.teams]} name={selectedTeams1.teams} />}
-          <div className="text-5xl font-bold text-red-500">{scoreBoard?.away_score || "0"}</div>
-          <div className="flex gap-4">
+          <div className="text-4xl md:text-5xl font-bold text-red-500">{scoreBoard?.away_score || "0"}</div>
+          <div className="flex flex-col md:flex-row gap-1 md:gap-4 text-xs md:text-sm">
             <span>Fouls: {scoreBoard?.away_fouls || "0"}</span>
-            <span>Possessions: {scoreBoard?.away_possessions || "0"}</span>
+            <span>Poss: {scoreBoard?.away_possessions || "0"}</span>
           </div>
         </div>
-        <div className="col-span-6 text-center">
-          <div className="text-2xl font-bold">{scoreBoard?.clock || "12:00"}</div>
-          <div className="text-lg">Qtr {scoreBoard?.quarter || "1"}</div>
-          {/* Selectors can be added here if needed */}
+
+        <div className="col-span-1 md:col-span-6 text-center flex flex-col justify-center my-2 md:my-0">
+          <div className="text-3xl md:text-2xl font-bold">{scoreBoard?.clock || "12:00"}</div>
+          <div className="text-xl md:text-lg">Qtr {scoreBoard?.quarter || "1"}</div>
         </div>
-        <div className="col-span-3 flex flex-col items-center">
-          <div className="font-bold text-lg">{selectedTeams2?.teams || "Home"}</div>
+
+        <div className="col-span-1 md:col-span-3 flex flex-row-reverse md:flex-col items-center justify-between md:justify-center">
+          <div className="font-bold text-lg md:text-xl">{selectedTeams2?.teams || "Home"}</div>
           {selectedTeams2 && <TeamLogo logo={teamLogos[selectedTeams2.teams]} name={selectedTeams2.teams} />}
-          <div className="text-5xl font-bold text-blue-500">{scoreBoard?.home_score || "0"}</div>
-          <div className="flex gap-4">
-            <span>Possessions: {scoreBoard?.home_possessions || "0"}</span>
+          <div className="text-4xl md:text-5xl font-bold text-blue-500">{scoreBoard?.home_score || "0"}</div>
+          <div className="flex flex-col md:flex-row gap-1 md:gap-4 text-xs md:text-sm">
+            <span>Poss: {scoreBoard?.home_possessions || "0"}</span>
             <span>Fouls: {scoreBoard?.home_fouls || "0"}</span>
           </div>
         </div>
-        <div className="col-span-3">
-          <Button className="w-full" size="sm">Away Team Sub Pattern</Button>
+
+        {/* Sub Buttons Row */}
+        <div className="col-span-1 md:col-span-12 grid grid-cols-3 gap-2 mt-2">
+          <Button className="w-full text-xs" size="sm" variant="outline">Away Subs</Button>
+          <Button className="w-full text-xs" size="sm" variant="outline">Subs/Def</Button>
+          <Button className="w-full text-xs" size="sm" variant="outline">Home Subs</Button>
         </div>
-        <div className="col-span-3 col-start-10">
-          <Button className="w-full" size="sm">Home Team Sub Pattern</Button>
-        </div>
-        <div className="col-span-4 col-start-5">
-          <Button className="w-full" size="sm">Subs/Defense</Button>
-        </div>
-        <div className="col-span-3 col-start-10 flex items-center gap-4">
-          <div className="border rounded p-1">
-            <h3 className="font-bold">Display Options</h3>
-            <CustomRadio name="display-options" value="play-by-play" checked={displayOptions === 'play-by-play'} onChange={setDisplayOptions} label="Play by Play" id="disp-pbp" />
-            <CustomRadio name="display-options" value="box-score" checked={displayOptions === 'box-score'} onChange={setDisplayOptions} label="Box Score" id="disp-box" />
+
+        <div className="col-span-1 md:col-span-12 flex flex-col md:flex-row items-center gap-4 mt-2 justify-center">
+          <div className="border rounded p-1 flex gap-2">
+            <span className="font-bold mr-2 hidden md:inline">Display:</span>
+            <CustomRadio name="display-options" value="play-by-play" checked={displayOptions === 'play-by-play'} onChange={setDisplayOptions} label="PBP" id="disp-pbp" />
+            <CustomRadio name="display-options" value="box-score" checked={displayOptions === 'box-score'} onChange={setDisplayOptions} label="Box" id="disp-box" />
             <CustomRadio name="display-options" value="both" checked={displayOptions === 'both'} onChange={setDisplayOptions} label="Both" id="disp-both" />
           </div>
-          <div>
-            <CustomCheckbox id="check-pbp" checked={showPlayByPlay} onChange={setShowPlayByPlay} label="Play by Play" />
-            <CustomCheckbox id="check-box" checked={showBoxScore} onChange={setShowBoxScore} label="Box Score" />
-            <CustomCheckbox id="check-court" checked={showCourtStats} onChange={setShowCourtStats} label="Court/stats" />
-            <CustomCheckbox id="check-score" checked={showTheScore} onChange={setShowTheScore} label="the score" />
-          </div>
-          <div>
-            <CustomCheckbox id="check-enhanced" checked={enhancedPBP} onChange={setEnhancedPBP} label="Enhanced PBP" />
+          <div className="flex flex-wrap gap-2 justify-center">
+            <CustomCheckbox id="check-pbp" checked={showPlayByPlay} onChange={setShowPlayByPlay} label="PBP" />
+            <CustomCheckbox id="check-box" checked={showBoxScore} onChange={setShowBoxScore} label="Box" />
+            <CustomCheckbox id="check-court" checked={showCourtStats} onChange={setShowCourtStats} label="Court" />
+            <CustomCheckbox id="check-score" checked={showTheScore} onChange={setShowTheScore} label="Score" />
+            <CustomCheckbox id="check-enhanced" checked={enhancedPBP} onChange={setEnhancedPBP} label="Enh PBP" />
           </div>
         </div>
       </div>
 
       {/* Bottom Controls */}
-      <div className="flex items-center justify-between gap-2 mb-2">
-        <div className="flex gap-1">
-          {['20', 'T-out', 'HC', 'R', 'PG', 'SG', 'SF', 'PF', 'C'].map(b => <Button key={b} variant="outline" size="sm">{b}</Button>)}
+      <div className="flex flex-col md:flex-row items-center justify-between gap-2 mb-2">
+        <div className="flex gap-1 overflow-x-auto w-full md:w-auto pb-1 md:pb-0">
+          {['20', 'T-out', 'HC', 'R', 'PG', 'SG', 'SF', 'PF', 'C'].map(b => <Button key={b} variant="outline" size="sm" className="px-2 min-w-[30px]">{b}</Button>)}
         </div>
-        <div className="flex items-center gap-2">
-          <span>Continue Game</span>
-          <Button size="sm" onClick={handleGameStep} disabled={!isGameStarted || isLoading}>
-            {isLoading ? "Processing..." : "Continue/Step"}
+        <div className="flex items-center gap-2 w-full md:w-auto">
+          <Button size="sm" onClick={handleGameStep} disabled={!isGameStarted || isLoading} className="flex-1 md:flex-none">
+            {isLoading ? "..." : "Continue/Step"}
           </Button>
-          <Button size="sm">No</Button>
+          <Button size="sm" variant="ghost">No</Button>
         </div>
-        <CustomCheckbox id="midline-scroll" checked={midlineScroll} onChange={setMidlineScroll} label="Mid-line scroll" />
+        <div className="hidden md:block">
+          <CustomCheckbox id="midline-scroll" checked={midlineScroll} onChange={setMidlineScroll} label="Mid-line scroll" />
+        </div>
       </div>
 
       {/* Play-by-Play and Box Score */}
-      <div className="grid grid-cols-2 gap-2 h-96">
-        <div className="border rounded-md p-2 overflow-y-auto bg-gray-800 text-white font-mono text-xs">
-          {playByPlay.map((p, i) => (
-            <div key={i} className={`mb-1 ${p.color === '1' ? 'text-blue-300' : p.color === '2' ? 'text-red-300' : 'text-gray-300'}`}>
-              {p.pbp_line}
-            </div>
-          ))}
-        </div>
-        <div className="border rounded-md p-2 overflow-y-auto bg-gray-800 text-white font-mono text-xs">
-          {boxScore.map((b, i) => (
-            <div key={i} className="whitespace-pre-wrap">{b.box_line}</div>
-          ))}
-        </div>
+      <div className={`grid gap-2 h-[500px] md:h-96 ${displayOptions === 'both' ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1'}`}>
+        {(displayOptions === 'play-by-play' || displayOptions === 'both') && showPlayByPlay && (
+          <div className="border rounded-md p-2 overflow-y-auto bg-gray-800 text-white font-mono text-xs h-full">
+            {playByPlay.map((p, i) => (
+              <div key={i} className={`mb-1 ${p.color === '1' ? 'text-blue-300' : p.color === '2' ? 'text-red-300' : 'text-gray-300'}`}>
+                {p.pbp_line}
+              </div>
+            ))}
+          </div>
+        )}
+        {(displayOptions === 'box-score' || displayOptions === 'both') && showBoxScore && (
+          <div className="border rounded-md p-2 overflow-y-auto bg-gray-800 text-white font-mono text-xs h-full">
+            {boxScore.map((b, i) => (
+              <div key={i} className="whitespace-pre-wrap">{b.box_line}</div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
