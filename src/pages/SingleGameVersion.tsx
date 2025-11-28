@@ -531,7 +531,7 @@ const SingleGameVersion: React.FC<SingleGameVersionProps> = ({
         <div className="col-span-3 col-start-10">
           <Button className="w-full" size="sm">Home Team Sub Pattern</Button>
         </div>
-        <div className="col-span-3 col-start-5">
+        <div className="col-span-4 col-start-5">
           <Button className="w-full" size="sm">Subs/Defense</Button>
         </div>
         <div className="col-span-3 col-start-10 flex items-center gap-4">

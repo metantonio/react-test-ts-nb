@@ -1537,7 +1537,7 @@ const GameSetup = () => {
                     onClick={() => setActiveView('single-game')}
                     className="justify-start mb-2 w-full"
                   >
-                    Single Game Version (hardcode data)
+                    Single Game Version (in development)
                   </Button>
                   <Button
                     variant={activeView === 'instructions' ? 'secondary' : 'ghost'}
