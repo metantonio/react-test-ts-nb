@@ -1,0 +1,332 @@
+POST Play games – Single Game Initial
+http://api.bballsports.com/simulationAPI/playsinglegame_initial.php
+Initiate new interactive single game mode session.
+AUTHORIZATION Bearer Token
+BODY json
+{"apikey":"7acfca7442404d6c8cd8322a06671b79",
+"homeaway":"away",
+"awayleague_name":"PRO2010-11",
+"homeleague_name":"PRO2010-11",
+"awayteam":"Golden State Warriors",
+"hometeam":"Cleveland Cavaliers"
+}
+
+Example request
+curl --location --request POST
+'http://api.bballsports.com/simulationAPI/playsinglegame_initial
+.php' \
+--header 'Authorization: 0751qaqp7qjnit2ag2ln8knfi3' \
+--data-raw '{"apikey":"7acfca7442404d6c8cd8322a06671b79",
+"homeaway":"away",
+"awayleague_name":"PRO2010-11",
+"homeleague_name":"PRO2010-11",
+"awayteam":"Golden State Warriors",
+"hometeam":"Cleveland Cavaliers"
+}'
+Example response
+{
+"status": "true",
+"message": "",
+"username": "Guest137004905",
+"data": [],
+"continue": "yes"
+}
+
+POST Play games – Single Game Step
+http://api.bballsports.com/simulationAPI/playsinglegame_step.php
+Step through single game, pause option parameters required : 1=pause after line, 2=pause
+after possession, 3=pause after quarter, 4=pause at end of game
+AUTHORIZATION Bearer Token
+BODY json
+{"apikey":"7acfca7442404d6c8cd8322a06671b79", "options": "4"
+}
+
+Example request
+curl --location --request POST
+'http://api.bballsports.com/simulationAPI/playsinglegame_step.ph
+p' \
+--header 'Authorization: 0751qaqp7qjnit2ag2ln8knfi3' \
+--data-raw '{"apikey":"7acfca7442404d6c8cd8322a06671b79",
+"options": "4"
+}'
+Example response
+{
+"status": "true",
+"message": "",
+"username": "Guest137004905",
+"data": [],
+"continue": "yes"
+}
+
+POST Single game – update scoreboard
+http://api.bballsports.com/simulationAPI/get_singlegame_stats.php
+Will return JSON structure of single game scoreboard data.
+AUTHORIZATION Bearer Token
+BODY json
+{"apikey":"7acfca7442404d6c8cd8322a06671b79"}
+
+Example request
+curl --location --request POST
+'http://api.bballsports.com/simulationAPI/get_singlegame_stats.p
+hp' \
+--header 'Authorization: 0751qaqp7qjnit2ag2ln8knfi3' \
+--data-raw '{"apikey":"7acfca7442404d6c8cd8322a06671b79"
+}'
+Example response
+{
+"scoreboard": [
+{
+"away_score": "0",
+"home_score": "0",
+"quarter": "1",
+"clock": "11:30",
+"away_possessions": "23",
+"home_possessions": "23",
+"away_fouls": "0",
+"home_fouls": "0",
+"home_team_offense": "2",
+"player_with_ball": "2",
+"away_player1": "Anderson Varejao",
+"away_player2": "J.J. Hickson",
+"away_player3": "Antawn Jamison",
+"away_player4": "Anthony Parker",
+"away_player5": "Ramon Sessions",
+"home_player1": "Andris Biedrins",
+"home_player2": "David Lee",
+"home_player3": "Dorell Wright",
+
+"home_player4": "Monta Ellis",
+"home_player5": "Stephen Curry",
+"away_player1_pts": "0",
+"away_player2_pts": "0",
+"away_player3_pts": "0",
+"away_player4_pts": "0",
+"away_player5_pts": "0",
+"home_player1_pts": "0",
+"home_player2_pts": "0",
+"home_player3_pts": "0",
+"home_player4_pts": "0",
+"home_player5_pts": "0",
+"away_player1_reb": "0",
+"away_player2_reb": "1",
+"away_player3_reb": "0",
+"away_player4_reb": "0",
+"away_player5_reb": "0",
+"home_player1_reb": "0",
+"home_player2_reb": "0",
+"home_player3_reb": "0",
+"home_player4_reb": "0",
+"home_player5_reb": "0",
+"away_player1_ast": "0",
+"away_player2_ast": "0",
+"away_player3_ast": "0",
+"away_player4_ast": "0",
+"away_player5_ast": "0",
+"home_player1_ast": "0",
+"home_player2_ast": "0",
+"home_player3_ast": "0",
+"home_player4_ast": "0",
+"home_player5_ast": "0",
+"away_player1_pf": "0",
+"away_player2_pf": "0",
+"away_player3_pf": "0",
+"away_player4_pf": "0",
+"away_player5_pf": "0",
+"home_player1_pf": "0",
+"home_player2_pf": "0",
+"home_player3_pf": "0",
+"home_player4_pf": "0",
+"home_player5_pf": "0",
+"away_player1_possfact": "0",
+"away_player2_possfact": "1",
+"away_player3_possfact": "2",
+"away_player4_possfact": "2",
+"away_player5_possfact": "3",
+
+"home_player1_possfact": "0",
+"home_player2_possfact": "2",
+"home_player3_possfact": "2",
+"home_player4_possfact": "3",
+"home_player5_possfact": "3",
+"off_position1": "C",
+"off_position2": "PF",
+"off_position3": "SF",
+"off_position4": "SG",
+"off_position5": "PG",
+"def_position1": "C",
+"def_position2": "PF",
+"def_position3": "SF",
+"def_position4": "SG",
+"def_position5": "PG",
+"passable1": "0",
+"passable2": "0",
+"passable3": "0",
+"passable4": "0",
+"passable5": "1",
+"passable6": "1",
+"passable7": "0"
+},
+{}
+]
+}
+
+POST Play games – update play by play
+http://api.bballsports.com/simulationAPI/get_singlegame_pbp.php
+Returns play by play text for single game (even in progress)
+AUTHORIZATION Bearer Token
+BODY json
+{"apikey":"7acfca7442404d6c8cd8322a06671b79"}
+
+Example request
+curl --location --request POST
+'http://api.bballsports.com/simulationAPI/get_singlegame_pbp.php
+' \
+--header 'Authorization: 0751qaqp7qjnit2ag2ln8knfi3' \
+--data-raw '{"apikey":"7acfca7442404d6c8cd8322a06671b79"
+}'
+Example response
+{
+"playbyplay": [
+{
+"color": "2",
+"pbp_line": "Start of first quarter..."
+},
+{
+"color": "1",
+"pbp_line": "Warriors win the jump ball."
+},
+{
+"color": "1",
+"pbp_line": "Golden State brings the ball upcourt PG SG R
+or half court offense HC"
+},
+{
+"color": "1",
+"pbp_line": "BOP : PG SG R"
+},
+{
+
+"color": "1",
+"pbp_line": "WhichAutoPass=4"
+},
+{
+"color": "1",
+"pbp_line": "Illegal player or no player selected. J=0"
+},
+{
+"color": "1",
+"pbp_line": "---"
+},
+{
+"color": "1",
+"pbp_line": "Defensive switch - Ramon Sessions switches to
+guard David Lee."
+},
+{
+"color": "1",
+"pbp_line": "parm1=3"
+},
+{
+"color": "1",
+"pbp_line": "David Lee throws the bounce pass to Stephen
+Curry."
+},
+{
+"color": "1",
+"pbp_line": "parm1=3"
+},
+{
+"color": "1",
+"pbp_line": "Stephen Curry looks inside, passes to Monta
+Ellis."
+},
+{
+"color": "1",
+"pbp_line": "parm1=3"
+},
+{
+"color": "1",
+"pbp_line": "Monta Ellis looks to shoot, but passes to
+Dorell Wright."
+},
+{
+"color": "1",
+"pbp_line": "Dorell Wright takes the three point
+jumper..."
+
+},
+{
+"color": "1",
+"pbp_line": "No good - it's off the rim."
+},
+{
+"color": "1",
+"pbp_line": "J.J. Hickson controls the defensive rebound."
+},
+{
+"color": "2",
+"pbp_line": "Cleveland on the break..."
+},
+{
+"color": "2",
+"pbp_line": "Cleveland brings the ball upcourt PG R or
+half court offense HC"
+},
+{
+"color": "2",
+"pbp_line": "BOP : PG R"
+},
+{
+"color": "2",
+"pbp_line": "---"
+},
+{}
+]
+}
+
+POST Single game – update box scores
+http://api.bballsports.com/simulationAPI/get_singlegame_box.php
+Returns latest box score for single game in progress (or final)
+AUTHORIZATION Bearer Token
+BODY json
+{"apikey":"7acfca7442404d6c8cd8322a06671b79"}
+
+Example request
+curl --location --request POST
+'http://api.bballsports.com/simulationAPI/get_singlegame_box.php
+' \
+--header 'Authorization: 0751qaqp7qjnit2ag2ln8knfi3' \
+--data-raw '{"apikey":"7acfca7442404d6c8cd8322a06671b79"
+}'
+Example response truncated
+{
+"boxscore": [
+{
+"box_line": " PRO2010-11 - Cleveland
+Cavaliers"
+},
+{
+"box_line": "HOME FG 3PFG FT
+REB "
+},
+{
+"box_line": "PLAYERS MIN M- A M- A M- A
+O- D- T AST PF ST TO BS PTS "
+},
+{
+"box_line": "*Varejao Anderson 0 0- 0 0- 0 0- 0
+0- 0- 0 0 0 0 0 0 0"
+},
+{
+"box_line": "*Hickson J.J. 0 0- 0 0- 0 0- 0
+0- 0- 0 0 0 0 0 0 0"
+
+},
+{
+"box_line": "*Jamison Antawn 0 0- 0 0- 0 0- 0
+0- 0- 0 0 0 0 0 0 0"
+},
+{
+"box_line": "*Parker Anthony 0 0- 0 0- 0 0- 0
+0- 0- 0 0 0 0 0 0 0"
+}]}

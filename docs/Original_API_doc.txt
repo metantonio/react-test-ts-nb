@@ -1,0 +1,1738 @@
+Pro Basketball Simulation API Specification
+To request an API key, please email webmaster@bballsports.com.
+POST User login
+http://api.bballsports.com/simulationAPI/login.php
+Given an already established username and password, return a session ID that will be used for all
+subsequent interactions with the API.
+AUTHORIZATION Bearer Token
+BODY formdata
+username test2
+password test2
+apikey 7acfca7442404d6c8cd8322a06671b79
+Example request
+curl --location --request POST
+'http://api.bballsports.com/simulationAPI/login.php' \
+--form 'username="test2"' \
+--form 'password="test2"' \
+--form 'apikey="7acfca7442404d6c8cd8322a06671b79"'
+Example response
+{
+"status": "true",
+"message": "",
+"data": [
+{
+"id": "ng7cjhn0bm3ho9qvlmhslvffjt",
+"username": "test2"
+}
+]
+}
+
+POST User registration
+http://api.bballsports.com/simulationAPI/register.php
+Create a new user record and default season access - given username, password and email
+address (for non social media sites). Note this will return a header authorization key.
+BODY formdata
+username test11
+password test11
+apikey 7acfca7442404d6c8cd8322a06671b79
+email misterroo@gmail.com
+Example request
+curl --location --request POST
+'http://api.bballsports.com/simulationAPI/register.php' \
+--form 'username="test11"' \
+--form 'password="test11"' \
+--form 'apikey="7acfca7442404d6c8cd8322a06671b79"' \
+--form 'email="misterroo@gmail.com"'
+Example response
+{
+"status": "true",
+"message": "",
+"data": [
+{
+"id": "qfnhh17rpfaj3ues91bqt3k4ki",
+"username": "test11"
+}
+]
+}
+
+POST Guest login
+http://api.bballsports.com/simulationAPI/guest.php
+This creates a temporary header session for a user to explore the app's features without having
+to register with social media or email address.
+
+BODY formdata
+apikey 7acfca7442404d6c8cd8322a06671b79
+Example request
+curl --location --request POST
+'http://api.bballsports.com/simulationAPI/guest.php' \
+--form 'apikey="7acfca7442404d6c8cd8322a06671b79"'
+Example response
+
+{
+"status": "true",
+"message": "",
+"data": [
+{
+"id": "i5o3mknlaldsb61o0bs995hp04",
+"username": "Guest137004905"
+}
+]
+}
+
+POST Get seasons
+http://api.bballsports.com/simulationAPI/get_leagues.php
+Returns a JSON list of available seasons that a user has access to.
+AUTHORIZATION Bearer Token
+BODY formdata
+apikey 7acfca7442404d6c8cd8322a06671b79
+Example request
+curl --location --request POST
+'http://api.bballsports.com/simulationAPI/get_leagues.php' \
+--header 'Authorization: 0751qaqp7qjnit2ag2ln8knfi3' \
+--form 'apikey="7acfca7442404d6c8cd8322a06671b79"'
+Example response
+{
+"status": "true",
+"message": "",
+"username": "Guest137004905",
+"data": [
+{
+"league_name": "PRO2013-14"
+},
+{
+"league_name": "PRO2012-13"
+},
+{
+"league_name": "PRO2011-12"
+}
+]
+}
+
+POST Get actual player statistics
+http://api.bballsports.com/simulationAPI/get_actual_player_stats.php
+Returns a JSON array of professional league statistics for a given season and team name.
+AUTHORIZATION Bearer Token
+BODY json
+{"apikey":"7acfca7442404d6c8cd8322a06671b79",
+"league_name":"PRO2015-16",
+"team_name":"Cleveland Cavaliers"
+}
+
+Example request
+curl --location --request POST
+'http://api.bballsports.com/simulationAPI/get_actual_player_stat
+s.php' \
+--header 'Authorization: 0751qaqp7qjnit2ag2ln8knfi3' \
+--data-raw '{"apikey":"7acfca7442404d6c8cd8322a06671b79",
+"league_name":"PRO2015-16",
+"team_name":"Cleveland Cavaliers"
+}'
+Example response (truncated)e
+{
+"status": "true",
+"message": "i5o3mknlaldsb61o0bs995hp04",
+"username": null,
+"data": [
+{
+"name": "Timofey Mozgov",
+"positions": "C ",
+"height": "7.01",
+"g": "76",
+"min": "1326",
+"ming": "17",
+"ptsg": "6.300",
+"fgpct": "56.500",
+"scorefgpct": "58.400",
+"twoptfgpct": "57.400",
+"threeptfgpct": "14.300",
+"ftpct": "71.600",
+
+"offreb": "11.900",
+"defreb": "12.300",
+"totreb": "12.200",
+"defrat": " -4.5",
+"pctpf": "12.000",
+"pctst": "1.700",
+"pctbs": "2.500"
+},
+{
+"name": "Kevin Love",
+"positions": "PF C ",
+"height": "6.10",
+"g": "77",
+"min": "2424",
+"ming": "31",
+"ptsg": "16.000",
+"fgpct": "41.900",
+"scorefgpct": "54.400",
+"twoptfgpct": "46.700",
+"threeptfgpct": "36.000",
+"ftpct": "82.200",
+"offreb": "8.900",
+"defreb": "18.200",
+"totreb": "15.100",
+"defrat": " -0.5",
+"pctpf": "6.600",
+"pctst": "2.400",
+"pctbs": "1.000"
+},
+
+POST Play games - Predict
+http://api.bballsports.com/simulationAPI/play_predict.php
+Execute game engine in "predict games" mode.
+AUTHORIZATION Bearer Token
+BODY json
+{"apikey":"7acfca7442404d6c8cd8322a06671b79",
+"league_name":"PRO2018-19",
+"numgames":"normal",
+"homeaway":"both",
+"gamemode":"predict",
+"keeppbp":"N",
+"gamearray":[{"predicthome":"Atlanta Hawks","predictaway":"Brooklyn Nets","predictgames":"20"}]}
+
+Example request
+curl --location --request POST
+'http://api.bballsports.com/simulationAPI/play_predict.php' \
+--header 'Authorization: 0751qaqp7qjnit2ag2ln8knfi3' \
+--data-raw '{"apikey":"7acfca7442404d6c8cd8322a06671b79",
+"league_name":"PRO2018-19",
+"numgames":"normal",
+"homeaway":"both",
+"gamemode":"predict",
+"keeppbp":"N",
+"gamearray":[{"predicthome":"Atlanta
+Hawks","predictaway":"Brooklyn Nets","predictgames":"20"}]}
+'
+Example response
+{
+"status": "true",
+"message": "",
+"username": "Guest137004905",
+"data": []
+}
+
+POST Play games – Single Game Initial
+http://api.bballsports.com/simulationAPI/playsinglegame_initial.php
+Initiate new interactive single game mode session.
+AUTHORIZATION Bearer Token
+BODY json
+{"apikey":"7acfca7442404d6c8cd8322a06671b79",
+"homeaway":"away",
+"awayleague_name":"PRO2010-11",
+"homeleague_name":"PRO2010-11",
+"awayteam":"Golden State Warriors",
+"hometeam":"Cleveland Cavaliers"
+}
+
+Example request
+curl --location --request POST
+'http://api.bballsports.com/simulationAPI/playsinglegame_initial
+.php' \
+--header 'Authorization: 0751qaqp7qjnit2ag2ln8knfi3' \
+--data-raw '{"apikey":"7acfca7442404d6c8cd8322a06671b79",
+"homeaway":"away",
+"awayleague_name":"PRO2010-11",
+"homeleague_name":"PRO2010-11",
+"awayteam":"Golden State Warriors",
+"hometeam":"Cleveland Cavaliers"
+}'
+Example response
+{
+"status": "true",
+"message": "",
+"username": "Guest137004905",
+"data": [],
+"continue": "yes"
+}
+
+POST Play games – Single Game Step
+http://api.bballsports.com/simulationAPI/playsinglegame_step.php
+Step through single game, pause option parameters required : 1=pause after line, 2=pause
+after possession, 3=pause after quarter, 4=pause at end of game
+AUTHORIZATION Bearer Token
+BODY json
+{"apikey":"7acfca7442404d6c8cd8322a06671b79", "options": "4"
+}
+
+Example request
+curl --location --request POST
+'http://api.bballsports.com/simulationAPI/playsinglegame_step.ph
+p' \
+--header 'Authorization: 0751qaqp7qjnit2ag2ln8knfi3' \
+--data-raw '{"apikey":"7acfca7442404d6c8cd8322a06671b79",
+"options": "4"
+}'
+Example response
+{
+"status": "true",
+"message": "",
+"username": "Guest137004905",
+"data": [],
+"continue": "yes"
+}
+
+POST Single game – update scoreboard
+http://api.bballsports.com/simulationAPI/get_singlegame_stats.php
+Will return JSON structure of single game scoreboard data.
+AUTHORIZATION Bearer Token
+BODY json
+{"apikey":"7acfca7442404d6c8cd8322a06671b79"}
+
+Example request
+curl --location --request POST
+'http://api.bballsports.com/simulationAPI/get_singlegame_stats.p
+hp' \
+--header 'Authorization: 0751qaqp7qjnit2ag2ln8knfi3' \
+--data-raw '{"apikey":"7acfca7442404d6c8cd8322a06671b79"
+}'
+Example response
+{
+"scoreboard": [
+{
+"away_score": "0",
+"home_score": "0",
+"quarter": "1",
+"clock": "11:30",
+"away_possessions": "23",
+"home_possessions": "23",
+"away_fouls": "0",
+"home_fouls": "0",
+"home_team_offense": "2",
+"player_with_ball": "2",
+"away_player1": "Anderson Varejao",
+"away_player2": "J.J. Hickson",
+"away_player3": "Antawn Jamison",
+"away_player4": "Anthony Parker",
+"away_player5": "Ramon Sessions",
+"home_player1": "Andris Biedrins",
+"home_player2": "David Lee",
+"home_player3": "Dorell Wright",
+
+"home_player4": "Monta Ellis",
+"home_player5": "Stephen Curry",
+"away_player1_pts": "0",
+"away_player2_pts": "0",
+"away_player3_pts": "0",
+"away_player4_pts": "0",
+"away_player5_pts": "0",
+"home_player1_pts": "0",
+"home_player2_pts": "0",
+"home_player3_pts": "0",
+"home_player4_pts": "0",
+"home_player5_pts": "0",
+"away_player1_reb": "0",
+"away_player2_reb": "1",
+"away_player3_reb": "0",
+"away_player4_reb": "0",
+"away_player5_reb": "0",
+"home_player1_reb": "0",
+"home_player2_reb": "0",
+"home_player3_reb": "0",
+"home_player4_reb": "0",
+"home_player5_reb": "0",
+"away_player1_ast": "0",
+"away_player2_ast": "0",
+"away_player3_ast": "0",
+"away_player4_ast": "0",
+"away_player5_ast": "0",
+"home_player1_ast": "0",
+"home_player2_ast": "0",
+"home_player3_ast": "0",
+"home_player4_ast": "0",
+"home_player5_ast": "0",
+"away_player1_pf": "0",
+"away_player2_pf": "0",
+"away_player3_pf": "0",
+"away_player4_pf": "0",
+"away_player5_pf": "0",
+"home_player1_pf": "0",
+"home_player2_pf": "0",
+"home_player3_pf": "0",
+"home_player4_pf": "0",
+"home_player5_pf": "0",
+"away_player1_possfact": "0",
+"away_player2_possfact": "1",
+"away_player3_possfact": "2",
+"away_player4_possfact": "2",
+"away_player5_possfact": "3",
+
+"home_player1_possfact": "0",
+"home_player2_possfact": "2",
+"home_player3_possfact": "2",
+"home_player4_possfact": "3",
+"home_player5_possfact": "3",
+"off_position1": "C",
+"off_position2": "PF",
+"off_position3": "SF",
+"off_position4": "SG",
+"off_position5": "PG",
+"def_position1": "C",
+"def_position2": "PF",
+"def_position3": "SF",
+"def_position4": "SG",
+"def_position5": "PG",
+"passable1": "0",
+"passable2": "0",
+"passable3": "0",
+"passable4": "0",
+"passable5": "1",
+"passable6": "1",
+"passable7": "0"
+},
+{}
+]
+}
+
+POST Play games – update play by play
+http://api.bballsports.com/simulationAPI/get_singlegame_pbp.php
+Returns play by play text for single game (even in progress)
+AUTHORIZATION Bearer Token
+BODY json
+{"apikey":"7acfca7442404d6c8cd8322a06671b79"}
+
+Example request
+curl --location --request POST
+'http://api.bballsports.com/simulationAPI/get_singlegame_pbp.php
+' \
+--header 'Authorization: 0751qaqp7qjnit2ag2ln8knfi3' \
+--data-raw '{"apikey":"7acfca7442404d6c8cd8322a06671b79"
+}'
+Example response
+{
+"playbyplay": [
+{
+"color": "2",
+"pbp_line": "Start of first quarter..."
+},
+{
+"color": "1",
+"pbp_line": "Warriors win the jump ball."
+},
+{
+"color": "1",
+"pbp_line": "Golden State brings the ball upcourt PG SG R
+or half court offense HC"
+},
+{
+"color": "1",
+"pbp_line": "BOP : PG SG R"
+},
+{
+
+"color": "1",
+"pbp_line": "WhichAutoPass=4"
+},
+{
+"color": "1",
+"pbp_line": "Illegal player or no player selected. J=0"
+},
+{
+"color": "1",
+"pbp_line": "---"
+},
+{
+"color": "1",
+"pbp_line": "Defensive switch - Ramon Sessions switches to
+guard David Lee."
+},
+{
+"color": "1",
+"pbp_line": "parm1=3"
+},
+{
+"color": "1",
+"pbp_line": "David Lee throws the bounce pass to Stephen
+Curry."
+},
+{
+"color": "1",
+"pbp_line": "parm1=3"
+},
+{
+"color": "1",
+"pbp_line": "Stephen Curry looks inside, passes to Monta
+Ellis."
+},
+{
+"color": "1",
+"pbp_line": "parm1=3"
+},
+{
+"color": "1",
+"pbp_line": "Monta Ellis looks to shoot, but passes to
+Dorell Wright."
+},
+{
+"color": "1",
+"pbp_line": "Dorell Wright takes the three point
+jumper..."
+
+},
+{
+"color": "1",
+"pbp_line": "No good - it's off the rim."
+},
+{
+"color": "1",
+"pbp_line": "J.J. Hickson controls the defensive rebound."
+},
+{
+"color": "2",
+"pbp_line": "Cleveland on the break..."
+},
+{
+"color": "2",
+"pbp_line": "Cleveland brings the ball upcourt PG R or
+half court offense HC"
+},
+{
+"color": "2",
+"pbp_line": "BOP : PG R"
+},
+{
+"color": "2",
+"pbp_line": "---"
+},
+{}
+]
+}
+
+POST Single game – update box scores
+http://api.bballsports.com/simulationAPI/get_singlegame_box.php
+Returns latest box score for single game in progress (or final)
+AUTHORIZATION Bearer Token
+BODY json
+{"apikey":"7acfca7442404d6c8cd8322a06671b79"}
+
+Example request
+curl --location --request POST
+'http://api.bballsports.com/simulationAPI/get_singlegame_box.php
+' \
+--header 'Authorization: 0751qaqp7qjnit2ag2ln8knfi3' \
+--data-raw '{"apikey":"7acfca7442404d6c8cd8322a06671b79"
+}'
+Example response truncated
+{
+"boxscore": [
+{
+"box_line": " PRO2010-11 - Cleveland
+Cavaliers"
+},
+{
+"box_line": "HOME FG 3PFG FT
+REB "
+},
+{
+"box_line": "PLAYERS MIN M- A M- A M- A
+O- D- T AST PF ST TO BS PTS "
+},
+{
+"box_line": "*Varejao Anderson 0 0- 0 0- 0 0- 0
+0- 0- 0 0 0 0 0 0 0"
+},
+{
+"box_line": "*Hickson J.J. 0 0- 0 0- 0 0- 0
+0- 0- 0 0 0 0 0 0 0"
+
+},
+{
+"box_line": "*Jamison Antawn 0 0- 0 0- 0 0- 0
+0- 0- 0 0 0 0 0 0 0"
+},
+{
+"box_line": "*Parker Anthony 0 0- 0 0- 0 0- 0
+0- 0- 0 0 0 0 0 0 0"
+},
+
+POST Play games – 82 games
+http://api.bballsports.com/simulationAPI/play_82.php
+Execute game engine in 82 game mode.
+AUTHORIZATION Bearer Token
+BODY json
+{"apikey":"7acfca7442404d6c8cd8322a06671b79",
+"keeppbp":"Y",
+"league_name":"PRO2010-11",
+"gamemode":"8200",
+"homeaway":"home",
+"numgames":"normal",
+"hometeam":"Golden State Warriors"
+}
+
+Example request
+curl --location --request POST
+'http://api.bballsports.com/simulationAPI/play_82.php' \
+--header 'Authorization: 0751qaqp7qjnit2ag2ln8knfi3' \
+--data-raw '{"apikey":"7acfca7442404d6c8cd8322a06671b79",
+"keeppbp":"Y",
+"league_name":"PRO2010-11",
+"gamemode":"8200",
+"homeaway":"home",
+"numgames":"normal",
+"hometeam":"Golden State Warriors"
+}'
+Example response
+{
+"status": "true",
+"message": "",
+"username": "Guest137004905",
+"data": []
+}
+
+POST Play games – full season
+http://api.bballsports.com/simulationAPI/play_fsv.php
+Execute game engine in full season replay mode.
+AUTHORIZATION Bearer Token
+BODY json
+{"apikey":"7acfca7442404d6c8cd8322a06671b79",
+"keeppbp":"N",
+"league_name":"PRO2010-11",
+"gamemode":"fullseason",
+"homeaway":"home",
+"numgames":"normal"
+}
+
+Example request
+curl --location --request POST
+'http://api.bballsports.com/simulationAPI/play_fsv.php' \
+--header 'Authorization: 0751qaqp7qjnit2ag2ln8knfi3' \
+--data-raw '{"apikey":"7acfca7442404d6c8cd8322a06671b79",
+"keeppbp":"N",
+"league_name":"PRO2010-11",
+"gamemode":"fullseason",
+"homeaway":"home",
+"numgames":"normal"
+}'
+Example response
+{
+"status": "true",
+"message": "",
+"username": "Guest137004905",
+"data": []
+}
+
+POST Get teams
+http://api.bballsports.com/simulationAPI/get_teams.php
+Return JSON array of team names for given season name (league_name)
+AUTHORIZATION Bearer Token
+BODY formdata
+apikey 7acfca7442404d6c8cd8322a06671b79
+league_name PRO2013-14
+
+Example request
+curl --location --request POST
+'http://api.bballsports.com/simulationAPI/get_teams.php' \
+--header 'Authorization: 0751qaqp7qjnit2ag2ln8knfi3' \
+--form 'apikey="7acfca7442404d6c8cd8322a06671b79"' \
+--form 'league_name="PRO2013-14"'
+Example response truncated
+
+"status": "true",
+"message": "",
+"username": "test2",
+"data": [
+{
+"teams": "Atlanta Hawks"
+},
+{
+"teams": "Boston Celtics"
+},
+{
+"teams": "Brooklyn Nets"
+},
+{
+"teams": "Charlotte Bobcats"
+},
+{
+"teams": "Chicago Bulls"
+},
+
+POST Get player sub positions
+http://api.bballsports.com/simulationAPI/get_players_subs.php
+Returns JSON array of 4-minute substitution pattern player names across 12 time segments for
+a given team name
+AUTHORIZATION Bearer Token
+BODY json
+{"apikey":"7acfca7442404d6c8cd8322a06671b79",
+"league_name":"PRO2017-18",
+"team_name":"Brooklyn Nets"
+}
+
+Example request
+curl --location --request POST
+'http://api.bballsports.com/simulationAPI/get_players_subs.php'
+\
+--header 'Authorization: 0751qaqp7qjnit2ag2ln8knfi3' \
+--data-raw '{"apikey":"7acfca7442404d6c8cd8322a06671b79",
+"league_name":"PRO2017-18",
+"team_name":"Brooklyn Nets"
+}
+'
+Example response truncated
+{
+"status": "true",
+"message": "",
+"username": "Guest137004905",
+"data": [
+{
+"pos1": "Jarrett Allen",
+"pos2": "Rondae Hollis-Jeffe",
+"pos3": "DeMarre Carroll",
+"pos4": "Allen Crabbe",
+"pos5": "Spencer Dinwiddie"
+},
+{
+"pos1": "Timofey Mozgov",
+"pos2": "DeMarre Carroll",
+
+"pos3": "Allen Crabbe",
+"pos4": "Joe Harris",
+"pos5": "D`Angelo Russell"
+},
+{
+"pos1": "Quincy Acy",
+"pos2": "Rondae Hollis-Jeffe",
+"pos3": "Caris Levert",
+"pos4": "Joe Harris",
+"pos5": "Spencer Dinwiddie"
+},
+{
+"pos1": "Jarrett Allen",
+"pos2": "Quincy Acy",
+"pos3": "Allen Crabbe",
+"pos4": "Joe Harris",
+"pos5": "Caris Levert"
+},
+
+POST Get sub pattern alt names
+http://api.bballsports.com/simulationAPI/get_alts.php
+Returns JSON array of alternate pre-defined substitution patterns for the given league_name
+and team_name.
+AUTHORIZATION Bearer Token
+BODY json
+{"apikey":"7acfca7442404d6c8cd8322a06671b79",
+"league_name":"PRO2017-18",
+"team_name":"Brooklyn Nets"
+}
+
+Example request
+curl --location --request POST
+'http://api.bballsports.com/simulationAPI/get_alts.php' \
+--header 'Authorization: 0751qaqp7qjnit2ag2ln8knfi3' \
+--data-raw '{"apikey":"7acfca7442404d6c8cd8322a06671b79",
+"league_name":"PRO2017-18",
+"team_name":"Brooklyn Nets"
+}
+'
+Example response
+{"status":"true","message":"","username":"Guest1982519441","data
+":[{"alt_sub":"Default-"},{"alt_sub":"Beta-Test-2017-18"}]}
+
+POST Set player sub positions
+http://api.bballsports.com/simulationAPI/set_players_subs.php
+Assign a season/teams 4-minute substitution pattern by sending 12 record array of 5 player
+positions. Note this is saved to the user's account.
+AUTHORIZATION Bearer Token
+BODY json
+{"apikey":"7acfca7442404d6c8cd8322a06671b79",
+"league_name":"PRO2017-18",
+"team_name":"Golden State Warriors",
+"data":[{"pos1":"Zaza Pachulia","pos2":"Draymond Green","pos3":"Kevin Durant","pos4":"Klay
+Thompson","pos5":"Stephen Curry"},{"pos1":"JaVale McGee","pos2":"Kevon Looney","pos3":"Kevin
+Durant","pos4":"Klay Thompson","pos5":"Shaun Livingston"},{"pos1":"Jordan Bell","pos2":"Draymond
+Green","pos3":"Andre Iguodala","pos4":"Patrick McCaw","pos5":"Stephen Curry"},{"pos1":"David
+West","pos2":"Omri Casspi","pos3":"Nick Young","pos4":"Klay Thompson","pos5":"Andre
+Iguodala"},{"pos1":"Jordan Bell","pos2":"Kevon Looney","pos3":"Nick Young","pos4":"Patrick
+McCaw","pos5":"Quinn Cook"},{"pos1":"David West","pos2":"Draymond Green","pos3":"Kevin
+Durant","pos4":"Klay Thompson","pos5":"Quinn Cook"},{"pos1":"Zaza Pachulia","pos2":"Draymond
+Green","pos3":"Kevin Durant","pos4":"Klay Thompson","pos5":"Stephen Curry"},{"pos1":"Kevon
+Looney","pos2":"Draymond Green","pos3":"Kevin Durant","pos4":"Nick Young","pos5":"Shaun
+Livingston"},{"pos1":"JaVale McGee","pos2":"Omri Casspi","pos3":"Nick Young","pos4":"Klay
+Thompson","pos5":"Andre Iguodala"},{"pos1":"Jordan Bell","pos2":"Draymond Green","pos3":"Andre
+Iguodala","pos4":"Patrick McCaw","pos5":"Shaun Livingston"},{"pos1":"David West","pos2":"Kevin
+Durant","pos3":"Andre Iguodala","pos4":"Klay Thompson","pos5":"Stephen Curry"},{"pos1":"Zaza
+Pachulia","pos2":"Draymond Green","pos3":"Kevin Durant","pos4":"Stephen Curry","pos5":"Stephen Curry"}]
+}
+
+Example request
+curl --location --request POST
+'http://api.bballsports.com/simulationAPI/set_players_subs.php'
+\
+--header 'Authorization: 0751qaqp7qjnit2ag2ln8knfi3' \
+--data-raw '{"apikey":"7acfca7442404d6c8cd8322a06671b79",
+"league_name":"PRO2017-18",
+"team_name":"Golden State Warriors",
+"data":[{"pos1":"Zaza Pachulia","pos2":"Draymond
+Green","pos3":"Kevin Durant","pos4":"Klay
+Thompson","pos5":"Stephen Curry"},{"pos1":"JaVale
+McGee","pos2":"Kevon Looney","pos3":"Kevin Durant","pos4":"Klay
+Thompson","pos5":"Shaun Livingston"},{"pos1":"Jordan
+Bell","pos2":"Draymond Green","pos3":"Andre
+
+Iguodala","pos4":"Patrick McCaw","pos5":"Stephen
+Curry"},{"pos1":"David West","pos2":"Omri Casspi","pos3":"Nick
+Young","pos4":"Klay Thompson","pos5":"Andre
+Iguodala"},{"pos1":"Jordan Bell","pos2":"Kevon
+Looney","pos3":"Nick Young","pos4":"Patrick McCaw","pos5":"Quinn
+Cook"},{"pos1":"David West","pos2":"Draymond
+Green","pos3":"Kevin Durant","pos4":"Klay
+Thompson","pos5":"Quinn Cook"},{"pos1":"Zaza
+Pachulia","pos2":"Draymond Green","pos3":"Kevin
+Durant","pos4":"Klay Thompson","pos5":"Stephen
+Curry"},{"pos1":"Kevon Looney","pos2":"Draymond
+Green","pos3":"Kevin Durant","pos4":"Nick Young","pos5":"Shaun
+Livingston"},{"pos1":"JaVale McGee","pos2":"Omri
+Casspi","pos3":"Nick Young","pos4":"Klay Thompson","pos5":"Andre
+Iguodala"},{"pos1":"Jordan Bell","pos2":"Draymond
+Green","pos3":"Andre Iguodala","pos4":"Patrick
+McCaw","pos5":"Shaun Livingston"},{"pos1":"David
+West","pos2":"Kevin Durant","pos3":"Andre Iguodala","pos4":"Klay
+Thompson","pos5":"Stephen Curry"},{"pos1":"Zaza
+Pachulia","pos2":"Draymond Green","pos3":"Kevin
+Durant","pos4":"Stephen Curry","pos5":"Stephen Curry"}]
+}'
+Example response
+{
+"status": "true",
+"message": "",
+"username": "Guest137004905",
+"data": ""
+}
+
+POST Get player characteristics
+http://api.bballsports.com/simulationAPI/get_players_chars.php
+For a given season and team, retrieve the editable player characteristics values in JSON format,
+one record for each player. Note these are the values saved to the user accounts. If the user
+has no saved values, the default values will be returned.
+AUTHORIZATION Bearer Token
+BODY json
+{"apikey":"7acfca7442404d6c8cd8322a06671b79",
+"league_name":"PRO2017-18",
+"team_name":"Golden State Warriors"
+}
+
+Example request
+curl --location --request POST
+'http://api.bballsports.com/simulationAPI/get_players_chars.php'
+\
+--header 'Authorization: 0751qaqp7qjnit2ag2ln8knfi3' \
+--data-raw '{"apikey":"7acfca7442404d6c8cd8322a06671b79",
+"league_name":"PRO2017-18",
+"team_name":"Golden State Warriors"
+}'
+Example response truncated
+{
+"status": "true",
+"message": "",
+"username": "Guest137004905",
+"data": [
+{
+"name": "Zaza Pachulia",
+"position": "C ",
+"poss_fact": "0",
+"two_pt_fg_pct": "56.7",
+"three_pt_fg_pct": "0.0",
+"ft_pct": "80.6",
+"pct_shot": "26.7",
+"three_pt_pct_shot": "0.3",
+
+"pct_fouled": "8.6",
+"pct_to": "7.3",
+"pct_pass": "57.4",
+"off_reb": "13.2",
+"def_reb": "17.2",
+"def_fg_pct": "4.0",
+"pct_pf": "12.5",
+"pct_st": "4.0",
+"pct_bs": "1.0",
+"year": "1718 ",
+"team_code": "gsw",
+"height": "6.11",
+"deny_fact": "0"
+},
+{
+"name": "Draymond Green",
+"position": "PF C ",
+"poss_fact": "0",
+"two_pt_fg_pct": "56.2",
+"three_pt_fg_pct": "30.1",
+"ft_pct": "77.5",
+"pct_shot": "17.1",
+"three_pt_pct_shot": "7.3",
+"pct_fouled": "4.2",
+"pct_to": "5.5",
+"pct_pass": "73.2",
+"off_reb": "4.7",
+"def_reb": "14.5",
+"def_fg_pct": "-3.5",
+"pct_pf": "8.1",
+"pct_st": "4.3",
+"pct_bs": "2.3",
+"year": "1718 ",
+"team_code": "gsw",
+"height": "6.07",
+"deny_fact": "0"
+},
+
+POST Get 82 game schedule
+http://api.bballsports.com/simulationAPI/get_82_game_schedule.php
+For a given league_name and team_name, return an array of team names and the number of
+games that will be played against that opponent in an 82-game regular season. Note the values
+will be multiplied by 100.
+AUTHORIZATION Bearer Token
+BODY json
+{"apikey":"7acfca7442404d6c8cd8322a06671b79",
+"league_name":"PRO2017-18",
+"team_name":"Golden State Warriors"
+}
+
+Example request
+curl --location --request POST
+'http://api.bballsports.com/simulationAPI/get_82_game_schedule.p
+hp' \
+--header 'Authorization: 0751qaqp7qjnit2ag2ln8knfi3' \
+--data-raw '{"apikey":"7acfca7442404d6c8cd8322a06671b79",
+"league_name":"PRO2017-18",
+"team_name":"Golden State Warriors"
+}'
+Example response truncated
+{
+"status": "true",
+"message": "i5o3mknlaldsb61o0bs995hp04",
+"username": "Guest137004905",
+"data": [
+{
+"teams": "Atlanta Hawks",
+"games": "200"
+},
+{
+"teams": "Brooklyn Nets",
+"games": "200"
+},
+{
+
+"teams": "Boston Celtics",
+"games": "200"
+},
+{
+"teams": "Charlotte Hornets",
+"games": "200"
+},
+
+POST Set player characteristics
+http://api.bballsports.com/simulationAPI/set_players_chars.php
+For a given league_name and team_name, set the user's altered values for each player's
+characteristics. Note that all players should be returned, even unchanged values. These will be
+saved to the user's account and used for the next simulation run, and retrieved upon calling get
+player characteristics.
+AUTHORIZATION Bearer Token
+BODY json
+
+{"apikey":"7acfca7442404d6c8cd8322a06671b79",
+"league_name":"PRO2017-18",
+"team_name":"Golden State Warriors",
+"data":[{"name":"Zaza
+Pachulia","position":"C","poss_fact":"0","two_pt_fg_pct":"56.7","three_pt_fg_pct":"0.
+0","ft_pct":"80.6","pct_shot":"26.7","three_pt_pct_shot":"0.3","pct_fouled":"8.6","pc
+t_to":"7.3","pct_pass":"57.4","off_reb":"13.2","def_reb":"17.2","def_fg_pct":"4.0","p
+ct_pf":"12.5","pct_st":"4.0","pct_bs":"1.0","year":"1718","team_code":"gsw","height":
+"6.11"},{"name":"Draymond Green","position":"PF
+C","poss_fact":"0","two_pt_fg_pct":"56.2","three_pt_fg_pct":"30.1","ft_pct":"77.5","p
+ct_shot":"17.1","three_pt_pct_shot":"7.3","pct_fouled":"4.2","pct_to":"5.5","pct_pass
+":"73.2","off_reb":"4.7","def_reb":"14.5","def_fg_pct":"-
+3.5","pct_pf":"8.1","pct_st":"4.3","pct_bs":"2.3","year":"1718","team_code":"gsw","he
+ight":"6.07"},{"name":"Kevin Durant","position":"SF
+PF","poss_fact":"0","two_pt_fg_pct":"56.5","three_pt_fg_pct":"41.9","ft_pct":"88.9","
+pct_shot":"33.0","three_pt_pct_shot":"11.4","pct_fouled":"9.9","pct_to":"5.6","pct_pa
+ss":"51.5","off_reb":"1.9","def_reb":"13.4","def_fg_pct":"-
+2.5","pct_pf":"5.7","pct_st":"2.3","pct_bs":"2.9","year":"1718","team_code":"gsw","he
+ight":"6.09"},{"name":"Klay
+Thompson","position":"SG","poss_fact":"0","two_pt_fg_pct":"52.6","three_pt_fg_pct":"4
+4.0","ft_pct":"83.7","pct_shot":"49.8","three_pt_pct_shot":"22.3","pct_fouled":"3.7",
+"pct_to":"5.5","pct_pass":"41.0","off_reb":"1.8","def_reb":"7.1","def_fg_pct":"-
+2.0","pct_pf":"4.7","pct_st":"2.3","pct_bs":"0.8","year":"1718","team_code":"gsw","he
+ight":"6.07"},{"name":"Stephen
+Curry","position":"PG","poss_fact":"0","two_pt_fg_pct":"59.5","three_pt_fg_pct":"42.3
+","ft_pct":"92.1","pct_shot":"29.8","three_pt_pct_shot":"17.5","pct_fouled":"9.5","pc
+t_to":"5.3","pct_pass":"55.4","off_reb":"3.2","def_reb":"9.9","def_fg_pct":"2.5","pct
+_pf":"7.0","pct_st":"5.0","pct_bs":"0.3","year":"1718","team_code":"gsw","height":"6.
+03"},{"name":"Jordan Bell","position":"C
+PF","poss_fact":"0","two_pt_fg_pct":"64.1","three_pt_fg_pct":"0.0","ft_pct":"68.2","p
+ct_shot":"22.9","three_pt_pct_shot":"0.8","pct_fouled":"5.1","pct_to":"6.3","pct_pass
+
+":"65.7","off_reb":"10.7","def_reb":"13.1","def_fg_pct":"1.5","pct_pf":"11.4","pct_st
+":"4.4","pct_bs":"3.9","year":"1718","team_code":"gsw","height":"6.09"},{"name":"Davi
+d West","position":"C
+PF","poss_fact":"0","two_pt_fg_pct":"57.6","three_pt_fg_pct":"37.5","ft_pct":"75.9","
+pct_shot":"30.3","three_pt_pct_shot":"0.9","pct_fouled":"5.6","pct_to":"6.4","pct_pas
+s":"57.7","off_reb":"9.2","def_reb":"12.5","def_fg_pct":"-
+3.0","pct_pf":"12.0","pct_st":"4.8","pct_bs":"4.2","year":"1718","team_code":"gsw","h
+eight":"6.09"},{"name":"Andre Iguodala","position":"SF
+SGPG","poss_fact":"0","two_pt_fg_pct":"56.7","three_pt_fg_pct":"28.2","ft_pct":"63.2"
+,"pct_shot":"20.5","three_pt_pct_shot":"7.8","pct_fouled":"5.1","pct_to":"4.3","pct_p
+ass":"70.1","off_reb":"4.4","def_reb":"8.7","def_fg_pct":"-
+4.0","pct_pf":"6.1","pct_st":"3.4","pct_bs":"1.3","year":"1718","team_code":"gsw","he
+ight":"6.06"},{"name":"Nick Young","position":"SG
+SF","poss_fact":"0","two_pt_fg_pct":"48.1","three_pt_fg_pct":"37.7","ft_pct":"86.2","
+pct_shot":"63.0","three_pt_pct_shot":"42.3","pct_fouled":"7.7","pct_to":"5.2","pct_pa
+ss":"24.1","off_reb":"2.1","def_reb":"5.4","def_fg_pct":"5.0","pct_pf":"7.2","pct_st"
+:"2.8","pct_bs":"0.3","year":"1718","team_code":"gsw","height":"6.06"},{"name":"Shaun
+Livingston","position":"PG","poss_fact":"0","two_pt_fg_pct":"50.9","three_pt_fg_pct":
+"0.0","ft_pct":"82.0","pct_shot":"28.9","three_pt_pct_shot":"0.7","pct_fouled":"4.6",
+"pct_to":"4.9","pct_pass":"61.6","off_reb":"4.1","def_reb":"6.3","def_fg_pct":"3.5","
+pct_pf":"10.4","pct_st":"3.2","pct_bs":"1.1","year":"1718","team_code":"gsw","height"
+:"6.07"},{"name":"Patrick
+McCaw","position":"SG","poss_fact":"0","two_pt_fg_pct":"50.3","three_pt_fg_pct":"23.8
+","ft_pct":"76.5","pct_shot":"31.3","three_pt_pct_shot":"11.3","pct_fouled":"4.2","pc
+t_to":"5.7","pct_pass":"58.8","off_reb":"2.4","def_reb":"4.9","def_fg_pct":"2.5","pct
+_pf":"6.9","pct_st":"4.6","pct_bs":"0.6","year":"1718","team_code":"gsw","height":"6.
+06"},{"name":"Kevon Looney","position":"C
+PF","poss_fact":"0","two_pt_fg_pct":"59.0","three_pt_fg_pct":"20.0","ft_pct":"54.5","
+pct_shot":"37.6","three_pt_pct_shot":"1.3","pct_fouled":"13.7","pct_to":"6.0","pct_pa
+ss":"42.7","off_reb":"13.1","def_reb":"10.4","def_fg_pct":"0.5","pct_pf":"11.6","pct_
+st":"3.8","pct_bs":"3.5","year":"1718","team_code":"gsw","height":"6.09"},{"name":"Om
+ri Casspi","position":"PF
+SF","poss_fact":"0","two_pt_fg_pct":"59.5","three_pt_fg_pct":"45.5","ft_pct":"72.5","
+pct_shot":"36.1","three_pt_pct_shot":"4.1","pct_fouled":"11.0","pct_to":"6.5","pct_pa
+ss":"46.4","off_reb":"5.8","def_reb":"16.5","def_fg_pct":"1.0","pct_pf":"9.4","pct_st
+":"2.5","pct_bs":"1.5","year":"1718","team_code":"gsw","height":"6.09"},{"name":"Quin
+n
+Cook","position":"PG","poss_fact":"0","two_pt_fg_pct":"51.4","three_pt_fg_pct":"44.2"
+,"ft_pct":"88.0","pct_shot":"32.7","three_pt_pct_shot":"13.8","pct_fouled":"2.8","pct
+_to":"4.1","pct_pass":"60.4","off_reb":"1.9","def_reb":"7.0","def_fg_pct":"3.0","pct_
+pf":"7.9","pct_st":"1.7","pct_bs":"0.1","year":"1718","team_code":"gsw","height":"6.0
+2"},{"name":"JaVale
+McGee","position":"C","poss_fact":"0","two_pt_fg_pct":"63.9","three_pt_fg_pct":"0.0",
+"ft_pct":"73.1","pct_shot":"47.0","three_pt_pct_shot":"1.5","pct_fouled":"10.2","pct_
+
+to":"5.8","pct_pass":"37.0","off_reb":"13.8","def_reb":"12.9","def_fg_pct":"3.5","pct
+_pf":"14.5","pct_st":"3.4","pct_bs":"5.2","year":"1718","team_code":"gsw","height":"7
+.00"},{"name":"Damian
+Jones","position":"C","poss_fact":"0","two_pt_fg_pct":"50.0","three_pt_fg_pct":"0.0",
+"ft_pct":"60.0","pct_shot":"53.7","three_pt_pct_shot":"0.0","pct_fouled":"11.2","pct_
+to":"9.8","pct_pass":"25.3","off_reb":"8.1","def_reb":"7.3","def_fg_pct":"0.0","pct_p
+f":"15.7","pct_st":"1.2","pct_bs":"1.9","year":"1718","team_code":"gsw","height":"7.0
+0"},{"name":"Chris Boucher","position":"PF
+C","poss_fact":"0","two_pt_fg_pct":"0.0","three_pt_fg_pct":"0.0","ft_pct":"0.0","pct_
+shot":"100.0","three_pt_pct_shot":"100.0","pct_fouled":"0.0","pct_to":"3.3","pct_pass
+":"-
+3.3","off_reb":"0.0","def_reb":"72.0","def_fg_pct":"0.0","pct_pf":"0.0","pct_st":"0.0
+","pct_bs":"0.0","year":"1718","team_code":"gsw","height":"6.10"}]
+}
+
+Example request
+curl --location --request POST
+'http://api.bballsports.com/simulationAPI/set_players_chars.php'
+\
+--header 'Authorization: 0751qaqp7qjnit2ag2ln8knfi3' \
+--data-raw '{"apikey":"7acfca7442404d6c8cd8322a06671b79",
+"league_name":"PRO2017-18",
+"team_name":"Golden State Warriors",
+"data":[{"name":"Zaza
+Pachulia","position":"C","poss_fact":"0","two_pt_fg_pct":"56.7",
+"three_pt_fg_pct":"0.0","ft_pct":"80.6","pct_shot":"26.7","three
+_pt_pct_shot":"0.3","pct_fouled":"8.6","pct_to":"7.3","pct_pass"
+:"57.4","off_reb":"13.2","def_reb":"17.2","def_fg_pct":"4.0","pc
+t_pf":"12.5","pct_st":"4.0","pct_bs":"1.0","year":"1718","team_c
+ode":"gsw","height":"6.11"},{"name":"Draymond
+Green","position":"PF
+C","poss_fact":"0","two_pt_fg_pct":"56.2","three_pt_fg_pct":"30.
+1","ft_pct":"77.5","pct_shot":"17.1","three_pt_pct_shot":"7.3","
+pct_fouled":"4.2","pct_to":"5.5","pct_pass":"73.2","off_reb":"4.
+7","def_reb":"14.5","def_fg_pct":"-
+3.5","pct_pf":"8.1","pct_st":"4.3","pct_bs":"2.3","year":"1718",
+"team_code":"gsw","height":"6.07"},{"name":"Kevin
+Durant","position":"SF
+PF","poss_fact":"0","two_pt_fg_pct":"56.5","three_pt_fg_pct":"41
+.9","ft_pct":"88.9","pct_shot":"33.0","three_pt_pct_shot":"11.4"
+,"pct_fouled":"9.9","pct_to":"5.6","pct_pass":"51.5","off_reb":"
+1.9","def_reb":"13.4","def_fg_pct":"-
+
+2.5","pct_pf":"5.7","pct_st":"2.3","pct_bs":"2.9","year":"1718",
+"team_code":"gsw","height":"6.09"},{"name":"Klay
+Thompson","position":"SG","poss_fact":"0","two_pt_fg_pct":"52.6"
+,"three_pt_fg_pct":"44.0","ft_pct":"83.7","pct_shot":"49.8","thr
+ee_pt_pct_shot":"22.3","pct_fouled":"3.7","pct_to":"5.5","pct_pa
+ss":"41.0","off_reb":"1.8","def_reb":"7.1","def_fg_pct":"-
+2.0","pct_pf":"4.7","pct_st":"2.3","pct_bs":"0.8","year":"1718",
+"team_code":"gsw","height":"6.07"},{"name":"Stephen
+Curry","position":"PG","poss_fact":"0","two_pt_fg_pct":"59.5","t
+hree_pt_fg_pct":"42.3","ft_pct":"92.1","pct_shot":"29.8","three_
+pt_pct_shot":"17.5","pct_fouled":"9.5","pct_to":"5.3","pct_pass"
+:"55.4","off_reb":"3.2","def_reb":"9.9","def_fg_pct":"2.5","pct_
+pf":"7.0","pct_st":"5.0","pct_bs":"0.3","year":"1718","team_code
+":"gsw","height":"6.03"},{"name":"Jordan Bell","position":"C
+PF","poss_fact":"0","two_pt_fg_pct":"64.1","three_pt_fg_pct":"0.
+0","ft_pct":"68.2","pct_shot":"22.9","three_pt_pct_shot":"0.8","
+pct_fouled":"5.1","pct_to":"6.3","pct_pass":"65.7","off_reb":"10
+.7","def_reb":"13.1","def_fg_pct":"1.5","pct_pf":"11.4","pct_st"
+:"4.4","pct_bs":"3.9","year":"1718","team_code":"gsw","height":"
+6.09"},{"name":"David West","position":"C
+PF","poss_fact":"0","two_pt_fg_pct":"57.6","three_pt_fg_pct":"37
+.5","ft_pct":"75.9","pct_shot":"30.3","three_pt_pct_shot":"0.9",
+"pct_fouled":"5.6","pct_to":"6.4","pct_pass":"57.7","off_reb":"9
+.2","def_reb":"12.5","def_fg_pct":"-
+3.0","pct_pf":"12.0","pct_st":"4.8","pct_bs":"4.2","year":"1718"
+,"team_code":"gsw","height":"6.09"},{"name":"Andre
+Iguodala","position":"SF
+SGPG","poss_fact":"0","two_pt_fg_pct":"56.7","three_pt_fg_pct":"
+28.2","ft_pct":"63.2","pct_shot":"20.5","three_pt_pct_shot":"7.8
+","pct_fouled":"5.1","pct_to":"4.3","pct_pass":"70.1","off_reb":
+"4.4","def_reb":"8.7","def_fg_pct":"-
+4.0","pct_pf":"6.1","pct_st":"3.4","pct_bs":"1.3","year":"1718",
+"team_code":"gsw","height":"6.06"},{"name":"Nick
+Young","position":"SG
+SF","poss_fact":"0","two_pt_fg_pct":"48.1","three_pt_fg_pct":"37
+.7","ft_pct":"86.2","pct_shot":"63.0","three_pt_pct_shot":"42.3"
+,"pct_fouled":"7.7","pct_to":"5.2","pct_pass":"24.1","off_reb":"
+2.1","def_reb":"5.4","def_fg_pct":"5.0","pct_pf":"7.2","pct_st":
+"2.8","pct_bs":"0.3","year":"1718","team_code":"gsw","height":"6
+.06"},{"name":"Shaun
+Livingston","position":"PG","poss_fact":"0","two_pt_fg_pct":"50.
+9","three_pt_fg_pct":"0.0","ft_pct":"82.0","pct_shot":"28.9","th
+ree_pt_pct_shot":"0.7","pct_fouled":"4.6","pct_to":"4.9","pct_pa
+ss":"61.6","off_reb":"4.1","def_reb":"6.3","def_fg_pct":"3.5","p
+ct_pf":"10.4","pct_st":"3.2","pct_bs":"1.1","year":"1718","team_
+code":"gsw","height":"6.07"},{"name":"Patrick
+McCaw","position":"SG","poss_fact":"0","two_pt_fg_pct":"50.3","t
+
+hree_pt_fg_pct":"23.8","ft_pct":"76.5","pct_shot":"31.3","three_
+pt_pct_shot":"11.3","pct_fouled":"4.2","pct_to":"5.7","pct_pass"
+:"58.8","off_reb":"2.4","def_reb":"4.9","def_fg_pct":"2.5","pct_
+pf":"6.9","pct_st":"4.6","pct_bs":"0.6","year":"1718","team_code
+":"gsw","height":"6.06"},{"name":"Kevon Looney","position":"C
+PF","poss_fact":"0","two_pt_fg_pct":"59.0","three_pt_fg_pct":"20
+.0","ft_pct":"54.5","pct_shot":"37.6","three_pt_pct_shot":"1.3",
+"pct_fouled":"13.7","pct_to":"6.0","pct_pass":"42.7","off_reb":"
+13.1","def_reb":"10.4","def_fg_pct":"0.5","pct_pf":"11.6","pct_s
+t":"3.8","pct_bs":"3.5","year":"1718","team_code":"gsw","height"
+:"6.09"},{"name":"Omri Casspi","position":"PF
+SF","poss_fact":"0","two_pt_fg_pct":"59.5","three_pt_fg_pct":"45
+.5","ft_pct":"72.5","pct_shot":"36.1","three_pt_pct_shot":"4.1",
+"pct_fouled":"11.0","pct_to":"6.5","pct_pass":"46.4","off_reb":"
+5.8","def_reb":"16.5","def_fg_pct":"1.0","pct_pf":"9.4","pct_st"
+:"2.5","pct_bs":"1.5","year":"1718","team_code":"gsw","height":"
+6.09"},{"name":"Quinn
+Cook","position":"PG","poss_fact":"0","two_pt_fg_pct":"51.4","th
+ree_pt_fg_pct":"44.2","ft_pct":"88.0","pct_shot":"32.7","three_p
+t_pct_shot":"13.8","pct_fouled":"2.8","pct_to":"4.1","pct_pass":
+"60.4","off_reb":"1.9","def_reb":"7.0","def_fg_pct":"3.0","pct_p
+f":"7.9","pct_st":"1.7","pct_bs":"0.1","year":"1718","team_code"
+:"gsw","height":"6.02"},{"name":"JaVale
+McGee","position":"C","poss_fact":"0","two_pt_fg_pct":"63.9","th
+ree_pt_fg_pct":"0.0","ft_pct":"73.1","pct_shot":"47.0","three_pt
+_pct_shot":"1.5","pct_fouled":"10.2","pct_to":"5.8","pct_pass":"
+37.0","off_reb":"13.8","def_reb":"12.9","def_fg_pct":"3.5","pct_
+pf":"14.5","pct_st":"3.4","pct_bs":"5.2","year":"1718","team_cod
+e":"gsw","height":"7.00"},{"name":"Damian
+Jones","position":"C","poss_fact":"0","two_pt_fg_pct":"50.0","th
+ree_pt_fg_pct":"0.0","ft_pct":"60.0","pct_shot":"53.7","three_pt
+_pct_shot":"0.0","pct_fouled":"11.2","pct_to":"9.8","pct_pass":"
+25.3","off_reb":"8.1","def_reb":"7.3","def_fg_pct":"0.0","pct_pf
+":"15.7","pct_st":"1.2","pct_bs":"1.9","year":"1718","team_code"
+:"gsw","height":"7.00"},{"name":"Chris Boucher","position":"PF
+C","poss_fact":"0","two_pt_fg_pct":"0.0","three_pt_fg_pct":"0.0"
+,"ft_pct":"0.0","pct_shot":"100.0","three_pt_pct_shot":"100.0","
+pct_fouled":"0.0","pct_to":"3.3","pct_pass":"-
+3.3","off_reb":"0.0","def_reb":"72.0","def_fg_pct":"0.0","pct_pf
+":"0.0","pct_st":"0.0","pct_bs":"0.0","year":"1718","team_code":
+"gsw","height":"6.10"}]
+}'
+Example response truncated
+{
+"status": "true",
+
+"message": "",
+"username": "Guest137004905",
+"data": ""
+}
+
+POST Set player drafts
+http://api.bballsports.com/simulationAPI/set_players_drafts.php
+Make changes to a league and team's roster. Send the league_name and team_name to be
+changed, and a JSON array of replace and add records, indicating if a new player is being
+assigned or replaced. The example shows different uses of this. Also note these changes are
+saved to the user's account and will be returned in subsequent queries and used in game
+execution.
+AUTHORIZATION Bearer Token
+BODY json
+{"apikey":"7acfca7442404d6c8cd8322a06671b79",
+"league_name":"PRO2017-18",
+"team_name":"Golden State Warriors",
+"data":"[{'action':'replace','original_league':'PRO2017-18','original_team':'Golden State
+Warriors','original_player':'Draymond Green','new_player_league':'PRO2017-18','new_player_team':'Golden State
+Warriors','new_player_name':'Stephen Curry'},{'action':'add','original_league':'PRO2017-
+18','original_team':'Golden State Warriors','new_player_league':'PRO2017-18','new_player_team':'Golden State
+Warriors','new_player_name':'Stephen Curry'}]"
+}
+
+Example request
+curl --location --request POST
+'http://api.bballsports.com/simulationAPI/set_players_drafts.php
+' \
+--header 'Authorization: 0751qaqp7qjnit2ag2ln8knfi3' \
+--data-raw '{"apikey":"7acfca7442404d6c8cd8322a06671b79",
+"league_name":"PRO2017-18",
+"team_name":"Golden State Warriors",
+"data":"[{'\''action'\'':'\''replace'\'','\''original_league'\''
+:'\''PRO2017-18'\'','\''original_team'\'':'\''Golden State
+Warriors'\'','\''original_player'\'':'\''Draymond
+Green'\'','\''new_player_league'\'':'\''PRO2017-
+18'\'','\''new_player_team'\'':'\''Golden State
+Warriors'\'','\''new_player_name'\'':'\''Stephen
+Curry'\''},{'\''action'\'':'\''add'\'','\''original_league'\'':'
+\''PRO2017-18'\'','\''original_team'\'':'\''Golden State
+Warriors'\'','\''new_player_league'\'':'\''PRO2017-
+18'\'','\''new_player_team'\'':'\''Golden State
+Warriors'\'','\''new_player_name'\'':'\''Stephen Curry'\''}]"
+}'
+
+Example response
+{
+"status": "true",
+"message": "",
+"username": "Guest137004905",
+"data": []
+}
+
+POST Get player data
+http://api.bballsports.com/simulationAPI/get_players.php
+Given a league_name and team_name, this returns a JSON array for the player roster, indicating
+the player's name, positions, height, and original year/team code (if drafted)
+AUTHORIZATION Bearer Token
+BODY json
+{"apikey":"7acfca7442404d6c8cd8322a06671b79",
+"league_name":"PRO2017-18",
+"team_name":"Cleveland Cavaliers"
+}
+
+Example request
+curl --location --request POST
+'http://api.bballsports.com/simulationAPI/get_players.php' \
+--header 'Authorization: 0751qaqp7qjnit2ag2ln8knfi3' \
+--data-raw '{"apikey":"7acfca7442404d6c8cd8322a06671b79",
+"league_name":"PRO2017-18",
+"team_name":"Cleveland Cavaliers"
+}'
+Example response truncated
+{
+"status": "true",
+"message": "",
+"username": "Guest137004905",
+"data": [
+{
+"player_name": "Kevin Love",
+"positions": "C PF ",
+"height": "6.10",
+"orig_year": "1718 ",
+"orig_team_code": "cle"
+},
+{
+"player_name": "Lebron James",
+"positions": "PF SF ",
+"height": "6.08",
+"orig_year": "1718 ",
+
+"orig_team_code": "cle"
+},
+{
+"player_name": "Jeff Green",
+"positions": "SF PF ",
+"height": "6.08",
+"orig_year": "1718 ",
+"orig_team_code": "cle"
+},
+
+POST Get simulated games
+http://api.bballsports.com/simulationAPI/get_played_game_list.php
+This returns an array of executed games so far. This can be used during simulation execution to
+show progress, and also at the end to indicate home/away/game score results. No input
+parameters are required other than API key and authorization header.
+AUTHORIZATION Bearer Token
+BODY formdata
+apikey 7acfca7442404d6c8cd8322a06671b79
+
+Example request
+curl --location --request POST
+'http://api.bballsports.com/simulationAPI/get_played_game_list.p
+hp' \
+--header 'Authorization: 0751qaqp7qjnit2ag2ln8knfi3' \
+--form 'apikey="7acfca7442404d6c8cd8322a06671b79"'
+Example response truncated
+{
+"status": "true",
+"message": "i5o3mknlaldsb61o0bs995hp04",
+"username": "Guest137004905",
+"data": [
+{
+"game_number": "1",
+"team_name1": "Boston",
+"team_name2": "Miami",
+"team1_homeaway": "(H)",
+"team2_homeaway": "(A)",
+"team1_score": "84",
+"team2_score": "101"
+},
+{
+"game_number": "2",
+"team_name1": "Dallas",
+"team_name2": "Charlotte",
+"team1_homeaway": "(H)",
+"team2_homeaway": "(A)",
+"team1_score": "107",
+"team2_score": "73"
+
+},
+{
+"game_number": "3",
+"team_name1": "Cleveland",
+"team_name2": "Boston",
+"team1_homeaway": "(H)",
+"team2_homeaway": "(A)",
+"team1_score": "84",
+"team2_score": "122"
+},
+
+POST Get play by play
+http://api.bballsports.com/simulationAPI/get_play_by_play.php
+Return a given game's play by play text by sending the designed game number. Note you can
+request "ALL" game_numbers and all play by play text will be returned. Currently, a maximum
+of 100 game play by play text values are stored. Also, subsequent simulation executions wipe
+out previously stored play by play text.
+AUTHORIZATION Bearer Token
+BODY json
+{"apikey":"7acfca7442404d6c8cd8322a06671b79",
+"game_number":"1"
+}
+
+Example request
+curl --location --request POST
+'http://api.bballsports.com/simulationAPI/get_play_by_play.php'
+\
+--header 'Authorization: 0751qaqp7qjnit2ag2ln8knfi3' \
+--data-raw '{"apikey":"7acfca7442404d6c8cd8322a06671b79",
+"game_number":"1"
+}'
+Example response truncated
+{"status":"true","message":"vqan1flldun2prfaai5aus4nqp","usernam
+e":"Guest1982519441","data":[{"game_number":"1","line_number":"1
+","color":"0","text":"Start
+of first
+quarter..."},{"game_number":"1","line_number":"2","color":"2","t
+ext":"Clippers win the jump
+ball."},{"game_number":"1","line_number":"3","color":"2","text":
+"Eric Bledsoe right of the key to Eric
+Gordon."},{"game_number":"1","line_number":"4","color":"2","text
+":"Eric Gordon throws the crosscourt pass to Ryan
+Gomes."},{"game_number":"1","line_number":"5","color":"2","text"
+:"Ryan Gomes dribbles around a pick and
+shoots..."},{"game_number":"1","line_number":"6","color":"2","te
+xt":"He swishes it through!
+"},{"game_number":"1","line_number":"7","color":"2","text":"Reco
+rd an assist for Eric
+
+Gordon."},{"game_number":"1","line_number":"8","color":"2","text
+":"Mavericks coming
+downcourt..."},{"game_number":"1","line_number":"9","color":"1",
+"text":"Dallas brings the ball upcourt R or half court
+offense
+HC"},{"game_number":"1","line_number":"10","color":"1","text":"D
+irk Nowitzki drives through traffic to the
+basket and shoots..."},
+
+POST Get raw box scores
+http://api.bballsports.com/simulationAPI/get_raw_box_scores.php
+Return a given game's raw box score text by sending the designed game number. Note you can
+request "ALL" game_numbers and all box score text will be returned.
+AUTHORIZATION Bearer Token
+BODY json
+{"apikey":"7acfca7442404d6c8cd8322a06671b79",
+"game_number":"1"
+}
+
+Example request
+curl --location --request POST
+'http://api.bballsports.com/simulationAPI/get_raw_box_scores.php
+' \
+--header 'Authorization: 0751qaqp7qjnit2ag2ln8knfi3' \
+--data-raw '{"apikey":"7acfca7442404d6c8cd8322a06671b79",
+"game_number":"1"
+}'
+Example response truncated
+{
+"status": "true",
+"message": "i5o3mknlaldsb61o0bs995hp04",
+"username": "Guest137004905",
+"data": [
+{
+"game_number": "1",
+"line_number": "1",
+"text": " Game 1 Miami Heat
+Boston Celtics "
+},
+{
+"game_number": "1",
+"line_number": "2",
+"text": ""
+},
+{
+"game_number": "1",
+
+"line_number": "3",
+"text": "Miami Heat AWAY "
+},
+{
+"game_number": "1",
+"line_number": "4",
+"text": "AWAY FG 3PFG FT
+REB IND PASSES TIMES FOULED
+AOSF DEF DEF PASSES HCAST-PASS TEAM GETBALL RIDBALL"
+},
+
+POST Get box scores
+http://api.bballsports.com/simulationAPI/get_box_scores2.php
+Returns a JSON array of box score data for a given game or ALL games for the last user
+executed game simulation session.
+AUTHORIZATION Bearer Token
+BODY formdata
+username test2
+apikey 7acfca7442404d6c8cd8322a06671b79
+game_number ALL
+
+Example request
+curl --location --request POST
+'http://api.bballsports.com/simulationAPI/get_box_scores2.php' \
+--header 'Authorization: 0751qaqp7qjnit2ag2ln8knfi3' \
+--form 'username="test2"' \
+--form 'apikey="7acfca7442404d6c8cd8322a06671b79"' \
+--form 'game_number="ALL"'
+Example response truncated
+{
+"status": "true",
+"message": null,
+"username": "test2",
+"data": [
+{
+"game_number": "1",
+"home_team": "Brooklyn Nets",
+"away_team": "Atlanta Hawks",
+"score": "112-107",
+"player_name": "DeWayne Dedmon ",
+"minutes": "20",
+"fgm": "5",
+"fga": "10",
+"three_pfgm": "1",
+"three_pfga": "3",
+"ftm": "0",
+"fta": "0",
+"oreb": "0",
+"dreb": "7",
+
+"treb": "7",
+"ast": "2",
+"pf": "0",
+"st": "1",
+"to1": "0",
+"bs": "2",
+"points": "11",
+"ind_poss": "14",
+"passes_thr": "4",
+"passes_rec": "10",
+"times_fouled_aosf": "0",
+"times_fouled_nsf": "0",
+"times_fouled_all": "0",
+"aosf_fgm": "0",
+"aosf_fga": "0",
+"def_fgm": "4",
+"def_fga": "6"
+},
+{
+"game_number": "1",
+"home_team": "Brooklyn Nets",
+"away_team": "Atlanta Hawks",
+"score": "112-107",
+"player_name": "John Collins ",
+"minutes": "20",
+"fgm": "3",
+"fga": "6",
+"three_pfgm": "0",
+"three_pfga": "0",
+"ftm": "1",
+"fta": "2",
+"oreb": "2",
+"dreb": "4",
+"treb": "6",
+"ast": "1",
+"pf": "1",
+"st": "0",
+"to1": "0",
+"bs": "0",
+"points": "7",
+"ind_poss": "10",
+"passes_thr": "3",
+"passes_rec": "3",
+"times_fouled_aosf": "0",
+"times_fouled_nsf": "1",
+"times_fouled_all": "1",
+"aosf_fgm": "0",
+
+"aosf_fga": "0",
+"def_fgm": "4",
+"def_fga": "9"
+},
+
+POST Get simulated player results
+http://api.bballsports.com/simulationAPI/get_player_results.php
+Return an array of JSON records, one for each player in the last simulation execution.
+AUTHORIZATION Bearer Token
+BODY json
+{"apikey":"7acfca7442404d6c8cd8322a06671b79"}
+
+Example request
+curl --location --request POST
+'http://api.bballsports.com/simulationAPI/get_player_results.php
+' \
+--header 'Authorization: 0751qaqp7qjnit2ag2ln8knfi3' \
+--data-raw '{"apikey":"7acfca7442404d6c8cd8322a06671b79"
+}'
+Example response truncated
+{
+"status": "true",
+"message": "i5o3mknlaldsb61o0bs995hp04",
+"username": "Guest137004905",
+"data": [
+{
+"team_name": "Atlanta Hawks",
+"player_name": "horford al",
+"sequence": "1",
+"games": "83",
+"minutes": "2661",
+"fgm": "471",
+"fga": "850",
+"fg_percent": "55.400",
+"eff_fg_pct": "55.600",
+"score_fg_pct": "57.700",
+"two_pt_fgm": "467",
+"two_pt_fga": "842",
+"two_pt_fg_pct": "55.500",
+"three_pt_fgm": "4",
+"three_pt_fga": "8",
+"three_pt_fg_pct": "50.000",
+
+"fg_miss": "83",
+"fg_miss_offreb": "2661",
+"fg_miss_defreb": "379",
+"fg_miss_offtmreb": "83",
+"fg_miss_deftmreb": "246",
+"ft_miss_noreb": "12",
+"ft_miss_offreb": "38",
+"ft_miss_defreb": "14",
+"ft_miss_offtmreb": "3",
+"ft_miss_deftmreb": "14",
+"ftm": "129",
+"fta": "162",
+"ft_pct": "79.600",
+"off_reb": "178",
+"def_reb": "516",
+"tot_reb": "694",
+"assists": "260",
+"pf": "185",
+"dq": "3",
+"st": "70",
+"turnovers": "101",
+"bs": "76",
+"pts": "1075",
+"pts_per_scopp": "1.150",
+"zero_pt_poss": "400",
+"zero_pt_poss_per_game": "4.800",
+"pts_zero_pt_poss": "2.690",
+"ast_per_min": "0.098",
+"ast1": "222",
+"ast1_per_min": "0.083",
+"hc_ast": "38",
+"ast2_per_min": "0.014",
+"fgm_with_assist": "304",
+"ast_fgm": "0.645",
+"min_per_game": "32.100",
+"fgm_per_game": "5.700",
+"fga_per_game": "10.200",
+"ftm_per_game": "1.600",
+"fta_per_game": "2.000",
+"off_reb_per_game": "2.100",
+"def_reb_per_game": "6.200",
+"tot_reb_per_game": "8.400",
+"ast_per_game": "3.100",
+"pf_per_game": "2.200",
+"st_per_game": "0.800",
+"to_per_game": "1.200",
+"bs_per_game": "0.900",
+
+"avg_per_game": "13.000",
+"lo_min": "21",
+"hi_min": "38",
+"hi_lo_fgm": "11",
+"hi_lo_fga": "17",
+"hi_lo_3pt_fgm": "2",
+"hi_lo_3pt_fga": "2",
+"hi_lo_ftm": "6",
+"hi_lo_fta": "8",
+"hi_lo_off_reb": "5",
+"hi_lo_def_reb": "13",
+"hi_lo_tot_reb": "15",
+"hi_lo_ast": "6",
+"hi_lo_st": "4",
+"hi_lo_to": "4",
+"hi_lo_bs": "5",
+"lo_pts": "4",
+"hi_pts": "26",
+"poss_fact": "0.950",
+"pass_poss_fact": "0.890",
+"total_poss_ind": "2518",
+"total_poss_total": "13362",
+"total_poss_pct": "18.800",
+"starts_ind": "945",
+"starts_total": "5447",
+"starts_pct": "17.300",
+"out_of_bounds_plays": "69",
+"poss_fact2": "0.940",
+"pass_poss_fact2": "0.870",
+"total_poss_ind2": "2502",
+"total_poss_total2": "13188",
+"total_poss_pct2": "19.000",
+"team_to": "6",
+"poss_to_get_ball": "2480",
+"poss_to_get_rid_of_ball": "2480",
+"poss_fact3": "0.930",
+"pass_poss_fact3": "0.870",
+"passes_caught_ind": "1391",
+"passes_caught_total": "7275",
+"passes_caught_pct": "19.100",
+"off_reb_ind": "178",
+"off_reb_total": "494",
+"off_reb_pct": "36.000",
+"aosf_fgm": "16",
+"aosf_fga": "73",
+"aosf_fg_pct": "21.900",
+"total_times_fouled": "155",
+
+"act_of_shoot_fouls": "73",
+"non_shoot_fouls": "82",
+"rebounds_per_game_off": "2.100",
+"rebounds_per_game_def": "9.300",
+"rebounds_per_game_tot": "8.400",
+"rebounds_per_48_min_off": "3.200",
+"rebounds_per_48_min_def": "9.300",
+"rebounds_per_48_min_tot": "12.500",
+"rebounding_rating_off": "9.600",
+"rebounding_rating_def": "14.000",
+"off_reb2": "178",
+"scored_after_off_reb": "34",
+"scored_on_first_poss": "192",
+"ast_2": "260",
+"total_passes_thrown": "1428",
+"total_passes_caught": "1391",
+"perform_points": "1477",
+"perform_points_per_min": "0.555",
+"perform_points_per_game": "17.800",
+"ast_thrown": "0.187",
+"ast_thrown2": "0",
+"passes_thrown": "1390",
+"passes_caught": "1363",
+"hc_ast_passes_thrown": "38",
+"hc_ast_passes_caught": "28",
+"def_sw_pass_made_to_turnover": "185",
+"pct_shoot": "34.200",
+"off_fouled_pct": "6.200",
+"pct_to": "4.100",
+"pct_pass": "55.500",
+"def_pct_pf": "7.000",
+"def_pct_st": "2.600",
+"def_pct_bs": "1.700",
+"def_fgm": "370",
+"def_fga": "817",
+"def_fg_pct": "45.300",
+"def_2pt_fgm": "349",
+"def_2pt_fga": "763",
+"def_2pt_fg_pct": "45.700",
+"def_3pt_fgm": "21",
+"def_3pt_fga": "54",
+"def_3pt_fg_pct": "38.900",
+"def_efg_pct": "46.600",
+"forced_shot_foul": "0",
+"def_fg_miss": "447",
+"fgmiss_off_reb": "153",
+"fgmiss_def_reb": "321",
+
+"fgmiss_offtmreb": "18",
+"fgmiss_deftmreb": "29",
+"ftmiss_offreb": "10",
+"ftmiss_defreb": "32",
+"ftmiss_offtmreb": "3",
+"ftmiss_deftmreb": "4",
+"old_def_fgm": "371",
+"old_def_fga": "817",
+"old_def_fg_pct": "45.400",
+"def_fgm_with_def_sw": "370",
+"def_fga_with_def_sw": "817",
+"def_fg_pct_with_def_sw": "45.300",
+"def_fgm_with_def_sw_bs": "370",
+"def_fga_with_def_sw_bs": "843",
+"def_fg_pct_with_def_sw_bs": "44.000",
+"plus_minus_in": "13",
+"plus_minus_out": "44",
+"team_pts_diff": "57",
+"min_in": "2661",
+"min_out": "1306",
+"total_min": "3967",
+"plus_minus_in_per_game": "0.200",
+"plus_minus_out_per_game": "0.500",
+"plus_minus_in_per_48_game": "0.200",
+"plus_minus_out_per_48_game": "1.600",
+"plus_minus_diff": "-1.400",
+"on_team_poss": "4989",
+"off_team_poss": "2472",
+"on_team_pts": "5296",
+"off_opp_pts": "2604",
+"on_offense_pts_poss": "1.062",
+"on_defense_pts_poss": "1.059",
+"on_off_def_diff": "0.003",
+"off_offense_pts_poss": "1.071",
+"off_defense_pts_poss": "1.053",
+"off_off_def_diff": "0.018",
+"total_diff": "-0.015",
+"total_diff_100_poss": "-1.500",
+"double_double": "38",
+"triple_double": "0"
+},
+
+POST Get raw stats
+http://api.bballsports.com/simulationAPI/get_raw_stats.php
+Returns raw (PRE formatted) text for the last user executed game simulation.
+AUTHORIZATION Bearer Token
+BODY formdata
+apikey 7acfca7442404d6c8cd8322a06671b79
+Example request
+curl --location --request POST
+'http://api.bballsports.com/simulationAPI/get_raw_stats.php' \
+--header 'Authorization: 0751qaqp7qjnit2ag2ln8knfi3' \
+--form 'apikey="7acfca7442404d6c8cd8322a06671b79"'
+Example response truncated
+{
+"status": "true",
+"message": "i5o3mknlaldsb61o0bs995hp04",
+"username": "Guest137004905",
+"data": [
+{
+"textlines": " Atlanta Hawks 2010-11
+W-L 40-43 "
+},
+{
+"textlines": "
+Avg Score Points Total "
+},
+{
+"textlines": "
+
+G W L Team- Opp Diff Pts Qtr-1 Qtr-2 Qtr-
+3 Qtr-4 OT Tot Qtr-1 Qtr-2 Qtr-3 Qtr-4 Final"
+
+},

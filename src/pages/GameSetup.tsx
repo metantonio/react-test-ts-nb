@@ -1625,7 +1625,21 @@ const GameSetup = () => {
           />
         }
         {activeView === 'single-game' &&
-          <SingleGameVersion />
+          <SingleGameVersion
+            selectedLeague={selectedLeague}
+            selectedTeams1={selectedTeams1}
+            selectedTeams2={selectedTeams2}
+            teamLogos={teamLogos}
+            getAltsSelected={getAltsSelected}
+            playersTeam1={playersTeam1}
+            playersTeam2={playersTeam2}
+            leagues={leagues}
+            teams={teams}
+            setSelectedLeague={setSelectedLeague}
+            setSelectedTeams1={setSelectedTeams1}
+            setSelectedTeams2={setSelectedTeams2}
+            handleFetchTeams={handleFetchTeams}
+          />
         }
         {activeView === 'instructions' &&
           <Instructions />
