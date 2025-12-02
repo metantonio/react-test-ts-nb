@@ -156,6 +156,13 @@ const SingleGameVersion: React.FC<SingleGameVersionProps> = ({
   const [isGameStarted, setIsGameStarted] = useState(false);
   const [isStatsOpen, setIsStatsOpen] = useState(false);
 
+  // Playback Animation State
+  const [fullCourtData, setFullCourtData] = useState<ScoreBoard[]>([]);
+  const [fullPlayByPlayData, setFullPlayByPlayData] = useState<PlayByPlay[]>([]);
+  const [currentPlayIndex, setCurrentPlayIndex] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [playbackSpeed, setPlaybackSpeed] = useState(1); // 0.5x, 1x, 2x, 4x
+
   // Fetch teams when league changes
   useEffect(() => {
     const fetchTeamsAway = async () => {
@@ -207,6 +214,70 @@ const SingleGameVersion: React.FC<SingleGameVersionProps> = ({
     fetchTeamsHome();
   }, [selectedLeagueHome]);
 
+  // Playback animation loop
+  useEffect(() => {
+    if (!isPlaying || fullCourtData.length === 0) return;
+
+    const baseDelay = 500; // Base delay in ms
+    const delay = baseDelay / playbackSpeed;
+
+    const interval = setInterval(() => {
+      setCurrentPlayIndex((prevIndex) => {
+        const nextIndex = prevIndex + 1;
+
+        // Stop at the end
+        if (nextIndex >= fullCourtData.length) {
+          setIsPlaying(false);
+          return prevIndex;
+        }
+
+        // Update scoreboard with current play
+        setScoreBoard(fullCourtData[nextIndex]);
+
+        // Accumulate play-by-play up to current index
+        setPlayByPlay(fullPlayByPlayData.slice(0, nextIndex + 1));
+
+        return nextIndex;
+      });
+    }, delay);
+
+    return () => clearInterval(interval);
+  }, [isPlaying, playbackSpeed, fullCourtData, fullPlayByPlayData]);
+
+  // Playback control functions
+  const handlePlay = () => {
+    if (currentPlayIndex >= fullCourtData.length - 1) {
+      // If at the end, restart from beginning
+      setCurrentPlayIndex(0);
+      setScoreBoard(fullCourtData[0]);
+      setPlayByPlay([fullPlayByPlayData[0]]);
+    }
+    setIsPlaying(true);
+  };
+
+  const handlePause = () => {
+    setIsPlaying(false);
+  };
+
+  const handleJumpToStart = () => {
+    setIsPlaying(false);
+    setCurrentPlayIndex(0);
+    if (fullCourtData.length > 0) {
+      setScoreBoard(fullCourtData[0]);
+      setPlayByPlay([fullPlayByPlayData[0]]);
+    }
+  };
+
+  const handleJumpToEnd = () => {
+    setIsPlaying(false);
+    const endIndex = fullCourtData.length - 1;
+    setCurrentPlayIndex(endIndex);
+    if (fullCourtData.length > 0) {
+      setScoreBoard(fullCourtData[endIndex]);
+      setPlayByPlay(fullPlayByPlayData);
+    }
+  };
+
   const handleStartGame = async () => {
     if (!selectedLeagueAway || !selectedLeagueHome || !selectedTeams1 || !selectedTeams2) {
       toast({
@@ -246,7 +317,14 @@ const SingleGameVersion: React.FC<SingleGameVersionProps> = ({
       }
 
       if (gameData.court && gameData.court.length > 0) {
-        setScoreBoard(gameData.court[gameData.court.length - 1]);
+        // Store full data for playback
+        setFullCourtData(gameData.court);
+        setFullPlayByPlayData(gameData.playbyplay || []);
+
+        // Set to end of game initially
+        const endIndex = gameData.court.length - 1;
+        setCurrentPlayIndex(endIndex);
+        setScoreBoard(gameData.court[endIndex]);
       }
       if (gameData.playbyplay) {
         setPlayByPlay(gameData.playbyplay);
@@ -258,7 +336,7 @@ const SingleGameVersion: React.FC<SingleGameVersionProps> = ({
       setIsGameStarted(true);
       toast({
         title: "Game Finished",
-        description: "The game has been simulated.",
+        description: "The game has been simulated. Use playback controls to replay.",
       });
 
     } catch (err: any) {
@@ -295,6 +373,56 @@ const SingleGameVersion: React.FC<SingleGameVersionProps> = ({
           <Button size="sm" onClick={handleStartGame} disabled={isLoading} className="flex-1 md:flex-none">
             {isLoading ? "Simulating..." : "Start Game"}
           </Button>
+
+          {/* Playback Controls */}
+          {isGameStarted && fullCourtData.length > 0 && (
+            <>
+              <div className="flex gap-1 flex-1 md:flex-none">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={handleJumpToStart}
+                  className="flex-1 px-2"
+                  title="Jump to Start"
+                >
+                  ⏮
+                </Button>
+                <Button
+                  size="sm"
+                  variant={isPlaying ? "destructive" : "default"}
+                  onClick={isPlaying ? handlePause : handlePlay}
+                  className="flex-1"
+                >
+                  {isPlaying ? "⏸ Pause" : "▶ Play"}
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={handleJumpToEnd}
+                  className="flex-1 px-2"
+                  title="Jump to End"
+                >
+                  ⏭
+                </Button>
+              </div>
+
+              <Select value={playbackSpeed.toString()} onValueChange={(val) => setPlaybackSpeed(parseFloat(val))}>
+                <SelectTrigger className="h-8 w-full md:w-auto">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="0.5">0.5x</SelectItem>
+                  <SelectItem value="1">1x</SelectItem>
+                  <SelectItem value="2">2x</SelectItem>
+                  <SelectItem value="4">4x</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <div className="text-xs text-muted-foreground text-center">
+                Play {currentPlayIndex + 1} / {fullCourtData.length}
+              </div>
+            </>
+          )}
 
           <Sheet open={isStatsOpen} onOpenChange={setIsStatsOpen}>
             <SheetTrigger asChild>
@@ -455,14 +583,16 @@ const SingleGameVersion: React.FC<SingleGameVersionProps> = ({
         <div className="col-span-1 md:col-span-6 text-center flex flex-col justify-center my-2 md:my-0">
           <div className="text-3xl md:text-2xl font-bold">{scoreBoard?.clock || "0:00"}</div>
           <div className="text-xl md:text-lg">Qtr {scoreBoard?.quarter || "1"}</div>
-          <div className="text-xs font-mono mt-2 whitespace-pre">
-            {scoreBoard?.line_score1}
-          </div>
-          <div className="text-xs font-mono whitespace-pre">
-            {scoreBoard?.line_score2}
-          </div>
-          <div className="text-xs font-mono whitespace-pre">
-            {scoreBoard?.line_score3}
+          <div className="overflow-x-auto mt-2 flex flex-col items-center">
+            <div className="text-[10px] md:text-xs font-mono whitespace-pre">
+              {scoreBoard?.line_score1}
+            </div>
+            <div className="text-[10px] md:text-xs font-mono whitespace-pre">
+              {scoreBoard?.line_score2}
+            </div>
+            <div className="text-[10px] md:text-xs font-mono whitespace-pre">
+              {scoreBoard?.line_score3}
+            </div>
           </div>
         </div>
 
