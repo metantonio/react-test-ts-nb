@@ -246,7 +246,7 @@ const SingleGameVersion: React.FC<SingleGameVersionProps> = ({
       }
 
       if (gameData.court && gameData.court.length > 0) {
-        setScoreBoard(gameData.court[0]);
+        setScoreBoard(gameData.court[gameData.court.length - 1]);
       }
       if (gameData.playbyplay) {
         setPlayByPlay(gameData.playbyplay);
