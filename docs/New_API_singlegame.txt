@@ -1,0 +1,68 @@
+For single game APIs, I'm in the process of simplifying into one call that returns the game in one streamable payload:
+
+play_sgv_fast.php
+Example JSON Request:
+{
+    "homeleague": "PRO2024-25",
+    "awayleague": "PRO2024-25",
+    "hometeam": "1",
+    "awayteam": "2",
+    "apikey": "{{apikey}}"
+}
+
+This will return three large JSON arrays: playbyplay, court, and box.  Example output:
+{
+    "playbyplay": [
+        {
+            "color": 0,
+            "pbp_line": "Start of first quarter..."
+        },
+        {
+            "color": 16711680,
+            "pbp_line": "Nets win the jump ball."
+        },
+    ],
+    "court": [
+        {
+            "away_score": 0,
+            "home_score": 0,
+            "quarter": 1,
+            "clock": " 0:00",
+            "line_score1": "                            1   2   3   4",
+            "line_score2": "xxxx-xx Nets Hawks  0  0",
+            "line_score3": "xxxx-xx Brooklyn Atlanta  0  0",
+            "away_player1": "         Clint Capela",
+            "away_player2": "        Jalen Johnson",
+            "away_player3": "   Zaccharie Risacher",
+            "away_player4": "        Dyson Daniels",
+            "away_player5": "           Trae Young",
+            "home_player1": "          Nic Claxton",
+            "home_player2": "      Cameron Johnson",
+            "home_player3": "  Dorian Finney-Smith",
+            "home_player4": "           Cam Thomas",
+            "home_player5": "      Dennis Schroder"
+        },
+    ],
+    "box": [
+        {
+            "game_number": "1",
+            "line_number": "1",
+            "text": ""
+        },
+        {
+            "game_number": "1",
+            "line_number": "2",
+            "text": ""
+        },
+        {
+            "game_number": "1",
+            "line_number": "3",
+            "text": "ATL *Capela Clint          C     6.10  0  0-  0  0- 0  0- 0  0- 0- 0  0  0   0  0  0  0  0    0  0   0   0   0   0  0   0  0   0"
+        },
+        {
+            "game_number": "1",
+            "line_number": "4",
+            "text": "ATL *Johnson Jalen         PF SF 6.08  0  0-  0  0- 0  0- 0  0- 0- 0  0  0   0  0  0  0  0    0  0   0   0   0   0  0   0  0   0"
+        },
+    ]
+}

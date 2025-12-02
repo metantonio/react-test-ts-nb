@@ -73,7 +73,6 @@ interface PlayerChar {
 }
 
 interface SingleGameVersionProps {
-  selectedLeague: League | null;
   selectedTeams1: Team | null; // Away Team
   selectedTeams2: Team | null; // Home Team
   teamLogos: { [key: string]: string };
@@ -81,24 +80,18 @@ interface SingleGameVersionProps {
   playersTeam1: PlayerChar[];
   playersTeam2: PlayerChar[];
   leagues: League[];
-  teams: Team[];
-  setSelectedLeague: React.Dispatch<React.SetStateAction<League | null>>;
   setSelectedTeams1: React.Dispatch<React.SetStateAction<Team | null>>;
   setSelectedTeams2: React.Dispatch<React.SetStateAction<Team | null>>;
-  handleFetchTeams: () => Promise<void>;
 }
 
 interface ScoreBoard {
-  away_score: string;
-  home_score: string;
-  quarter: string;
+  away_score: number;
+  home_score: number;
+  quarter: number;
   clock: string;
-  away_possessions: string;
-  home_possessions: string;
-  away_fouls: string;
-  home_fouls: string;
-  home_team_offense: string;
-  player_with_ball: string;
+  line_score1: string;
+  line_score2: string;
+  line_score3: string;
   away_player1: string;
   away_player2: string;
   away_player3: string;
@@ -109,88 +102,24 @@ interface ScoreBoard {
   home_player3: string;
   home_player4: string;
   home_player5: string;
-  away_player1_pts: string;
-  away_player2_pts: string;
-  away_player3_pts: string;
-  away_player4_pts: string;
-  away_player5_pts: string;
-  home_player1_pts: string;
-  home_player2_pts: string;
-  home_player3_pts: string;
-  home_player4_pts: string;
-  home_player5_pts: string;
-  away_player1_reb: string;
-  away_player2_reb: string;
-  away_player3_reb: string;
-  away_player4_reb: string;
-  away_player5_reb: string;
-  home_player1_reb: string;
-  home_player2_reb: string;
-  home_player3_reb: string;
-  home_player4_reb: string;
-  home_player5_reb: string;
-  away_player1_ast: string;
-  away_player2_ast: string;
-  away_player3_ast: string;
-  away_player4_ast: string;
-  away_player5_ast: string;
-  home_player1_ast: string;
-  home_player2_ast: string;
-  home_player3_ast: string;
-  home_player4_ast: string;
-  home_player5_ast: string;
-  away_player1_pf: string;
-  away_player2_pf: string;
-  away_player3_pf: string;
-  away_player4_pf: string;
-  away_player5_pf: string;
-  home_player1_pf: string;
-  home_player2_pf: string;
-  home_player3_pf: string;
-  home_player4_pf: string;
-  home_player5_pf: string;
-  away_player1_possfact: string;
-  away_player2_possfact: string;
-  away_player3_possfact: string;
-  away_player4_possfact: string;
-  away_player5_possfact: string;
-  home_player1_possfact: string;
-  home_player2_possfact: string;
-  home_player3_possfact: string;
-  home_player4_possfact: string;
-  home_player5_possfact: string;
-  off_position1: string;
-  off_position2: string;
-  off_position3: string;
-  off_position4: string;
-  off_position5: string;
-  def_position1: string;
-  def_position2: string;
-  def_position3: string;
-  def_position4: string;
-  def_position5: string;
-  passable1: string;
-  passable2: string;
-  passable3: string;
-  passable4: string;
-  passable5: string;
-  passable6: string;
-  passable7: string;
 }
 
 interface PlayByPlay {
-  color: string;
+  color: number;
   pbp_line: string;
 }
 
 interface BoxScore {
-  box_line: string;
+  game_number: string;
+  line_number: string;
+  text: string;
 }
 
+const SIMULATION_URL = import.meta.env.VITE_APP_API_SIMULATION
 const API_URL = import.meta.env.VITE_API_BASE_URL;
+const API_KEY = import.meta.env.VITE_APP_API_KEY;
 
 const SingleGameVersion: React.FC<SingleGameVersionProps> = ({
-  selectedLeague,
   selectedTeams1,
   selectedTeams2,
   teamLogos,
@@ -198,19 +127,19 @@ const SingleGameVersion: React.FC<SingleGameVersionProps> = ({
   playersTeam1,
   playersTeam2,
   leagues,
-  teams,
-  setSelectedLeague,
   setSelectedTeams1,
-  setSelectedTeams2,
-  handleFetchTeams
+  setSelectedTeams2
 }) => {
   const { fetchWithAuth } = useUser();
   const { toast } = useToast();
 
+  // Separate league selection for away and home teams
+  const [selectedLeagueAway, setSelectedLeagueAway] = useState<League | null>(null);
+  const [selectedLeagueHome, setSelectedLeagueHome] = useState<League | null>(null);
+  const [teamsAway, setTeamsAway] = useState<Team[]>([]);
+  const [teamsHome, setTeamsHome] = useState<Team[]>([]);
+
   // State for UI controls
-  const [awayTeamMode, setAwayTeamMode] = useState('computer');
-  const [homeTeamMode, setHomeTeamMode] = useState('computer');
-  const [pauseOptions, setPauseOptions] = useState('do-not-pause');
   const [displayOptions, setDisplayOptions] = useState('both');
   const [showPlayByPlay, setShowPlayByPlay] = useState(true);
   const [showBoxScore, setShowBoxScore] = useState(true);
@@ -227,11 +156,62 @@ const SingleGameVersion: React.FC<SingleGameVersionProps> = ({
   const [isGameStarted, setIsGameStarted] = useState(false);
   const [isStatsOpen, setIsStatsOpen] = useState(false);
 
+  // Fetch teams when league changes
+  useEffect(() => {
+    const fetchTeamsAway = async () => {
+      if (!selectedLeagueAway) return;
+      try {
+        const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', {
+          body: {
+            league_name: selectedLeagueAway.league_name,
+            method: "POST",
+            endpoint: "get_teams.php",
+            content: "json",
+            alt_sub: getAltsSelected
+          }
+        });
+        if (response.ok) {
+          const data = await response.json();
+          const body = JSON.parse(data.body);
+          setTeamsAway(body.data || []);
+        }
+      } catch (err) {
+        console.error("Error fetching away teams:", err);
+      }
+    };
+    fetchTeamsAway();
+  }, [selectedLeagueAway]);
+
+  useEffect(() => {
+    const fetchTeamsHome = async () => {
+      if (!selectedLeagueHome) return;
+      try {
+        const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', {
+          body: {
+            league_name: selectedLeagueHome.league_name,
+            method: "POST",
+            endpoint: "get_teams.php",
+            content: "json",
+            alt_sub: getAltsSelected
+          }
+        });
+        if (response.ok) {
+          const data = await response.json();
+          const body = JSON.parse(data.body);
+          setTeamsHome(body.data || []);
+        }
+      } catch (err) {
+        console.error("Error fetching home teams:", err);
+      }
+    };
+    fetchTeamsHome();
+  }, [selectedLeagueHome]);
+
   const handleStartGame = async () => {
-    if (!selectedLeague || !selectedTeams1 || !selectedTeams2) {
+    if (!selectedLeagueAway || !selectedLeagueHome || !selectedTeams1 || !selectedTeams2) {
       toast({
         title: "Error",
-        description: "Please select a league and both teams.",
+        description: "Please select leagues and both teams.",
         variant: "destructive"
       });
       return;
@@ -239,17 +219,12 @@ const SingleGameVersion: React.FC<SingleGameVersionProps> = ({
 
     setIsLoading(true);
     try {
-      const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', {
-        body: {
-          endpoint: "playsinglegame_initial.php",
-          method: "POST",
-          homeaway: "home", // Assuming home game for selectedTeams2
-          awayleague_name: selectedLeague.league_name,
-          homeleague_name: selectedLeague.league_name,
-          hometeam: selectedTeams2.teams,
-          awayteam: selectedTeams1.teams,
-          alt_sub: getAltsSelected
-        }
+      const response = await fetchWithAuth(`${SIMULATION_URL}/play_sgv_fast.php`, 'POST', {
+        homeleague: selectedLeagueHome.league_name,
+        awayleague: selectedLeagueAway.league_name,
+        hometeam: "1",//selectedTeams2.teams,
+        awayteam: "2",//selectedTeams1.teams,
+        apikey: API_KEY
       });
 
       if (!response.ok) {
@@ -257,14 +232,37 @@ const SingleGameVersion: React.FC<SingleGameVersionProps> = ({
         throw new Error(err.message || 'Failed to start game.');
       }
 
+      const data = await response.json();
+      // The API returns the JSON directly, or wrapped in body? 
+      // Based on previous code it was wrapped in 'body' string sometimes, but the new doc implies direct JSON.
+      // I'll check if 'body' exists and parse it, otherwise use data directly.
+      let gameData = data;
+      if (data.body && typeof data.body === 'string') {
+        try {
+          gameData = JSON.parse(data.body);
+        } catch (e) {
+          gameData = data;
+        }
+      }
+
+      if (gameData.court && gameData.court.length > 0) {
+        setScoreBoard(gameData.court[0]);
+      }
+      if (gameData.playbyplay) {
+        setPlayByPlay(gameData.playbyplay);
+      }
+      if (gameData.box) {
+        setBoxScore(gameData.box);
+      }
+
       setIsGameStarted(true);
-      await fetchGameData();
       toast({
-        title: "Game Started",
-        description: "The game has been initialized.",
+        title: "Game Finished",
+        description: "The game has been simulated.",
       });
 
     } catch (err: any) {
+      console.error(err);
       toast({
         title: "Error starting game",
         description: err.message,
@@ -275,93 +273,27 @@ const SingleGameVersion: React.FC<SingleGameVersionProps> = ({
     }
   };
 
-  const handleGameStep = async () => {
-    if (!isGameStarted) return;
-
-    setIsLoading(true);
-    let option = "4"; // Default: run to end
-    if (pauseOptions === 'each-line') option = "1";
-    if (pauseOptions === 'each-possession') option = "2";
-    if (pauseOptions === 'end-of-quarter') option = "3";
-
-    try {
-      const response = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', {
-        body: {
-          endpoint: "playsinglegame_step.php",
-          method: "POST",
-          options: option,
-          alt_sub: getAltsSelected
-        }
-      });
-
-      if (!response.ok) {
-        const err = await response.json();
-        throw new Error(err.message || 'Failed to advance game.');
-      }
-
-      await fetchGameData();
-
-    } catch (err: any) {
-      toast({
-        title: "Error advancing game",
-        description: err.message,
-        variant: "destructive"
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const fetchGameData = async () => {
-    try {
-      // Fetch Scoreboard
-      const scoreResponse = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', {
-        body: { endpoint: "get_singlegame_stats.php", method: "POST", alt_sub: getAltsSelected }
-      });
-      if (scoreResponse.ok) {
-        const data = await scoreResponse.json();
-        const body = JSON.parse(data.body);
-        if (body.scoreboard && body.scoreboard.length > 0) {
-          setScoreBoard(body.scoreboard[0]);
-        }
-      }
-
-      // Fetch Play by Play
-      const pbpResponse = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', {
-        body: { endpoint: "get_singlegame_pbp.php", method: "POST", alt_sub: getAltsSelected }
-      });
-      if (pbpResponse.ok) {
-        const data = await pbpResponse.json();
-        const body = JSON.parse(data.body);
-        setPlayByPlay(body.playbyplay || []);
-      }
-
-      // Fetch Box Score
-      const boxResponse = await fetchWithAuth(`${API_URL}/conversionjs`, 'POST', {
-        body: { endpoint: "get_singlegame_box.php", method: "POST", alt_sub: getAltsSelected }
-      });
-      if (boxResponse.ok) {
-        const data = await boxResponse.json();
-        const body = JSON.parse(data.body);
-        setBoxScore(body.boxscore || []);
-      }
-
-    } catch (err) {
-      console.error("Error fetching game data:", err);
-    }
-  };
-
   const TeamLogo: React.FC<{ logo?: string; name: string }> = ({ logo, name }) => (
     logo ? <img src={logo} alt={`${name} Logo`} className="h-14 w-14 object-contain" /> : <div className="h-14 w-14 bg-gray-700 rounded-full flex items-center justify-center text-white font-bold text-xl">{name.substring(0, 3).toUpperCase()}</div>
   );
+
+  const getPbpColorClass = (color: number) => {
+    // 16711680 is Red (0xFF0000)
+    // 255 is Blue (0x0000FF) - Assumption based on standard colors
+    // 0 is Black/Default
+    if (color === 16711680) return 'text-red-300';
+    if (color === 255 || color === 16711935 || color === 65535) return 'text-blue-300'; // 16711935 is Magenta, 65535 is Cyan, just covering bases or just default to blue for non-red/non-zero
+    if (color !== 0) return 'text-blue-300'; // Default to blue for other colors for now
+    return 'text-gray-300';
+  };
 
   return (
     <div className="p-2 md:p-4 bg-background text-foreground text-xs md:text-sm">
       {/* Top Controls */}
       <div className="grid grid-cols-1 md:grid-cols-12 gap-2 md:gap-4 mb-2">
         <div className="col-span-1 md:col-span-2 flex flex-row md:flex-col gap-2 overflow-x-auto md:overflow-visible">
-          <Button size="sm" onClick={handleStartGame} disabled={isLoading || isGameStarted} className="flex-1 md:flex-none">
-            {isLoading ? "Loading..." : "Start Game"}
+          <Button size="sm" onClick={handleStartGame} disabled={isLoading} className="flex-1 md:flex-none">
+            {isLoading ? "Simulating..." : "Start Game"}
           </Button>
 
           <Sheet open={isStatsOpen} onOpenChange={setIsStatsOpen}>
@@ -423,31 +355,23 @@ const SingleGameVersion: React.FC<SingleGameVersionProps> = ({
               </div>
             </SheetContent>
           </Sheet>
-
-          <Button size="sm" disabled className="flex-1 md:flex-none">Pause</Button>
-        </div>
-
-        <div className="col-span-1 md:col-span-2 border rounded-md p-2">
-          <h3 className="font-bold text-center mb-1">Away Team</h3>
-          <div className="flex flex-row md:flex-col gap-2 md:gap-0 justify-around">
-            <CustomRadio name="away-team-mode" value="manual" checked={awayTeamMode === 'manual'} onChange={setAwayTeamMode} label="Manual" id="away-manual" />
-            <CustomRadio name="away-team-mode" value="auto" checked={awayTeamMode === 'auto'} onChange={setAwayTeamMode} label="Auto" id="away-auto" />
-            <CustomRadio name="away-team-mode" value="computer" checked={awayTeamMode === 'computer'} onChange={setAwayTeamMode} label="Comp" id="away-computer" />
-          </div>
         </div>
 
         <div className="col-span-1 md:col-span-4">
           {/* Setup Section */}
           <div className="flex flex-col gap-2 p-2 border rounded-md">
-            <div className="flex gap-2">
-              <Select value={selectedLeague?.league_name} onValueChange={(val) => {
+            <div className="text-xs font-semibold text-muted-foreground mb-1">League & Team Selection</div>
+
+            {/* Away Team Section */}
+            <div className="space-y-2 pb-2 border-b">
+              <label className="text-xs text-muted-foreground">Away Team</label>
+              <Select value={selectedLeagueAway?.league_name} onValueChange={(val) => {
                 const league = leagues.find(l => l.league_name === val);
-                setSelectedLeague(league || null);
-                // Trigger team fetch when league changes
-                setTimeout(() => handleFetchTeams(), 0);
+                setSelectedLeagueAway(league || null);
+                setSelectedTeams1(null); // Reset team selection when league changes
               }}>
                 <SelectTrigger className="h-8 w-full">
-                  <SelectValue placeholder="League" />
+                  <SelectValue placeholder="Select Away League" />
                 </SelectTrigger>
                 <SelectContent>
                   {leagues.map((l) => (
@@ -455,59 +379,68 @@ const SingleGameVersion: React.FC<SingleGameVersionProps> = ({
                   ))}
                 </SelectContent>
               </Select>
+
+              {selectedLeagueAway && (
+                <Select value={selectedTeams1?.teams} onValueChange={(val) => {
+                  const team = teamsAway.find(t => t.teams === val);
+                  setSelectedTeams1(team || null);
+                }}>
+                  <SelectTrigger className="h-8 w-full">
+                    <SelectValue placeholder="Select Away Team" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {teamsAway.map((t) => (
+                      <SelectItem key={t.teams} value={t.teams}>{t.teams}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
             </div>
-            <div className="grid grid-cols-2 gap-2">
-              <Select value={selectedTeams1?.teams} onValueChange={(val) => {
-                const team = teams.find(t => t.teams === val);
-                setSelectedTeams1(team || null);
+
+            {/* Home Team Section */}
+            <div className="space-y-2 pt-2">
+              <label className="text-xs text-muted-foreground">Home Team</label>
+              <Select value={selectedLeagueHome?.league_name} onValueChange={(val) => {
+                const league = leagues.find(l => l.league_name === val);
+                setSelectedLeagueHome(league || null);
+                setSelectedTeams2(null); // Reset team selection when league changes
               }}>
                 <SelectTrigger className="h-8 w-full">
-                  <SelectValue placeholder="Away Team" />
+                  <SelectValue placeholder="Select Home League" />
                 </SelectTrigger>
                 <SelectContent>
-                  {teams.map((t) => (
-                    <SelectItem key={t.teams} value={t.teams}>{t.teams}</SelectItem>
+                  {leagues.map((l) => (
+                    <SelectItem key={l.league_name} value={l.league_name}>{l.league_name}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
-              <Select value={selectedTeams2?.teams} onValueChange={(val) => {
-                const team = teams.find(t => t.teams === val);
-                setSelectedTeams2(team || null);
-              }}>
-                <SelectTrigger className="h-8 w-full">
-                  <SelectValue placeholder="Home Team" />
-                </SelectTrigger>
-                <SelectContent>
-                  {teams.map((t) => (
-                    <SelectItem key={t.teams} value={t.teams}>{t.teams}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+
+              {selectedLeagueHome && (
+                <Select value={selectedTeams2?.teams} onValueChange={(val) => {
+                  const team = teamsHome.find(t => t.teams === val);
+                  setSelectedTeams2(team || null);
+                }}>
+                  <SelectTrigger className="h-8 w-full">
+                    <SelectValue placeholder="Select Home Team" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {teamsHome.map((t) => (
+                      <SelectItem key={t.teams} value={t.teams}>{t.teams}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
             </div>
-          </div>
-        </div>
-
-        <div className="col-span-1 md:col-span-2 border rounded-md p-2">
-          <h3 className="font-bold text-center mb-1">Home Team</h3>
-          <div className="flex flex-row md:flex-col gap-2 md:gap-0 justify-around">
-            <CustomRadio name="home-team-mode" value="manual" checked={homeTeamMode === 'manual'} onChange={setHomeTeamMode} label="Manual" id="home-manual" />
-            <CustomRadio name="home-team-mode" value="auto" checked={homeTeamMode === 'auto'} onChange={setHomeTeamMode} label="Auto" id="home-auto" />
-            <CustomRadio name="home-team-mode" value="computer" checked={homeTeamMode === 'computer'} onChange={setHomeTeamMode} label="Comp" id="home-computer" />
-          </div>
-        </div>
-
-        <div className="col-span-1 md:col-span-2 border rounded-md p-2">
-          <h3 className="font-bold text-center mb-1">Pause Options</h3>
-          <div className="flex flex-wrap md:flex-col gap-2 md:gap-0 justify-around">
-            <CustomRadio name="pause-options" value="each-line" checked={pauseOptions === 'each-line'} onChange={setPauseOptions} label="Line" id="pause-line" />
-            <CustomRadio name="pause-options" value="each-possession" checked={pauseOptions === 'each-possession'} onChange={setPauseOptions} label="Poss" id="pause-possession" />
-            <CustomRadio name="pause-options" value="end-of-quarter" checked={pauseOptions === 'end-of-quarter'} onChange={setPauseOptions} label="Qtr" id="pause-quarter" />
-            <CustomRadio name="pause-options" value="do-not-pause" checked={pauseOptions === 'do-not-pause'} onChange={setPauseOptions} label="None" id="pause-none" />
           </div>
         </div>
 
         <div className="col-span-1 md:col-start-11 md:col-span-2">
-          <Button size="sm" className="w-full" onClick={() => setIsGameStarted(false)}>Reset Game</Button>
+          <Button size="sm" className="w-full" onClick={() => {
+            setIsGameStarted(false);
+            setScoreBoard(null);
+            setPlayByPlay([]);
+            setBoxScore([]);
+          }}>Reset Game</Button>
         </div>
       </div>
 
@@ -517,32 +450,26 @@ const SingleGameVersion: React.FC<SingleGameVersionProps> = ({
           <div className="font-bold text-lg md:text-xl">{selectedTeams1?.teams || "Away"}</div>
           {selectedTeams1 && <TeamLogo logo={teamLogos[selectedTeams1.teams]} name={selectedTeams1.teams} />}
           <div className="text-4xl md:text-5xl font-bold text-red-500">{scoreBoard?.away_score || "0"}</div>
-          <div className="flex flex-col md:flex-row gap-1 md:gap-4 text-xs md:text-sm">
-            <span>Fouls: {scoreBoard?.away_fouls || "0"}</span>
-            <span>Poss: {scoreBoard?.away_possessions || "0"}</span>
-          </div>
         </div>
 
         <div className="col-span-1 md:col-span-6 text-center flex flex-col justify-center my-2 md:my-0">
-          <div className="text-3xl md:text-2xl font-bold">{scoreBoard?.clock || "12:00"}</div>
+          <div className="text-3xl md:text-2xl font-bold">{scoreBoard?.clock || "0:00"}</div>
           <div className="text-xl md:text-lg">Qtr {scoreBoard?.quarter || "1"}</div>
+          <div className="text-xs font-mono mt-2 whitespace-pre">
+            {scoreBoard?.line_score1}
+          </div>
+          <div className="text-xs font-mono whitespace-pre">
+            {scoreBoard?.line_score2}
+          </div>
+          <div className="text-xs font-mono whitespace-pre">
+            {scoreBoard?.line_score3}
+          </div>
         </div>
 
         <div className="col-span-1 md:col-span-3 flex flex-row-reverse md:flex-col items-center justify-between md:justify-center">
           <div className="font-bold text-lg md:text-xl">{selectedTeams2?.teams || "Home"}</div>
           {selectedTeams2 && <TeamLogo logo={teamLogos[selectedTeams2.teams]} name={selectedTeams2.teams} />}
           <div className="text-4xl md:text-5xl font-bold text-blue-500">{scoreBoard?.home_score || "0"}</div>
-          <div className="flex flex-col md:flex-row gap-1 md:gap-4 text-xs md:text-sm">
-            <span>Poss: {scoreBoard?.home_possessions || "0"}</span>
-            <span>Fouls: {scoreBoard?.home_fouls || "0"}</span>
-          </div>
-        </div>
-
-        {/* Sub Buttons Row */}
-        <div className="col-span-1 md:col-span-12 grid grid-cols-3 gap-2 mt-2">
-          <Button className="w-full text-xs" size="sm" variant="outline">Away Subs</Button>
-          <Button className="w-full text-xs" size="sm" variant="outline">Subs/Def</Button>
-          <Button className="w-full text-xs" size="sm" variant="outline">Home Subs</Button>
         </div>
 
         <div className="col-span-1 md:col-span-12 flex flex-col md:flex-row items-center gap-4 mt-2 justify-center">
@@ -567,12 +494,6 @@ const SingleGameVersion: React.FC<SingleGameVersionProps> = ({
         <div className="flex gap-1 overflow-x-auto w-full md:w-auto pb-1 md:pb-0">
           {['20', 'T-out', 'HC', 'R', 'PG', 'SG', 'SF', 'PF', 'C'].map(b => <Button key={b} variant="outline" size="sm" className="px-2 min-w-[30px]">{b}</Button>)}
         </div>
-        <div className="flex items-center gap-2 w-full md:w-auto">
-          <Button size="sm" onClick={handleGameStep} disabled={!isGameStarted || isLoading} className="flex-1 md:flex-none">
-            {isLoading ? "..." : "Continue/Step"}
-          </Button>
-          <Button size="sm" variant="ghost">No</Button>
-        </div>
         <div className="hidden md:block">
           <CustomCheckbox id="midline-scroll" checked={midlineScroll} onChange={setMidlineScroll} label="Mid-line scroll" />
         </div>
@@ -583,7 +504,7 @@ const SingleGameVersion: React.FC<SingleGameVersionProps> = ({
         {(displayOptions === 'play-by-play' || displayOptions === 'both') && showPlayByPlay && (
           <div className="border rounded-md p-2 overflow-y-auto bg-gray-800 text-white font-mono text-xs h-full">
             {playByPlay.map((p, i) => (
-              <div key={i} className={`mb-1 ${p.color === '1' ? 'text-blue-300' : p.color === '2' ? 'text-red-300' : 'text-gray-300'}`}>
+              <div key={i} className={`mb-1 ${getPbpColorClass(p.color)}`}>
                 {p.pbp_line}
               </div>
             ))}
@@ -592,7 +513,7 @@ const SingleGameVersion: React.FC<SingleGameVersionProps> = ({
         {(displayOptions === 'box-score' || displayOptions === 'both') && showBoxScore && (
           <div className="border rounded-md p-2 overflow-y-auto bg-gray-800 text-white font-mono text-xs h-full">
             {boxScore.map((b, i) => (
-              <div key={i} className="whitespace-pre-wrap">{b.box_line}</div>
+              <div key={i} className="whitespace-pre-wrap">{b.text}</div>
             ))}
           </div>
         )}
