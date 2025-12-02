@@ -109,7 +109,7 @@ const TeamToolsSection: React.FC<TeamToolsSectionProps> = ({
                 <CardTitle className="flex justify-between items-center">
                     <div className="flex items-center gap-2">
                         <span>2. Team Tools</span>
-                        <HelpModal title="Full Season Simulation" contentKey="fullSeason" />
+                        <HelpModal title="Team Tools" contentKey="fullSeason" />
                     </div>
                 </CardTitle>
             </CardHeader>
@@ -117,7 +117,10 @@ const TeamToolsSection: React.FC<TeamToolsSectionProps> = ({
                 {/* Substitution Pattern */}
                 <Sheet open={isSubPatternSheetOpen} onOpenChange={setIsSubPatternSheetOpen}>
                     <SheetTrigger asChild>
-                        <Button variant="outline" className="h-auto py-4 flex flex-col gap-2" onClick={handleSubPatternClick} disabled={isFetchingSubPattern || !selectedTeams2}>
+                        <Button variant="outline" className="h-auto py-4 flex flex-col gap-2 relative group" onClick={handleSubPatternClick} disabled={isFetchingSubPattern || !selectedTeams2}>
+                            <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity" onClick={(e) => e.stopPropagation()}>
+                                <HelpModal title="Substitution Pattern" contentKey="substitutionPattern" />
+                            </div>
                             <Users className="h-6 w-6" />
                             <span className="text-xs">Sub Pattern</span>
                         </Button>
@@ -167,7 +170,10 @@ const TeamToolsSection: React.FC<TeamToolsSectionProps> = ({
                 </Sheet>
 
                 {/* Draft Dialog Trigger */}
-                <Button variant="outline" className="h-auto py-4 flex flex-col gap-2" onClick={() => setIsDraftDialogOpen(true)}>
+                <Button variant="outline" className="h-auto py-4 flex flex-col gap-2 relative group" onClick={() => setIsDraftDialogOpen(true)}>
+                    <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity" onClick={(e) => e.stopPropagation()}>
+                        <HelpModal title="Draft Players" contentKey="draftingPlayers" />
+                    </div>
                     <FileText className="h-6 w-6" />
                     <span className="text-xs">Draft</span>
                 </Button>
@@ -175,7 +181,10 @@ const TeamToolsSection: React.FC<TeamToolsSectionProps> = ({
                 {/* View Actual Stats */}
                 <Sheet>
                     <SheetTrigger asChild>
-                        <Button variant="outline" className="h-auto py-4 flex flex-col gap-2">
+                        <Button variant="outline" className="h-auto py-4 flex flex-col gap-2 relative group">
+                            <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity" onClick={(e) => e.stopPropagation()}>
+                                <HelpModal title="Player Statistics" contentKey="playerStats" />
+                            </div>
                             <BarChart2 className="h-6 w-6" />
                             <span className="text-xs">View Stats</span>
                         </Button>

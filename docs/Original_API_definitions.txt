@@ -1,0 +1,364 @@
+THE ACTUAL PLAYER STATISTICS SCREEN (FULL SEASON VERSION):
+
+    The Actual Players Statistics screen (accessed via the Actual Player Statistics button below the Choose League button) shows all relevant player statistics that describe a player's abilities except their possession factors (how often the player handled the ball on offense, i.e. their touches/min) which are listed in the final program display or the Pro Basketball Statistical Database. The categories listed in the Actual Players Statistics screen include: 
+
+Player Name
+Pos - positions played
+Ht - height
+G - games played
+MIN - minutes played
+MIN/G - minutes per game
+PTS/G - points scored per game
+FG% - field goal percentage = FGM/FGA
+SCORE FG% - scoring field goal percentage
+
+	    = (2pters + 1.5 x 3pters + FTM/2) / (FGA + FTA/2)
+
+2PT FG% = 2pt field goal percentage = 2ptFGM/2ptFGA 
+3PT FG% = 2pt field goal percentage = 3ptFGM/3ptFGA
+FT%     = free throw percentage = FTM/FTA
+
+OFF REB - offensive rebounding rating (off rebs x 144 / minutes)
+DEF REB - defensive rebounding rating (def rebs x 72 / minutes)
+TOT REB - total rebounding rating  (tot rebs x 48 / minutes)
+
+these ratings are a player's offensive and defensive rebounds per 48 minutes multiplied by factors to equate the two. Since years ago approximately 1/3 of all rebounds were offensive and 2/3 were defensive, the average player grabbed 1 offensive rebound for every 2 defensive rebounds he gets. If a player averaged 12 rebounds total per 48 minutes and 1/3 of his rebounds were offensive (4) and 2/3 were defensive (8), his offensive rebounding rating would be 12.0 and his defensive rebounding rating would be 12.0. The ratings are calculated by
+
+              (offreb/min) x 48 x 3   and   (defreb/min) x 48 x 1.5 
+
+This is simply another way of measuring a player's rebounding ability as the final display and printout also lists every player's rebounds (offensive, defensive, and total) per game and per 48 minutes. Another way to look at these ratings is the off rat x 1/3 plus the def rat x 2/3 equals the player's rebounds per 48 minutes played:
+
+   (off reb rat) x 1/3  +  (def reb rat) x 2/3  =  reb per 48 min
+
+Keep in mind that after playing games using the Full Season Game Mode the final statistics display (the raw stats file) includes not just the above rebounding ratings but also the conventional statistics of rebounds per game and rebounds per 48 minutes.
+
+DEF RAT - individual player defensive field goal percentage rating -
+
+this is how much the defender will, on average, increase or decrease the FG% of the offensive players he guards by forcing missed shots (other than shots he actually blocks which is measured separately by his shot blocking rating). The best a defender can be is -5.0% and the worst +5.0%. In other words if a player on offense who normally shoots 50% from the field is guarded by a defender rated at -5.0% (a very good shot defender), he would shoot on average just 45% from the field and if guarded by a defender rated at +5.0% (a very poor shot defender) would shoot on average 55% from the field.
+
+%PF - percent personal fouls committed
+%ST - percent steals
+
+how often the defender, on average, commits fouls and steals the ball per 100 minutes he plays. Example: If a player played 3000 minutes during a season and committed 300 fouls and stole the ball 150 times, his %Foul and %ST would be 10% and 5%.
+
+%BS (blocked shots) - 
+
+the percentage of shots that the defender will, on average, block out of the total number of shots taken by the opposing team (not just the player he is directly guarding) while that defender is on the court. Example: if a player played during a season and his team's opponents attempted 5000 shots during the time he actually played, and he individually blocked 250 shots, his %BS would be 5.0%.
+
+13-GAME BOX SCORES
+
+    Once the games being played by the computer have finished, aside from the final statistics you can also view all of the individual game box scores, either in a static text file or in a sortable format. Click on either the “Raw Box Scores” tab or the “Sortable Box Scores” tab to view them. In the Raw Box Scores file you can scroll up and down using the vertical scroll bar to view the box scores, plus you can R click your mouse and then L click on “Find” to search for specific text within the file. In the Sortable Box Scores file you can sort, query, and limit the stats from all the box scores by R clicking anywhere in the white statistics area and then L clicking on select, sort, or limit. Each record listed shows the player name, the teams involved in the game, which team was the home and away team, and the game number, so that you can refer back to the Raw Box Scores file if you wish.
+
+Example: You can sort the Sortable Box Scores file by Points descending to find the most points scored in a single game by an individual player, then note the game number and go back to the Raw Box Scores file and search for that game number to view the box score where that player scored the most points in a single game.
+
+The following are definitions for the statistics listed in the box scores that are tracked by the simulation:
+
+MIN – minutes played
+FGM-A – field goals made and attempted
+3PFGM-A –3pt field goals made and attempted
+REB O-D-T – rebounds offensive-defensive-total
+AST - assists
+FLS – personal fouls committed
+DQ – disqualifications (6 fouls assessed, player out of the game)
+ST - steals
+TO – turnovers
+BS – blocked shots
+PTS – points scored
+
+IND POSS – individual possessions (touches), the number of times the player either shot, passed the ball, got fouled, or threw a pass
+
+PASSES THR REC – passes thrown and caught (received) by the player
+
+TIMES FOULED AOSF NSF ALL – the number of times the player was fouled in the act of shooting, in a non-shooting situation, and both/overall
+
+AOSF FGM FGA – the number of times the player was fouled in the act of shooting, and the number of times that shot was succesfull
+
+DEF FGM FGA – the number of shots made and attempted by opponents that were guarded by the player, i.e. what FGM/FGA the player gave up while on defense 
+
+
+14-THE FINAL SEASON STATISTICS DISPLAY (THE RAW STATS FILE):
+
+    For any simulated games the individual player and team statistics are compiled and saved to the Raw Stats and Sortable Stats files. Both files contain the same information (the raw stats file contains some extra overall team stats), but in a different format. A large amount of data is saved in these statistics files, and an itemized listing of all that is contained is presented below, with explanations for some of the not-so-obvious stats saved. 
+
+    When you L click on the “Raw Stats” tab to open the statistics file the very first/top line of this Raw Stats file lists the team you simulated games for.
+
+    If you were to save the Raw Stats File as a text file, and try to print it out, you would get 6 pages of statistics per team, and stats for all 30 teams (as there are 30 teams in the 2023-24 season), and thus a total of 180+ pages if printed out. Also for a complete season replay for all of the teams (the Replay Entire League Season toggle) in a league there are additional pages of stats at the end of the file that contain:
+
+•	numerous offensive and defensive team statistics, including per game totals, total team possessions, team scoring per game and per home and away games
+•	total team offensive and defensive performance points per game
+•	final league standings
+•	final league totals
+•	top league leaders in eight statistical categories (pts/g, FG%, FT%, 3pt FG%, rebounding, assists, steals, and blocked shots)
+
+    To display all of these team/league statistics without first having to scroll or page down through all of the individual team's players statistics, hit the "ctrl-end" key combination, which will take you to the bottom of this large statistics file where you can then page up through these last few pages of team/league statistics.
+
+    Or when viewing this Raw Stats file, R click your mouse anywhere within the white statistics area to get a listing of the teams. L click on any team name to jump down to the start of that team's stats. You can also click on the “Find” function to search for specific text in the file.
+
+    The following definitions are for the different statistical categories found in the Raw Stats file (and Sortable Stats file) on the six pages of the final statistics display for each of the individual teams:
+
+---------
+PAGE ONE:
+---------
+
+The first page of a team's final simulated season statistics displays the team overall W-L record, the team's home and away W-L records, and the average score, point differential, and total points scored for each.
+
+Three sections follow and list the individual players and team total raw statistics for:
+
+1st section:
+
+G         - games played
+MIN       - minutes played
+FGM       - field goals made
+FGA       - field goals attempted
+FG%       - field goal percentage = FGM/FGA
+EFF FG%   - effective FG% = (2pters + 1.5 x 3pters)/FGA
+SCORE FG% - Scoring FG% = (2pters + 1.5 x 3pters + FTM/2) / (FGA + FTA/2)
+2PT FGM   - 2pt field goals made
+2PT FGA   - 2pt field goals attempted
+2PT FG%   - 2pt FG% = 2ptFGM/2ptFGA
+3PT FGM   - 3pt field goals made
+3PT FGA   - 3pt field goals attempted
+3PT FG%   - 3pt FG% = 3ptFGM/3ptFGA
+FGmiss    - missed shots
+FGmiss offreb   – missed shots rebounded by the offense
+FGmiss defreb   – missed shots rebounded by the defense
+FGmiss offtmreb – missed shots followed by an offensive team rebound
+FGmiss deftmreb – missed shots followed by a defensive team rebound
+FTmiss no reb   – missed FTs, each of which was the 1st of 2 FTs, thus no rebound
+FTmiss offreb   - missed FTs rebounded by the offense
+FTmiss defreb   - missed FTs rebounded by the defense
+FTmiss offtmreb – missed FTs followed by an offensive team rebound
+FTmiss deftmreb – missed FTs followed by a defensive team rebound
+
+2nd section:
+
+FTM - free throws made
+FTA - free throws attempted
+FT% - free throw percentage
+OFF REB - offensive rebounds
+DEF REB - defensive rebounds
+TOT REB - total rebounds
+AST - assists
+PF - personal fouls
+DQ - disqualifications (fouled out)
+ST - steals
+TO - turnovers
+BS - blocked shots
+PTS - points scored 
+
+PTS/ScOPP - points scored per scoring opportunity = PTS/(FGA + FTA/2)
+
+ZERO PTPOSS – zero point possessions – the number of times a player was personally responsible for his team not scoring on a team possession, either by missing a shot that was rebounded by the defense, missing a free throw that was rebounded by the defense, or by committing a turnover
+
+ZERO POSS/G – zero point possessions per game player was responsible for
+
+PTS ZEROPTPOSS – points scored per zero point team possession personally responsible for, a measure of offensive efficiency. In other words the number of points a player scores divided by the number of times he was personally responsible for his team not scoring
+
+
+3rd section:
+contains per game numbers for some of the above statistics
+---------
+PAGE TWO:
+---------
+
+Team W-L record
+
+SINGLE GAME HIGH-LOW - these are the most of a single category that a player achieved in any single game, i.e. the most points, rebounds, free throws made, etc. For points scored and minutes played the lowest amount in any single game for the player are also displayed. An asterisk by any number means that number was accumulated in a game that went into overtime. This same data can be found in the Sortable Box Scores tab.
+
+POSSESSIONS - a player possession (a “touch”) is anytime a player handled the ball on offense (grabbing a defensive rebound is not considered a player touch). A player's total number of possessions is the sum of his shots attempted, passes thrown, turnovers, and number of times fouled, minus the number of times the player was fouled in the act of shooting and made the field goal (because this is one play but the player is technically doing two things – taking a shot and getting fouled). Divide a player's possessions by his minutes played to get his possession factor (touches per minute).
+
+POSS FACT and PASS POSS FACT - these are a player's possession factor (PF) or touches/min and passing possession factor (PPF) or touches/min minus offensive rebounds. They are equal to the number of different things the player did in relation to the number of minutes he played. They are equal to:
+
+POSS FACT (touches/min) = (shots + passes thrown + turnovers + times fouled – AOSF FGM)/possessions
+
+PASSING POSS FACT = (shots + passes thrown + turnovers + times fouled – AOSF FGM - off reb)/possessions
+
+Thus if a player had a possession factor of 1.00, that means he averaged one shot, one pass, one turnover, or got fouled once per minute that he played.
+
+STARTS – the number of times a player started a team possession
+
+TEAM TO – the number of times a team turnover occurred when the player had the ball. This could be an 8 or 10 second backcourt violation, a 24 second shot clock violation, or a 5 second inbound violation.
+
+POSS TO GET BALL – a player’s total possessions on offense, calculcated as his “starts + passes caught + off reb – team TO”
+
+POSS GET RID OF BALL – a player’s possessions on offense, calculated as his “FGA + passes thrown + times fouled + turnovers – AOSF FGM”
+
+PASS THR/CATCH /40 – a player’s passes thrown and caught/received per 40 minutes played
+
+
+TOTAL POSSESSIONS - the total number of times the player handled the ball on offense (his total touches) out of the total number of times the ball was handled by he and his teammates while he played (everyone’s touches). The percentages listed shows who handled the ball the most and least on offense for the team in relation to the other players while those players were on the floor.
+
+STARTS - the number of times the player was the first player to handle the ball on offense out of the total number of possessions begun by the offense while he played (think of this as the first player to handle the ball once the team began to run an offensive play or started a fastbreak and not necessarily the player who dribbled the ball up the floor through the backcourt).
+
+OUT OF BOUNDS PLAYS - the number of times that player was fouled before his team was in the penalty (bonus) situation and an out of bounds play for his team followed.
+
+PASSES CAUGHT - the number of passes a player had thrown to him (he caught/received) out of the total number of passes caught/received by he and his teammates while he played.
+
+OFF REB - the number of offensive rebounds the player grabbed out of the total number of offensive rebounds he and his teammates grabbed while he played.
+
+AOSF FGM / AOSF FGA - AOSF stands for Act Of Shooting Fouls - AOSF FGM is the number of shots the player actually made while fouled in the act of shooting. AOSF FGA is the total number of times he was fouled in the act of shooting. This success rate/percentage for the league overall is around 25%. When data for all individual players becomes available, it will be incorporated into the simulation.
+
+-----------
+PAGE THREE:
+-----------
+
+NUMBER OF TIMES FOULED: 
+
+TOTAL TIMES FOULED - the total number of times each player was fouled – NSF for non-shooting fouls and AOSF for act-of-shooting fouls and backcourt fouls.
+
+PLAYER REBOUNDING - these are the number of offensive, defensive, and total rebounds the players grabbed per game and also per 48 minutes played.
+
+REBOUNDING RATINGS - these ratings are a player's offensive and defensive rebounds per 48 minutes multiplied by factors to equate the two. Years ago approximately 1/3 of all rebounds were offensive and 2/3 were defensive, the average player grabs 1 offensive rebound for every 2 defensive rebounds he gets. Thus to equate offensive rebounds with defensive rebounds the offensive rebounds are multiplied by 3 and the defensive rebounds are multiplied by 1.5 (i.e. 3/2).
+
+If a player averaged 12 rebounds total per 48 minutes and 1/3 of his rebounds were offensive (4) and 2/3 were defensive (8), his offensive rebounding rating would be 12.0 and his defensive rebounding rating would be 12.0. The ratings are calculated by:
+
+             off reb rating = (offreb/min) x 48 x 3
+
+             def reb rating = (defreb/min) x 48 x 1.5
+
+The average player has ratings of approximately 8.7 for offensive rebounding and 8.7 for defensive rebounding. When looking at these ratings, simply divide the offensive rating by 3 and the defensive rating by 1.5 to get the player's offensive and defensive rebounds per 48 minutes. 
+
+These ratings are helpful in showing whether an individual player is a better offensive or defensive rebounder.
+
+SAOR - 'S'cored 'A'fter an 'O'ffensive 'R'ebound - the number of times the player got an offensive rebound and immediately put the ball back up and in.
+
+
+PERFORMANCE POINTS:
+
+PERFORMANCE RATING - a single generic number used to "measure" a player's overall individual performance. It has also been called a "TENDEX" rating or a "Production" rating by other authors. It is calculated by:
+
+PERFORMANCE POINTS = 
+
+        pts + reb + ast + st + bs - to - pf - FGmissed - FTmissed
+
+PERFORMANCE POINTS PER MINUTE =
+
+       (pts + reb + ast + st + bs - to - pf - FGmissed - FTmissed)/minutes
+
+PERFORMANCE POINTS PER GAME = a player's performance points per game played
+
+This performance rating is useful when comparing how players perform from one season to the next but with varying teammates, i.e. did a player's "performance" improve or get worse with the addition of a new teammate and why. 
+
+Note: this rating is NOT all inclusive in that it does NOT measure a player's defensive ability other than his defensive rebounds, steals, and blocked shots, and thus is NOT a true measure of a player’s overall contribution.
+
+
+PLAYER ATTRIBUTES - these are percentages for how often a player did each of the following:
+
+%SHOOT, %FOULED, %TO (turnovers), %PASS - how often a player shot, got fouled, turned the ball over, and passed the ball in relation to how often he handled the ball – shots per touch, number of times fouled per touch, turnovers per touch, passes thrown per touch). 
+
+Example: If a player handled the ball 2000 times during a season and took 1000 shots, got fouled 200 times, and committed 100 turnovers, his %Shoot, %Fouled, and %TO would be 50%, 10%, and 5%. The number of passes he threw would be 2000 - 1000 - 200 - 100 = 700 passes or his %Pass would be 100% - 50% - 10% - 5% = 35%. 
+
+%PF, %ST - how often each player committed a foul or stole the ball in relation to the time he played (given as fouls and steals per 100 minutes).
+
+%BS - the percentage of shots the player blocked out of the total number of shots attempted by the opposition during the time he played. Example: if during a season when a player played the opposition attempted 5000 shots and he individually blocked 250 shots, his %BS would be 5.0%.
+
+PLAYER SHOT DEFENSE - 
+
+DEF FGM, DEF FGA, DEF FG% (defensive field goal percentage) - this is how many shots were made and attempted by opponents directly guarded by the player, i.e. this is a measure of a player's individual defensive ability in terms of a FG% allowed, with the lower the percentage the better the defender.
+
+WITH DEF SW/BS – the most accurate of the individual player shot defense DEF FG% statistics, as this last column incorporates all FGAs defended against by a defender including those on defensive switches and those shots the defender blocked.
+
+
+PLAYER PLUS/MINUS -
+
++/- IN – plus/minus points when player was in the game - the total number of points scored by the player's team minus the total number of points scored by the team's opponents while that particular player was on the court in the game playing.
+
++/- OUT – plus/minus points when player was NOT in the game – the total number of points scored by the player’s team minus the total number of points scored by the team’s opponents while that particular player was NOT in the game.
+
+TEAM PTS DIFF – the overall difference in the total points scored by the team minus the total points scored by the opposition in all the games played, i.e. this is NOT player specific but is simply the sum of a player’s +/- IN and +/- OUT points
+
+MIN IN – total minutes the player was in the game
+
+MIN OUT – total minutes the player was NOT in the game
+
+TOTAL MIN – total minutes played by position, equal to the player’s MIN IN plus MIN OUT. You may see slight discrepancies from one player’s total to the next, and these are simply rounding errors
+
++/- IN/game – the player’s plus/minus points per game
+
++/- OUT/game – plus/minus points when the player was NOT in the game
+
++/- IN/game48 – the player’s plus/minus points per 48 minute game, equal to:
+
+        = ((+/- IN)/(games played))/(player min/g) x 48
+
++/- OUT/game48 – the player’s plus/minus points per 48 minute game when the player was NOT in the game, equal to:
+
+        = (+/- OUT)/(games played)/(min/g player NOT in game) x 48
+ 
++/- DIFF – the player plus/minus point differential, equal to:
+
+        = (+/- IN/game48) – (+/- OUT/game48)
+
+
+PLAYER PTS/POSS – team points scored per team offensive and defensive possession when specific players were on or off the floor.
+
+ON TEAM POSS – the total number of team possessions the player was on the floor (was in the game)
+
+OFF TEAM POSS – the total number of team possessions the player was off the floor (was not in the game)
+
+ON TEAM PTS – the total number of points the team scored when the player was on the floor (in the game)
+
+ON OPP PTS – the total number of points the opposing team scored when the player was on the floor (in the game)
+
+OFF TEAM PTS – the total number of points the team scored when the players was off the floor (not in the game)
+
+OFF OPP PTS – the total number of points the opposing team scored when the player was off the floor (not in the game)
+
+ON OFFENSE PTS/POSS – the points scored per team possession when the player was on the floor (in the game)
+
+ON DEFENSE PTS/POSS – the points scored per opponent team possession when the player was on the floor (in the game)
+
+OFF OFFENSE PTS/POSS - the points scored per team possession when the player was off the floor (not in the game)
+
+OFF DEFENSE PTS/POSS - the points scored per opponent team possession when the player was off the floor (not in the game)
+
+
+----------
+PAGE FOUR:
+----------
+
+TEAM SUBSTITUTION PATTERN - 4 minute:
+
+    This is the substitution pattern used by the team for each game during the simulated season played. Players automatically substitute at 4 minute increments (your choice at the beginning of the season) based on the pattern you set up prior to the start of the simulated season. Note that all player substitutions occur at a change of possession between the teams unless a player fouls out, at which point that player is replaced at that immediate dead ball situation.
+
+----------
+PAGE FIVE:
+----------
+
+SEASON STATISTICS BY QUARTER - this is a breakdown of the team's average per game offensive and defensive statistics by quarter for all of the games played. There are seven total columns of statistics. The first column lists the statistical categories, the next four are the statistics by quarter, and the last two columns list the overtime statistics and the average per game totals. 
+
+The +/- PTS is the difference in the number of points the team scored per quarter minus the number of points the opposition scored.
+
+---------
+PAGE SIX:
+---------
+
+SEASON STATISTICS BY 4 MINUTE INTERVAL - this is a breakdown of the team's average offensive and defensive per game statistics for all of the games played by 4 minute intervals. The statistics are listed as three columns for each quarter as there are three 4 minute intervals per 12 minute quarter. 
+
+The +/- PTS is the difference in the number of points the team scored per four minute time interval minus the number of points the opposition scored.
+
+NOTE: The season statistics by quarter and by 4 minute interval are useful when you are trying to determine the optimal substitution pattern for your team, i.e. which player combinations best complement each other either offensively and/or defensively by generating the largest point differential.
+
+--------------------------------
+FINAL TEAM AND LEAGUE STATISTICS
+--------------------------------
+
+These last 8 pages of statistics appear in any simulation.
+
+TEAM SEASON TOTALS – the first page of team season totals lists all of the teams overall total offensive and defensive shooting statistics and percentages. The second page of team season totals lists each team’s offensive and defensive totals for the other raw statistics – free throws made and attempted, rebounds, assists, fouls, steals, turnovers, blocked shots, and points.
+
+TEAM STATISTICS PER GAME – this page lists each team’s per game stats for all the raw statistical categories on offense and defense.
+
+TEAM POINTS PER POSSESSION – this page lists each team’s total ball possessions, possessions per 48 minute game and per quarter, each team’s points scored per team possession on offense and points allowed per team possession on defense, and the points per possession difference.
+
+TEAM SCORING PER GAME – overall, home, and away team W-L records, average points per game scored and allowed, average per game point differential, and team per game offensive and defensive performance points, where performance points simply adds up all those statistics that are positive and subtracts off all those statistics that are negative, and is equal to:
+
+prfm pts = pts + reb + ast + st + bs – FGmissed – FTmissed – to - pf  
+
+HOME AND AWAY SCORES – average home and away scores and per game point differential.
+
+FINAL LEAGUE TOTALS – total overall league numbers for each major statistical category, plus overall league average per game stats.
+
+STANDINGS – team W-L records by conference and division
+
+LEAGUE LEADERS – top ten per game listings for players in 8 statistical categories – scoring, field goal, free throw, and 3pt field goal percentage, and for rebounds, assists, steals, and blocked shots. 

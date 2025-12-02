@@ -13,22 +13,34 @@ const Instructions = () => {
         {/* Introduction */}
         <section className="text-center space-y-4">
           <p className="text-lg text-muted-foreground">
-            Welcome to the Basketball Simulation Application. This guide will help you navigate through the Game Setup,
-            Full Season Simulation, Player Drafting, and Substitution Patterns.
+            Welcome to the Basketball Simulation Application. This guide covers everything from starting a game to deep statistical analysis.
           </p>
         </section>
 
         <Separator />
 
-        {/* Game Setup */}
-        <section id="game-setup">
-          <h2 className="text-2xl font-semibold mb-4">Game Setup</h2>
+        {/* Getting Started */}
+        <section id="getting-started">
+          <h2 className="text-2xl font-semibold mb-4">Getting Started</h2>
           <Card>
             <CardHeader>
-              <CardTitle>Getting Started</CardTitle>
+              <CardTitle>Starting the Simulation</CardTitle>
             </CardHeader>
             <CardContent>
-              {instructionData.gameSetup}
+              {instructionData.gettingStarted}
+            </CardContent>
+          </Card>
+        </section>
+
+        {/* Single Game Version */}
+        <section id="single-game">
+          <h2 className="text-2xl font-semibold mb-4">Single Game Version</h2>
+          <Card>
+            <CardHeader>
+              <CardTitle>Playing a Single Game</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {instructionData.singleGame}
             </CardContent>
           </Card>
         </section>
@@ -36,14 +48,56 @@ const Instructions = () => {
         {/* Full Season Version */}
         <section id="full-season">
           <h2 className="text-2xl font-semibold mb-4">Full Season Simulation</h2>
-          <Card>
+          <Card className="mb-4">
             <CardHeader>
-              <CardTitle>Managing the Season</CardTitle>
+              <CardTitle>Overview</CardTitle>
             </CardHeader>
             <CardContent>
               {instructionData.fullSeason}
             </CardContent>
           </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Simulation Modes</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {instructionData.fullSeasonModes}
+            </CardContent>
+          </Card>
+        </section>
+
+        {/* Statistics Definitions */}
+        <section id="statistics">
+          <h2 className="text-2xl font-semibold mb-4">Statistics Definitions</h2>
+          <div className="grid gap-4">
+            <Card>
+              <CardHeader>
+                <CardTitle>Player Statistics</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {instructionData.playerStats}
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Box Scores</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {instructionData.boxScores}
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Final Season Statistics (Raw Stats)</CardTitle>
+              </CardHeader>
+              <CardContent>
+                {instructionData.finalStats}
+              </CardContent>
+            </Card>
+          </div>
         </section>
 
         {/* Draft of Players */}
@@ -59,7 +113,7 @@ const Instructions = () => {
           </Card>
         </section>
 
-        {/* 4 Minute Substitution Pattern */}
+        {/* Substitution Pattern */}
         <section id="substitution-pattern">
           <h2 className="text-2xl font-semibold mb-4">Substitution Pattern</h2>
           <Card>

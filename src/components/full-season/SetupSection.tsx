@@ -46,7 +46,7 @@ const SetupSection: React.FC<SetupSectionProps> = ({
                 <CardTitle className="flex justify-between items-center">
                     <div className="flex items-center gap-2">
                         <span>1. Game Setup</span>
-                        <HelpModal title="Game Setup" contentKey="gameSetup" />
+                        <HelpModal title="Game Setup" contentKey="fullSeason" />
                     </div>
                     <Button variant="ghost" size="sm" onClick={onClear} className="text-muted-foreground hover:text-destructive">
                         Reset All

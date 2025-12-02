@@ -1,3 +1,5 @@
+import HelpModal from '@/components/ui/HelpModal';
+
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -61,7 +63,10 @@ const ResultsSection: React.FC<ResultsSectionProps> = ({
     return (
         <Card className="w-full">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle>Results & Schedule</CardTitle>
+                <div className="flex items-center gap-2">
+                    <CardTitle>Results & Schedule</CardTitle>
+                    <HelpModal title="Results & Statistics" contentKey="finalStats" />
+                </div>
                 <div className="flex gap-2">
                     <Sheet>
                         <SheetTrigger asChild>

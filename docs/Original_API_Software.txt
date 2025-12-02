@@ -1,0 +1,175 @@
+2-STARTING THE SIMULATION SOFTWARE:
+
+    To play just one game click on the Single Game Version tab. Then click on one of the YEAR dropdown arrows to choose which season to play, and once the dropdown appears scroll down and click on a season. That click will set both the home and away teams to that season. Then click on one of the TEAM dropdown arrows and scroll down and click on a team. The left dropdown is for the Away team and the right dropdown is for the Home team.
+
+    If you want to play teams from different seasons against one another then once you have chosen one team click on the YEAR dropdown for the other team, click on a different season, then click on the TEAM dropdown to select the opposing team.
+
+     To play a quick game, click your setting toggles to “Away Team – Computer”, “Home Team – Computer”, “Pause Options – Do Not Pause”, and “Display Options – Both”. Then click on “Start Game”.
+
+     To play the Full Season Version click on the Full Season Version tab, then the Game Setup tab. Then click on Choose League, scroll through the seasons list, click on the season you wish to play, and click OK.  The Full Season Version is broken down into three separate applications:
+
+1) 82/820/8200 Game Schedule Version
+2) Predict Games Version
+3) Replay Entire League Season Version
+
+Click on the toggle for the option you want.
+
+Option 1 allows you to play an 82 game season for any team against their actual schedule of opponents for the season chosen. For this option click on the Team dropdown, then click on a team, then click on a schedule (82, 820, or 8200 games) for that team. The latter two are just 10x and 100x the 82 game schedule. You can also save either or both the Box Scores and Game Play-by-Play text by checking the respective checkboxes.
+
+Option 2 allows you to play many games between sets of two teams of the same season. In the cells below "Home/Away Team" and "Away/Home Team" L click in the cell and a list of teams appears. Click on the team(s) you wish to play. In the column between the two teams click on the cell and type in the number of games you wish to play (if you choose more than 10,000 games to be played between any two teams the statistics files will get too large). You can set up as many as 15 games between sets of teams. Once you have chosen your teams and number of games played click on the Play Games button.
+
+Option 3 allows you to play an entire season (for example all 1230 games for the 2023-24 season). Set your toggle on Replay Full League Season and click on Play Games.  
+
+
+3–THE SINGLE GAME VERSION:
+
+    As a game is played all player matchups are displayed in the center game screen, a text commentary similar to a radio broadcast describes the action in a window at the bottom left, and a box score on the bottom right compiles and displays the player statistics, those statistics you would normally see in a box score, plus some additional statistics such as player touches, how often each player is fouled (both act-of-shooting and non-shooting fouls), how many passes each player throws and catches, how individual players defend against opponent FGAs, and more.
+
+    Once you have chosen two teams to play in a game, there are a few options on how you can play a game.     
+
+Passing - can be Computer, Automatic, or Manual.
+
+Computer passing – the computer controls all the action in the game. You can adjust how the text commentary pauses using the Pause Options, but other than that you have no control on the game, other than by stopping the action and adjusting a team’s substituion pattern.
+
+Automatic passing – the computer control all the passing, but you control all player substitutions.
+
+Manual passing – you as coach can to a certain extent control action on the floor by dictating who to pass the ball to on many (but not all) team possessions, while also controlling all player substitutions.
+
+Manual passing:
+
+The Possession Factor (PF) rates players for how often they handle the ball on offense, rated on a scale of 3, 2, 1, and 0. Players rated as a 3 handle the ball the most, players rated as a 0 the least. Players rated as 3s are high touches players that are typically PGs, but also SGs, SFs, PF, or Cs actively involved in their team’s offense through both scoring and passing. Players rated as 0s are low touches players that are typically rebounders and/or defensive minded players who are not involved in their team’s offense very much.
+
+As a game is played the players’ Possessions Factors (PF) are listed on the main game screen in the column between the player names and their positions (POS).
+
+During a game with manual passing the “position buttons” below the main game screen will light up (red for the away team, blue for the home team) indicating that position is available to next receive the ball on offense. If a button is not lit up that player cannot receive the ball at that particular moment in the game. Think of a button not being lit up as that player not open to receive a pass at that moment.
+
+Thus players with a Possession Factor PF=3 are almost always available to get the ball, while players with a PF=0 are the least available.
+
+When you click on a lighted position button you are giving the ball to that player (as in starting a team possession) or the ball is being passed to that player from another player. When you click on a position button an action occurs and the game continues.
+
+Below the game screen you will see – HC  R  PG  SG  SF  PF  C
+
+On most team possessions you will want to start the team possession by giving the ball to the PG. However you can also start a team possession by clicking on either HC or R to start a team position:
+
+HC (half court) – can be used usually every other team possession. This is if you do not want to routinely start team possessions with the PG (maybe because he is a poor shooter or commits too many turnovers). Click on HC and you will have the option to give the ball to a non-PG with a PF=2 or 3. HC will not be an option if all of your non-PGs in the game have PFs=0 or 1.
+
+R (random) – the player to next receive the ball is chosen at random.
+
+
+At the beginning of a game you can change the “Pause Option” (top R hand portion of your screen) so that the game commentary text can be stopped after each line of game action or after each team possession such that it can be read as the game is played, or after each quarter is ended. This is useful for example if you want to play a game with the computer playing both teams until say the start of the 4th quarter where you can then take control with Manual or Automatic passing.
+
+    You can also change either team's substitution pattern prior to a game being started. Simply left click on the “Away Team Sub Pattern” or “Home Team Sub Pattern” buttons to access each team’s substitution pattern. Any changes you make to a team’s sub pattern will remain in effect for that team in that game until you either make more changes to the sub pattern or the game ends. See below for details on how to change a team’s substitution pattern.
+
+
+
+4–THE FULL SEASON VERSION:
+
+    The Full Season Version plays tens, hundreds, even thousands of games in just seconds (without showing you the text commentary or accumulating box score of each game in real time as the Single Game Version does), and because the games are played very fast this allows you the ability to try out different what-if scenarios quickly, such as changing the substitution pattern of a team (changing the minutes played of numerous players), replacing a starting player with a bench player, or trading a player to a specific team - all to see whether the changes you make will either increase or decrease the number of wins for a specific team. 
+
+    All you will see as the games are being played fast in the Full Season Version are the game scores as they flash by. But all of the player and team statistics being generated are compiled as the games are being played. When all of the games are completed these statistics can then be displayed in two different stats files and two different box score files, one each of which contains “raw” stats and the other sortable stats.
+    
+    You can “re-play” current and past seasons (to see how the outcome matches real life), trade players to teams and simulate a season to see if the team is better or worse, you can even make changes to players’ statistical profiles (using the Change Players Characteristics screen) and simulate entire seasons to see the impact your player changes make in terms of more wins or losses for that team. 
+
+You can use the Full Season Version in a number of ways:
+
+a) Simulating an entire pro season, for example the 2023-24 season, all 1230 total games for the 30 pro teams, and obtaining accurate statistical results in just seconds.
+
+b) Simulating a season of 82, 820, or 8200 games (or any number of games) for any single team using their actual season schedule (or any schedule of opponents) for the year chosen.
+
+c) Determining whether a future trade or free agent signing would be advantageous to a team in terms of producing more wins for that team. Any player in the league (or from any season) can be "traded" to any team using the software and a simulated season or seasons played to see if the team wins or loses more games.
+
+d) Determining how a team would perform without a certain player on the team having played in any of it’s games, or with a certain player (such as a bench player) playing more or less minutes than he actually played in real life - i.e. determining how valuable certain players are to the team in terms of producing more wins for the team. Simply change a team’s substitution pattern and simulate the games.
+
+e) Determining a team's best substitution pattern, i.e. the substitution pattern (minutes given to all of a team's players) that results in the most wins for the team, against not just the team's actual schedule but even against specific opponents. This determines which player combinations play the best together statistically in terms of producing the most wins for the team.
+
+f) Determining which player attributes, such as better shooting, scoring, foul drawing, passing, rebounding, defense, committing less turnovers or fouls, etc. are needed by a team for it to win more games.
+
+g) Predicting the outcome of a single upcoming game between any two pro teams
+by playing any number of computer simulated games between those same two teams (of the same season) and determining an average score, point differential, and total points scored between the two teams (easiest using the Predict Games Version).
+
+    During the pro season the team and player files will be updated once a week (every 3-4 games played per team). The program can then be used during the actual playing of the pro season for the analysis of upcoming games and for determining the statistical outcomes (in terms of a team getting more wins or loses) of player trades or free agent signings using the current team and player statistics and also statistics from earlier seasons. 
+
+
+82/820/8200 Game Schedule Version:
+
+This version can be used for making changes to a team – such as changing players minutes played by altering a team’s substitution pattern or adding a player to simulate a trade or free agent signing - and then simulating either 82, 820, or 8200 games against that team’s actual schedule to see the difference in wins or losses generated caused by the specific change. The key is to play as many games as possible in order to get as “average” a result as possible. In actual fact any number of simulated games can be played, but for convenience each of the teams’ actual schedules are already built into the software for ease of use.
+
+The variability of any change made – per 82 games – decreases with the more games you play. Thus to see the actual difference a specific player change (trade or free agent signing) or change in a player’s minutes played would make on a team’s W-L record, you should play as many simulated games as possible to get an average result (for example simulate 8200 games several times, then average the result, to see the change in a team's W-L record per 82 game season).
+
+
+Predict Games Version:
+
+This version is best used for playing hundreds or thousands of games between two specific teams to predict the outcome of a single game, and by altering a team’s substitution pattern to determine the best combination of players to defeat a specific opponent.
+
+
+Replay Entire League Season:
+
+This version plays an entire season (for example the 2023-24 season all 1230 games for all 30 teams), based on the real-life player and team statistics at that time. Earlier seasons can also be simulated.
+
+In all three versions of the simulation software Full Season Version games are played extremely quickly by the computer such that thousands of games can be played in just seconds.
+
+
+82/820/8200 Game Schedule:
+
+To play a full season for one team, click on the Full Season Game Version tab. Click on the “Choose League” button to select a year of teams to play. Then click on the first toggle:
+
+O 82/820/8200 Game Schedule
+O Predict Games
+O Replay Entire League Season
+
+which is the "82/820/8200 Game Schedule" toggle so that the black dot appears to the left of it. When doing so a schedule box appears to the far right, with a listing of all of the teams in the league. Then click on the “Team” drop-down menu and a listing of the teams for that season will appear. You can then click on the team you wish to play games for. 
+
+     To the right of the Team drop-down is a drop-down that lists either “Default” or “Beta-Test” for that specific season. “Default” uses rosters for teams as they appeared at the end of the season (or if the current season the roster at the time the software was last updated). If a player was traded away during the season, or switched teams, he will be listed on the last team he played for. “Beta-test” shows players on all teams they played for during the season, i.e. a player can be listed on more than one team.
+
+     If you then click on the “Play Games” button the schedule you chose will be played, and the games will be played very fast (in seconds). Once the games are complete, you can click on any of the four tabs to the right of the “Game Setup” tab: 
+
+Raw Stats
+Raw Box Scores
+Sortable Stats
+Sortable Box Scores
+
+to view all of the stats or box scores generated by the season you just played.
+
+
+Predict Games Version:
+
+    The Predict Games mode allows you to play tens, hundreds, even thousands of games between two specific teams. Simply click on the Predict Games toggle:
+
+O 82/820/8200 Game Schedule
+O Predict Games
+O Replay Entire League Season
+
+so that the black dot is to the left of “Predict Games”. When you do so a schedule box (different from the one above) will appear to the far right. Here you can set up games to be played between specific teams. 
+    
+    Place your mouse arrow in the Schedule Box in the first cell below "Home/Away Team" and L click in it (which will then be highlighted in light blue as you click in it) and a listing of the teams will appear in a pop-up window. L click on any team and that team will be input into the highlighted cell. Then repeat this on the right hand side in the first cell below "Away/Home Team", with the teams to play games against each other be set up on the same line across from one another. Set up as many matches between teams as you wish (with a maximum of 15), using each team only once, then L click in the column labeled "Games" to type in the number of games you want played between each pair of teams (with a maximum of 10,000 games played between any two teams). You cannot type in a number of games to be played on any line until there is a team selected on both sides.
+
+    After you have typed in a number of games to be played in a cell between two selected teams, type the “Enter” key, then L click on another cell to type in more games. To play only Home games for one team and only Away games for the other, or Neutral games for both teams, click on either Home, Away, Both, or Neutral in the box to the right of the box selecting the Predict Games mode (and notice the change in the heading above your selected teams from Home to Away to Home/Away to Neutral).
+
+    To change the substitution pattern of a team or teams prior to the games being played, simply L click in the cell the team is in. As it is highlighted in blue then R click in the cell to bring up that team’s substitution pattern. Any changes made to the team sub patterns at this point will remain in effect only temporarily, until you either switch leagues by clicking on the Choose League button or click on the Clear button at the top left of your screen (not the Clear button at the top right, that Clear button simply wipes out the teams chosen, but keeps any changes you made to the sub patterns), or you exit the application.
+
+    If you make any changes to a sub pattern and want to save those changes for later, instead of clicking on the “OK” button in the sub pattern pop-up window after making some changes, click on the “Save Sub Pattern” button, and save the sub pattern to a directory and file name of your choosing. You can then recall this sub pattern when using the software later.
+
+    There is a toggle below the Predict Games Version schedule box for saving or not saving the box scores generated by the games played. The default is to not save the box scores. Finally click on the “Play Games” button to start the playing of the games.
+
+    Once the games are complete you can view the stats in the Raw Stats or Sortable Stats files, and if you saved the box scores those can also be viewed in the Raw Box Scores and Sortable Box Scores files.
+
+    The  Predict Games Version can be used for the purpose of predicting the outcome of upcoming pro games by using statistically updated and current team and player files. Since the program simply plays games between any two teams, you can play as many games between any two teams that are about to play a game in real life as you feel are necessary to produce an average game outcome. You can play as few as 1 or as many as 10,000 computer simulated played games between any two teams for the purpose of determining for each upcoming game an average game score, point differential, and total points scored.
+
+    However, before choosing teams to play in games, you should set up team substitution patterns for each team that reflects the players currently playing for those specific teams and in the approximate number of minutes that they average per game. Default team substitution patterns are set up so that players will play about the same amount of minutes per game that they are averaging during the current season. However you should change these as you see fit, such as if certain players are injured and not available to play that day.
+
+    In other words, if a team's star player cannot play that day, take him out of that team's substitution pattern and replace him with the bench player most likely to play in his place, so that the replayed game's outcome reflects that player not actually playing. The accuracy of this program in predicting the outcomes of upcoming pro games is extremely dependent on the players who play in those simulated games, thus do not use a team's star player in that team's substitution pattern if he is not available to play in that immediate upcoming game whose outcome you wish to predict.
+
+    After choosing both a home team and away team for each scheduled upcoming pro game that you want to predict the results of then type in the number of computer simulated games that you want to be played between the two teams, with the minimum number of games to be played being 1 and the maximum being 10,000. Be sure to hit the “Enter” key after you type in a number of games to be played.
+
+    Remember, even though the computer simulated games are played very fast, actual individual games are indeed being simulated (use the  Single Game Version to verify just how the games are actually played). The program is not simply making statistical calculations based on player statistics - games are actually being played with every shot, pass, rebound, free throw attempt, foul, steal, assist, turnover, blocked shot, etc. being accounted for as the games are played.
+
+
+Replay Entire League Season:
+
+To replay an entire league season (like the 30 team 2019-20 season which plays 1230 games total), first choose a league (season), then place the toggle:
+
+O 82/820/8200 Game Schedule
+O Predict Games
+O Replay Entire League Season
+
+So that the black dot is on "Replay Entire League Season". Then click on the “Play Games” button and the games will begin. When the season replay is over you can view the stats and box score files.

@@ -1,3 +1,5 @@
+import HelpModal from '@/components/ui/HelpModal';
+
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import CustomRadio from '@/components/ui/CustomRadio';
@@ -37,7 +39,12 @@ const SimulationSettings: React.FC<SimulationSettingsProps> = ({
     return (
         <Card className="w-full h-full flex flex-col">
             <CardHeader>
-                <CardTitle>3. Simulation Settings</CardTitle>
+                <CardTitle className="flex justify-between items-center">
+                    <div className="flex items-center gap-2">
+                        <span>3. Simulation Settings</span>
+                        <HelpModal title="Simulation Modes" contentKey="fullSeasonModes" />
+                    </div>
+                </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6 flex-1 flex flex-col">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
