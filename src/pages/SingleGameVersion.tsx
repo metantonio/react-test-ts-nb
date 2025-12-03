@@ -293,8 +293,8 @@ const SingleGameVersion: React.FC<SingleGameVersionProps> = ({
       const response = await fetchWithAuth(`${SIMULATION_URL}/play_sgv_fast.php`, 'POST', {
         homeleague: selectedLeagueHome.league_name,
         awayleague: selectedLeagueAway.league_name,
-        hometeam: "1",//selectedTeams2.teams,
-        awayteam: "2",//selectedTeams1.teams,
+        hometeam: selectedTeams2.teams,
+        awayteam: selectedTeams1.teams,
         apikey: API_KEY
       });
 
