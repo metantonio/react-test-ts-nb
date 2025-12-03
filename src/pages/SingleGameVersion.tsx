@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -161,6 +161,10 @@ const SingleGameVersion: React.FC<SingleGameVersionProps> = ({
   const [fullPlayByPlayData, setFullPlayByPlayData] = useState<PlayByPlay[]>([]);
   const [currentPlayIndex, setCurrentPlayIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
+
+  // Refs for scrollable containers
+  const playByPlayRef = useRef<HTMLDivElement>(null);
+  const boxScoreRef = useRef<HTMLDivElement>(null);
   const [playbackSpeed, setPlaybackSpeed] = useState(1); // 0.5x, 1x, 2x, 4x
 
   // Fetch teams when league changes
@@ -243,6 +247,18 @@ const SingleGameVersion: React.FC<SingleGameVersionProps> = ({
 
     return () => clearInterval(interval);
   }, [isPlaying, playbackSpeed, fullCourtData, fullPlayByPlayData]);
+
+  // Auto-scroll to bottom when midlineScroll is enabled or when data updates
+  useEffect(() => {
+    if (midlineScroll) {
+      if (playByPlayRef.current) {
+        playByPlayRef.current.scrollTop = playByPlayRef.current.scrollHeight;
+      }
+      if (boxScoreRef.current) {
+        boxScoreRef.current.scrollTop = boxScoreRef.current.scrollHeight;
+      }
+    }
+  }, [playByPlay, boxScore, midlineScroll]);
 
   // Playback control functions
   const handlePlay = () => {
@@ -632,19 +648,37 @@ const SingleGameVersion: React.FC<SingleGameVersionProps> = ({
       {/* Play-by-Play and Box Score */}
       <div className={`grid gap-2 h-[500px] md:h-96 ${displayOptions === 'both' ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1'}`}>
         {(displayOptions === 'play-by-play' || displayOptions === 'both') && showPlayByPlay && (
-          <div className="border rounded-md p-2 overflow-y-auto bg-gray-800 text-white font-mono text-xs h-full">
-            {playByPlay.map((p, i) => (
+          <div
+            ref={playByPlayRef}
+            className="border rounded-md p-2 overflow-y-auto bg-gray-800 text-white font-mono text-xs h-full"
+          >
+            {/* Only render the last 1000 items for performance */}
+            {playByPlay.slice(-1000).map((p, i) => (
               <div key={i} className={`mb-1 ${getPbpColorClass(p.color)}`}>
                 {p.pbp_line}
               </div>
             ))}
+            {playByPlay.length > 1000 && (
+              <div className="text-yellow-400 mb-2">
+                ... showing last 1000 of {playByPlay.length} plays
+              </div>
+            )}
           </div>
         )}
         {(displayOptions === 'box-score' || displayOptions === 'both') && showBoxScore && (
-          <div className="border rounded-md p-2 overflow-y-auto bg-gray-800 text-white font-mono text-xs h-full">
-            {boxScore.map((b, i) => (
+          <div
+            ref={boxScoreRef}
+            className="border rounded-md p-2 overflow-y-auto bg-gray-800 text-white font-mono text-xs h-full"
+          >
+            {/* Only render the last 1000 items for performance */}
+            {boxScore.slice(-1000).map((b, i) => (
               <div key={i} className="whitespace-pre-wrap">{b.text}</div>
             ))}
+            {boxScore.length > 1000 && (
+              <div className="text-yellow-400 mb-2">
+                ... showing last 1000 of {boxScore.length} lines
+              </div>
+            )}
           </div>
         )}
       </div>

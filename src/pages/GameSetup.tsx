@@ -1530,14 +1530,14 @@ const GameSetup = () => {
                     onClick={() => setActiveView('full-season')}
                     className="justify-start mb-2 w-full"
                   >
-                    Full Season Version
+                    Full Season
                   </Button>
                   <Button
                     variant={activeView === 'single-game' ? 'secondary' : 'ghost'}
                     onClick={() => setActiveView('single-game')}
                     className="justify-start mb-2 w-full"
                   >
-                    Single Game Version (in development)
+                    Single Game
                   </Button>
                   <Button
                     variant={activeView === 'instructions' ? 'secondary' : 'ghost'}
