@@ -159,7 +159,7 @@ Instead of using separate tables for `game_play_by_play` and `game_box_scores`, 
 ]
 ```
 
-### 4. `game_player_stats` (Optional, for Analysis)
+### 6. `game_player_stats` (May be to apply in the future, for Analysis with AI)
 
 While the `box_score` JSONB column stores the display-ready text, this table is designed for structured queries (e.g., "Who had the most rebounds?").
 
