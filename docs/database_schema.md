@@ -159,3 +159,21 @@ Instead of using separate tables for `game_play_by_play` and `game_box_scores`, 
 ]
 ```
 
+### 4. `game_player_stats` (Optional, for Analysis)
+
+While the `box_score` JSONB column stores the display-ready text, this table is designed for structured queries (e.g., "Who had the most rebounds?").
+
+| Column | Type | Constraints | Description |
+| :--- | :--- | :--- | :--- |
+| `id` | `BIGSERIAL` | `PRIMARY KEY` | Unique identifier. |
+| `game_id` | `INTEGER` | `FOREIGN KEY` | Reference to the `games` table. |
+| `player_name` | `VARCHAR(255)` | `NOT NULL` | Name of the player. |
+| `team_id` | `INTEGER` | `FOREIGN KEY` | Reference to the `teams` table. |
+| `points` | `INTEGER` | | Total points scored. |
+| `rebounds` | `INTEGER` | | Total rebounds. |
+| `assists` | `INTEGER` | | Total assists. |
+| `steals` | `INTEGER` | | Total steals. |
+| `blocks` | `INTEGER` | | Total blocks. |
+| `turnovers` | `INTEGER` | | Total turnovers. |
+
+

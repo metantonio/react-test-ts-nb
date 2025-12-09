@@ -35,6 +35,30 @@ CREATE TABLE games (
     -- Structure: [{ "line_number": 1, "text": "..." }, ...]
 );
 
+-- 4. Game Player Stats (For structured analysis)
+CREATE TABLE game_player_stats (
+    id BIGSERIAL PRIMARY KEY,
+    game_id INTEGER REFERENCES games(id),
+    player_name VARCHAR(255) NOT NULL,
+    team_id INTEGER REFERENCES teams(id),
+    
+    -- Stats columns
+    points INTEGER DEFAULT 0,
+    rebounds INTEGER DEFAULT 0,
+    assists INTEGER DEFAULT 0,
+    steals INTEGER DEFAULT 0,
+    blocks INTEGER DEFAULT 0,
+    turnovers INTEGER DEFAULT 0,
+    
+    -- Storing precise shooting stats if needed
+    field_goals_made INTEGER DEFAULT 0,
+    field_goals_attempted INTEGER DEFAULT 0,
+    three_pointers_made INTEGER DEFAULT 0,
+    three_pointers_attempted INTEGER DEFAULT 0,
+    free_throws_made INTEGER DEFAULT 0,
+    free_throws_attempted INTEGER DEFAULT 0
+);
+
 -- Indexing (Optional but recommended for JSONB queries)
 -- CREATE INDEX idx_games_play_by_play ON games USING GIN (play_by_play);
 -- CREATE INDEX idx_games_box_score ON games USING GIN (box_score);
