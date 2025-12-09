@@ -24,7 +24,8 @@ CREATE TABLE IF NOT EXISTS games (
     home_score INTEGER NOT NULL,
     away_score INTEGER NOT NULL,
     played_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    season_game_number INTEGER -- Optional, for full season tracking
+    season_game_number INTEGER, -- Optional, for full season tracking
+    cognito_user_id VARCHAR(255) -- Optional, links to AWS Cognito User ID
 );
 
 -- Indexes for faster lookup of games by team

@@ -42,6 +42,7 @@ erDiagram
         int away_score
         timestamp played_at
         int season_game_number
+        string cognito_user_id
     }
 
     GAME_PLAY_BY_PLAY {
@@ -93,6 +94,7 @@ Stores the header information and final score of a game.
 | `away_score` | `INTEGER` | `NOT NULL` | Final score for the away team. |
 | `played_at` | `TIMESTAMP` | `DEFAULT NOW()` | When the simulation was run. |
 | `season_game_number` | `INTEGER` | | Optional. The game number in the season schedule (e.g., 1-82). |
+| `cognito_user_id` | `VARCHAR(255)` | | Optional. References the AWS Cognito User ID associated with this game. |
 
 ### 4. `game_play_by_play` (Not really necessary)
 Stores the raw text lines of the play-by-play commentary.
