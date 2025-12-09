@@ -121,3 +121,41 @@ Stores the raw text lines of the box score.
 
 - **Data Ingestion**: When a game finishes in the React app, the frontend should send the `gameData` object to a backend endpoint. The backend will then insert records into these tables.
 - **Box Score**: Currently, the box score is stored as raw text lines to match the current application output. If structured analysis (e.g., "Find all players who scored > 20 points") is needed in the future, a new table `game_player_stats` should be created to parse and store individual player metrics.
+
+## Alternative: Optimized Schema (JSONB)
+
+For improved performance and efficiency, especially when dealing with large volumes of text data like play-by-play logs, we can leverage PostgreSQL's `JSONB` data type.
+
+### Changes to `games` Table
+
+Instead of using separate tables for `game_play_by_play` and `game_box_scores`, we add two columns directly to the `games` table:
+
+| Column | Type | Description |
+| :--- | :--- | :--- |
+| `play_by_play` | `JSONB` | Stores the entire list of play-by-play objects. |
+| `box_score` | `JSONB` | Stores the entire list of box score line objects. |
+
+### Benefits
+
+1.  **Reduced Row Count**: Eliminates hundreds or thousands of rows per game in child tables.
+2.  **Faster Reads**: Fetching a game and its logs becomes a single `SELECT` statement without expensive `JOIN`s.
+3.  **Simplified Writes**: The entire game object (header + logs) can be inserted or updated in fewer operations.
+
+### JSON Structure
+
+**`play_by_play` Column:**
+```json
+[
+  { "line_number": 1, "text": "Tip-off...", "color": "0" },
+  { "line_number": 2, "text": "Player X scores!", "color": "1" }
+]
+```
+
+**`box_score` Column:**
+```json
+[
+  { "line_number": 1, "text": "Header Info..." },
+  { "line_number": 2, "text": "Player Stats..." }
+]
+```
+
