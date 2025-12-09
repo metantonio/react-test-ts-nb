@@ -1,1 +1,0 @@
-in @Instructions.tsx, I want to center the content of the page based on the User point of view, instructions about how works @GameSetup.tsx and @FullSeason.tsx, and be detailed on how works the draft of players and 4 minute substitution pattern.   
