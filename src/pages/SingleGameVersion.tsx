@@ -147,7 +147,7 @@ const SingleGameVersion: React.FC<SingleGameVersionProps> = ({
   const [showCourtStats, setShowCourtStats] = useState(true);
   const [showTheScore, setShowTheScore] = useState(true);
   const [enhancedPBP, setEnhancedPBP] = useState(false);
-  const [midlineScroll, setMidlineScroll] = useState(false);
+  const [midlineScroll, setMidlineScroll] = useState(true);
 
   // Game Data State
   const [scoreBoard, setScoreBoard] = useState<ScoreBoard | null>(null);
