@@ -125,12 +125,51 @@ const PBP2DVisualizer: React.FC<PBP2DVisualizerProps> = ({ scoreBoard, currentPl
             ballPos.x = 470; ballPos.y = 250;
         }
 
+        // Role-based coordinates (Offense side, assuming basket is at X=50)
+        const ROLE_COORDS: Record<string, { offense: { x: number, y: number }, defense: { x: number, y: number } }> = {
+            'PG': { offense: { x: 420, y: 250 }, defense: { x: 430, y: 250 } },
+            'SG': { offense: { x: 300, y: 80 }, defense: { x: 310, y: 120 } },
+            'SF': { offense: { x: 300, y: 420 }, defense: { x: 310, y: 380 } },
+            'PF': { offense: { x: 220, y: 320 }, defense: { x: 200, y: 300 } },
+            'C': { offense: { x: 120, y: 250 }, defense: { x: 80, y: 250 } },
+        };
+
+        const getPlayerRole = (name: string, team: 'away' | 'home') => {
+            if (!name || name === "Unknown") return null;
+            const roster = team === 'away' ? playersAway : playersHome;
+            const lowerName = name.toLowerCase().trim();
+            const lastName = lowerName.split(' ').pop() || '';
+
+            const p = roster.find(r => {
+                const rLower = r.name.toLowerCase().trim();
+                const rLast = rLower.split(' ').pop() || '';
+                // Match full name or last name (if last name is significant)
+                return rLower === lowerName || (lastName.length > 2 && rLast === lastName);
+            });
+            if (!p) return null;
+            const pos = p.positions?.toUpperCase() || "";
+            if (pos.includes('C')) return 'C';
+            if (pos.includes('PF')) return 'PF';
+            if (pos.includes('SF')) return 'SF';
+            if (pos.includes('SG')) return 'SG';
+            if (pos.includes('PG') || pos.includes('G')) return 'PG';
+            return null;
+        };
+
         // Render Away
         onCourtAway.forEach((n, i) => {
             const offence = isAwayOffense;
             const side = offence ? awaySide : homeSide;
+            const role = getPlayerRole(n, 'away');
+
             let x = side === 0 ? 150 : 790;
             let y = [100, 200, 250, 300, 400][i];
+
+            if (role && ROLE_COORDS[role]) {
+                const coords = offence ? ROLE_COORDS[role].offense : ROLE_COORDS[role].defense;
+                const loc = side === 0 ? coords : { x: COURT_WIDTH - coords.x, y: coords.y };
+                x = loc.x; y = loc.y;
+            }
 
             if (active?.name === n && active.team === 'away') {
                 for (const [k, v] of Object.entries(locations)) {
@@ -152,8 +191,16 @@ const PBP2DVisualizer: React.FC<PBP2DVisualizerProps> = ({ scoreBoard, currentPl
         onCourtHome.forEach((n, i) => {
             const offence = !isAwayOffense;
             const side = offence ? homeSide : awaySide;
+            const role = getPlayerRole(n, 'home');
+
             let x = side === 0 ? 150 : 790;
-            let y = [120, 220, 270, 320, 420][i]; // Slightly offset from away to minimize overlap if center
+            let y = [120, 220, 270, 320, 420][i];
+
+            if (role && ROLE_COORDS[role]) {
+                const coords = offence ? ROLE_COORDS[role].offense : ROLE_COORDS[role].defense;
+                const loc = side === 0 ? coords : { x: COURT_WIDTH - coords.x, y: coords.y };
+                x = loc.x; y = loc.y;
+            }
 
             if (active?.name === n && active.team === 'home') {
                 for (const [k, v] of Object.entries(locations)) {
@@ -207,7 +254,7 @@ const PBP2DVisualizer: React.FC<PBP2DVisualizerProps> = ({ scoreBoard, currentPl
             {positions.players.map((p, i) => {
                 const rawName = p.name ? p.name.trim() : "";
                 const displayLabel = (rawName && rawName !== "Unknown")
-                    ? rawName.substring(0, 5).toUpperCase()
+                    ? rawName.substring(0, 3).toUpperCase()
                     : (p.hasBall ? "!!!" : "?");
 
                 return (
