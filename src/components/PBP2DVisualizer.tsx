@@ -1,4 +1,9 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useRef } from 'react';
+
+interface Player {
+    name: string;
+    positions: string;
+}
 
 interface PlayerPos {
     x: number;
@@ -16,52 +21,63 @@ interface PBP2DVisualizerProps {
         home_score: number;
     } | null;
     currentPlay: string | undefined;
+    playersAway: Player[];
+    playersHome: Player[];
 }
 
 const COURT_WIDTH = 940;
 const COURT_HEIGHT = 500;
 
-const PBP2DVisualizer: React.FC<PBP2DVisualizerProps> = ({ scoreBoard, currentPlay }) => {
-    const positions = useMemo<{ players: PlayerPos[]; ball: { x: number; y: number } } | null>(() => {
+const PBP2DVisualizer: React.FC<PBP2DVisualizerProps> = ({ scoreBoard, currentPlay, playersAway = [], playersHome = [] }) => {
+    // Keep track of the last side a team was on to prevent flickering
+    const lastPossession = useRef<'away' | 'home'>('away');
+    const lastBallPos = useRef({ x: COURT_WIDTH / 2, y: COURT_HEIGHT / 2 });
+
+    const positions = useMemo(() => {
         if (!scoreBoard) return null;
 
-        const awayPlayers = [
+        const onCourtAway = [
             scoreBoard.away_player1, scoreBoard.away_player2, scoreBoard.away_player3,
             scoreBoard.away_player4, scoreBoard.away_player5
-        ].filter(Boolean);
-        const homePlayers = [
+        ].map(n => n || "Unknown");
+
+        const onCourtHome = [
             scoreBoard.home_player1, scoreBoard.home_player2, scoreBoard.home_player3,
             scoreBoard.home_player4, scoreBoard.home_player5
-        ].filter(Boolean);
+        ].map(n => n || "Unknown");
 
         const playText = currentPlay?.toLowerCase() || "";
 
-        // Determine which team has the ball
-        // Simple logic: check if an away player or home player is mentioned in the active action
-        const isAwayAction = awayPlayers.some(p => playText.includes(p.toLowerCase()));
-        const isHomeAction = homePlayers.some(p => playText.includes(p.toLowerCase()));
+        // Build name dictionaries for better matching
+        const awayRoster = (playersAway || []).flatMap(p => [p.name, p.name.split(' ').pop() || '']);
+        const homeRoster = (playersHome || []).flatMap(p => [p.name, p.name.split(' ').pop() || '']);
 
-        // Offensive side changes after halftime (Quarter 3)
-        // Q1, Q2: Away attacks Left (0), Home attacks Right (1)
-        // Q3, Q4: Away attacks Right (1), Home attacks Left (0)
-        const awayOffenseSide = scoreBoard.quarter <= 2 ? 0 : 1;
-        const homeOffenseSide = scoreBoard.quarter <= 2 ? 1 : 0;
+        const matchPlayer = (name: string, team: 'away' | 'home') => {
+            if (!name || name === "Unknown") return false;
+            const lower = name.toLowerCase();
+            const lastName = lower.split(' ').pop() || '';
+            const isMentioned = playText.includes(lower) || (lastName.length > 2 && playText.includes(lastName));
 
-        const currentOffenseSide = isAwayAction ? awayOffenseSide : (isHomeAction ? homeOffenseSide : (awayOffenseSide)); // Default to away offense for jump ball etc
+            if (!isMentioned) return false;
 
-        // Base positions relative to the offense side
-        const getBasePos = (index: number, team: 'away' | 'home') => {
-            const isOffense = (team === 'away' && isAwayAction) || (team === 'home' && isHomeAction);
-            const side = team === 'away' ? (isOffense ? awayOffenseSide : homeOffenseSide) : (isOffense ? homeOffenseSide : awayOffenseSide);
-
-            const baseX = side === 0 ? 150 : 790;
-            const spreadY = [100, 200, 250, 300, 400];
-
-            return {
-                x: baseX + (Math.random() * 60 - 30),
-                y: spreadY[index] + (Math.random() * 40 - 20)
-            };
+            // Validate against roster to prevent cross-team mismatches
+            const roster = team === 'away' ? awayRoster : homeRoster;
+            return roster.some(r => r.toLowerCase() === lower || r.toLowerCase() === lastName);
         };
+
+        // Possession detection
+        let currentPos = lastPossession.current;
+        if (onCourtAway.some(p => matchPlayer(p, 'away')) || playText.includes("hawks") || playText.includes("atlanta")) {
+            currentPos = 'away';
+        } else if (onCourtHome.some(p => matchPlayer(p, 'home')) || playText.includes("celtics") || playText.includes("boston")) {
+            currentPos = 'home';
+        }
+        lastPossession.current = currentPos;
+
+        // Sides
+        const awaySide = scoreBoard.quarter <= 2 ? 0 : 1;
+        const homeSide = scoreBoard.quarter <= 2 ? 1 : 0;
+        const isAwayOffense = currentPos === 'away';
 
         const locations: Record<string, { x: number, y: number }> = {
             'corner': { x: 50, y: 50 },
@@ -69,124 +85,145 @@ const PBP2DVisualizer: React.FC<PBP2DVisualizerProps> = ({ scoreBoard, currentPl
             'wing': { x: 220, y: 100 },
             'lane': { x: 150, y: 250 },
             'paint': { x: 120, y: 250 },
+            'foul line': { x: 190, y: 250 },
+            'top of the key': { x: 380, y: 250 },
+            'high post': { x: 220, y: 250 },
+            'low post': { x: 100, y: 300 },
             '3 point': { x: 320, y: 250 },
             'rim': { x: 55, y: 250 },
             'backboard': { x: 45, y: 250 },
             'upcourt': { x: 470, y: 250 },
-            'half court': { x: 400, y: 250 },
         };
 
-        const ballPos = { x: 470, y: 250 };
-        const playerNodes: PlayerPos[] = [];
+        const ballPos = { ...lastBallPos.current };
+        const nodes: PlayerPos[] = [];
 
-        // Common logic to place a player and the ball
-        const setNodeAndBall = (name: string, team: 'away' | 'home', index: number) => {
-            let pos = getBasePos(index, team);
-            const teamOffenseSide = team === 'away' ? awayOffenseSide : homeOffenseSide;
+        const findActive = () => {
+            const a = onCourtAway.find(n => matchPlayer(n, 'away'));
+            if (a) return { name: a, team: 'away' as const };
+            const h = onCourtHome.find(n => matchPlayer(n, 'home'));
+            if (h) return { name: h, team: 'home' as const };
+            return null;
+        };
+        const active = findActive();
 
-            if (playText.includes(name.toLowerCase())) {
-                let foundLoc = false;
-                for (const [key, loc] of Object.entries(locations)) {
-                    if (playText.includes(key)) {
-                        pos = teamOffenseSide === 0 ? loc : { x: COURT_WIDTH - loc.x, y: loc.y };
-                        ballPos.x = pos.x; ballPos.y = pos.y;
-                        foundLoc = true;
+        if (playText.includes("start of") || playText.includes("jump ball")) {
+            ballPos.x = 470; ballPos.y = 250;
+        }
+
+        // Render Away
+        onCourtAway.forEach((n, i) => {
+            const offence = isAwayOffense;
+            const side = offence ? awaySide : homeSide;
+            let x = side === 0 ? 150 : 790;
+            let y = [100, 200, 250, 300, 400][i];
+
+            if (active?.name === n && active.team === 'away') {
+                for (const [k, v] of Object.entries(locations)) {
+                    if (playText.includes(k)) {
+                        const loc = side === 0 ? v : { x: COURT_WIDTH - v.x, y: v.y };
+                        x = loc.x; y = loc.y;
+                        ballPos.x = x; ballPos.y = y;
                         break;
                     }
                 }
-                if (!foundLoc) {
-                    ballPos.x = pos.x; ballPos.y = pos.y;
+                if (ballPos.x === lastBallPos.current.x) { // If no location found but player active
+                    ballPos.x = x; ballPos.y = y;
                 }
             }
-            playerNodes.push({ ...pos, name, team });
-        };
+            nodes.push({ x, y, name: n, team: 'away' });
+        });
 
-        awayPlayers.forEach((name, i) => setNodeAndBall(name, 'away', i));
-        homePlayers.forEach((name, i) => setNodeAndBall(name, 'home', i));
+        // Render Home
+        onCourtHome.forEach((n, i) => {
+            const offence = !isAwayOffense;
+            const side = offence ? homeSide : awaySide;
+            let x = side === 0 ? 150 : 790;
+            let y = [120, 220, 270, 320, 420][i]; // Slightly offset from away to minimize overlap if center
 
-        return { players: playerNodes, ball: ballPos };
-    }, [scoreBoard, currentPlay]);
+            if (active?.name === n && active.team === 'home') {
+                for (const [k, v] of Object.entries(locations)) {
+                    if (playText.includes(k)) {
+                        const loc = side === 0 ? v : { x: COURT_WIDTH - v.x, y: v.y };
+                        x = loc.x; y = loc.y;
+                        ballPos.x = x; ballPos.y = y;
+                        break;
+                    }
+                }
+                if (ballPos.x === lastBallPos.current.x) {
+                    ballPos.x = x; ballPos.y = y;
+                }
+            }
+            nodes.push({ x, y, name: n, team: 'home' });
+        });
+
+        lastBallPos.current = ballPos;
+        return { players: nodes, ball: ballPos };
+    }, [scoreBoard, currentPlay, playersAway, playersHome]);
 
     if (!scoreBoard || !positions) return null;
 
     return (
-        <div className="relative w-full aspect-[94/50] rounded-lg overflow-hidden shadow-2xl border-4 border-gray-800"
-            style={{
-                background: 'linear-gradient(45deg, #f3d299 25%, #eed090 25%, #eed090 50%, #f3d299 50%, #f3d299 75%, #eed090 75%, #eed090 100%)',
-                backgroundSize: '40px 40px'
-            }}>
-            {/* Wood Parquet Overlay */}
-            <div className="absolute inset-0 opacity-10 pointer-events-none" style={{ backgroundImage: 'repeating-linear-gradient(0deg, #000, #000 1px, transparent 1px, transparent 10px)' }}></div>
+        <div className="relative w-full aspect-[94/50] rounded-lg overflow-hidden shadow-2xl border-4 border-gray-800 bg-[#f3d299]">
+            {/* Parquet Texture */}
+            <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
+                style={{ backgroundImage: 'repeating-linear-gradient(90deg, #000, #000 2px, transparent 2px, transparent 40px), repeating-linear-gradient(0deg, #000, #000 2px, transparent 2px, transparent 120px)' }} />
 
-            {/* Court Lines SVG */}
             <svg viewBox={`0 0 ${COURT_WIDTH} ${COURT_HEIGHT}`} className="absolute inset-0 w-full h-full">
-                {/* Borders */}
-                <rect x="0" y="0" width={COURT_WIDTH} height={COURT_HEIGHT} fill="none" stroke="white" strokeWidth="6" />
-
-                {/* Midcourt */}
-                <line x1={COURT_WIDTH / 2} y1="0" x2={COURT_WIDTH / 2} y2={COURT_HEIGHT} stroke="white" strokeWidth="4" />
-                <circle cx={COURT_WIDTH / 2} cy={COURT_HEIGHT / 2} r="60" fill="none" stroke="white" strokeWidth="4" />
+                <rect x="0" y="0" width={COURT_WIDTH} height={COURT_HEIGHT} fill="none" stroke="white" strokeWidth="4" />
+                <line x1={COURT_WIDTH / 2} y1="0" x2={COURT_WIDTH / 2} y2={COURT_HEIGHT} stroke="white" strokeWidth="3" />
+                <circle cx={COURT_WIDTH / 2} cy={COURT_HEIGHT / 2} r="60" fill="none" stroke="white" strokeWidth="3" />
 
                 {/* Left Side */}
-                <path d="M 0 50 Q 350 250 0 450" fill="none" stroke="white" strokeWidth="4" /> {/* 3pt Arc */}
-                <rect x="0" y="170" width="190" height="160" fill="rgba(255,255,255,0.1)" stroke="white" strokeWidth="4" /> {/* Key */}
-                <circle cx="190" cy="250" r="60" fill="none" stroke="white" strokeWidth="4" /> {/* Free Throw Circle */}
-                <line x1="40" y1="220" x2="40" y2="280" stroke="white" strokeWidth="6" /> {/* Backboard */}
-                <circle cx="55" cy="250" r="15" fill="none" stroke="orange" strokeWidth="3" /> {/* Rim */}
+                <path d="M 0 40 L 220 40 Q 420 250 220 460 L 0 460" fill="none" stroke="white" strokeWidth="3" /> {/* 3pt Line */}
+                <rect x="0" y="170" width="190" height="160" fill="rgba(255,255,255,0.05)" stroke="white" strokeWidth="3" />
+                <circle cx="190" cy="250" r="60" fill="none" stroke="white" strokeWidth="3" />
+                <line x1="30" y1="220" x2="30" y2="280" stroke="white" strokeWidth="5" />
+                <circle cx="45" cy="250" r="12" fill="none" stroke="orange" strokeWidth="3" />
 
                 {/* Right Side */}
-                <path d={`M ${COURT_WIDTH} 50 Q ${COURT_WIDTH - 350} 250 ${COURT_WIDTH} 450`} fill="none" stroke="white" strokeWidth="4" /> {/* 3pt Arc */}
-                <rect x={COURT_WIDTH - 190} y="170" width="190" height="160" fill="rgba(255,255,255,0.1)" stroke="white" strokeWidth="4" /> {/* Key */}
-                <circle cx={COURT_WIDTH - 190} cy="250" r="60" fill="none" stroke="white" strokeWidth="4" /> {/* Free Throw Circle */}
-                <line x1={COURT_WIDTH - 40} y1="220" x2={COURT_WIDTH - 40} y2="280" stroke="white" strokeWidth="6" /> {/* Backboard */}
-                <circle cx={COURT_WIDTH - 55} cy="250" r="15" fill="none" stroke="orange" strokeWidth="3" /> {/* Rim */}
+                <path d={`M ${COURT_WIDTH} 40 L ${COURT_WIDTH - 220} 40 Q ${COURT_WIDTH - 420} 250 ${COURT_WIDTH - 220} 460 L ${COURT_WIDTH} 460`} fill="none" stroke="white" strokeWidth="3" />
+                <rect x={COURT_WIDTH - 190} y="170" width="190" height="160" fill="rgba(255,255,255,0.05)" stroke="white" strokeWidth="3" />
+                <circle cx={COURT_WIDTH - 190} cy="250" r="60" fill="none" stroke="white" strokeWidth="3" />
+                <line x1={COURT_WIDTH - 30} y1="220" x2={COURT_WIDTH - 30} y2="280" stroke="white" strokeWidth="5" />
+                <circle cx={COURT_WIDTH - 45} cy={COURT_HEIGHT / 2} r="12" fill="none" stroke="orange" strokeWidth="3" />
             </svg>
 
             {/* Players */}
             {positions.players.map((p, i) => (
-                <div
-                    key={i}
-                    className={`absolute w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold text-white transition-all duration-700 ease-in-out border-2 border-white shadow-lg
-            ${p.team === 'away' ? 'bg-red-600' : 'bg-blue-600'}`}
+                <div key={i}
+                    className={`absolute w-7 h-7 rounded-full flex items-center justify-center text-[9px] font-bold text-white transition-all duration-700 ease-in-out border-2 shadow-lg
+                        ${p.team === 'away' ? 'bg-red-600 border-red-200' : 'bg-blue-600 border-blue-200'}`}
                     style={{
                         left: `${(p.x / COURT_WIDTH) * 100}%`,
                         top: `${(p.y / COURT_HEIGHT) * 100}%`,
                         transform: 'translate(-50%, -50%)',
                         zIndex: 5
-                    }}
-                    title={p.name}
-                >
-                    {p.name?.substring(0, 1)}
+                    }} >
+                    {p.name !== "Unknown" ? p.name.split(' ').pop()?.substring(0, 3).toUpperCase() : "?"}
                 </div>
             ))}
 
             {/* Ball */}
-            <div
-                className="absolute w-4 h-4 bg-orange-500 rounded-full transition-all duration-500 ease-out border-2 border-black shadow-xl"
+            <div className="absolute w-4 h-4 bg-orange-600 rounded-full transition-all duration-500 ease-out border-2 border-black shadow-xl"
                 style={{
                     left: `${(positions.ball.x / COURT_WIDTH) * 100}%`,
                     top: `${(positions.ball.y / COURT_HEIGHT) * 100}%`,
                     transform: 'translate(-50%, -50%)',
                     zIndex: 10
-                }}
-            >
-                <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-[1px] h-full bg-black/30"></div>
-                    <div className="h-[1px] w-full bg-black/30"></div>
-                </div>
+                }} />
+
+            {/* Score Overlay */}
+            <div className="absolute top-3 left-1/2 -translate-x-1/2 flex gap-4 bg-black/70 backdrop-blur-sm px-4 py-1 rounded-full border border-white/20 text-white text-[10px] font-mono">
+                <span className="text-red-400 font-bold">{scoreBoard.away_score}</span>
+                <span className="opacity-50">VS</span>
+                <span className="text-blue-400 font-bold">{scoreBoard.home_score}</span>
+                <span className="ml-2 border-l border-white/20 pl-2">Q{scoreBoard.quarter}</span>
             </div>
 
-            {/* Legend & Stats Overlay */}
-            <div className="absolute top-2 right-2 flex flex-col gap-1 items-end">
-                <div className="bg-black/60 backdrop-blur-sm px-2 py-1 rounded text-[10px] text-white flex gap-3">
-                    <div className="flex items-center gap-1"><div className="w-2 h-2 bg-red-600 rounded-full"></div> {scoreBoard.away_score}</div>
-                    <div className="flex items-center gap-1"><div className="w-2 h-2 bg-blue-600 rounded-full"></div> {scoreBoard.home_score}</div>
-                    <div className="font-mono">Q{scoreBoard.quarter}</div>
-                </div>
-            </div>
-
-            <div className="absolute bottom-2 left-2 max-w-[60%] bg-black/40 backdrop-blur-sm p-1 rounded text-[10px] text-white italic truncate">
-                {currentPlay || "Waiting for tip-off..."}
+            <div className="absolute bottom-3 left-4 right-4 bg-black/70 backdrop-blur-md p-2 rounded-lg text-[11px] text-white border border-white/10 shadow-2xl flex items-center gap-3">
+                <div className={`w-2 h-2 rounded-full ${lastPossession.current === 'away' ? 'bg-red-500' : 'bg-blue-500'} animate-pulse`} />
+                <span className="flex-1 italic truncate">{currentPlay || "Waiting for action..."}</span>
             </div>
         </div>
     );

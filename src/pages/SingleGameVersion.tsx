@@ -652,6 +652,8 @@ const SingleGameVersion: React.FC<SingleGameVersionProps> = ({
           <PBP2DVisualizer
             scoreBoard={scoreBoard}
             currentPlay={playByPlay[currentPlayIndex]?.pbp_line}
+            playersAway={playersTeam1}
+            playersHome={playersTeam2}
           />
         </div>
       )}
