@@ -9,6 +9,7 @@ import CustomRadio from '../components/ui/CustomRadio';
 import CustomCheckbox from '../components/ui/CustomCheckbox';
 import { useUser } from '@/contexts/UserContext';
 import { useToast } from "@/hooks/use-toast";
+import PBP2DVisualizer from '../components/PBP2DVisualizer';
 import {
   Dialog,
   DialogContent,
@@ -644,6 +645,16 @@ const SingleGameVersion: React.FC<SingleGameVersionProps> = ({
           <CustomCheckbox id="midline-scroll" checked={midlineScroll} onChange={setMidlineScroll} label="Mid-line scroll" />
         </div>
       </div>
+
+      {/* 2D Visualization Section */}
+      {showCourtStats && (
+        <div className="mb-4">
+          <PBP2DVisualizer
+            scoreBoard={scoreBoard}
+            currentPlay={playByPlay[currentPlayIndex]?.pbp_line}
+          />
+        </div>
+      )}
 
       {/* Play-by-Play and Box Score */}
       <div className={`grid gap-2 h-[500px] md:h-96 ${displayOptions === 'both' ? 'grid-cols-1 md:grid-cols-2' : 'grid-cols-1'}`}>
