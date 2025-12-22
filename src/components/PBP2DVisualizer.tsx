@@ -10,6 +10,7 @@ interface PlayerPos {
     y: number;
     name: string;
     team: 'away' | 'home';
+    hasBall: boolean;
 }
 
 interface PBP2DVisualizerProps {
@@ -51,25 +52,35 @@ const PBP2DVisualizer: React.FC<PBP2DVisualizerProps> = ({ scoreBoard, currentPl
         // Build name dictionaries for better matching
         const awayRoster = (playersAway || []).flatMap(p => [p.name, p.name.split(' ').pop() || '']);
         const homeRoster = (playersHome || []).flatMap(p => [p.name, p.name.split(' ').pop() || '']);
-
-        const matchPlayer = (name: string, team: 'away' | 'home') => {
-            if (!name || name === "Unknown") return false;
+        // Improved name matching logic that returns the index of the mention
+        const getMentionIndex = (name: string, team: 'away' | 'home') => {
+            if (!name || name === "Unknown") return -1;
             const lower = name.toLowerCase();
             const lastName = lower.split(' ').pop() || '';
-            const isMentioned = playText.includes(lower) || (lastName.length > 2 && playText.includes(lastName));
 
-            if (!isMentioned) return false;
+            const fullIdx = playText.lastIndexOf(lower);
+            const lastIdx = lastName.length > 2 ? playText.lastIndexOf(lastName) : -1;
+            const idx = Math.max(fullIdx, lastIdx);
+
+            if (idx === -1) return -1;
 
             // Validate against roster to prevent cross-team mismatches
             const roster = team === 'away' ? awayRoster : homeRoster;
-            return roster.some(r => r.toLowerCase() === lower || r.toLowerCase() === lastName);
+            const isAuthentic = roster.some(r => r.toLowerCase() === lower || r.toLowerCase() === lastName);
+            return isAuthentic ? idx : -1;
         };
 
-        // Possession detection
+        // Possession detection based on mentions
         let currentPos = lastPossession.current;
-        if (onCourtAway.some(p => matchPlayer(p, 'away')) || playText.includes("hawks") || playText.includes("atlanta")) {
+        const awayMentions = onCourtAway.map(p => getMentionIndex(p, 'away'));
+        const homeMentions = onCourtHome.map(p => getMentionIndex(p, 'home'));
+
+        const maxAwayIdx = Math.max(...awayMentions);
+        const maxHomeIdx = Math.max(...homeMentions);
+
+        if (maxAwayIdx > maxHomeIdx || playText.includes("hawks") || playText.includes("atlanta")) {
             currentPos = 'away';
-        } else if (onCourtHome.some(p => matchPlayer(p, 'home')) || playText.includes("celtics") || playText.includes("boston")) {
+        } else if (maxHomeIdx > maxAwayIdx || playText.includes("celtics") || playText.includes("boston")) {
             currentPos = 'home';
         }
         lastPossession.current = currentPos;
@@ -99,11 +110,14 @@ const PBP2DVisualizer: React.FC<PBP2DVisualizerProps> = ({ scoreBoard, currentPl
         const nodes: PlayerPos[] = [];
 
         const findActive = () => {
-            const a = onCourtAway.find(n => matchPlayer(n, 'away'));
-            if (a) return { name: a, team: 'away' as const };
-            const h = onCourtHome.find(n => matchPlayer(n, 'home'));
-            if (h) return { name: h, team: 'home' as const };
-            return null;
+            if (maxAwayIdx === -1 && maxHomeIdx === -1) return null;
+            if (maxAwayIdx >= maxHomeIdx) {
+                const idx = awayMentions.indexOf(maxAwayIdx);
+                return { name: onCourtAway[idx], team: 'away' as const };
+            } else {
+                const idx = homeMentions.indexOf(maxHomeIdx);
+                return { name: onCourtHome[idx], team: 'home' as const };
+            }
         };
         const active = findActive();
 
@@ -131,7 +145,7 @@ const PBP2DVisualizer: React.FC<PBP2DVisualizerProps> = ({ scoreBoard, currentPl
                     ballPos.x = x; ballPos.y = y;
                 }
             }
-            nodes.push({ x, y, name: n, team: 'away' });
+            nodes.push({ x, y, name: n, team: 'away', hasBall: active?.name === n && active.team === 'away' });
         });
 
         // Render Home
@@ -154,7 +168,7 @@ const PBP2DVisualizer: React.FC<PBP2DVisualizerProps> = ({ scoreBoard, currentPl
                     ballPos.x = x; ballPos.y = y;
                 }
             }
-            nodes.push({ x, y, name: n, team: 'home' });
+            nodes.push({ x, y, name: n, team: 'home', hasBall: active?.name === n && active.team === 'home' });
         });
 
         lastBallPos.current = ballPos;
@@ -192,15 +206,19 @@ const PBP2DVisualizer: React.FC<PBP2DVisualizerProps> = ({ scoreBoard, currentPl
             {/* Players */}
             {positions.players.map((p, i) => (
                 <div key={i}
-                    className={`absolute w-7 h-7 rounded-full flex items-center justify-center text-[9px] font-bold text-white transition-all duration-700 ease-in-out border-2 shadow-lg
-                        ${p.team === 'away' ? 'bg-red-600 border-red-200' : 'bg-blue-600 border-blue-200'}`}
+                    className={`absolute rounded-full flex items-center justify-center font-bold text-white transition-all duration-500 ease-in-out border-2 shadow-lg
+                        ${p.team === 'away' ? 'bg-red-600 border-red-200' : 'bg-blue-600 border-blue-200'}
+                        ${p.hasBall ? 'z-30 ring-4 ring-yellow-400 shadow-[0_0_20px_rgba(255,255,0,0.6)]' : 'z-10'}`}
                     style={{
                         left: `${(p.x / COURT_WIDTH) * 100}%`,
                         top: `${(p.y / COURT_HEIGHT) * 100}%`,
-                        transform: 'translate(-50%, -50%)',
-                        zIndex: 5
+                        transform: `translate(-50%, -50%) ${p.hasBall ? 'scale(1.5)' : 'scale(1)'}`,
+                        width: '28px',
+                        height: '28px',
                     }} >
-                    {p.name !== "Unknown" ? p.name.split(' ').pop()?.substring(0, 3).toUpperCase() : "?"}
+                    <span className="text-[10px] font-black tracking-tighter drop-shadow-md">
+                        {p.name !== "Unknown" ? p.name.split(' ').pop()?.substring(0, 3).toUpperCase() : "?"}
+                    </span>
                 </div>
             ))}
 
@@ -213,8 +231,20 @@ const PBP2DVisualizer: React.FC<PBP2DVisualizerProps> = ({ scoreBoard, currentPl
                     zIndex: 10
                 }} />
 
-            {/* Score Overlay */}
-            <div className="absolute top-3 left-1/2 -translate-x-1/2 flex gap-4 bg-black/70 backdrop-blur-sm px-4 py-1 rounded-full border border-white/20 text-white text-[10px] font-mono">
+            {/* Top Left: Ball Holder Name */}
+            {positions.players.find(p => p.hasBall) && (
+                <div className="absolute top-3 left-4 bg-black/70 backdrop-blur-sm px-4 py-1.5 rounded-lg border border-white/20 shadow-2xl transition-all duration-300 animate-in fade-in slide-in-from-left-4 z-40">
+                    <div className="flex items-center gap-2">
+                        <div className={`w-2 h-2 rounded-full animate-pulse ${positions.players.find(p => p.hasBall)?.team === 'away' ? 'bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]' : 'bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.8)]'}`} />
+                        <span className="text-white text-[12px] font-bold tracking-wide uppercase">
+                            {positions.players.find(p => p.hasBall)?.name}
+                        </span>
+                    </div>
+                </div>
+            )}
+
+            {/* Score Overlay (Top Right) */}
+            <div className="absolute top-3 right-4 flex gap-4 bg-black/70 backdrop-blur-sm px-4 py-1 rounded-full border border-white/20 text-white text-[10px] font-mono z-40">
                 <span className="text-red-400 font-bold">{scoreBoard.away_score}</span>
                 <span className="opacity-50">VS</span>
                 <span className="text-blue-400 font-bold">{scoreBoard.home_score}</span>
