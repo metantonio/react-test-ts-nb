@@ -204,23 +204,30 @@ const PBP2DVisualizer: React.FC<PBP2DVisualizerProps> = ({ scoreBoard, currentPl
             </svg>
 
             {/* Players */}
-            {positions.players.map((p, i) => (
-                <div key={i}
-                    className={`absolute rounded-full flex items-center justify-center font-bold text-white transition-all duration-500 ease-in-out border-2 shadow-lg
-                        ${p.team === 'away' ? 'bg-red-600 border-red-200' : 'bg-blue-600 border-blue-200'}
-                        ${p.hasBall ? 'z-30 ring-4 ring-yellow-400 shadow-[0_0_20px_rgba(255,255,0,0.6)]' : 'z-10'}`}
-                    style={{
-                        left: `${(p.x / COURT_WIDTH) * 100}%`,
-                        top: `${(p.y / COURT_HEIGHT) * 100}%`,
-                        transform: `translate(-50%, -50%) ${p.hasBall ? 'scale(1.5)' : 'scale(1)'}`,
-                        width: '28px',
-                        height: '28px',
-                    }} >
-                    <span className="text-[10px] font-black tracking-tighter drop-shadow-md">
-                        {p.name !== "Unknown" ? p.name.split(' ').pop()?.substring(0, 3).toUpperCase() : "?"}
-                    </span>
-                </div>
-            ))}
+            {positions.players.map((p, i) => {
+                const rawName = p.name ? p.name.trim() : "";
+                const displayLabel = (rawName && rawName !== "Unknown")
+                    ? rawName.substring(0, 5).toUpperCase()
+                    : (p.hasBall ? "!!!" : "?");
+
+                return (
+                    <div key={i}
+                        className={`absolute w-8 h-8 rounded-full flex items-center justify-center font-bold text-white transition-all duration-500 ease-in-out border-2 shadow-lg
+                            ${p.team === 'away' ? 'bg-red-600 border-red-200' : 'bg-blue-600 border-blue-200'}
+                            ${p.hasBall ? 'z-30 ring-4 ring-yellow-400 shadow-[0_0_20px_rgba(255,255,0,0.6)]' : 'z-10'}`}
+                        style={{
+                            left: `${(p.x / COURT_WIDTH) * 100}%`,
+                            top: `${(p.y / COURT_HEIGHT) * 100}%`,
+                            transform: `translate(-50%, -50%) ${p.hasBall ? 'scale(1.5)' : 'scale(1)'}`,
+                            zIndex: p.hasBall ? 40 : 10,
+                            display: 'flex'
+                        }} >
+                        <span className="text-[10px] font-black drop-shadow-[0_1px_2px_rgba(0,0,0,1)] pointer-events-none select-none">
+                            {displayLabel}
+                        </span>
+                    </div>
+                );
+            })}
 
             {/* Ball */}
             <div className="absolute w-4 h-4 bg-orange-600 rounded-full transition-all duration-500 ease-out border-2 border-black shadow-xl"
