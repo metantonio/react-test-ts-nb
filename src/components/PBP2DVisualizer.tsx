@@ -9,8 +9,10 @@ interface PlayerPos {
     x: number;
     y: number;
     name: string;
+    fullName: string;
     team: 'away' | 'home';
     hasBall: boolean;
+    number: string;
 }
 
 interface PBP2DVisualizerProps {
@@ -218,7 +220,20 @@ const PBP2DVisualizer: React.FC<PBP2DVisualizerProps> = ({ scoreBoard, currentPl
                     ballPos.x = x; ballPos.y = y;
                 }
             }
-            nodes.push({ x, y, name: n, team: 'away', hasBall: active?.name === n && active.team === 'away' });
+
+            const getJerseyNumber = (role: string | null, index: number) => {
+                const map: Record<string, string> = { 'PG': '1', 'SG': '2', 'SF': '3', 'PF': '4', 'C': '5' };
+                return role ? map[role] : (index + 1).toString();
+            };
+
+            nodes.push({
+                x, y,
+                name: n,
+                fullName: n,
+                team: 'away',
+                hasBall: active?.name === n && active.team === 'away',
+                number: getJerseyNumber(role, i)
+            });
         });
 
         // Render Home
@@ -255,7 +270,20 @@ const PBP2DVisualizer: React.FC<PBP2DVisualizerProps> = ({ scoreBoard, currentPl
                     ballPos.x = x; ballPos.y = y;
                 }
             }
-            nodes.push({ x, y, name: n, team: 'home', hasBall: active?.name === n && active.team === 'home' });
+
+            const getJerseyNumber = (role: string | null, index: number) => {
+                const map: Record<string, string> = { 'PG': '1', 'SG': '2', 'SF': '3', 'PF': '4', 'C': '5' };
+                return role ? map[role] : (index + 1).toString();
+            };
+
+            nodes.push({
+                x, y,
+                name: n,
+                fullName: n,
+                team: 'home',
+                hasBall: active?.name === n && active.team === 'home',
+                number: getJerseyNumber(role, i)
+            });
         });
 
         lastBallPos.current = ballPos;
@@ -292,26 +320,53 @@ const PBP2DVisualizer: React.FC<PBP2DVisualizerProps> = ({ scoreBoard, currentPl
 
             {/* Players */}
             {positions.players.map((p, i) => {
-                const rawName = p.name ? p.name.trim() : "";
-                const displayLabel = (rawName && rawName !== "Unknown")
-                    ? rawName.substring(0, 3).toUpperCase()
-                    : (p.hasBall ? "!!!" : "?");
-
                 return (
                     <div key={i}
-                        className={`absolute w-8 h-8 rounded-full flex items-center justify-center font-bold text-white transition-all duration-500 ease-in-out border-2 shadow-lg
-                            ${p.team === 'away' ? 'bg-red-600 border-red-200' : 'bg-blue-600 border-blue-200'}
-                            ${p.hasBall ? 'z-30 ring-4 ring-yellow-400 shadow-[0_0_20px_rgba(255,255,0,0.6)]' : 'z-10'}`}
+                        className={`absolute flex flex-col items-center transition-all duration-500 ease-in-out
+                            ${p.hasBall ? 'z-30 scale-125' : 'z-10 scale-100'}`}
                         style={{
                             left: `${(p.x / COURT_WIDTH) * 100}%`,
                             top: `${(p.y / COURT_HEIGHT) * 100}%`,
-                            transform: `translate(-50%, -50%) ${p.hasBall ? 'scale(1.5)' : 'scale(1)'}`,
-                            zIndex: p.hasBall ? 40 : 10,
-                            display: 'flex'
+                            transform: 'translate(-50%, -50%)',
                         }} >
-                        <span className="text-[10px] font-black drop-shadow-[0_1px_2px_rgba(0,0,0,1)] pointer-events-none select-none">
-                            {displayLabel}
-                        </span>
+
+                        {/* Jersey (Shirt) UI */}
+                        <div className="relative group">
+                            {/* Shirt Body (SVG) */}
+                            <svg className={`w-12 h-12 drop-shadow-xl ${p.hasBall ? 'animate-bounce shadow-[0_0_20px_rgba(255,255,0,0.6)]' : ''}`} viewBox="0 0 100 100">
+                                <path
+                                    d="M 20,20 L 35,10 L 50,20 L 65,10 L 80,20 L 80,50 L 95,65 L 85,75 L 80,70 L 80,95 L 20,95 L 20,70 L 15,75 L 5,65 L 20,50 Z"
+                                    fill={p.team === 'away' ? '#dc2626' : '#2563eb'}
+                                    stroke="white"
+                                    strokeWidth="3"
+                                />
+                                <text
+                                    x="50"
+                                    y="65"
+                                    textAnchor="middle"
+                                    fill="white"
+                                    fontSize="32"
+                                    fontWeight="bold"
+                                    className="select-none"
+                                >
+                                    {p.number}
+                                </text>
+                            </svg>
+
+                            {/* Notification on Ball Possession */}
+                            {p.hasBall && (
+                                <div className="absolute -top-2 -right-2 bg-yellow-400 text-black text-[8px] font-black px-1 rounded-full animate-pulse border border-black">
+                                    BALL
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Full Name Label */}
+                        <div className="mt-1 px-2 py-0.5 bg-black/80 rounded-sm border border-white/20 shadow-lg whitespace-nowrap overflow-hidden max-w-[120px]">
+                            <span className="text-white text-[9px] font-bold tracking-tight block truncate uppercase">
+                                {p.fullName}
+                            </span>
+                        </div>
                     </div>
                 );
             })}
