@@ -20,6 +20,16 @@ interface PBP2DVisualizerProps {
         quarter: number;
         away_score: number;
         home_score: number;
+        off_position1?: string;
+        off_position2?: string;
+        off_position3?: string;
+        off_position4?: string;
+        off_position5?: string;
+        def_position1?: string;
+        def_position2?: string;
+        def_position3?: string;
+        def_position4?: string;
+        def_position5?: string;
     } | null;
     currentPlay: string | undefined;
     playersAway: Player[];
@@ -127,15 +137,31 @@ const PBP2DVisualizer: React.FC<PBP2DVisualizerProps> = ({ scoreBoard, currentPl
 
         // Role-based coordinates (Offense side, assuming basket is at X=50)
         const ROLE_COORDS: Record<string, { offense: { x: number, y: number }, defense: { x: number, y: number } }> = {
-            'PG': { offense: { x: 420, y: 250 }, defense: { x: 430, y: 250 } },
-            'SG': { offense: { x: 300, y: 80 }, defense: { x: 310, y: 120 } },
-            'SF': { offense: { x: 300, y: 420 }, defense: { x: 310, y: 380 } },
-            'PF': { offense: { x: 220, y: 320 }, defense: { x: 200, y: 300 } },
-            'C': { offense: { x: 120, y: 250 }, defense: { x: 80, y: 250 } },
+            'PG': { offense: { x: 420, y: 250 }, defense: { x: 440, y: 250 } },
+            'SG': { offense: { x: 320, y: 90 }, defense: { x: 340, y: 130 } },
+            'SF': { offense: { x: 320, y: 410 }, defense: { x: 340, y: 370 } },
+            'PF': { offense: { x: 220, y: 340 }, defense: { x: 200, y: 320 } },
+            'C': { offense: { x: 130, y: 250 }, defense: { x: 90, y: 250 } },
         };
 
-        const getPlayerRole = (name: string, team: 'away' | 'home') => {
+        const getPlayerRole = (name: string, team: 'away' | 'home', index: number) => {
             if (!name || name === "Unknown") return null;
+
+            // 1. Try Scoreboard-provided positions if available
+            const sideType = (isAwayOffense && team === 'away') || (!isAwayOffense && team === 'home') ? 'off' : 'def';
+            const boardPosKey = `${sideType}_position${index + 1}` as keyof typeof scoreBoard;
+            const boardPos = scoreBoard[boardPosKey] as string | undefined;
+
+            if (boardPos) {
+                const pos = boardPos.toUpperCase();
+                if (pos.includes('C')) return 'C';
+                if (pos.includes('PF')) return 'PF';
+                if (pos.includes('SF')) return 'SF';
+                if (pos.includes('SG')) return 'SG';
+                if (pos.includes('PG') || pos.includes('G')) return 'PG';
+            }
+
+            // 2. Fallback to roster-based positions
             const roster = team === 'away' ? playersAway : playersHome;
             const lowerName = name.toLowerCase().trim();
             const lastName = lowerName.split(' ').pop() || '';
@@ -143,16 +169,18 @@ const PBP2DVisualizer: React.FC<PBP2DVisualizerProps> = ({ scoreBoard, currentPl
             const p = roster.find(r => {
                 const rLower = r.name.toLowerCase().trim();
                 const rLast = rLower.split(' ').pop() || '';
-                // Match full name or last name (if last name is significant)
                 return rLower === lowerName || (lastName.length > 2 && rLast === lastName);
             });
-            if (!p) return null;
-            const pos = p.positions?.toUpperCase() || "";
-            if (pos.includes('C')) return 'C';
-            if (pos.includes('PF')) return 'PF';
-            if (pos.includes('SF')) return 'SF';
-            if (pos.includes('SG')) return 'SG';
-            if (pos.includes('PG') || pos.includes('G')) return 'PG';
+
+            if (p) {
+                const pos = p.positions?.toUpperCase() || "";
+                if (pos.includes('C')) return 'C';
+                if (pos.includes('PF')) return 'PF';
+                if (pos.includes('SF')) return 'SF';
+                if (pos.includes('SG')) return 'SG';
+                if (pos.includes('PG') || pos.includes('G')) return 'PG';
+            }
+
             return null;
         };
 
@@ -160,10 +188,16 @@ const PBP2DVisualizer: React.FC<PBP2DVisualizerProps> = ({ scoreBoard, currentPl
         onCourtAway.forEach((n, i) => {
             const offence = isAwayOffense;
             const side = offence ? awaySide : homeSide;
-            const role = getPlayerRole(n, 'away');
+            const role = getPlayerRole(n, 'away', i);
 
-            let x = side === 0 ? 150 : 790;
-            let y = [100, 200, 250, 300, 400][i];
+            // Realistic tactical fallback positions (3-2 formation)
+            const fallbackCoords = offence
+                ? [{ x: 420, y: 250 }, { x: 300, y: 100 }, { x: 300, y: 400 }, { x: 200, y: 300 }, { x: 120, y: 250 }]
+                : [{ x: 440, y: 250 }, { x: 320, y: 150 }, { x: 320, y: 350 }, { x: 180, y: 300 }, { x: 80, y: 250 }];
+
+            const fallback = fallbackCoords[i];
+            let x = side === 0 ? fallback.x : COURT_WIDTH - fallback.x;
+            let y = fallback.y;
 
             if (role && ROLE_COORDS[role]) {
                 const coords = offence ? ROLE_COORDS[role].offense : ROLE_COORDS[role].defense;
@@ -191,10 +225,16 @@ const PBP2DVisualizer: React.FC<PBP2DVisualizerProps> = ({ scoreBoard, currentPl
         onCourtHome.forEach((n, i) => {
             const offence = !isAwayOffense;
             const side = offence ? homeSide : awaySide;
-            const role = getPlayerRole(n, 'home');
+            const role = getPlayerRole(n, 'home', i);
 
-            let x = side === 0 ? 150 : 790;
-            let y = [120, 220, 270, 320, 420][i];
+            // Realistic tactical fallback positions (3-2 formation)
+            const fallbackCoords = offence
+                ? [{ x: 420, y: 250 }, { x: 300, y: 100 }, { x: 300, y: 400 }, { x: 200, y: 300 }, { x: 120, y: 250 }]
+                : [{ x: 440, y: 250 }, { x: 320, y: 150 }, { x: 320, y: 350 }, { x: 180, y: 300 }, { x: 80, y: 250 }];
+
+            const fallback = fallbackCoords[i];
+            let x = side === 0 ? fallback.x : COURT_WIDTH - fallback.x;
+            let y = fallback.y;
 
             if (role && ROLE_COORDS[role]) {
                 const coords = offence ? ROLE_COORDS[role].offense : ROLE_COORDS[role].defense;

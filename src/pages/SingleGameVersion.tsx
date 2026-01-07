@@ -103,6 +103,16 @@ interface ScoreBoard {
   home_player3: string;
   home_player4: string;
   home_player5: string;
+  off_position1?: string;
+  off_position2?: string;
+  off_position3?: string;
+  off_position4?: string;
+  off_position5?: string;
+  def_position1?: string;
+  def_position2?: string;
+  def_position3?: string;
+  def_position4?: string;
+  def_position5?: string;
 }
 
 interface PlayByPlay {
