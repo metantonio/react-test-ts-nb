@@ -5,10 +5,9 @@ import FullSeasonVersion from './FullSeasonVersion';
 import SingleGameVersion from './SingleGameVersion';
 import Instructions from './Instructions';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Menu } from 'lucide-react';
 import { authService } from '@/contexts/AuthService';
 import { useUser } from '@/contexts/UserContext';
+import Navbar from '@/components/Navbar';
 import { StringToBoolean } from 'class-variance-authority/types';
 
 interface Message {
@@ -1508,53 +1507,14 @@ const GameSetup = () => {
 
 
   return (
-    <div className="p-4 bg-background text-foreground">
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-xl font-bold">NBA Game Simulation</h1>
-        <div className="flex items-center gap-4">
-          <div className="text-right">
-            <p className="text-base font-semibold">Welcome, {user?.name}</p>
-            <p className="text-xs text-muted-foreground">Ready to simulate?</p>
-          </div>
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button variant="outline" size="icon">
-                <Menu className="h-4 w-4" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right" className="w-1/3">
-              <div className="flex flex-col h-full p-8">
-                <div className="flex-grow">
-                  <Button
-                    variant={activeView === 'full-season' ? 'secondary' : 'ghost'}
-                    onClick={() => setActiveView('full-season')}
-                    className="justify-start mb-2 w-full"
-                  >
-                    Full Season
-                  </Button>
-                  <Button
-                    variant={activeView === 'single-game' ? 'secondary' : 'ghost'}
-                    onClick={() => setActiveView('single-game')}
-                    className="justify-start mb-2 w-full"
-                  >
-                    Single Game
-                  </Button>
-                  <Button
-                    variant={activeView === 'instructions' ? 'secondary' : 'ghost'}
-                    onClick={() => setActiveView('instructions')}
-                    className="justify-start w-full"
-                  >
-                    Instructions
-                  </Button>
-                </div>
-                <Button onClick={async () => { goLoginPage() }} disabled={isLoading} variant="outline" className="mt-auto">
-                  Sign Out
-                </Button>
-              </div>
-            </SheetContent>
-          </Sheet>
-        </div>
-      </div>
+    <div className="min-h-screen bg-background text-foreground">
+      <Navbar
+        activeView={activeView}
+        setActiveView={setActiveView}
+        user={user}
+        goLoginPage={goLoginPage}
+        isLoading={isLoading}
+      />
 
       <div className="mt-4">
         {activeView === 'full-season' &&

@@ -8,7 +8,7 @@
   },
   "homepage": "https://example.com",
   "private": true,
-  "version": "1.0.64",
+  "version": "1.0.65",
   "type": "module",
   "scripts": {
     "dev": "vite",
