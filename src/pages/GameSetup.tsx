@@ -8,6 +8,8 @@ import { Button } from '@/components/ui/button';
 import { authService } from '@/contexts/AuthService';
 import { useUser } from '@/contexts/UserContext';
 import Navbar from '@/components/Navbar';
+import AccountSettings from './AccountSettings';
+import DigitalWallet from './DigitalWallet';
 import { StringToBoolean } from 'class-variance-authority/types';
 
 interface Message {
@@ -1599,6 +1601,12 @@ const GameSetup = () => {
         }
         {activeView === 'instructions' &&
           <Instructions />
+        }
+        {activeView === 'account-settings' &&
+          <AccountSettings />
+        }
+        {activeView === 'digital-wallet' &&
+          <DigitalWallet />
         }
         {error && <p className="text-red-500 mt-4">{error}</p>}
       </div>
