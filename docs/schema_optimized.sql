@@ -59,6 +59,49 @@ CREATE TABLE game_player_stats (
     free_throws_attempted INTEGER DEFAULT 0
 );
 
--- Indexing (Optional but recommended for JSONB queries)
--- CREATE INDEX idx_games_play_by_play ON games USING GIN (play_by_play);
 -- CREATE INDEX idx_games_box_score ON games USING GIN (box_score);
+
+-- 5. Wallets Table
+CREATE TABLE wallets (
+    id SERIAL PRIMARY KEY,
+    user_id VARCHAR(255) UNIQUE NOT NULL,
+    balance DECIMAL(12,2) DEFAULT 0.00,
+    currency VARCHAR(10) DEFAULT 'USD',
+    updated_at TIMESTAMP DEFAULT NOW()
+);
+
+-- 6. Wallet Transactions Table
+CREATE TABLE wallet_transactions (
+    id BIGSERIAL PRIMARY KEY,
+    wallet_id INTEGER REFERENCES wallets(id),
+    amount DECIMAL(12,2) NOT NULL,
+    type VARCHAR(50) NOT NULL,
+    reference_id VARCHAR(255),
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+-- 7. Bets Table
+CREATE TABLE bets (
+    id SERIAL PRIMARY KEY,
+    user_id VARCHAR(255) NOT NULL,
+    game_id INTEGER REFERENCES games(id),
+    bet_type VARCHAR(50) NOT NULL,
+    selection VARCHAR(255) NOT NULL,
+    odds DECIMAL(6,2) NOT NULL,
+    stake DECIMAL(12,2) NOT NULL,
+    potential_payout DECIMAL(12,2) NOT NULL,
+    status VARCHAR(20) DEFAULT 'pending',
+    created_at TIMESTAMP DEFAULT NOW(),
+    settled_at TIMESTAMP
+);
+
+-- 8. User Bet Stats Table
+CREATE TABLE user_bet_stats (
+    user_id VARCHAR(255) PRIMARY KEY,
+    total_bets INTEGER DEFAULT 0,
+    wins INTEGER DEFAULT 0,
+    losses INTEGER DEFAULT 0,
+    total_wagered DECIMAL(15,2) DEFAULT 0.00,
+    total_profit DECIMAL(15,2) DEFAULT 0.00,
+    win_rate DECIMAL(5,2)
+);

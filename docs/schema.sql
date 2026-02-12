@@ -54,3 +54,53 @@ CREATE TABLE IF NOT EXISTS game_box_scores (
 
 -- Index for retrieving Box Score for a specific game in order
 CREATE INDEX idx_box_game_id ON game_box_scores(game_id, line_number);
+
+-- 6. Wallets Table
+CREATE TABLE IF NOT EXISTS wallets (
+    id SERIAL PRIMARY KEY,
+    user_id VARCHAR(255) UNIQUE NOT NULL, -- Cognito User ID
+    balance DECIMAL(12,2) DEFAULT 0.00,
+    currency VARCHAR(10) DEFAULT 'USD',
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 7. Wallet Transactions Table
+CREATE TABLE IF NOT EXISTS wallet_transactions (
+    id BIGSERIAL PRIMARY KEY,
+    wallet_id INTEGER REFERENCES wallets(id) ON DELETE CASCADE,
+    amount DECIMAL(12,2) NOT NULL,
+    type VARCHAR(50) NOT NULL, -- deposit, withdrawal, bet_placed, bet_won
+    reference_id VARCHAR(255),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 8. Bets Table
+CREATE TABLE IF NOT EXISTS bets (
+    id SERIAL PRIMARY KEY,
+    user_id VARCHAR(255) NOT NULL,
+    game_id INTEGER REFERENCES games(id) ON DELETE SET NULL,
+    bet_type VARCHAR(50) NOT NULL, -- winner, over_under, spread
+    selection VARCHAR(255) NOT NULL, -- e.g., 'home_team', 'over_210.5'
+    odds DECIMAL(6,2) NOT NULL,
+    stake DECIMAL(12,2) NOT NULL,
+    potential_payout DECIMAL(12,2) NOT NULL,
+    status VARCHAR(20) DEFAULT 'pending' CHECK (status IN ('pending', 'won', 'lost', 'cancelled')),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    settled_at TIMESTAMP WITH TIME ZONE
+);
+
+-- 9. User Bet Stats Table
+CREATE TABLE IF NOT EXISTS user_bet_stats (
+    user_id VARCHAR(255) PRIMARY KEY,
+    total_bets INTEGER DEFAULT 0,
+    wins INTEGER DEFAULT 0,
+    losses INTEGER DEFAULT 0,
+    total_wagered DECIMAL(15,2) DEFAULT 0.00,
+    total_profit DECIMAL(15,2) DEFAULT 0.00,
+    win_rate DECIMAL(5,2)
+);
+
+-- Indexes for betting system
+CREATE INDEX idx_bets_user_id ON bets(user_id);
+CREATE INDEX idx_bets_game_id ON bets(game_id);
+CREATE INDEX idx_transactions_wallet_id ON wallet_transactions(wallet_id);

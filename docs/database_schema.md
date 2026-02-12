@@ -20,6 +20,10 @@ erDiagram
     TEAMS ||--o{ GAMES : "away team"
     GAMES ||--o{ GAME_PLAY_BY_PLAY : has
     GAMES ||--o{ GAME_BOX_SCORES : has
+    GAMES ||--o{ BETS : has
+    BETS }o--|| WALLETS : uses
+    WALLETS ||--o{ WALLET_TRANSACTIONS : logs
+    WALLETS ||--o{ USER_BET_STATS : tracks
 
     LEAGUES {
         int id PK
@@ -58,6 +62,47 @@ erDiagram
         int game_id FK
         int line_number
         text text
+    }
+
+    WALLETS {
+        int id PK
+        string user_id
+        decimal balance
+        string currency
+        timestamp updated_at
+    }
+
+    WALLET_TRANSACTIONS {
+        bigint id PK
+        int wallet_id FK
+        decimal amount
+        string type
+        string reference_id
+        timestamp created_at
+    }
+
+    BETS {
+        int id PK
+        string user_id
+        int game_id FK
+        string bet_type
+        string selection
+        decimal odds
+        decimal stake
+        decimal potential_payout
+        string status
+        timestamp created_at
+        timestamp settled_at
+    }
+
+    USER_BET_STATS {
+        string user_id PK
+        int total_bets
+        int wins
+        int losses
+        decimal total_wagered
+        decimal total_profit
+        decimal win_rate
     }
 ```
 
@@ -175,5 +220,58 @@ While the `box_score` JSONB column stores the display-ready text, this table is 
 | `steals` | `INTEGER` | | Total steals. |
 | `blocks` | `INTEGER` | | Total blocks. |
 | `turnovers` | `INTEGER` | | Total turnovers. |
+
+### 7. `wallets`
+Stores the current balance for each user.
+
+| Column | Type | Constraints | Description |
+| :--- | :--- | :--- | :--- |
+| `id` | `SERIAL` | `PRIMARY KEY` | Unique identifier. |
+| `user_id` | `VARCHAR(255)` | `UNIQUE`, `NOT NULL` | The Cognito User ID. |
+| `balance` | `DECIMAL(12,2)` | `DEFAULT 0.00` | Current funds. |
+| `currency` | `VARCHAR(10)` | `DEFAULT 'USD'` | Currency type. |
+| `updated_at` | `TIMESTAMP` | `DEFAULT NOW()` | Last balance change. |
+
+### 8. `wallet_transactions`
+Auditable log of all balance changes.
+
+| Column | Type | Constraints | Description |
+| :--- | :--- | :--- | :--- |
+| `id` | `BIGSERIAL` | `PRIMARY KEY` | Unique identifier. |
+| `wallet_id` | `INTEGER` | `FOREIGN KEY` | Reference to `wallets`. |
+| `amount` | `DECIMAL(12,2)` | `NOT NULL` | Change amount (positive or negative). |
+| `type` | `VARCHAR(50)` | `NOT NULL` | e.g., 'deposit', 'withdrawal', 'bet_placed', 'bet_won'. |
+| `reference_id` | `VARCHAR(255)` | | Optional ID linking to a specific bet or external transaction. |
+| `created_at` | `TIMESTAMP` | `DEFAULT NOW()` | Transaction time. |
+
+### 9. `bets`
+Records individual wagers placed by users.
+
+| Column | Type | Constraints | Description |
+| :--- | :--- | :--- | :--- |
+| `id` | `SERIAL` | `PRIMARY KEY` | Unique identifier. |
+| `user_id` | `VARCHAR(255)` | `NOT NULL` | The Cognito User ID. |
+| `game_id` | `INTEGER` | `FOREIGN KEY` | Reference to the `games` table. |
+| `bet_type` | `VARCHAR(50)` | `NOT NULL` | e.g., 'winner', 'over_under', 'points_spread'. |
+| `selection` | `VARCHAR(255)` | `NOT NULL` | The user's choice (e.g., 'home_team', 'away_team', 'over_210.5'). |
+| `odds` | `DECIMAL(6,2)` | `NOT NULL` | Odds multiplier. |
+| `stake` | `DECIMAL(12,2)` | `NOT NULL` | Amount wagered. |
+| `potential_payout` | `DECIMAL(12,2)` | `NOT NULL` | Stake * Odds. |
+| `status` | `VARCHAR(20)` | `DEFAULT 'pending'` | 'pending', 'won', 'lost', 'cancelled'. |
+| `created_at` | `TIMESTAMP` | `DEFAULT NOW()` | When the bet was placed. |
+| `settled_at` | `TIMESTAMP` | | When the game result was processed. |
+
+### 10. `user_bet_stats`
+Summary statistics for user profiles.
+
+| Column | Type | Constraints | Description |
+| :--- | :--- | :--- | :--- |
+| `user_id` | `VARCHAR(255)` | `PRIMARY KEY` | Link to Cognito User ID. |
+| `total_bets` | `INTEGER` | `DEFAULT 0` | Count of bets placed. |
+| `wins` | `INTEGER` | `DEFAULT 0` | Count of won bets. |
+| `losses` | `INTEGER` | `DEFAULT 0` | Count of lost bets. |
+| `total_wagered` | `DECIMAL(15,2)` | `DEFAULT 0.00` | Sum of all stakes. |
+| `total_profit` | `DECIMAL(15,2)` | `DEFAULT 0.00` | Net profit (Payouts - Stakes). |
+| `win_rate` | `DECIMAL(5,2)` | | Percentage of wins. |
 
 
