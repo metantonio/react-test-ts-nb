@@ -88,8 +88,9 @@ def lambda_handler(event, context):
 
 ### Specific Steps & Logic:
 1.  **Selection**: User A picks a game or player stat and sets the `stake`.
-2.  **External Check**: Lambda calls the external wallet service to verify User A has `balance >= stake`.
-3.  **Tx Initiation**: Lambda initiates a transfer from User A to the **Platform Escrow Vault**.
+2.  **Profitability Check**: Lambda estimates total gas for (Transfer In + Transfer Out). It verifies that the `Platform_Fee` >= `Estimated_Gas_Toll`.
+3.  **External Check**: Lambda calls the external wallet service to verify User A has `balance >= (stake + fee)`.
+4.  **Tx Initiation**: Lambda initiates a transfer from User A to the **Platform Escrow Vault** for the total amount.
 4.  **Local Record**: Create a record in `bets` with `status='escrow_pending'`.
 5.  **Audit**: Create a `wallet_transactions` entry (Type: `escrow_in`).
 6.  **Confirmation**: Once the external service confirms the transfer, update `bets.status = 'open'`.
@@ -120,7 +121,8 @@ def create_bet_offer(user_id, game_id, selection, stake):
 
 ### Specific Steps:
 1.  **Verification**: Lambda verifies User B has sufficient funds and the bet is still `status='open'`.
-2.  **Ext Transfer**: Lambda initiates a transfer from User B to the **Platform Escrow Vault**.
+2.  **Profitability Check**: Lambda verifies that User B's transaction also covers their portion of the network gas (In-transfer).
+3.  **Ext Transfer**: Lambda initiates a transfer from User B to the **Platform Escrow Vault** (Stake + Acceptance Fee).
 3.  **Matching**: Set `bets.status = 'matched'` and `bets.acceptor_id = UserB` ONLY AFTER the transfer is confirmed by the external service.
 
 ---
