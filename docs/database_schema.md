@@ -250,14 +250,15 @@ Records individual wagers placed by users.
 | Column | Type | Constraints | Description |
 | :--- | :--- | :--- | :--- |
 | `id` | `SERIAL` | `PRIMARY KEY` | Unique identifier. |
-| `user_id` | `VARCHAR(255)` | `NOT NULL` | The Cognito User ID. |
+| `user_id` | `VARCHAR(255)` | `NOT NULL` | The Cognito User ID (Challenger). |
+| `acceptor_id` | `VARCHAR(255)` | | The Cognito User ID of the acceptor (for P2P). |
 | `game_id` | `INTEGER` | `FOREIGN KEY` | Reference to the `games` table. |
-| `bet_type` | `VARCHAR(50)` | `NOT NULL` | e.g., 'winner', 'over_under', 'points_spread'. |
-| `selection` | `VARCHAR(255)` | `NOT NULL` | The user's choice (e.g., 'home_team', 'away_team', 'over_210.5'). |
+| `bet_type` | `VARCHAR(50)` | `NOT NULL` | e.g., 'winner', 'over_under', 'player_stat'. |
+| `selection` | `VARCHAR(255)` | `NOT NULL` | e.g., 'home_team', 'away_team', 'playerX_points_over_20'. |
 | `odds` | `DECIMAL(6,2)` | `NOT NULL` | Odds multiplier. |
 | `stake` | `DECIMAL(12,2)` | `NOT NULL` | Amount wagered. |
-| `potential_payout` | `DECIMAL(12,2)` | `NOT NULL` | Stake * Odds. |
-| `status` | `VARCHAR(20)` | `DEFAULT 'pending'` | 'pending', 'won', 'lost', 'cancelled'. |
+| `escrow_tx_id` | `VARCHAR(255)` | | ID of the transaction in the external escrow vault. |
+| `status` | `VARCHAR(20)` | `DEFAULT 'pending'` | 'pending', 'open', 'matched', 'won', 'lost'. |
 | `created_at` | `TIMESTAMP` | `DEFAULT NOW()` | When the bet was placed. |
 | `settled_at` | `TIMESTAMP` | | When the game result was processed. |
 
