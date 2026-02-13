@@ -154,8 +154,26 @@ def settle_bet(bet):
         update_user_stats(loser_id, win=False, profit=-bet.stake)
 ```
 
-### Risk & Error Handling:
-- **Refunds**: If a game is cancelled or a refund is triggered, funds are returned from Escrow to the users. 
-    - > [!IMPORTANT]
-    - > Refunds are **not 100%**. The system calculates the "Gas Used" (transaction fees/tolls) encountered during the original transfer to escrow and the return transfer. This amount is deducted from the refund total.
-- **Liquidity Audit**: The system must verify the Escrow account balance matches the sum of all `matched` stakes before any payout is triggered.
+### Financial Risk & Liquidity Safety
+
+In a **Peer-to-Peer (P2P)** model, the platform acts as a facilitator, not a bookmaker. However, there are still risks that could lead to financial loss:
+
+#### 1. Transaction Cost Risk (Gas/Tolls)
+- **Risk**: If the `Platform Fee` is lower than the total gas spent to move funds (User -> Escrow -> Winner), the platform loses money on every bet.
+- **Mitigation**: The system calculates a dynamic fee or a fixed percentage that covers the maximum estimated gas for at least 3 transfers (2 into escrow, 1 out).
+
+#### 2. The "Double-Payout" Risk
+- **Risk**: A race condition or bug in the Lambda could trigger two payout transfers for the same `bet_id`.
+- **Mitigation**: 
+    - Use **Database Transactions**: Mark the bet as `status='settling'` before initiating the transfer.
+    - **Idempotency**: Use a unique `Idempotency Key` (e.g., `bet_id + "payout"`) when calling the External Wallet API to ensure the transfer only happens once.
+
+#### 3. Platform Insolvency (Liquidity)
+- **Risk**: Errors in accounting or external hacks.
+- **Safety Lock**: The `Global_Liquidity_Audit` must run before **every** payout batch.
+    - **Formula**: `Escrow_Account_Balance >= SUM(Matched_Stakes * 2)`.
+    - If this fails, the system automatically shuts down payouts and alerts admins.
+
+> [!TIP]
+> **Profitability Rule**: `Remaining Pot = (Stake A + Stake B) - (Gas In A + Gas In B + Gas Out + Platform Margin)`. 
+> The platform should only process bets where the Margin is positive.
