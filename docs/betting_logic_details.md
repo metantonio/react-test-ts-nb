@@ -161,21 +161,32 @@ def settle_bet(bet):
         # 1. Economic Viability Check
         current_gas_fee = external_wallet.estimate_fee(destination=winner_id)
         if current_gas_fee >= total_pot:
-            # Fee is higher than the prize (Dust situation or High Gas Spike)
             db.execute("UPDATE bets SET status='high_gas_wait' WHERE id=%s", (bet.id,))
-            alert_admin(f"Payout deferred for bet {bet.id}: Fee ({current_gas_fee}) > Pot ({total_pot})")
             return
 
-        # 2. Secure Transfer from Escrow to Winner
+        # 2. Atomic Transaction Lock (Idempotency Key)
+        # Using bet_id + "payout" ensures the API provider only executes once
+        idempotency_key = f"{bet.id}_payout"
+        
+        # Mark as 'paying_out' to prevent concurrent Lambda triggers from retrying
+        db.execute("UPDATE bets SET status='paying_out' WHERE id=%s AND status != 'paying_out'", (bet.id,))
+        if db.row_count == 0: return # Already being processed
+
+        # 3. Secure Transfer from Escrow to Winner
         try:
-            tx_id = external_wallet.transfer(source=PLATFORM_ESCROW, destination=winner_id, amount=total_pot)
+            tx_id = external_wallet.transfer(
+                source=PLATFORM_ESCROW, 
+                destination=winner_id, 
+                amount=total_pot,
+                idempotency_key=idempotency_key
+            )
             
-            # Update Records
+            # 4. Final Confirmation
             db.execute("UPDATE bets SET status='won', settled_at=NOW(), payout_tx_id=%s WHERE id=%s", (tx_id, bet.id))
             update_user_stats(winner_id, win=True, profit=bet.stake)
         except Exception as e:
-            alert_admin(f"Payout failed for bet {bet.id}: {e}")
-            db.execute("UPDATE bets SET status='payout_failed' WHERE id=%s", (bet.id,))
+            # Handle communication error (Status stays 'paying_out' for reconciliation)
+            alert_admin(f"Payout exception for {bet.id}: {e}")
 ```
 
 ### Financial Risk & Liquidity Safety
@@ -201,6 +212,17 @@ In a **Peer-to-Peer (P2P)** model, the platform acts as a facilitator, not a boo
 > [!TIP]
 > **Profitability Rule**: `Net Margin = (Total_Fees_Collected) - (Gas_In_A + Gas_In_B + Gas_Payout_Winner)`. 
 > The platform should only process bets where the Margin is positive.
+
+### Payout Idempotency & Error Recovery
+
+**Objective**: Ensure that a payout is never executed twice, even in the event of a network timeout or Lambda failure.
+
+1.  **Status Atomic Lock**: The bet status transitions to `paying_out` **before** the API call. If the Lambda crashes, the bet stays in this state.
+2.  **External Idempotency**: The `external_wallet.transfer` call MUST include a unique `idempotency_key`. If the platform retries an identical request, the wallet provider returns the original `tx_id` instead of moving funds again.
+3.  **Reconciliation Loop**: A separate "Reconciler" service (Lambda triggered by EventBridge) periodically checks for bets stuck in `paying_out` for > 15 minutes.
+    - It queries the External Wallet API to check if the `idempotency_key` (bet_id) has a confirmed transaction.
+    - If **Yes**: Updates DB to `status='won'`.
+    - If **No**: Reverts DB to `status='matched'` (or retries).
 
 ---
 
