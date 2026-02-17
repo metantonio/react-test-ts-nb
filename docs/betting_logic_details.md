@@ -88,27 +88,31 @@ def lambda_handler(event, context):
 
 ### Specific Steps & Logic:
 1.  **Selection**: User A picks a game or player stat and sets the `stake`.
-2.  **Profitability Check**: Lambda estimates total gas for (Transfer In + Transfer Out). It verifies that the `Platform_Fee` >= `Estimated_Gas_Toll`.
-3.  **External Check**: Lambda calls the external wallet service to verify User A has `balance >= (stake + fee)`.
-4.  **Tx Initiation**: Lambda initiates a transfer from User A to the **Platform Escrow Vault** for the total amount.
-4.  **Local Record**: Create a record in `bets` with `status='escrow_pending'`.
-5.  **Audit**: Create a `wallet_transactions` entry (Type: `escrow_in`).
-6.  **Confirmation**: Once the external service confirms the transfer, update `bets.status = 'open'`.
+2.  **Fee Calculation**: Lambda estimates the `Total_Fee` required to cover transaction gas for (Stake Transfer In + Acceptance Transfer In + Winner Payout).
+3.  **External Check**: Lambda calls the external wallet service to verify User A has `balance >= (stake + Total_Fee)`.
+4.  **Tx Initiation**: Lambda initiates a transfer from User A to the **Platform Escrow Vault** for `(stake + Total_Fee)`.
+5.  **Local Record**: Create a record in `bets` with `status='escrow_pending'`.
+6.  **Audit**: Create a `wallet_transactions` entry (Type: `escrow_in`).
+7.  **Confirmation**: Once the external service confirms the transfer, update `bets.status = 'open'`.
 
 ### Lambda Snippet (Python Example)
 ```python
 def create_bet_offer(user_id, game_id, selection, stake):
-    # 1. External Balance Verification
-    if not external_wallet.has_funds(user_id, stake):
-        return {"error": "Insufficient funds"}
+    # 1. Dynamic Fee Calculation (Escrow In + Acceptance In + Payout Out)
+    platform_fee = calculate_dynamic_gas_fee()
+    total_required = stake + platform_fee
 
-    # 2. Transfer to Escrow
-    tx_id = external_wallet.transfer(source=user_id, destination=PLATFORM_ESCROW, amount=stake)
+    # 2. External Balance Verification
+    if not external_wallet.has_funds(user_id, total_required):
+        return {"error": "Insufficient funds to cover stake and transaction gas"}
 
-    # 3. DB Persistence
+    # 3. Transfer Total (Stake + Gas Fee) to Escrow
+    tx_id = external_wallet.transfer(source=user_id, destination=PLATFORM_ESCROW, amount=total_required)
+
+    # 4. DB Persistence
     db.execute(
-        "INSERT INTO bets (user_id, game_id, selection, stake, escrow_tx_id, status) VALUES (%s, %s, %s, %s, %s, 'escrow_pending')",
-        (user_id, game_id, selection, stake, tx_id)
+        "INSERT INTO bets (user_id, game_id, selection, stake, fee_paid, escrow_tx_id, status) VALUES (%s, %s, %s, %s, %s, %s, 'escrow_pending')",
+        (user_id, game_id, selection, stake, platform_fee, tx_id)
     )
     return {"status": "pending_confirmation", "tx_id": tx_id}
 ```
@@ -121,9 +125,9 @@ def create_bet_offer(user_id, game_id, selection, stake):
 
 ### Specific Steps:
 1.  **Verification**: Lambda verifies User B has sufficient funds and the bet is still `status='open'`.
-2.  **Profitability Check**: Lambda verifies that User B's transaction also covers their portion of the network gas (In-transfer).
-3.  **Ext Transfer**: Lambda initiates a transfer from User B to the **Platform Escrow Vault** (Stake + Acceptance Fee).
-3.  **Matching**: Set `bets.status = 'matched'` and `bets.acceptor_id = UserB` ONLY AFTER the transfer is confirmed by the external service.
+2.  **Fee Calculation**: Lambda verifies User B's balance covers `Stake + Gas_Fee` (In-transfer + portion of Payout gas).
+3.  **Ext Transfer**: Lambda initiates a transfer from User B to the **Platform Escrow Vault** (Stake + AcceptanceFee).
+4.  **Matching**: Set `bets.status = 'matched'` and `bets.acceptor_id = UserB` ONLY AFTER the transfer is confirmed by the external service.
 
 ---
 
@@ -135,7 +139,7 @@ def create_bet_offer(user_id, game_id, selection, stake):
 - **Simulation Source**: `games.home_score` vs `games.away_score`.
 - **Stat Source**: `game_player_stats` (points, rebounds, etc.).
 - **Payout Calculation**:
-    - **Total Pot** = `stake * 2` (minus platform fee).
+    - **Total Pot** = `stake * 2`. (Transaction fees/gas were pre-collected from both parties).
     - **Final Check**: Run `Global_Liquidity_Audit` to verify the Vault balance matches all `matched` bets.
     - **Transfer**: Call `External_Wallet_API.transfer(from: PlatformEscrow, to: Winner, amount: Pot)`.
 
@@ -146,14 +150,22 @@ def settle_bet(bet):
     winner_id = determine_winner(bet, game) # Selection vs Actual Results
     
     if winner_id:
+        # Pot is stake * 2. Gas fees for this transfer were pre-collected during bet creation/acceptance.
         total_pot = bet.stake * 2
-        # Secure Transfer from Escrow to Winner
-        external_wallet.transfer(source=PLATFORM_ESCROW, destination=winner_id, amount=total_pot)
         
-        # Update Records
-        db.execute("UPDATE bets SET status='won', settled_at=NOW() WHERE id=%s", (bet.id,))
-        update_user_stats(winner_id, win=True, profit=bet.stake)
-        update_user_stats(loser_id, win=False, profit=-bet.stake)
+        # Secure Transfer from Escrow to Winner
+        try:
+            # Note: The platform uses the pre-collected 'fee_paid' to cover the gas for this operation
+            tx_id = external_wallet.transfer(source=PLATFORM_ESCROW, destination=winner_id, amount=total_pot)
+            
+            # Update Records
+            db.execute("UPDATE bets SET status='won', settled_at=NOW(), payout_tx_id=%s WHERE id=%s", (tx_id, bet.id))
+            update_user_stats(winner_id, win=True, profit=bet.stake)
+            update_user_stats(loser_id, win=False, profit=-bet.stake)
+        except Exception as e:
+            # Handle transfer failure (insufficient gas in vault, network error, etc.)
+            alert_admin(f"Payout failed for bet {bet.id}: {e}")
+            db.execute("UPDATE bets SET status='payout_failed' WHERE id=%s", (bet.id,))
 ```
 
 ### Financial Risk & Liquidity Safety
@@ -177,5 +189,5 @@ In a **Peer-to-Peer (P2P)** model, the platform acts as a facilitator, not a boo
     - If this fails, the system automatically shuts down payouts and alerts admins.
 
 > [!TIP]
-> **Profitability Rule**: `Remaining Pot = (Stake A + Stake B) - (Gas In A + Gas In B + Gas Out + Platform Margin)`. 
+> **Profitability Rule**: `Net Margin = (Total_Fees_Collected) - (Gas_In_A + Gas_In_B + Gas_Payout_Winner)`. 
 > The platform should only process bets where the Margin is positive.
