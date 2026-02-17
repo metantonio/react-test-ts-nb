@@ -16,7 +16,8 @@ sequenceDiagram
     Note over User, Escrow: 1. Challenge Creation (User A)
     User->>App: Clicks "Bet on Game/Player"
     App->>Lambda: create_bet_offer(stake, selection, stats)
-    Lambda->>ExtWallet: Verify Balance User A
+    Lambda->>Lambda: Validate Min Stake (Anti-Spam)
+    Lambda->>ExtWallet: Verify Balance User A (Stake + Gas Fee)
     ExtWallet-->>Lambda: Balance OK
     Lambda->>ExtWallet: Initiate Transfer(UserA -> Escrow)
     Lambda->>DB: INSERT INTO bets (status='escrow_pending')
@@ -27,7 +28,7 @@ sequenceDiagram
     Note over User, Escrow: 2. Challenge Acceptance (User B)
     User->>App: Clicks "Accept Bet"
     App->>Lambda: accept_bet_offer(bet_id)
-    Lambda->>ExtWallet: Verify Balance User B
+    Lambda->>ExtWallet: Verify Balance User B (Stake + Gas Fee)
     Lambda->>ExtWallet: Initiate Transfer(UserB -> Escrow)
     Lambda->>DB: UPDATE bets (status='matching')
     ExtWallet-->>Lambda: Transfer Confirmed
@@ -37,10 +38,15 @@ sequenceDiagram
     Note over User, Escrow: 3. Simulation & Payout
     DB-->>Lambda: Game/Stats Finalized Trigger
     Lambda->>DB: SELECT wins/losses based on results
-    Lambda->>Lambda: Global Liquidity Audit (Audit Vault)
-    Lambda->>ExtWallet: Transfer Pot(Escrow -> Winner)
-    Lambda->>DB: UPDATE bets (status='won'/'lost')
-    Lambda->>DB: Update user_bet_stats
+    Lambda->>Lambda: Economic Viability Audit (Fee < Pot?)
+    alt Gas is too high
+        Lambda->>DB: UPDATE bets (status='high_gas_wait')
+    else Economic Viability OK
+        Lambda->>DB: UPDATE bets (status='paying_out') [Atomic Lock]
+        Lambda->>ExtWallet: Transfer Pot(Escrow -> Winner, Idempotency_Key)
+        Lambda->>DB: UPDATE bets (status='won'/'lost')
+        Lambda->>DB: Update user_bet_stats
+    end
 ```
 
 ---
