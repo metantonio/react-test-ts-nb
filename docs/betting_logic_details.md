@@ -150,20 +150,24 @@ def settle_bet(bet):
     winner_id = determine_winner(bet, game) # Selection vs Actual Results
     
     if winner_id:
-        # Pot is stake * 2. Gas fees for this transfer were pre-collected during bet creation/acceptance.
         total_pot = bet.stake * 2
         
-        # Secure Transfer from Escrow to Winner
+        # 1. Economic Viability Check
+        current_gas_fee = external_wallet.estimate_fee(destination=winner_id)
+        if current_gas_fee >= total_pot:
+            # Fee is higher than the prize (Dust situation or High Gas Spike)
+            db.execute("UPDATE bets SET status='high_gas_wait' WHERE id=%s", (bet.id,))
+            alert_admin(f"Payout deferred for bet {bet.id}: Fee ({current_gas_fee}) > Pot ({total_pot})")
+            return
+
+        # 2. Secure Transfer from Escrow to Winner
         try:
-            # Note: The platform uses the pre-collected 'fee_paid' to cover the gas for this operation
             tx_id = external_wallet.transfer(source=PLATFORM_ESCROW, destination=winner_id, amount=total_pot)
             
             # Update Records
             db.execute("UPDATE bets SET status='won', settled_at=NOW(), payout_tx_id=%s WHERE id=%s", (tx_id, bet.id))
             update_user_stats(winner_id, win=True, profit=bet.stake)
-            update_user_stats(loser_id, win=False, profit=-bet.stake)
         except Exception as e:
-            # Handle transfer failure (insufficient gas in vault, network error, etc.)
             alert_admin(f"Payout failed for bet {bet.id}: {e}")
             db.execute("UPDATE bets SET status='payout_failed' WHERE id=%s", (bet.id,))
 ```
@@ -191,3 +195,23 @@ In a **Peer-to-Peer (P2P)** model, the platform acts as a facilitator, not a boo
 > [!TIP]
 > **Profitability Rule**: `Net Margin = (Total_Fees_Collected) - (Gas_In_A + Gas_In_B + Gas_Payout_Winner)`. 
 > The platform should only process bets where the Margin is positive.
+
+---
+
+## 5. High Gas & Dust Management
+
+**Objective**: Prevent the platform from processing irrational transactions where the network cost exceeds the value of the prize.
+
+### 1. Economic Viability Rule
+A payout is considered **economically viable** if:
+`Pot_Amount > (Current_Network_Gas * Multiplier)`.
+- If `current_gas >= pot`, the status is set to `high_gas_wait`.
+- If the prize is extremely small (Dust), the platform may consolidate payouts or offer a "Claim" mechanism where the user pays the gas.
+
+### 2. The `high_gas_wait` Status
+- Bets in this status are checked every hour by a scheduled Lambda trigger.
+- When network congestion clears and `gas < pot * 0.5` (or a defined safety threshold), the transfer is executed automatically.
+- Users see a "Congested Network - Pending Payout" message in the UI.
+
+### 3. Dust Consolidation
+For very small bets (e.g., $1 stakes on experimental leagues), the platform should discourage their creation if the estimated gas at creation time is > 20% of the stake.
