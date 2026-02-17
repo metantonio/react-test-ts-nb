@@ -88,28 +88,34 @@ def lambda_handler(event, context):
 
 ### Specific Steps & Logic:
 1.  **Selection**: User A picks a game or player stat and sets the `stake`.
-2.  **Fee Calculation**: Lambda estimates the `Total_Fee` required to cover transaction gas for (Stake Transfer In + Acceptance Transfer In + Winner Payout).
-3.  **External Check**: Lambda calls the external wallet service to verify User A has `balance >= (stake + Total_Fee)`.
-4.  **Tx Initiation**: Lambda initiates a transfer from User A to the **Platform Escrow Vault** for `(stake + Total_Fee)`.
-5.  **Local Record**: Create a record in `bets` with `status='escrow_pending'`.
-6.  **Audit**: Create a `wallet_transactions` entry (Type: `escrow_in`).
-7.  **Confirmation**: Once the external service confirms the transfer, update `bets.status = 'open'`.
+2.  **Minimum Stake Validation**: Lambda checks if `stake >= MIN_PAYOUT_THRESHOLD` (e.g., stake must be high enough that `stake * 2` significantly exceeds transaction gas).
+3.  **Fee Calculation**: Lambda estimates the `Total_Fee` required to cover transaction gas for (Stake Transfer In + Acceptance Transfer In + Winner Payout).
+4.  **External Check**: Lambda calls the external wallet service to verify User A has `balance >= (stake + Total_Fee)`.
+5.  **Tx Initiation**: Lambda initiates a transfer from User A to the **Platform Escrow Vault** for `(stake + Total_Fee)`.
+6.  **Local Record**: Create a record in `bets` with `status='escrow_pending'`.
+7.  **Audit**: Create a `wallet_transactions` entry (Type: `escrow_in`).
+8.  **Confirmation**: Once the external service confirms the transfer, update `bets.status = 'open'`.
 
 ### Lambda Snippet (Python Example)
 ```python
 def create_bet_offer(user_id, game_id, selection, stake):
-    # 1. Dynamic Fee Calculation (Escrow In + Acceptance In + Payout Out)
+    # 1. Dynamic Minimum Stake Guard
+    min_stake = calculate_dynamic_min_stake() # Based on current network gas
+    if stake < min_stake:
+        return {"error": f"Stake too low. Minimum required: {min_stake}"}
+
+    # 2. Dynamic Fee Calculation (Escrow In + Acceptance In + Payout Out)
     platform_fee = calculate_dynamic_gas_fee()
     total_required = stake + platform_fee
 
-    # 2. External Balance Verification
+    # 3. External Balance Verification
     if not external_wallet.has_funds(user_id, total_required):
         return {"error": "Insufficient funds to cover stake and transaction gas"}
 
-    # 3. Transfer Total (Stake + Gas Fee) to Escrow
+    # 4. Transfer Total (Stake + Gas Fee) to Escrow
     tx_id = external_wallet.transfer(source=user_id, destination=PLATFORM_ESCROW, amount=total_required)
 
-    # 4. DB Persistence
+    # 5. DB Persistence
     db.execute(
         "INSERT INTO bets (user_id, game_id, selection, stake, fee_paid, escrow_tx_id, status) VALUES (%s, %s, %s, %s, %s, %s, 'escrow_pending')",
         (user_id, game_id, selection, stake, platform_fee, tx_id)
@@ -213,5 +219,8 @@ A payout is considered **economically viable** if:
 - When network congestion clears and `gas < pot * 0.5` (or a defined safety threshold), the transfer is executed automatically.
 - Users see a "Congested Network - Pending Payout" message in the UI.
 
-### 3. Dust Consolidation
-For very small bets (e.g., $1 stakes on experimental leagues), the platform should discourage their creation if the estimated gas at creation time is > 20% of the stake.
+### 3. Anti-Spam & Platform Defense
+To prevent "Dust Attacks" (creating thousands of tiny bets that are unprofitable to settle), the platform enforces:
+- **Minimum Stake Requirement**: A bet must be at least `Current_Gas * 5` to be created.
+- **Dynamic Throttle**: If a user creates more than 5 `unmatched` bets in 1 minute, the API temporarily rate-limits their `create_bet_offer` calls.
+- **Dust Consolidation**: For small wins, the platform may encourage users to "Batch Claim" multiple winnings into a single transaction to save on gas.
