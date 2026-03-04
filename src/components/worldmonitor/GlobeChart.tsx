@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import Globe, { GlobeMethods } from 'react-globe.gl';
-import { RotateCcw, PauseCircle, PlayCircle } from 'lucide-react';
+
 
 // GeoJSON geometry — loosened coords type to avoid recursive generics
 interface Geometry {
@@ -50,9 +50,10 @@ interface LabelData {
 interface GlobeChartProps {
     onCountrySelect?: (country: { name: string; code: string } | null) => void;
     selectedCountry?: string | null;
+    onReady?: (controls: { toggleRotation: () => void; resetView: () => void; autoRotate: boolean }) => void;
 }
 
-const GlobeChart: React.FC<GlobeChartProps> = ({ onCountrySelect, selectedCountry }) => {
+const GlobeChart: React.FC<GlobeChartProps> = ({ onCountrySelect, selectedCountry, onReady }) => {
     const globeEl = useRef<GlobeMethods | undefined>(undefined);
     const [dimensions, setDimensions] = useState({ width: window.innerWidth, height: window.innerHeight });
     const [countries, setCountries] = useState<CountryFeature[]>([]);
@@ -82,13 +83,12 @@ const GlobeChart: React.FC<GlobeChartProps> = ({ onCountrySelect, selectedCountr
         }
     }, []);
 
-    // Focus camera on selected country
+    // Focus camera when selectedCountry changes (fallback for when countries load after selection)
     useEffect(() => {
         if (selectedCountry && countries.length > 0 && globeEl.current) {
             const feature = countries.find(f => f.properties.NAME === selectedCountry);
             if (feature) {
                 const { lat, lng } = getCentroid(feature.geometry);
-                // stop rotation and zoom in
                 globeEl.current.controls().autoRotate = false;
                 setAutoRotate(false);
                 globeEl.current.pointOfView({ lat, lng, altitude: 1.4 }, 1200);
@@ -96,14 +96,29 @@ const GlobeChart: React.FC<GlobeChartProps> = ({ onCountrySelect, selectedCountr
         }
     }, [selectedCountry, countries]);
 
+    // Expose controls to parent once globe is ready
+    useEffect(() => {
+        if (onReady) {
+            onReady({ toggleRotation, resetView, autoRotate });
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [autoRotate]);
+
     const handlePolygonClick = useCallback((polygon: object) => {
         const feature = polygon as CountryFeature;
         const name = feature?.properties?.NAME;
         const code = feature?.properties?.ISO_A2;
-        if (name && onCountrySelect) {
-            onCountrySelect({ name, code });
+        if (name) {
+            // Animate camera immediately on click — don't wait for state update
+            if (globeEl.current && countries.length > 0) {
+                const { lat, lng } = getCentroid(feature.geometry);
+                globeEl.current.controls().autoRotate = false;
+                setAutoRotate(false);
+                globeEl.current.pointOfView({ lat, lng, altitude: 1.4 }, 1200);
+            }
+            if (onCountrySelect) onCountrySelect({ name, code });
         }
-    }, [onCountrySelect]);
+    }, [onCountrySelect, countries]);
 
     const getPolygonColor = useCallback((polygon: object) => {
         const feature = polygon as CountryFeature;
@@ -178,25 +193,7 @@ const GlobeChart: React.FC<GlobeChartProps> = ({ onCountrySelect, selectedCountr
                 labelResolution={2}
             />
 
-            {/* Globe Controls (bottom-left) */}
-            <div className="absolute bottom-6 left-6 z-20 flex flex-col gap-2">
-                <button
-                    onClick={toggleRotation}
-                    title={autoRotate ? 'Pause Rotation' : 'Resume Rotation'}
-                    className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-900/80 border border-slate-600 text-white hover:bg-slate-800 transition-colors text-xs font-semibold backdrop-blur-sm shadow-lg"
-                >
-                    {autoRotate ? <PauseCircle size={16} className="text-blue-400" /> : <PlayCircle size={16} className="text-green-400" />}
-                    {autoRotate ? 'Pause' : 'Resume'}
-                </button>
-                <button
-                    onClick={resetView}
-                    title="Reset View"
-                    className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-900/80 border border-slate-600 text-white hover:bg-slate-800 transition-colors text-xs font-semibold backdrop-blur-sm shadow-lg"
-                >
-                    <RotateCcw size={16} className="text-slate-300" />
-                    Reset
-                </button>
-            </div>
+            {/* NO controls here — they are rendered in the parent with higher z-index */}
         </div>
     );
 };

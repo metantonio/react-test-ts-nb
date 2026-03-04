@@ -1,20 +1,28 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useRef } from 'react';
 import GlobeChart from '../components/worldmonitor/GlobeChart';
 import LiveGamesPanel from '../components/worldmonitor/LiveGamesPanel';
 import NewsPanel from '../components/worldmonitor/NewsPanel';
 import NcaaPanel from '../components/worldmonitor/NcaaPanel';
 import YoutubePanel from '../components/worldmonitor/YoutubePanel';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Globe2, X } from 'lucide-react';
+import { ArrowLeft, Globe2, X, PauseCircle, PlayCircle, RotateCcw } from 'lucide-react';
 
 interface SelectedCountry {
     name: string;
     code: string;
 }
 
+interface GlobeControls {
+    toggleRotation: () => void;
+    resetView: () => void;
+    autoRotate: boolean;
+}
+
 const BasketballWorldMonitor: React.FC = () => {
     const navigate = useNavigate();
     const [selectedCountry, setSelectedCountry] = useState<SelectedCountry | null>(null);
+    const [autoRotate, setAutoRotate] = useState(true);
+    const globeControlsRef = useRef<GlobeControls | null>(null);
 
     const handleCountrySelect = useCallback((country: { name: string; code: string } | null) => {
         setSelectedCountry(country);
@@ -24,12 +32,27 @@ const BasketballWorldMonitor: React.FC = () => {
         setSelectedCountry(null);
     }, []);
 
+    const handleGlobeReady = useCallback((controls: GlobeControls) => {
+        globeControlsRef.current = controls;
+        setAutoRotate(controls.autoRotate);
+    }, []);
+
+    const toggleRotation = () => {
+        globeControlsRef.current?.toggleRotation();
+        setAutoRotate(prev => !prev);
+    };
+
+    const resetView = () => {
+        globeControlsRef.current?.resetView();
+    };
+
     return (
         <div className="relative w-full h-screen overflow-hidden bg-black text-white font-sans">
             {/* 3D Background Globe */}
             <GlobeChart
                 onCountrySelect={handleCountrySelect}
                 selectedCountry={selectedCountry?.name ?? null}
+                onReady={handleGlobeReady}
             />
 
             {/* Header Overlay */}
@@ -70,6 +93,28 @@ const BasketballWorldMonitor: React.FC = () => {
                 )}
             </div>
 
+            {/* Globe Controls — bottom center, always visible */}
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-20 flex flex-row gap-2 pointer-events-auto">
+                <button
+                    onClick={toggleRotation}
+                    title={autoRotate ? 'Pause Rotation' : 'Resume Rotation'}
+                    className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-900/85 border border-slate-600 text-white hover:bg-slate-800 transition-colors text-xs font-semibold backdrop-blur-sm shadow-lg"
+                >
+                    {autoRotate
+                        ? <PauseCircle size={16} className="text-blue-400" />
+                        : <PlayCircle size={16} className="text-green-400" />}
+                    {autoRotate ? 'Pause' : 'Resume'}
+                </button>
+                <button
+                    onClick={resetView}
+                    title="Reset View"
+                    className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-900/85 border border-slate-600 text-white hover:bg-slate-800 transition-colors text-xs font-semibold backdrop-blur-sm shadow-lg"
+                >
+                    <RotateCcw size={16} className="text-slate-300" />
+                    Reset View
+                </button>
+            </div>
+
             {/* Left Panels */}
             <div className="absolute top-24 left-4 z-10 flex flex-col gap-4 pointer-events-auto max-h-[calc(100vh-120px)] overflow-y-auto no-scrollbar pb-4 shadow-2xl">
                 <LiveGamesPanel countryFilter={selectedCountry?.name ?? null} />
@@ -81,7 +126,6 @@ const BasketballWorldMonitor: React.FC = () => {
                 <NewsPanel countryFilter={selectedCountry?.name ?? null} />
                 <YoutubePanel countryFilter={selectedCountry?.name ?? null} />
             </div>
-
         </div>
     );
 };
