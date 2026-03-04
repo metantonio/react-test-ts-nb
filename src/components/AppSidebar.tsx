@@ -19,6 +19,7 @@ import {
   BarChart3,
   ChevronLeft,
   ChevronRight,
+  Globe,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { useUser } from "@/contexts/UserContext";
@@ -26,6 +27,7 @@ import React, { useState } from "react";
 
 const menuItems = [
   { title: "Dashboard", url: "/adminpanel", icon: Home, permission: "view_all" },
+  { title: "World Monitor", url: "/world-monitor", icon: Globe, permission: "view_all" },
   { title: "Casinos", url: "/adminpanel/casinos", icon: Building2, permission: "view_all" },
   { title: "Users", url: "/adminpanel/users", icon: Users, permission: "add_edit_delete_users" },
   { title: "Analytics", url: "/adminpanel/analytics", icon: BarChart3, permission: "view_all" },

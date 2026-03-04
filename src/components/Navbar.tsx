@@ -7,8 +7,10 @@ import {
     LogOut,
     User as UserIcon,
     Settings,
-    Wallet
+    Wallet,
+    Globe
 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import {
     DropdownMenu,
@@ -34,9 +36,12 @@ const Navbar: React.FC<NavbarProps> = ({
     goLoginPage,
     isLoading,
 }) => {
+    const navigate = useNavigate();
+
     const navItems = [
         { id: 'full-season', label: 'Full Season', icon: CalendarDays },
         { id: 'single-game', label: 'Single Game', icon: Trophy },
+        { id: 'world-monitor', label: 'World Monitor', icon: Globe, path: '/world-monitor' },
         { id: 'instructions', label: 'Info', icon: BookOpen },
     ];
 
@@ -56,7 +61,13 @@ const Navbar: React.FC<NavbarProps> = ({
                                     <Button
                                         key={item.id}
                                         variant="ghost"
-                                        onClick={() => setActiveView(item.id)}
+                                        onClick={() => {
+                                            if (item.path) {
+                                                navigate(item.path);
+                                            } else {
+                                                setActiveView(item.id);
+                                            }
+                                        }}
                                         className={cn(
                                             "relative h-10 px-4 transition-all duration-300 hover:bg-white/10 dark:hover:bg-white/5 font-medium",
                                             activeView === item.id
@@ -154,7 +165,13 @@ const Navbar: React.FC<NavbarProps> = ({
                     {navItems.map((item) => (
                         <button
                             key={item.id}
-                            onClick={() => setActiveView(item.id)}
+                            onClick={() => {
+                                if (item.path) {
+                                    navigate(item.path);
+                                } else {
+                                    setActiveView(item.id);
+                                }
+                            }}
                             className={cn(
                                 "flex flex-col items-center gap-1 transition-all duration-300 touch-none",
                                 activeView === item.id ? "text-primary scale-110" : "text-muted-foreground scale-100"

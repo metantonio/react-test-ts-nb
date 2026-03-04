@@ -17,6 +17,7 @@ import LoginCognito from "./pages/auth/loginCognito";
 import UpdatePassword from "./pages/auth/UpdatePassword";
 import Signup from "./pages/auth/signup";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import BasketballWorldMonitor from "./pages/BasketballWorldMonitor";
 
 // Layouts
 import AuthLayout from "./components/LoginLayout";
@@ -73,6 +74,11 @@ const AppContent = () => {
                 <Route path="/league" element={
                     <ProtectedRoute permission="view_all">
                         <GameSetup />
+                    </ProtectedRoute>}
+                />
+                <Route path="/world-monitor" element={
+                    <ProtectedRoute permission="view_all">
+                        <BasketballWorldMonitor />
                     </ProtectedRoute>}
                 />
                 <Route path="/updatepassword" element={<UpdatePassword />} />

@@ -31,3 +31,4 @@ out/*
 .env
 electron-builder.json5
 electron-builder.json
+temp_worldmonitor/*
