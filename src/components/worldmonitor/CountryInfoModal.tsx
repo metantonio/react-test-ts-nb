@@ -1,42 +1,143 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react';
-import { X, Globe2, Trophy, Users, Loader2, AlertCircle, GripHorizontal } from 'lucide-react';
+import { X, Globe2, Trophy, Users, Loader2, AlertCircle, GripHorizontal, ExternalLink } from 'lucide-react';
 
-interface League {
-    id: number;
+// Wikidata – structured, free, no API key, CORS: Access-Control-Allow-Origin: *
+const WD_ENTITY = 'https://www.wikidata.org/w/api.php';
+const WD_SPARQL = 'https://query.wikidata.org/sparql';
+const BASKETBALL_QID = 'Q5372'; // basketball sport entity in Wikidata
+
+interface WDLeague {
+    qid: string;
     name: string;
-    logo: string;
-    seasons?: { season: number }[];
+    logo?: string;
+    article?: string;
 }
-
-interface Team {
-    id: number;
+interface WDTeam {
+    qid: string;
     name: string;
-    logo: string;
+    logo?: string;
 }
-
-interface LeagueWithTeams extends League {
-    teams: Team[];
+interface LeagueWithTeams extends WDLeague {
+    teams: WDTeam[];
     loading: boolean;
     loaded: boolean;
 }
-
 interface CountryInfoModalProps {
     country: { name: string; code: string } | null;
     onClose: () => void;
 }
 
 function flagEmoji(code: string): string {
-    if (!code || code === '-1' || code.length !== 2) return '🏀';
+    if (!code || code.length !== 2) return '🏀';
     return code.toUpperCase().replace(/./g, c =>
         String.fromCodePoint(127397 + c.charCodeAt(0))
     );
 }
+function qidFromUri(uri: string): string {
+    return uri.replace('http://www.wikidata.org/entity/', '');
+}
 
-const API_BASE = 'https://v1.basketball.api-sports.io';
+/** Step 1: resolve country name → Wikidata QID */
+async function resolveCountryQID(name: string): Promise<string | null> {
+    const url = `${WD_ENTITY}?action=wbsearchentities&search=${encodeURIComponent(name)}&language=en&type=item&limit=5&format=json&origin=*`;
+    const res = await fetch(url);
+    const data = await res.json();
+    const results: { id: string; description?: string }[] = data.search ?? [];
+    const country = results.find(r =>
+        r.description && /country|state|nation|republic/i.test(r.description)
+    ) ?? results[0];
+    return country?.id ?? null;
+}
 
-// corsproxy.io forwards all request headers (including x-apisports-key) to the target
-function proxyUrl(path: string) {
-    return `https://corsproxy.io/?${encodeURIComponent(API_BASE + path)}`;
+/** Step 2: SPARQL – basketball leagues located in a country.
+ *  Uses broader types and country-of-origin fallback to catch the NBA and others. */
+async function fetchLeaguesForCountry(countryQID: string): Promise<WDLeague[]> {
+    const sparql = `
+SELECT DISTINCT ?league ?leagueLabel ?logo ?article WHERE {
+  ?league wdt:P641 wd:${BASKETBALL_QID} ;
+          wdt:P31/wdt:P279* ?type ;
+          rdfs:label ?leagueLabel .
+  { ?league wdt:P17 wd:${countryQID} . }
+  UNION
+  { ?league wdt:P495 wd:${countryQID} . }
+  
+  VALUES ?type { wd:Q15089 wd:Q6230 wd:Q15991275 wd:Q15991290 wd:Q18536323 }
+  FILTER(LANG(?leagueLabel) = "en")
+  OPTIONAL { ?league wdt:P154 ?logo . }
+  OPTIONAL {
+    ?article schema:about ?league ;
+             schema:inLanguage "en" ;
+             schema:isPartOf <https://en.wikipedia.org/> .
+  }
+}
+ORDER BY ?leagueLabel
+LIMIT 30`;
+    const res = await fetch(`${WD_SPARQL}?query=${encodeURIComponent(sparql)}&format=json`, {
+        headers: { Accept: 'application/sparql-results+json' }
+    });
+    const data = await res.json();
+    return (data.results?.bindings ?? []).map((b: {
+        league: { value: string };
+        leagueLabel: { value: string };
+        logo?: { value: string };
+        article?: { value: string };
+    }) => ({
+        qid: qidFromUri(b.league.value),
+        name: b.leagueLabel.value,
+        logo: b.logo?.value,
+        article: b.article?.value,
+    }));
+}
+
+/** Step 3: SPARQL – teams in a specific league.
+ *  Handles Wikidata's dual-entity issue and diverse team-type QIDs (Q133930, Q13393265). */
+async function fetchTeamsForLeague(leagueQID: string, leagueName: string): Promise<WDTeam[]> {
+    const sparql = `
+SELECT DISTINCT ?team ?teamLabel ?logo WHERE {
+  {
+    ?otherLeague rdfs:label "${leagueName.replace(/"/g, '\\"')}"@en .
+    { ?team wdt:P118 ?otherLeague . }
+    UNION
+    { ?otherLeague wdt:P1923 ?team . }
+    UNION
+    { ?team wdt:P463 ?otherLeague . }
+  }
+  UNION
+  {
+    { ?team wdt:P118 wd:${leagueQID} . }
+    UNION
+    { wd:${leagueQID} wdt:P1923 ?team . }
+    UNION
+    { ?team wdt:P463 wd:${leagueQID} . }
+  }
+  
+  ?team rdfs:label ?teamLabel .
+  FILTER(LANG(?teamLabel) = "en")
+  
+  # Must be a basketball team type
+  ?team wdt:P31 ?teamType .
+  VALUES ?teamType { wd:Q133930 wd:Q13393265 }
+  
+  # Exclude specific humans/topics linked accidentally
+  FILTER NOT EXISTS { ?team wdt:P31 wd:Q5 } 
+  
+  OPTIONAL { ?team wdt:P154 ?logo . }
+}
+ORDER BY ?teamLabel
+LIMIT 60`;
+    const res = await fetch(`${WD_SPARQL}?query=${encodeURIComponent(sparql)}&format=json`, {
+        headers: { Accept: 'application/sparql-results+json' }
+    });
+    const data = await res.json();
+    return (data.results?.bindings ?? []).map((b: {
+        team: { value: string };
+        teamLabel: { value: string };
+        logo?: { value: string };
+    }) => ({
+        qid: qidFromUri(b.team.value),
+        name: b.teamLabel.value,
+        logo: b.logo?.value,
+    }));
 }
 
 const CountryInfoModal: React.FC<CountryInfoModalProps> = ({ country, onClose }) => {
@@ -45,14 +146,11 @@ const CountryInfoModal: React.FC<CountryInfoModalProps> = ({ country, onClose })
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
-    // Drag state
     const [pos, setPos] = useState({ x: 0, y: 0 });
-    const [centered, setCentered] = useState(true); // use CSS centering until first drag
+    const [centered, setCentered] = useState(true);
     const dragging = useRef(false);
     const dragStart = useRef({ mx: 0, my: 0, px: 0, py: 0 });
     const modalRef = useRef<HTMLDivElement>(null);
-
-    const apiKey = import.meta.env.VITE_API_SPORTS_BASKETBALL_KEY as string;
 
     const fetchLeagues = useCallback(async () => {
         if (!country) return;
@@ -61,68 +159,42 @@ const CountryInfoModal: React.FC<CountryInfoModalProps> = ({ country, onClose })
         setLeagues([]);
         setActiveLeagueIdx(0);
         try {
-            const res = await fetch(
-                proxyUrl(`/leagues?country=${encodeURIComponent(country.name)}`),
-                { headers: { 'x-apisports-key': apiKey } }
-            );
-            const data = await res.json();
-            if (data.response && Array.isArray(data.response) && data.response.length > 0) {
-                setLeagues(data.response.map((l: {
-                    id: number; name: string; logo: string;
-                    seasons?: { season: number }[];
-                }) => ({
-                    id: l.id, name: l.name, logo: l.logo,
-                    seasons: l.seasons, teams: [], loading: false, loaded: false,
-                })));
-            } else {
-                setError('No basketball leagues found for this country.');
-            }
-        } catch {
-            setError('Could not load leagues. Check your API key.');
+            const qid = await resolveCountryQID(country.name);
+            if (!qid) throw new Error('Country not found in Wikidata');
+            const results = await fetchLeaguesForCountry(qid);
+            if (results.length === 0) throw new Error('No basketball leagues found for this country.');
+            setLeagues(results.map(l => ({ ...l, teams: [], loading: false, loaded: false })));
+        } catch (e: unknown) {
+            setError(e instanceof Error ? e.message : 'Could not load data from Wikidata.');
         } finally {
             setLoading(false);
         }
-    }, [country, apiKey]);
+    }, [country]);
 
     useEffect(() => {
         fetchLeagues();
-        // Reset drag position when a new country is selected
         setCentered(true);
     }, [fetchLeagues]);
 
-    // Load teams for the active league tab on demand
     const loadTeams = useCallback(async (idx: number) => {
         const league = leagues[idx];
         if (!league || league.loaded || league.loading) return;
-
         setLeagues(prev => prev.map((l, i) => i === idx ? { ...l, loading: true } : l));
-        const season = league.seasons?.slice(-1)[0]?.season ?? new Date().getFullYear();
-
         try {
-            const res = await fetch(
-                proxyUrl(`/teams?league=${league.id}&season=${season}`),
-                { headers: { 'x-apisports-key': apiKey } }
-            );
-            const data = await res.json();
-            const teams: Team[] = (data.response ?? []).map((t: { id: number; name: string; logo: string }) => ({
-                id: t.id, name: t.name, logo: t.logo
-            }));
+            const teams = await fetchTeamsForLeague(league.qid, league.name);
             setLeagues(prev => prev.map((l, i) => i === idx ? { ...l, teams, loading: false, loaded: true } : l));
         } catch {
             setLeagues(prev => prev.map((l, i) => i === idx ? { ...l, loading: false, loaded: true } : l));
         }
-    }, [leagues, apiKey]);
+    }, [leagues]);
 
-    // Load teams whenever active tab changes
     useEffect(() => {
         if (leagues.length > 0) loadTeams(activeLeagueIdx);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [activeLeagueIdx, leagues.length]);
 
-    // ── Drag handlers ──────────────────────────────────────────────────────
     const onMouseDown = (e: React.MouseEvent) => {
         if (!modalRef.current) return;
-        // First drag: compute actual screen position to switch from CSS center to absolute
         if (centered) {
             const rect = modalRef.current.getBoundingClientRect();
             setPos({ x: rect.left, y: rect.top });
@@ -161,7 +233,6 @@ const CountryInfoModal: React.FC<CountryInfoModalProps> = ({ country, onClose })
 
     return (
         <div className="fixed inset-0 z-50 pointer-events-none">
-            {/* Modal */}
             <div
                 ref={modalRef}
                 className="absolute pointer-events-auto w-96 max-h-[75vh] bg-slate-900/95 border border-slate-600/80 rounded-2xl shadow-2xl backdrop-blur-xl flex flex-col overflow-hidden select-none"
@@ -190,11 +261,10 @@ const CountryInfoModal: React.FC<CountryInfoModalProps> = ({ country, onClose })
                     </button>
                 </div>
 
-                {/* Loading / Error states */}
                 {loading && (
                     <div className="flex flex-col items-center justify-center py-12 gap-3">
                         <Loader2 size={26} className="text-blue-400 animate-spin" />
-                        <span className="text-slate-400 text-sm">Loading leagues...</span>
+                        <span className="text-slate-400 text-sm">Loading from Wikidata...</span>
                     </div>
                 )}
 
@@ -205,14 +275,12 @@ const CountryInfoModal: React.FC<CountryInfoModalProps> = ({ country, onClose })
                     </div>
                 )}
 
-                {/* League Tabs */}
                 {!loading && leagues.length > 0 && (
                     <>
-                        {/* Tab bar */}
                         <div className="flex overflow-x-auto no-scrollbar border-b border-slate-700/60 bg-slate-900/60">
                             {leagues.map((league, idx) => (
                                 <button
-                                    key={league.id}
+                                    key={league.qid}
                                     onMouseDown={e => e.stopPropagation()}
                                     onClick={() => setActiveLeagueIdx(idx)}
                                     title={league.name}
@@ -222,12 +290,8 @@ const CountryInfoModal: React.FC<CountryInfoModalProps> = ({ country, onClose })
                                         }`}
                                 >
                                     {league.logo ? (
-                                        <img
-                                            src={league.logo}
-                                            alt=""
-                                            className="w-4 h-4 object-contain"
-                                            onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
-                                        />
+                                        <img src={league.logo} alt="" className="w-4 h-4 object-contain"
+                                            onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }} />
                                     ) : (
                                         <Trophy size={10} className="text-yellow-500" />
                                     )}
@@ -236,8 +300,16 @@ const CountryInfoModal: React.FC<CountryInfoModalProps> = ({ country, onClose })
                             ))}
                         </div>
 
-                        {/* Tab content: teams */}
                         <div className="flex-1 overflow-y-auto custom-scrollbar p-3">
+                            {activeLeague?.article && (
+                                <a href={activeLeague.article} target="_blank" rel="noopener noreferrer"
+                                    onMouseDown={e => e.stopPropagation()}
+                                    className="flex items-center gap-1.5 text-[10px] text-blue-400 hover:text-blue-300 mb-3 transition-colors">
+                                    <ExternalLink size={10} />
+                                    <span>Read about {activeLeague.name} on Wikipedia</span>
+                                </a>
+                            )}
+
                             {activeLeague?.loading && (
                                 <div className="flex items-center justify-center py-10 gap-2">
                                     <Loader2 size={18} className="text-blue-400 animate-spin" />
@@ -248,24 +320,18 @@ const CountryInfoModal: React.FC<CountryInfoModalProps> = ({ country, onClose })
                             {activeLeague?.loaded && activeLeague.teams.length === 0 && (
                                 <div className="flex flex-col items-center justify-center py-10 gap-2">
                                     <Users size={22} className="text-slate-600" />
-                                    <p className="text-slate-500 text-xs">No teams found for this league.</p>
+                                    <p className="text-slate-500 text-xs">No teams found for this league in Wikidata.</p>
                                 </div>
                             )}
 
                             {activeLeague?.loaded && activeLeague.teams.length > 0 && (
                                 <div className="grid grid-cols-2 gap-2">
                                     {activeLeague.teams.map(team => (
-                                        <div
-                                            key={team.id}
-                                            className="flex items-center gap-2 text-xs text-slate-300 bg-slate-800/50 hover:bg-slate-700/60 rounded-xl px-2.5 py-2 border border-slate-700/40 transition-colors"
-                                        >
+                                        <div key={team.qid}
+                                            className="flex items-center gap-2 text-xs text-slate-300 bg-slate-800/50 hover:bg-slate-700/60 rounded-xl px-2.5 py-2 border border-slate-700/40 transition-colors">
                                             {team.logo ? (
-                                                <img
-                                                    src={team.logo}
-                                                    alt={team.name}
-                                                    className="w-6 h-6 object-contain flex-shrink-0"
-                                                    onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }}
-                                                />
+                                                <img src={team.logo} alt={team.name} className="w-6 h-6 object-contain flex-shrink-0"
+                                                    onError={e => { (e.currentTarget as HTMLImageElement).style.display = 'none'; }} />
                                             ) : (
                                                 <Users size={12} className="text-slate-500 flex-shrink-0" />
                                             )}
@@ -276,9 +342,8 @@ const CountryInfoModal: React.FC<CountryInfoModalProps> = ({ country, onClose })
                             )}
                         </div>
 
-                        {/* Footer */}
                         <div className="px-4 py-1.5 border-t border-slate-800 text-[10px] text-slate-600 text-right">
-                            via API-Sports Basketball
+                            via Wikidata / Wikipedia
                         </div>
                     </>
                 )}
