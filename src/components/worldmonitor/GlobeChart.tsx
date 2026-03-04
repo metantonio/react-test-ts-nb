@@ -33,8 +33,8 @@ function getCentroid(geometry: Geometry): { lat: number; lng: number } {
 interface CountryFeature {
     type: string;
     properties: {
-        NAME: string;
-        ISO_A2: string;
+        name: string;   // actual GeoJSON field (lowercase)
+        id: string;     // ISO code in this dataset
     };
     geometry: Geometry;
 }
@@ -83,10 +83,10 @@ const GlobeChart: React.FC<GlobeChartProps> = ({ onCountrySelect, selectedCountr
         }
     }, []);
 
-    // Focus camera when selectedCountry changes (fallback for when countries load after selection)
+    // Focus camera when selectedCountry changes
     useEffect(() => {
         if (selectedCountry && countries.length > 0 && globeEl.current) {
-            const feature = countries.find(f => f.properties.NAME === selectedCountry);
+            const feature = countries.find(f => f.properties.name === selectedCountry);
             if (feature) {
                 const { lat, lng } = getCentroid(feature.geometry);
                 globeEl.current.controls().autoRotate = false;
@@ -106,11 +106,10 @@ const GlobeChart: React.FC<GlobeChartProps> = ({ onCountrySelect, selectedCountr
 
     const handlePolygonClick = useCallback((polygon: object) => {
         const feature = polygon as CountryFeature;
-        const name = feature?.properties?.NAME;
-        const code = feature?.properties?.ISO_A2;
+        const name = feature?.properties?.name;   // lowercase in holtzy GeoJSON
+        const code = feature?.properties?.id ?? '';
         if (name) {
-            // Animate camera immediately on click — don't wait for state update
-            if (globeEl.current && countries.length > 0) {
+            if (globeEl.current) {
                 const { lat, lng } = getCentroid(feature.geometry);
                 globeEl.current.controls().autoRotate = false;
                 setAutoRotate(false);
@@ -118,11 +117,11 @@ const GlobeChart: React.FC<GlobeChartProps> = ({ onCountrySelect, selectedCountr
             }
             if (onCountrySelect) onCountrySelect({ name, code });
         }
-    }, [onCountrySelect, countries]);
+    }, [onCountrySelect]);
 
     const getPolygonColor = useCallback((polygon: object) => {
         const feature = polygon as CountryFeature;
-        const name = feature?.properties?.NAME;
+        const name = feature?.properties?.name;
         if (name === selectedCountry) return 'rgba(59, 130, 246, 0.85)';
         if (feature === hoveredCountry) return 'rgba(148, 163, 184, 0.5)';
         return 'rgba(71, 85, 105, 0.22)';
@@ -130,17 +129,17 @@ const GlobeChart: React.FC<GlobeChartProps> = ({ onCountrySelect, selectedCountr
 
     const getPolygonAltitude = useCallback((polygon: object) => {
         const feature = polygon as CountryFeature;
-        return feature?.properties?.NAME === selectedCountry ? 0.07 : 0.01;
+        return feature?.properties?.name === selectedCountry ? 0.07 : 0.01;
     }, [selectedCountry]);
 
     // Show label only for hovered or selected countries
     const labelsData: LabelData[] = [];
     if (hoveredCountry) {
         const { lat, lng } = getCentroid(hoveredCountry.geometry);
-        labelsData.push({ lat, lng, text: hoveredCountry.properties.NAME, size: 0.6, color: '#e2e8f0' });
+        labelsData.push({ lat, lng, text: hoveredCountry.properties.name, size: 0.6, color: '#e2e8f0' });
     }
-    if (selectedCountry && hoveredCountry?.properties.NAME !== selectedCountry) {
-        const selFeature = countries.find(f => f.properties.NAME === selectedCountry);
+    if (selectedCountry && hoveredCountry?.properties.name !== selectedCountry) {
+        const selFeature = countries.find(f => f.properties.name === selectedCountry);
         if (selFeature) {
             const { lat, lng } = getCentroid(selFeature.geometry);
             labelsData.push({ lat, lng, text: selectedCountry, size: 0.7, color: '#93c5fd' });

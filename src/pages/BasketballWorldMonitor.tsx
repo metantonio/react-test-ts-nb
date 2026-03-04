@@ -6,6 +6,7 @@ import NcaaPanel from '../components/worldmonitor/NcaaPanel';
 import YoutubePanel from '../components/worldmonitor/YoutubePanel';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Globe2, X, PauseCircle, PlayCircle, RotateCcw } from 'lucide-react';
+import CountryInfoModal from '../components/worldmonitor/CountryInfoModal';
 
 interface SelectedCountry {
     name: string;
@@ -126,6 +127,11 @@ const BasketballWorldMonitor: React.FC = () => {
                 <NewsPanel countryFilter={selectedCountry?.name ?? null} />
                 <YoutubePanel countryFilter={selectedCountry?.name ?? null} />
             </div>
+            {/* Country Info Modal */}
+            <CountryInfoModal
+                country={selectedCountry}
+                onClose={clearSelection}
+            />
         </div>
     );
 };
