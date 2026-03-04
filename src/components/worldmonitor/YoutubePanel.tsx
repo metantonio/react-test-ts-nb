@@ -22,7 +22,11 @@ interface YoutubeVideo {
 const NETWORKS = ['ESPN', 'Fox Sports', 'Basketball Network'];
 const TOPICS = ['NBA', 'NCAA'];
 
-const YoutubePanel: React.FC = () => {
+interface YoutubePanelProps {
+    countryFilter?: string | null;
+}
+
+const YoutubePanel: React.FC<YoutubePanelProps> = ({ countryFilter }) => {
     const [videos, setVideos] = useState<YoutubeVideo[]>([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
@@ -39,7 +43,8 @@ const YoutubePanel: React.FC = () => {
                 throw new Error("Missing YouTube API Key setup");
             }
 
-            const query = encodeURIComponent(`${activeNetwork} ${activeTopic}`);
+            const countryTerm = countryFilter ? `+${encodeURIComponent(countryFilter)}` : '';
+            const query = encodeURIComponent(`${activeNetwork} ${activeTopic}`) + countryTerm;
             const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&order=date&maxResults=5&q=${query}&key=${apiKey}`;
 
             const response = await fetch(url);
@@ -61,7 +66,7 @@ const YoutubePanel: React.FC = () => {
         } finally {
             setLoading(false);
         }
-    }, [activeNetwork, activeTopic]);
+    }, [activeNetwork, activeTopic, countryFilter]);
 
     useEffect(() => {
         fetchVideos();
@@ -72,7 +77,7 @@ const YoutubePanel: React.FC = () => {
             <CardHeader className="pb-2 border-b border-slate-800 flex flex-row items-center justify-between">
                 <CardTitle className="text-sm font-semibold flex items-center gap-2 uppercase tracking-wider text-red-500">
                     <Youtube size={16} />
-                    Video Intelligence
+                    Video Intelligence {countryFilter ? <span className="font-normal text-blue-300 normal-case tracking-normal text-[10px]">• {countryFilter}</span> : ''}
                 </CardTitle>
                 <button onClick={fetchVideos} className="text-slate-400 hover:text-white transition-colors" disabled={loading}>
                     <RefreshCcw size={14} className={loading ? 'animate-spin' : ''} />

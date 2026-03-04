@@ -1,44 +1,199 @@
-import React, { useEffect, useRef, useState } from 'react';
-import Globe from 'react-globe.gl';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
+import Globe, { GlobeMethods } from 'react-globe.gl';
+import { RotateCcw, PauseCircle, PlayCircle } from 'lucide-react';
 
-const GlobeChart: React.FC = () => {
-    const globeEl = useRef<any>();
+interface Geometry {
+    type: string;
+    coordinates: number[][][][];
+}
+
+interface CountryFeature {
+    type: string;
+    properties: {
+        NAME: string;
+        ISO_A2: string;
+    };
+    geometry: Geometry;
+}
+
+interface LabelData {
+    lat: number;
+    lng: number;
+    text: string;
+    size: number;
+    color: string;
+}
+
+function getCentroid(geometry: Geometry): { lat: number; lng: number } {
+    let coordsToUse: number[][] = [];
+    if (geometry.type === 'Polygon') {
+        coordsToUse = geometry.coordinates[0];
+    } else if (geometry.type === 'MultiPolygon') {
+        // Use the ring with the most points (likely the main landmass)
+        let maxLen = 0;
+        geometry.coordinates.forEach(poly => {
+            if (poly[0].length > maxLen) {
+                maxLen = poly[0].length;
+                coordsToUse = poly[0];
+            }
+        });
+    }
+    if (!coordsToUse.length) return { lat: 0, lng: 0 };
+    const lat = coordsToUse.reduce((s, c) => s + c[1], 0) / coordsToUse.length;
+    const lng = coordsToUse.reduce((s, c) => s + c[0], 0) / coordsToUse.length;
+    return { lat, lng };
+}
+
+interface GlobeChartProps {
+    onCountrySelect?: (country: { name: string; code: string } | null) => void;
+    selectedCountry?: string | null;
+}
+
+const GlobeChart: React.FC<GlobeChartProps> = ({ onCountrySelect, selectedCountry }) => {
+    const globeEl = useRef<GlobeMethods | undefined>(undefined);
     const [dimensions, setDimensions] = useState({ width: window.innerWidth, height: window.innerHeight });
+    const [countries, setCountries] = useState<CountryFeature[]>([]);
+    const [hoveredCountry, setHoveredCountry] = useState<CountryFeature | null>(null);
+    const [autoRotate, setAutoRotate] = useState(true);
 
     useEffect(() => {
-        const handleResize = () => {
+        const handleResize = () =>
             setDimensions({ width: window.innerWidth, height: window.innerHeight });
-        };
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    // Use a dark map texture
-    const globeImageUrl = '//unpkg.com/three-globe/example/img/earth-dark.jpg';
-    // A bump map to make mountains stand out
-    const bumpImageUrl = '//unpkg.com/three-globe/example/img/earth-topology.png';
+    useEffect(() => {
+        fetch('https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/world.geojson')
+            .then(r => r.json())
+            .then(data => setCountries(data.features as CountryFeature[]))
+            .catch(err => console.warn('Could not load country boundaries:', err));
+    }, []);
 
+    // globe setup
     useEffect(() => {
         if (globeEl.current) {
-            // Auto-rotate the globe slowly
             globeEl.current.controls().autoRotate = true;
-            globeEl.current.controls().autoRotateSpeed = 0.5;
-            globeEl.current.pointOfView({ altitude: 2 });
+            globeEl.current.controls().autoRotateSpeed = 0.4;
+            globeEl.current.pointOfView({ altitude: 2.2 });
         }
     }, []);
 
+    // Focus camera on selected country
+    useEffect(() => {
+        if (selectedCountry && countries.length > 0 && globeEl.current) {
+            const feature = countries.find(f => f.properties.NAME === selectedCountry);
+            if (feature) {
+                const { lat, lng } = getCentroid(feature.geometry);
+                // stop rotation and zoom in
+                globeEl.current.controls().autoRotate = false;
+                setAutoRotate(false);
+                globeEl.current.pointOfView({ lat, lng, altitude: 1.4 }, 1200);
+            }
+        }
+    }, [selectedCountry, countries]);
+
+    const handlePolygonClick = useCallback((polygon: object) => {
+        const feature = polygon as CountryFeature;
+        const name = feature?.properties?.NAME;
+        const code = feature?.properties?.ISO_A2;
+        if (name && onCountrySelect) {
+            onCountrySelect({ name, code });
+        }
+    }, [onCountrySelect]);
+
+    const getPolygonColor = useCallback((polygon: object) => {
+        const feature = polygon as CountryFeature;
+        const name = feature?.properties?.NAME;
+        if (name === selectedCountry) return 'rgba(59, 130, 246, 0.85)';
+        if (feature === hoveredCountry) return 'rgba(148, 163, 184, 0.5)';
+        return 'rgba(71, 85, 105, 0.22)';
+    }, [selectedCountry, hoveredCountry]);
+
+    const getPolygonAltitude = useCallback((polygon: object) => {
+        const feature = polygon as CountryFeature;
+        return feature?.properties?.NAME === selectedCountry ? 0.07 : 0.01;
+    }, [selectedCountry]);
+
+    // Show label only for hovered or selected countries
+    const labelsData: LabelData[] = [];
+    if (hoveredCountry) {
+        const { lat, lng } = getCentroid(hoveredCountry.geometry);
+        labelsData.push({ lat, lng, text: hoveredCountry.properties.NAME, size: 0.6, color: '#e2e8f0' });
+    }
+    if (selectedCountry && hoveredCountry?.properties.NAME !== selectedCountry) {
+        const selFeature = countries.find(f => f.properties.NAME === selectedCountry);
+        if (selFeature) {
+            const { lat, lng } = getCentroid(selFeature.geometry);
+            labelsData.push({ lat, lng, text: selectedCountry, size: 0.7, color: '#93c5fd' });
+        }
+    }
+
+    const toggleRotation = () => {
+        if (globeEl.current) {
+            const next = !autoRotate;
+            globeEl.current.controls().autoRotate = next;
+            setAutoRotate(next);
+        }
+    };
+
+    const resetView = () => {
+        if (globeEl.current) {
+            globeEl.current.pointOfView({ lat: 20, lng: 0, altitude: 2.2 }, 800);
+        }
+    };
+
     return (
-        <div className="absolute inset-0 z-0 bg-black">
+        <div className="absolute inset-0 z-0 bg-[#050510]">
             <Globe
                 ref={globeEl}
                 width={dimensions.width}
                 height={dimensions.height}
-                globeImageUrl={globeImageUrl}
-                bumpImageUrl={bumpImageUrl}
-                backgroundColor="#050510" // very dark blue/black
-                atmosphereColor="#3b82f6"
-                atmosphereAltitude={0.15}
+                globeImageUrl="//unpkg.com/three-globe/example/img/earth-blue-marble.jpg"
+                bumpImageUrl="//unpkg.com/three-globe/example/img/earth-topology.png"
+                backgroundColor="#050510"
+                atmosphereColor="#60a5fa"
+                atmosphereAltitude={0.18}
+                polygonsData={countries}
+                polygonAltitude={getPolygonAltitude}
+                polygonCapColor={getPolygonColor}
+                polygonSideColor={() => 'rgba(0,0,0,0.05)'}
+                polygonStrokeColor={() => 'rgba(148, 163, 184, 0.25)'}
+                polygonLabel={() => ''}
+                onPolygonClick={handlePolygonClick}
+                onPolygonHover={(polygon) => {
+                    setHoveredCountry(polygon as CountryFeature | null);
+                    document.body.style.cursor = polygon ? 'pointer' : 'default';
+                }}
+                labelsData={labelsData}
+                labelLat={(d) => (d as LabelData).lat}
+                labelLng={(d) => (d as LabelData).lng}
+                labelText={(d) => (d as LabelData).text}
+                labelSize={(d) => (d as LabelData).size}
+                labelColor={(d) => (d as LabelData).color}
+                labelDotRadius={0.3}
+                labelResolution={2}
             />
+
+            {/* Globe Controls (bottom-left) */}
+            <div className="absolute bottom-6 left-6 z-20 flex flex-col gap-2">
+                <button
+                    onClick={toggleRotation}
+                    title={autoRotate ? 'Pause Rotation' : 'Resume Rotation'}
+                    className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-900/80 border border-slate-600 text-white hover:bg-slate-800 transition-colors text-xs font-semibold backdrop-blur-sm shadow-lg"
+                >
+                    {autoRotate ? <PauseCircle size={16} className="text-blue-400" /> : <PlayCircle size={16} className="text-green-400" />}
+                    {autoRotate ? 'Pause' : 'Resume'}
+                </button>
+                <button
+                    onClick={resetView}
+                    title="Reset View"
+                    className="flex items-center gap-2 px-3 py-2 rounded-lg bg-slate-900/80 border border-slate-600 text-white hover:bg-slate-800 transition-colors text-xs font-semibold backdrop-blur-sm shadow-lg"
+                >
+                    <RotateCcw size={16} className="text-slate-300" />
+                    Reset
+                </button>
+            </div>
         </div>
     );
 };

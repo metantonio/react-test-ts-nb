@@ -13,7 +13,11 @@ interface Game {
     status: { short: string; timer?: string };
 }
 
-const LiveGamesPanel: React.FC = () => {
+interface LiveGamesPanelProps {
+    countryFilter?: string | null;
+}
+
+const LiveGamesPanel: React.FC<LiveGamesPanelProps> = ({ countryFilter }) => {
     const [games, setGames] = useState<Game[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -58,12 +62,21 @@ const LiveGamesPanel: React.FC = () => {
         return () => clearInterval(interval);
     }, []);
 
+    const displayedGames = countryFilter
+        ? games.filter(g =>
+            g.league.country.toLowerCase().includes(countryFilter.toLowerCase())
+        )
+        : games;
+
     return (
         <Card className="w-80 bg-slate-900/80 border-slate-700 text-white backdrop-blur-md shadow-xl flex flex-col h-[500px]">
             <CardHeader className="pb-2 border-b border-slate-800">
                 <CardTitle className="text-sm font-semibold flex items-center gap-2 uppercase tracking-wider text-blue-400">
                     <Activity size={16} className="text-red-500 animate-pulse" />
                     Live Global Games
+                    {countryFilter && (
+                        <span className="font-normal text-blue-300 normal-case tracking-normal text-[10px]">• {countryFilter}</span>
+                    )}
                 </CardTitle>
             </CardHeader>
             <CardContent className="pt-4 flex-1 overflow-y-auto custom-scrollbar">
@@ -71,13 +84,13 @@ const LiveGamesPanel: React.FC = () => {
                     <div className="flex justify-center mt-10">
                         <span className="text-slate-400 text-sm animate-pulse">Scanning live data...</span>
                     </div>
-                ) : games.length === 0 ? (
+                ) : displayedGames.length === 0 ? (
                     <div className="text-center mt-10 text-slate-500 text-sm italic">
-                        No live games detected currently.
+                        {countryFilter ? `No live games for ${countryFilter}.` : 'No live games detected currently.'}
                     </div>
                 ) : (
                     <div className="space-y-4">
-                        {games.map(game => (
+                        {displayedGames.map(game => (
                             <div key={game.id} className="bg-slate-800/50 p-3 rounded-md border border-slate-700/50 hover:bg-slate-800 transition-colors">
                                 <div className="flex items-center gap-2 mb-2">
                                     <img src={game.league.logo} alt={game.league.name} className="w-4 h-4 object-contain" onError={(e) => (e.currentTarget.style.display = 'none')} />
