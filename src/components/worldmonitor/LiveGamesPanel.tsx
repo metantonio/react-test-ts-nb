@@ -17,6 +17,11 @@ interface LiveGamesPanelProps {
     countryFilter?: string | null;
 }
 
+const API_BASE = 'https://v1.basketball.api-sports.io';
+function proxyUrl(path: string) {
+    return `https://corsproxy.io/?${encodeURIComponent(API_BASE + path)}`;
+}
+
 const LiveGamesPanel: React.FC<LiveGamesPanelProps> = ({ countryFilter }) => {
     const [games, setGames] = useState<Game[]>([]);
     const [loading, setLoading] = useState(true);
@@ -33,11 +38,10 @@ const LiveGamesPanel: React.FC<LiveGamesPanelProps> = ({ countryFilter }) => {
 
                 // Fetch today's live games (using API-Sports basketball endpoint)
                 // Usually it's GET https://v1.basketball.api-sports.io/games?live=all
-                const response = await fetch('https://v1.basketball.api-sports.io/games?live=all', {
+                const response = await fetch(proxyUrl('/games?live=all'), {
                     method: 'GET',
                     headers: {
                         'x-apisports-key': apiKey,
-                        'x-rapidapi-key': apiKey, // sometimes it wants this header
                     }
                 });
                 const data = await response.json();

@@ -34,6 +34,11 @@ function flagEmoji(code: string): string {
 
 const API_BASE = 'https://v1.basketball.api-sports.io';
 
+// corsproxy.io forwards all request headers (including x-apisports-key) to the target
+function proxyUrl(path: string) {
+    return `https://corsproxy.io/?${encodeURIComponent(API_BASE + path)}`;
+}
+
 const CountryInfoModal: React.FC<CountryInfoModalProps> = ({ country, onClose }) => {
     const [leagues, setLeagues] = useState<LeagueWithTeams[]>([]);
     const [activeLeagueIdx, setActiveLeagueIdx] = useState(0);
@@ -57,7 +62,7 @@ const CountryInfoModal: React.FC<CountryInfoModalProps> = ({ country, onClose })
         setActiveLeagueIdx(0);
         try {
             const res = await fetch(
-                `${API_BASE}/leagues?country=${encodeURIComponent(country.name)}`,
+                proxyUrl(`/leagues?country=${encodeURIComponent(country.name)}`),
                 { headers: { 'x-apisports-key': apiKey } }
             );
             const data = await res.json();
@@ -95,7 +100,7 @@ const CountryInfoModal: React.FC<CountryInfoModalProps> = ({ country, onClose })
 
         try {
             const res = await fetch(
-                `${API_BASE}/teams?league=${league.id}&season=${season}`,
+                proxyUrl(`/teams?league=${league.id}&season=${season}`),
                 { headers: { 'x-apisports-key': apiKey } }
             );
             const data = await res.json();
@@ -212,8 +217,8 @@ const CountryInfoModal: React.FC<CountryInfoModalProps> = ({ country, onClose })
                                     onClick={() => setActiveLeagueIdx(idx)}
                                     title={league.name}
                                     className={`flex items-center gap-1.5 px-3 py-2.5 text-[10px] font-semibold whitespace-nowrap shrink-0 transition-colors border-b-2 ${idx === activeLeagueIdx
-                                            ? 'text-blue-300 border-blue-400 bg-slate-800/60'
-                                            : 'text-slate-500 border-transparent hover:text-slate-300 hover:bg-slate-800/30'
+                                        ? 'text-blue-300 border-blue-400 bg-slate-800/60'
+                                        : 'text-slate-500 border-transparent hover:text-slate-300 hover:bg-slate-800/30'
                                         }`}
                                 >
                                     {league.logo ? (
