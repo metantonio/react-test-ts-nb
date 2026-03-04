@@ -31,6 +31,11 @@ interface NcaaNews {
     image: string;
 }
 
+const NCAA_BASE = 'https://ncaa-api.henrygd.me';
+function proxy(path: string) {
+    return `https://api.allorigins.win/raw?url=${encodeURIComponent(NCAA_BASE + path)}`;
+}
+
 const NcaaPanel: React.FC = () => {
     const [games, setGames] = useState<NcaaGame[]>([]);
     const [news, setNews] = useState<NcaaNews[]>([]);
@@ -40,18 +45,18 @@ const NcaaPanel: React.FC = () => {
     const fetchData = async () => {
         setLoading(true);
         try {
-            // Fetch Scores
-            const scoreRes = await fetch('https://ncaa-api.henrygd.me/scoreboard/basketball-men/d1');
+            // Fetch Scores via proxy (NCAA API lacks CORS headers)
+            const scoreRes = await fetch(proxy('/scoreboard/basketball-men/d1'));
             const scoreData = await scoreRes.json();
             if (scoreData.games) {
-                setGames(scoreData.games.slice(0, 15)); // limit to 15
+                setGames(scoreData.games.slice(0, 15));
             }
 
-            // Fetch News
-            const newsRes = await fetch('https://ncaa-api.henrygd.me/news/basketball-men/d1');
+            // Fetch News via proxy
+            const newsRes = await fetch(proxy('/news/basketball-men/d1'));
             const newsData = await newsRes.json();
             if (newsData.items) {
-                setNews(newsData.items.slice(0, 10)); // limit to 10
+                setNews(newsData.items.slice(0, 10));
             }
         } catch (error) {
             console.error('Failed to fetch NCAA data:', error);
