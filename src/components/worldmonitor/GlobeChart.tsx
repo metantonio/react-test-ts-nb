@@ -2,9 +2,32 @@ import React, { useEffect, useRef, useState, useCallback } from 'react';
 import Globe, { GlobeMethods } from 'react-globe.gl';
 import { RotateCcw, PauseCircle, PlayCircle } from 'lucide-react';
 
+// GeoJSON geometry — loosened coords type to avoid recursive generics
 interface Geometry {
     type: string;
-    coordinates: number[][][][];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    coordinates: any[];
+}
+
+function getCentroid(geometry: Geometry): { lat: number; lng: number } {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let ring: number[][] = [];
+    if (geometry.type === 'Polygon') {
+        ring = geometry.coordinates[0] as number[][];
+    } else if (geometry.type === 'MultiPolygon') {
+        let maxLen = 0;
+        // Find the largest polygon ring (the main landmass)
+        for (const poly of geometry.coordinates as number[][][][]) {
+            if (poly[0].length > maxLen) {
+                maxLen = poly[0].length;
+                ring = poly[0];
+            }
+        }
+    }
+    if (!ring.length) return { lat: 0, lng: 0 };
+    const lat = ring.reduce((s: number, c: number[]) => s + c[1], 0) / ring.length;
+    const lng = ring.reduce((s: number, c: number[]) => s + c[0], 0) / ring.length;
+    return { lat, lng };
 }
 
 interface CountryFeature {
@@ -22,26 +45,6 @@ interface LabelData {
     text: string;
     size: number;
     color: string;
-}
-
-function getCentroid(geometry: Geometry): { lat: number; lng: number } {
-    let coordsToUse: number[][] = [];
-    if (geometry.type === 'Polygon') {
-        coordsToUse = geometry.coordinates[0];
-    } else if (geometry.type === 'MultiPolygon') {
-        // Use the ring with the most points (likely the main landmass)
-        let maxLen = 0;
-        geometry.coordinates.forEach(poly => {
-            if (poly[0].length > maxLen) {
-                maxLen = poly[0].length;
-                coordsToUse = poly[0];
-            }
-        });
-    }
-    if (!coordsToUse.length) return { lat: 0, lng: 0 };
-    const lat = coordsToUse.reduce((s, c) => s + c[1], 0) / coordsToUse.length;
-    const lng = coordsToUse.reduce((s, c) => s + c[0], 0) / coordsToUse.length;
-    return { lat, lng };
 }
 
 interface GlobeChartProps {
