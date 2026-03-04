@@ -3,6 +3,7 @@ import GlobeChart from '../components/worldmonitor/GlobeChart';
 import LiveGamesPanel from '../components/worldmonitor/LiveGamesPanel';
 import NewsPanel from '../components/worldmonitor/NewsPanel';
 import NcaaPanel from '../components/worldmonitor/NcaaPanel';
+import YoutubePanel from '../components/worldmonitor/YoutubePanel';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 
@@ -40,8 +41,9 @@ const BasketballWorldMonitor: React.FC = () => {
             </div>
 
             {/* Right Panels */}
-            <div className="absolute top-24 right-4 z-10 flex flex-col gap-4 pointer-events-auto">
+            <div className="absolute top-24 right-4 z-10 flex flex-col gap-4 pointer-events-auto max-h-[calc(100vh-120px)] overflow-y-auto no-scrollbar pb-4 shadow-2xl">
                 <NewsPanel />
+                <YoutubePanel />
             </div>
 
         </div>
